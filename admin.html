@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel – PLC SimTel</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="./auth-config.js"></script>
+    <script src="./auth-guard.js"></script>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: Georgia, 'Times New Roman', serif;
+            background: #f8f9fa;
+            color: #343a40;
+            min-height: 100vh;
+        }
+
+        .admin-header {
+            background: #343a40;
+            color: #fff;
+            padding: 14px 28px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .admin-header h1 {
+            font-size: 1.15rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .admin-header-right {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .admin-header a {
+            color: #adb5bd;
+            text-decoration: none;
+            font-size: 0.85rem;
+        }
+
+        .admin-header a:hover { color: #fff; }
+
+        .admin-header button {
+            background: #dc3545;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            padding: 5px 14px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            font-family: inherit;
+        }
+
+        .admin-body {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 28px 20px;
+        }
+
+        /* Stats */
+        .stats-row {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 28px;
+            flex-wrap: wrap;
+        }
+
+        .stat-card {
+            background: #fff;
+            border-radius: 8px;
+            padding: 16px 22px;
+            box-shadow: 0 1px 6px rgba(0,0,0,0.07);
+            flex: 1;
+            min-width: 130px;
+            text-align: center;
+        }
+
+        .stat-card .stat-num {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #343a40;
+        }
+
+        .stat-card .stat-label {
+            font-size: 0.82rem;
+            color: #6c757d;
+            margin-top: 2px;
+        }
+
+        /* Create User */
+        .panel {
+            background: #fff;
+            border-radius: 8px;
+            box-shadow: 0 1px 6px rgba(0,0,0,0.07);
+            margin-bottom: 24px;
+            overflow: hidden;
+        }
+
+        .panel-header {
+            padding: 14px 20px;
+            border-bottom: 1px solid #e9ecef;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .panel-header h2 {
+            font-size: 1rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .panel-body { padding: 20px; }
+
+        .create-form {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .create-form input, .create-form select {
+            flex: 1;
+            min-width: 140px;
+            padding: 8px 11px;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            font-family: inherit;
+            color: #343a40;
+        }
+
+        .create-form input:focus, .create-form select:focus {
+            outline: none;
+            border-color: #6c757d;
+        }
+
+        .btn-primary {
+            background: #343a40;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            padding: 8px 18px;
+            font-size: 0.9rem;
+            font-family: inherit;
+            font-weight: 600;
+            cursor: pointer;
+            white-space: nowrap;
+        }
+
+        .btn-primary:hover { background: #23272b; }
+
+        /* Search */
+        .search-bar {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .search-bar input {
+            padding: 7px 12px;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            font-size: 0.88rem;
+            font-family: inherit;
+            width: 200px;
+        }
+
+        .search-bar input:focus {
+            outline: none;
+            border-color: #6c757d;
+        }
+
+        /* Table */
+        .user-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.88rem;
+        }
+
+        .user-table th {
+            background: #f1f3f5;
+            padding: 10px 14px;
+            text-align: left;
+            font-size: 0.8rem;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+            color: #6c757d;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .user-table td {
+            padding: 11px 14px;
+            border-bottom: 1px solid #e9ecef;
+            vertical-align: middle;
+        }
+
+        .user-table tr:last-child td { border-bottom: none; }
+
+        .user-table tr:hover td { background: #f8f9fa; }
+
+        .badge {
+            display: inline-block;
+            padding: 2px 9px;
+            border-radius: 10px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+
+        .badge-active { background: #d1e7dd; color: #0f5132; }
+        .badge-inactive { background: #f8d7da; color: #842029; }
+        .badge-admin { background: #cfe2ff; color: #084298; }
+        .badge-user { background: #e9ecef; color: #495057; }
+
+        .action-btns {
+            display: flex;
+            gap: 6px;
+            flex-wrap: wrap;
+        }
+
+        .btn-sm {
+            padding: 4px 11px;
+            border-radius: 4px;
+            font-size: 0.78rem;
+            font-family: inherit;
+            cursor: pointer;
+            border: 1px solid transparent;
+            font-weight: 600;
+            transition: all 0.12s;
+        }
+
+        .btn-activate { background: #d1e7dd; color: #0a3622; border-color: #a3cfbb; }
+        .btn-activate:hover { background: #198754; color: #fff; }
+        .btn-deactivate { background: #f8d7da; color: #58151c; border-color: #f1aeb5; }
+        .btn-deactivate:hover { background: #dc3545; color: #fff; }
+        .btn-delete { background: #fff; color: #dc3545; border-color: #dc3545; }
+        .btn-delete:hover { background: #dc3545; color: #fff; }
+        .btn-make-admin { background: #cfe2ff; color: #084298; border-color: #9ec5fe; }
+        .btn-make-admin:hover { background: #0d6efd; color: #fff; }
+        .btn-remove-admin { background: #e9ecef; color: #495057; border-color: #ced4da; }
+        .btn-remove-admin:hover { background: #6c757d; color: #fff; }
+
+        .alert {
+            padding: 10px 14px;
+            border-radius: 5px;
+            font-size: 0.88rem;
+            margin-bottom: 14px;
+            display: none;
+        }
+        .alert.error { background: #f8d7da; color: #842029; border: 1px solid #f5c2c7; }
+        .alert.success { background: #d1e7dd; color: #0f5132; border: 1px solid #badbcc; }
+        .alert.show { display: block; }
+
+        .loading { text-align: center; color: #6c757d; padding: 30px; font-style: italic; }
+
+        .table-wrap { overflow-x: auto; }
+
+        @media (max-width: 600px) {
+            .admin-body { padding: 16px 10px; }
+            .create-form { flex-direction: column; }
+            .user-table th:nth-child(4), .user-table td:nth-child(4),
+            .user-table th:nth-child(5), .user-table td:nth-child(5) { display: none; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="admin-header">
+    <h1><i class="fas fa-shield-alt"></i> PLC SimTel — Admin Panel</h1>
+    <div class="admin-header-right">
+        <a href="/index.html"><i class="fas fa-arrow-left"></i> Back to App</a>
+        <button onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
+    </div>
+</div>
+
+<div class="admin-body">
+
+    <!-- Stats -->
+    <div class="stats-row" id="stats-row">
+        <div class="stat-card"><div class="stat-num" id="stat-total">–</div><div class="stat-label">Total Users</div></div>
+        <div class="stat-card"><div class="stat-num" id="stat-active">–</div><div class="stat-label">Active</div></div>
+        <div class="stat-card"><div class="stat-num" id="stat-pending">–</div><div class="stat-label">Pending Approval</div></div>
+        <div class="stat-card"><div class="stat-num" id="stat-admins">–</div><div class="stat-label">Admins</div></div>
+    </div>
+
+    <!-- Create User -->
+    <div class="panel">
+        <div class="panel-header">
+            <h2><i class="fas fa-user-plus"></i> Create User</h2>
+        </div>
+        <div class="panel-body">
+            <div class="alert error" id="create-error"></div>
+            <div class="alert success" id="create-success"></div>
+            <div class="create-form">
+                <input type="text" id="c-name" placeholder="Full Name">
+                <input type="email" id="c-email" placeholder="Email Address">
+                <input type="password" id="c-password" placeholder="Password (min 6)">
+                <select id="c-role">
+                    <option value="user">User</option>
+                    <option value="admin">Admin</option>
+                </select>
+                <button class="btn-primary" onclick="createUser()">
+                    <i class="fas fa-plus"></i> Create &amp; Activate
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- User List -->
+    <div class="panel">
+        <div class="panel-header">
+            <h2><i class="fas fa-users"></i> All Users</h2>
+            <div class="search-bar">
+                <i class="fas fa-search" style="color:#6c757d;"></i>
+                <input type="text" id="user-search" placeholder="Filter users..." oninput="filterTable()">
+            </div>
+        </div>
+        <div class="panel-body">
+            <div class="alert error" id="list-error"></div>
+            <div class="table-wrap">
+                <table class="user-table">
+                    <thead>
+                        <tr>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Status</th>
+                            <th>Role</th>
+                            <th>Joined</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="user-tbody">
+                        <tr><td colspan="6" class="loading">Loading users...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    const cfg = window.SIMTEL_AUTH_CONFIG;
+    let allUsers = [];
+
+    // Guard: only admin can access this page
+    const userRaw = localStorage.getItem(cfg.USER_KEY);
+    const currentUser = userRaw ? JSON.parse(userRaw) : null;
+    if (!currentUser || currentUser.role !== 'admin') {
+        alert('Admin access required.');
+        window.location.replace(window.location.origin + cfg.LOGIN_PAGE);
+    }
+
+    function getToken() { return localStorage.getItem(cfg.TOKEN_KEY); }
+
+    function authHeaders() {
+        return { 'Content-Type': 'application/json', 'Authorization': `Bearer ${getToken()}` };
+    }
+
+    function showMsg(id, msg, type) {
+        const el = document.getElementById(id);
+        el.textContent = msg;
+        el.className = `alert ${type} show`;
+        setTimeout(() => el.className = 'alert', 4000);
+    }
+
+    async function loadUsers() {
+        try {
+            const res = await fetch(`${cfg.AUTH_SERVER_URL}/api/admin/users`, { headers: authHeaders() });
+            const data = await res.json();
+            if (!data.success) throw new Error(data.message);
+            allUsers = data.users;
+            renderTable(allUsers);
+            updateStats(allUsers);
+        } catch (err) {
+            document.getElementById('list-error').textContent = err.message;
+            document.getElementById('list-error').className = 'alert error show';
+        }
+    }
+
+    function updateStats(users) {
+        document.getElementById('stat-total').textContent = users.length;
+        document.getElementById('stat-active').textContent = users.filter(u => u.isActive).length;
+        document.getElementById('stat-pending').textContent = users.filter(u => !u.isActive).length;
+        document.getElementById('stat-admins').textContent = users.filter(u => u.role === 'admin').length;
+    }
+
+    function filterTable() {
+        const q = document.getElementById('user-search').value.toLowerCase();
+        const filtered = allUsers.filter(u =>
+            u.name.toLowerCase().includes(q) || u.email.toLowerCase().includes(q)
+        );
+        renderTable(filtered);
+    }
+
+    function renderTable(users) {
+        const tbody = document.getElementById('user-tbody');
+        if (users.length === 0) {
+            tbody.innerHTML = '<tr><td colspan="6" class="loading">No users found.</td></tr>';
+            return;
+        }
+        tbody.innerHTML = users.map(u => `
+            <tr id="row-${u._id}">
+                <td><strong>${escHtml(u.name)}</strong></td>
+                <td>${escHtml(u.email)}</td>
+                <td>
+                    <span class="badge ${u.isActive ? 'badge-active' : 'badge-inactive'}">
+                        ${u.isActive ? 'Active' : 'Pending'}
+                    </span>
+                </td>
+                <td>
+                    <span class="badge ${u.role === 'admin' ? 'badge-admin' : 'badge-user'}">
+                        ${u.role}
+                    </span>
+                </td>
+                <td>${new Date(u.createdAt).toLocaleDateString('en-IN')}</td>
+                <td>
+                    <div class="action-btns">
+                        ${u.isActive
+                            ? `<button class="btn-sm btn-deactivate" onclick="setActive('${u._id}', false)">Revoke</button>`
+                            : `<button class="btn-sm btn-activate" onclick="setActive('${u._id}', true)">Approve</button>`
+                        }
+                        ${u.role === 'admin'
+                            ? `<button class="btn-sm btn-remove-admin" onclick="setRole('${u._id}', 'user')">Remove Admin</button>`
+                            : `<button class="btn-sm btn-make-admin" onclick="setRole('${u._id}', 'admin')">Make Admin</button>`
+                        }
+                        <button class="btn-sm btn-delete" onclick="deleteUser('${u._id}', '${escHtml(u.name)}')">Delete</button>
+                    </div>
+                </td>
+            </tr>
+        `).join('');
+    }
+
+    async function createUser() {
+        const name = document.getElementById('c-name').value.trim();
+        const email = document.getElementById('c-email').value.trim();
+        const password = document.getElementById('c-password').value;
+        const role = document.getElementById('c-role').value;
+
+        if (!name || !email || !password) {
+            showMsg('create-error', 'All fields are required.', 'error');
+            return;
+        }
+
+        try {
+            const res = await fetch(`${cfg.AUTH_SERVER_URL}/api/admin/users`, {
+                method: 'POST',
+                headers: authHeaders(),
+                body: JSON.stringify({ name, email, password, role })
+            });
+            const data = await res.json();
+            if (data.success) {
+                showMsg('create-success', data.message, 'success');
+                document.getElementById('c-name').value = '';
+                document.getElementById('c-email').value = '';
+                document.getElementById('c-password').value = '';
+                loadUsers();
+            } else {
+                showMsg('create-error', data.message, 'error');
+            }
+        } catch {
+            showMsg('create-error', 'Server error. Try again.', 'error');
+        }
+    }
+
+    async function setActive(id, active) {
+        const action = active ? 'activate' : 'deactivate';
+        try {
+            const res = await fetch(`${cfg.AUTH_SERVER_URL}/api/admin/users/${id}/${action}`, {
+                method: 'PUT', headers: authHeaders()
+            });
+            const data = await res.json();
+            if (data.success) {
+                allUsers = allUsers.map(u => u._id === id ? { ...u, isActive: active } : u);
+                renderTable(allUsers);
+                updateStats(allUsers);
+            }
+        } catch { alert('Error updating user.'); }
+    }
+
+    async function setRole(id, role) {
+        try {
+            const res = await fetch(`${cfg.AUTH_SERVER_URL}/api/admin/users/${id}/role`, {
+                method: 'PUT',
+                headers: authHeaders(),
+                body: JSON.stringify({ role })
+            });
+            const data = await res.json();
+            if (data.success) {
+                allUsers = allUsers.map(u => u._id === id ? { ...u, role } : u);
+                renderTable(allUsers);
+                updateStats(allUsers);
+            }
+        } catch { alert('Error updating role.'); }
+    }
+
+    async function deleteUser(id, name) {
+        if (!confirm(`Delete user "${name}"? This cannot be undone.`)) return;
+        try {
+            const res = await fetch(`${cfg.AUTH_SERVER_URL}/api/admin/users/${id}`, {
+                method: 'DELETE', headers: authHeaders()
+            });
+            const data = await res.json();
+            if (data.success) {
+                allUsers = allUsers.filter(u => u._id !== id);
+                renderTable(allUsers);
+                updateStats(allUsers);
+            }
+        } catch { alert('Error deleting user.'); }
+    }
+
+    function logout() {
+        localStorage.removeItem(cfg.TOKEN_KEY);
+        localStorage.removeItem(cfg.USER_KEY);
+        window.location.replace(window.location.origin + cfg.LOGIN_PAGE);
+    }
+
+    function escHtml(str) {
+        return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+    }
+
+    loadUsers();
+</script>
+</body>
+</html>

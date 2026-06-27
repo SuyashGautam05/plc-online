@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PLC Software</title>
+    <link rel="stylesheet" href="../defination.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+    <div class="container">
+        <header style="display: flex;">
+            <div class="logo-container">
+                <img src="../../assets/Scientech logo-2.png" alt="Scientech Logo">
+                <h1>Stepper Motors</h1>
+            </div>
+        </header>
+
+        <main>
+            <a href="../../index.html" class="back-button">
+                <i class="fas fa-arrow-left"></i> Back to Course
+            </a>
+
+            <div class="content-wrapper">
+                <div class="image-section">
+                    <img style="border-radius: 20px;border: 2px solid black;" src="../../assets/Stepper Motors.jpg"
+                        alt="Stepper Motors">
+                </div>
+
+                <div class="theory-section">
+                    <h2>Stepper Motors</h2>
+                    <p>
+                        A stepper motor is a brushless synchronous electric motor engineered to convert digital input
+                        (pulses) into mechanical rotation. Unlike conventional electric motors, stepper motors divide a
+                        full rotation (360°) into a series of equal steps. This results in a step angle of 1.8°, which
+                        means each electrical pulse moves the shaft by exactly that amount.
+                    </p>
+                    <h2>Working Principle of Stepper Motor</h2>
+                    <p>
+                        The working principle of stepper motor is based on electromagnetic attraction. When the stator
+                        coils are energised, they produce a magnetic field that aligns the rotor with the stator pole.
+                        By energising stator coils in a specific sequence, the rotor moves incrementally from one
+                        position to the next at a specific angle. Each electrical pulse advances the rotor by one step.
+                        <br><br>The below stepper motor diagram will help us to visualise how stepper motors work.
+                    </p>
+                    <img style="margin-left: 20px; border: 2px solid black;margin-bottom: 30px; align-self: center;height: auto; width: 528px;border-radius: 20px;"
+                        src="../../assets/Working Principle of Stepper Motor.png">
+                    <h2>different modes of the stepper motor:</h2>
+                    <ul>
+                        <li><b>Full-step mode: </b> It is the mode where one winding (or a pair of windings) is
+                            energised at a time.</li>
+                        <li><b>Half-step mode: </b> In this mode, the motor alternates between energising one winding
+                            and two windings at a time. It creates more steps in one full rotation and results in smooth
+                            and morev accurate movement than full-step mode.</li>
+                        <li>Microstepping or half-step mode, where multiple windings are partially energised to achieve
+                            smoother and more precise motion.</li>
+                    </ul>
+                    <img style="margin-left: 20px; border: 2px solid black;margin-bottom: 30px; align-self: center;height: auto; width: 528px;border-radius: 20px;"
+                        src="../../assets/different modes of the stepper motor.gif">
+                    <h2>Applications</h2>
+                    <ul>
+                        <li>Printers and scanners.</li>
+                        <li>3D printers.</li>
+                        <li>CNC machines.</li>
+                        <li>Robotics.</li>
+                        <li>Disk drives.</li>
+                    </ul>
+                    <img style="margin-left: 20px; border: 2px solid black;margin-bottom: 30px; align-self: center;height: auto; width: 528px;border-radius: 20px;"
+                        src="../../assets/Application of stepper motor.png">
+                    <h2>Permanent Magnet Stepper Motor</h2>
+                    <p>
+                        A Permanent Magnet (PM) Stepper Motor is a type of stepper motor that uses a permanent magnet
+                        rotor and produces motion in discrete steps. Unlike conventional motors that rotate
+                        continuously, a stepper motor moves in precise angular steps when electrical pulses are applied.
+                        This property makes PM stepper motors highly suitable for applications requiring accurate
+                        position control without feedback systems.
+                        <br><br>Permanent magnet stepper motors are widely used in automation, instrumentation, and
+                        control systems due to their simplicity, reliability, and precise control capability.
+                    </p>
+                    <h2>Construction of Permanent Magnet Stepper Motor</h2>
+                    <p>
+                        The main components of a permanent magnet stepper motor are:
+                    </p>
+                    <ul>
+                        <li><b>Stator: </b> The stator consists of multiple windings arranged in phases. When energized
+                            sequentially, these windings produce a rotating magnetic field.</li>
+                        <li><b>Rotor: </b> The rotor is made of a permanent magnet, usually cylindrical, with north and
+                            south poles. The rotor aligns itself with the stator’s magnetic field.</li>
+                        <li><b>Shaft and Bearings: </b> The shaft is connected to the rotor and transmits mechanical
+                            motion, while bearings support smooth rotation.</li>
+                    </ul>
+                    <p>The permanent magnet rotor eliminates the need for rotor windings or external excitation.</p>
+                    <img style="margin-left: 20px; border: 2px solid black;margin-bottom: 30px; align-self: center;height: auto; width: 528px;border-radius: 20px;"
+                        src="../../assets/Construction of Permanent Magnet Stepper Motor.jpg">
+                    <h2>Working Principle</h2>
+                    <p>
+                        The working principle of a permanent magnet stepper motor is based on magnetic attraction and
+                        repulsion. When a stator winding is energized, it creates a magnetic field. The permanent magnet
+                        rotor aligns itself with this field. As different stator windings are energized in sequence, the
+                        rotor moves step by step to align with the new magnetic field position.
+                        <br><br>Each input pulse causes the motor to rotate by a fixed angle called the step angle. The
+                        direction of rotation depends on the sequence of energizing the stator windings.
+                    </p>
+                    <h2>Step Angle</h2>
+                    <p>
+                        The step angle is the angle through which the motor shaft rotates for each input pulse. It is a
+                        fixed value determined by the motor construction.
+                        <b>Key points about step angle:</b>
+                    </p>
+                    <ul>
+                        <li>Smaller step angle gives higher position accuracy.</li>
+                        <li>PM stepper motors typically have step angles such as 7.5°, 15°, or 18°.</li>
+                        <li>Total steps per revolution = 360° / step angle.</li>
+                    </ul>
+                    <img style="margin-left: 20px; border: 2px solid black;margin-bottom: 30px; align-self: center;height: auto; width: 528px;border-radius: 20px;"
+                        src="../../assets/Step Angle of Permanent Magnet Stepper Motor.png">
+                    <h2>Types of Excitation</h2>
+                    <p>Permanent magnet stepper motors can be operated using:</p>
+                    <ul>
+                        <li><b>Single-phase excitation,</b> where one winding is energized at a time.</li>
+                        <li><b>Two-phase excitation,</b> where two windings are energized simultaneously for higher
+                            torque.</li>
+                    </ul>
+                    <p>
+                        The choice of excitation affects torque and smoothness of motion.
+                    </p>
+                    <h2>Applications of Permanent Magnet Stepper Motor</h2>
+                    <p>Permanent magnet stepper motors are commonly used in:</p>
+                    <ul>
+                        <li>Printers and scanners.</li>
+                        <li>Plotters and office equipment.</li>
+                        <li>CNC positioning systems.</li>
+                        <li>Robotics and automation equipment.</li>
+                        <li>Instrumentation and control devices.</li>
+                    </ul>
+                    <p>
+                        These applications require accurate step-by-step movement.
+                    </p>
+                    <h2>Hybrid Stepper Motor</h2>
+                    <p>
+                        A <strong>Hybrid Stepper Motor</strong> is a type of stepper motor that combines the features of
+                        <strong>Permanent Magnet
+                            (PM) stepper motors</strong> and <strong>Variable Reluctance (VR) stepper motors.</strong>
+                        This combination results in
+                        high positioning accuracy, better torque characteristics, and smooth operation. Hybrid stepper
+                        motors are the most widely used stepper motors in modern industrial automation and precision
+                        control applications.
+                    </p>
+                    <img style="margin-left: 20px; border: 2px solid black;margin-bottom: 30px; align-self: center;height: auto; width: 528px;border-radius: 20px;"
+                        src="../../assets/Hybrid Stepper Motor.png">
+                    <p>
+                        Hybrid stepper motors move in precise, discrete steps when electrical pulses are applied, making
+                        them ideal for open-loop position control systems.
+                    </p>
+                    <h2>Construction of Hybrid Stepper Motor</h2>
+                    <p>
+                        The construction of a hybrid stepper motor includes:
+                    </p>
+                    <ul>
+                        <li><b>Stator: </b> The stator consists of multiple toothed poles with windings arranged in
+                            phases. These windings are energized in a specific sequence to create a rotating magnetic
+                            field.</li>
+                        <li><b>Rotor: </b> The rotor is made of a permanent magnet placed between two toothed iron cups.
+                            One cup has north polarity and the other has south polarity. The rotor teeth are offset
+                            slightly from each other to increase step resolution.</li>
+                        <li><b>Shaft and Bearings: </b> The rotor is mounted on a shaft supported by bearings for smooth
+                            rotation.</li>
+                    </ul>
+                    <p>
+                        The combination of a permanent magnet rotor and toothed structure gives the motor high
+                        precision.
+                    </p>
+                    <h2>Working Principle</h2>
+                    <p>
+                        The working principle of a hybrid stepper motor is based on <strong>magnetic attraction and
+                            variable
+                            reluctance.</strong> When a stator phase is energized, magnetic flux is produced, and the
+                        rotor aligns
+                        itself to the position of minimum reluctance. As stator phases are energized sequentially, the
+                        rotor moves step by step. <br><br>
+                        Each input pulse rotates the shaft by a fixed angle known as the <strong>step angle.</strong>
+                        The direction of
+                        rotation depends on the order of phase excitation.
+                    </p>
+                    <img style="margin-left: 20px; border: 2px solid black;margin-bottom: 30px; align-self: center;height: auto; width: 528px;border-radius: 20px;"
+                        src="../../assets/Construction of Hybrid Stepper Motor.png">
+                    <h2>Step Angle and Resolution</h2>
+                    <p>
+                        <b>Hybrid stepper motors have very small step angles, typically:</b>
+                    </p>
+                    <ul>
+                        <li><strong>1.8° per step</strong> (200 steps per revolution).</li>
+                        <li><strong>0.9° per step</strong> (400 steps per revolution).</li>
+                    </ul>
+                    <p><b>Smaller step angles provide:</b></p>
+                    <ul>
+                        <li>Higher positional accuracy.</li>
+                        <li>Smoother motion.</li>
+                        <li>Better control at low speeds.</li>
+                    </ul>
+                    <p>Microstepping techniques can further reduce the effective step angle.</p>
+                    <h2>Modes of Operation</h2>
+                    <p>
+                        Hybrid stepper motors can operate in different stepping modes:
+                    </p>
+                    <ul>
+                        <li><strong>Full-step mode,</strong> providing maximum torque.</li>
+                        <li><strong>Half-step mode,</strong> improving resolution.</li>
+                        <li><strong>Microstepping mode,</strong> offering very smooth and precise motion.</li>
+                    </ul>
+                    <p>The mode of operation is selected based on application requirements.</p>
+                    <h2>Applications of Hybrid Stepper Motor</h2>
+                    <p><b>Hybrid stepper motors are widely used in:</b></p>
+                    <ul>
+                        <li>CNC machines and 3D printers.</li>
+                        <li>Robotics and automation systems.</li>
+                        <li>Medical equipment.</li>
+                        <li>Industrial positioning systems.</li>
+                        <li>Precision instrumentation.</li>
+                    </ul>
+                    <p>
+                        These applications demand high accuracy and reliable motion control.
+                    </p>
+                    <!-- <h2>Scope of Industrial Automation</h2>
+                    <p>The scope of industrial automation is broad and includes:</p>
+                    <ol>
+                        <li><b>Manufacturing Automation: </b> Automated assembly lines, CNC machines, and robotic
+                            systems used in mass production.</li>
+                        <li><b>Process Automation: </b> Control of continuous processes in industries like oil and gas,
+                            chemicals, pharmaceuticals, food, and beverages.</li>
+                        <li><b>Robotics and Mechatronics: </b> Use of industrial robots for tasks such as welding,
+                            packaging, material handling, and inspection.</li>
+                        <li><b>Control Systems: </b> PLCs, SCADA, and DCS systems for monitoring and controlling
+                            industrial operations.</li>
+                        <li><b>Quality Control and Inspection: </b> Automated testing, sensors, and vision systems to
+                            ensure product quality.</li>
+                        <li><b>Material Handling and Logistics: </b> Automated conveyors, storage systems, and smart
+                            warehouses.</li>
+                        <li><b>Safety and Monitoring: </b> Systems designed to reduce human risk and ensure safe
+                            operation of machinery.</li>
+                    </ol> -->
+
+
+                    <!-- <ul>
+                        <li><b>Flexibility: </b> Control logic can be changed by modifying the program instead of
+                            rewiring hardware.</li>
+                        <li><b>Compact Size: </b> Replaces large relay panels, saving space.</li>
+                        <li><b>High Reliability: </b> Solid-state components reduce mechanical wear and failure.</li>
+                        <li><b>Easy Troubleshooting: </b> Diagnostic tools and status indicators simplify fault
+                            detection.</li>
+                        <li><b>Reduced Maintenance: </b> Quick response time compared to electromechanical relays.</li>
+                        <li><b>Faster Operation: </b> bottling, filling, and labeling processes.</li>
+                        <li><b>Scalability : </b> Easy expansion of inputs and outputs.</li>
+                    </ul> -->
+                    <!-- <img style="margin-left: 20px; border: 2px solid black; align-self: center;height: auto; width: 528px;border-radius: 20px;" src="../assets/Pages/Applications_of_plc.png" alt=""> -->
+
+                    <!-- <h2>PLC (Programmable Logic Controller)</h2>
+                    <p>A programmable Logic Controller(PLC) is a specialized digital computer employed in industrial
+                        settings for automation and control. Acting as the central brain of machinery and processes,
+                        PLCs receive input from sensors, process the data through programmed logic, and generate output
+                        signals to control devices like motors and valves. They use a programming language, often ladder
+                        logic, resembling electrical relay diagrams. PLCs are ruggedized for harsh industrial
+                        environments and play a crucial role in automating tasks and reducing manufacturing and energy.
+                        Their modular design allows scalability, making them versatile components in modern industrial
+                        control systems.</p>
+
+                    <img style="border: 2px solid black; align-self: center;border-radius: 20px;" src="../assets/Pages/PLC.jpg" alt="">
+
+                    <h2>Where Can PLC Be Used?</h2>
+                    <p>
+                        PLCs play a pivotal role in industrial automation, efficiently managing machinery and processes.
+                        They receive data from sensors, execute programmed logic, and control actuators, enhancing
+                        precision and reducing manual intervention. PLCs find application across diverse industries,
+                        from manufacturing to utilities, ensuring streamlined operations, increased productivity, and
+                        adaptability to evolving production needs. Their robust capabilities make PLCs indispensable in
+                        modern industrial settings, facilities with seamless control and automation for improved
+                        efficiency and reliability.
+                    </p> -->
+                    <!-- <p>
+                        A <strong>Programmable Logic Controller (PLC)</strong> is a digital computing device used to
+                        automate electromechanical processes such as control of machinery on factory assembly lines,
+                        amusement rides, or light fixtures. It is a specialized computer designed to monitor and control
+                        manufacturing processes and other automated systems.
+                    </p>
+
+                    <h3 style="margin-top: 20px; margin-bottom: 15px; color: var(--text-color);">Key Characteristics:
+                    </h3>
+                    <ul>
+                        <li><strong>Programmable:</strong> Can be programmed to perform specific tasks according to user
+                            requirements</li>
+                        <li><strong>Rugged Design:</strong> Built to withstand harsh industrial environments with
+                            temperature, humidity, and vibration</li>
+                        <li><strong>Reliable:</strong> Provides consistent and repeatable performance in critical
+                            applications</li>
+                        <li><strong>User-Friendly:</strong> Utilizes standard programming languages like Ladder Diagram,
+                            which resembles traditional electrical schematics</li>
+                        <li><strong>Fast Response:</strong> Provides real-time monitoring and control of industrial
+                            processes</li>
+                        <li><strong>Cost-Effective:</strong> Reduces wiring and maintenance costs compared to
+                            conventional relay systems</li>
+                    </ul>
+
+                    <h3 style="margin-top: 25px; margin-bottom: 15px; color: var(--text-color);">Main Components:</h3>
+                    <ul>
+                        <li><strong>Power Supply:</strong> Provides electrical power to the PLC</li>
+                        <li><strong>Processor (CPU):</strong> The brain of the PLC that executes the program</li>
+                        <li><strong>Memory:</strong> Stores the program and operational data</li>
+                        <li><strong>Input Modules:</strong> Receive signals from sensors and switches</li>
+                        <li><strong>Output Modules:</strong> Send control signals to actuators and motors</li>
+                        <li><strong>Communication Module:</strong> Enables communication with other devices and systems
+                        </li>
+                    </ul>
+
+                    <h3 style="margin-top: 25px; margin-bottom: 15px; color: var(--text-color);">Basic Operating Cycle:
+                    </h3>
+                    <ul>
+                        <li><strong>Input Scan:</strong> The PLC reads the status of all input devices</li>
+                        <li><strong>Program Execution:</strong> The processor executes the control program based on
+                            current inputs and stored data</li>
+                        <li><strong>Output Update:</strong> The PLC sends the results to output devices (solenoids,
+                            motors, lights, etc.)</li>
+                        <li><strong>Housekeeping:</strong> The PLC performs diagnostics and prepares for the next cycle
+                        </li>
+                    </ul>
+
+                    <p style="margin-top: 25px;">
+                        The entire cycle typically occurs in milliseconds, making PLCs suitable for real-time industrial
+                        automation and control applications. Modern PLCs are integral to industrial IoT and Industry 4.0
+                        initiatives, enabling seamless integration with cloud-based monitoring and data analytics
+                        systems.
+                    </p> -->
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- MCQ Modal -->
+    <div id="mcq-modal" class="mcq-modal">
+        <div class="mcq-modal-content">
+            <div class="mcq-modal-header">
+                <h2>Multiple Choice Questions</h2>
+                <button class="close-btn" onclick="closeMCQModal()">&times;</button>
+            </div>
+            <div class="mcq-modal-body">
+                <div id="mcq-container"></div>
+            </div>
+            <div class="mcq-modal-footer">
+                <button class="reset-btn" onclick="resetMCQs()">Reset Answers</button>
+                <button class="close-modal-btn" onclick="closeMCQModal()">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Add smooth scroll behavior for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+    </script>
+
+    <!-- MCQ Handler Script -->
+    <script src="../mcq-handler.js"></script>
+</body>
+
+</html>

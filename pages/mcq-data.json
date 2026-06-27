@@ -1,0 +1,262 @@
+{
+    "Introduction to Industrial Automation/Definition_and_Scope_of_Industrial_Automation.html": {
+    "title": "Definition and Scope of Industrial Automation",
+    "questions": [
+      {
+        "id": 1,
+        "question": "What is industrial automation primarily concerned with?",
+        "options": [
+          "Manual control of machines",
+          "Use of human labor only",
+          "Use of control systems to operate machinery",
+          "Mechanical design only"
+        ],
+        "correct": 3,
+        "explanation": "Augmented Reality is a technology that overlays digital information onto the real-world environment in real time, allowing users to see both the real system and additional contextual information simultaneously."
+      },
+      {
+        "id": 2,
+        "question": "Which of the following is NOT a device used to view AR content?",
+        "options": [
+          "Smart glasses",
+          "Tablets",
+          "Mobile phones",
+          "Closed-circuit television (CCTV)"
+        ],
+        "correct": 3,
+        "explanation": "CCTV is a surveillance system that doesn't support AR overlays. AR content is viewed through smart glasses, tablets, and mobile phones."
+      },
+      {
+        "id": 3,
+        "question": "What is the primary application of AR in industrial maintenance?",
+        "options": [
+          "Entertainment and games",
+          "Displaying step-by-step instructions directly on machines",
+          "Replacing workers completely",
+          "Storing large amounts of data"
+        ],
+        "correct": 1,
+        "explanation": "In maintenance, AR displays step-by-step instructions directly on machines, reducing dependency on manuals and minimizing human error."
+      },
+      {
+        "id": 4,
+        "question": "How does Virtual Reality (VR) differ from Augmented Reality (AR)?",
+        "options": [
+          "VR overlays information, AR replaces it",
+          "VR fully replaces the real environment, AR overlays digital information on the real world",
+          "VR is cheaper than AR",
+          "There is no difference"
+        ],
+        "correct": 1,
+        "explanation": "VR creates a completely immersive digital environment that fully replaces the real world, while AR overlays digital information onto the real environment."
+      },
+      {
+        "id": 5,
+        "question": "Which of the following is a primary use of VR in industrial settings?",
+        "options": [
+          "Only for entertainment",
+          "Operator training for complex or hazardous equipment",
+          "Replacing all workers",
+          "Storing production data"
+        ],
+        "correct": 1,
+        "explanation": "VR is used for operator training, virtual commissioning and testing, factory layout planning, and safety training simulations without risking equipment damage or human injury."
+      }
+    ]
+  },
+  "Actuators/Introduction_and_Function_of_Actuators.html": {
+    "title": "Introduction and Function of Actuators",
+    "questions": [
+      {
+        "id": 1,
+        "question": "What is the primary function of an actuator?",
+        "options": [
+          "To measure physical quantities",
+          "To convert electrical signals into mechanical motion or action",
+          "To store energy",
+          "To process data"
+        ],
+        "correct": 1,
+        "explanation": "An actuator converts electrical signals into mechanical motion or action, allowing systems to perform physical tasks."
+      },
+      {
+        "id": 2,
+        "question": "Which of the following is NOT a type of actuator power source?",
+        "options": [
+          "Electric",
+          "Pneumatic",
+          "Hydraulic",
+          "Thermal"
+        ],
+        "correct": 3,
+        "explanation": "The main actuator types are electric, pneumatic, and hydraulic. Thermal is not a standard actuator power source."
+      },
+      {
+        "id": 3,
+        "question": "What does a linear actuator do?",
+        "options": [
+          "Produces rotational motion",
+          "Produces straight-line or reciprocating motion",
+          "Stores energy",
+          "Measures temperature"
+        ],
+        "correct": 1,
+        "explanation": "A linear actuator produces straight-line or reciprocating motion, moving in one direction along an axis."
+      },
+      {
+        "id": 4,
+        "question": "In which industrial application are pneumatic actuators most commonly used?",
+        "options": [
+          "Heavy lifting equipment",
+          "Fast-switching applications with moderate force",
+          "Underwater operations",
+          "High-temperature environments"
+        ],
+        "correct": 1,
+        "explanation": "Pneumatic actuators are ideal for fast-switching applications requiring moderate force, such as automation and robotic assembly."
+      },
+      {
+        "id": 5,
+        "question": "What is the main advantage of electric actuators?",
+        "options": [
+          "Low cost",
+          "Precise control and smooth operation",
+          "High speed only",
+          "No maintenance required"
+        ],
+        "correct": 1,
+        "explanation": "Electric actuators offer precise control, smooth operation, and easy integration with control systems."
+      }
+    ]
+  },
+  "Actuators/Classification_of_Actuators.html": {
+    "title": "Classification of Actuators",
+    "questions": [
+      {
+        "id": 1,
+        "question": "Actuators can be classified based on which of the following?",
+        "options": [
+          "Only their power source",
+          "Only their application",
+          "Their power source, type of motion, and application",
+          "Only their physical size"
+        ],
+        "correct": 2,
+        "explanation": "Actuators are classified based on their power source (electric, pneumatic, hydraulic), type of motion (linear, rotary), and application."
+      },
+      {
+        "id": 2,
+        "question": "Which type of actuator is best for precise positioning?",
+        "options": [
+          "Pneumatic actuators",
+          "Hydraulic actuators",
+          "Electric actuators",
+          "All are equally precise"
+        ],
+        "correct": 2,
+        "explanation": "Electric actuators provide precise positioning control and are commonly used in applications requiring accuracy."
+      },
+      {
+        "id": 3,
+        "question": "What is an advantage of hydraulic actuators?",
+        "options": [
+          "Low cost",
+          "High power-to-weight ratio and smooth operation",
+          "Easy maintenance",
+          "Simple installation"
+        ],
+        "correct": 1,
+        "explanation": "Hydraulic actuators are known for their high power-to-weight ratio and smooth, stable operation."
+      },
+      {
+        "id": 4,
+        "question": "Which actuator type is most suitable for clean environments?",
+        "options": [
+          "Hydraulic actuators",
+          "Pneumatic actuators",
+          "Electric actuators",
+          "All types"
+        ],
+        "correct": 2,
+        "explanation": "Electric actuators are clean and are preferred for applications in clean environments as they don't leak fluids."
+      },
+      {
+        "id": 5,
+        "question": "What type of motion does a rotary actuator produce?",
+        "options": [
+          "Straight-line movement",
+          "Up and down movement",
+          "Circular or rotational movement",
+          "Oscillating movement"
+        ],
+        "correct": 2,
+        "explanation": "A rotary actuator produces circular or rotational movement, useful for applications like opening/closing valves or rotating shafts."
+      }
+    ]
+  },
+  "Advanced Automation Technologies/AR_and_VR.html": {
+    "title": "Augmented Reality (AR) and Virtual Reality (VR)",
+    "questions": [
+      {
+        "id": 1,
+        "question": "What is Augmented Reality (AR)?",
+        "options": [
+          "A technology that fully replaces the real environment with a virtual one",
+          "A technology that overlays digital information onto the real-world environment in real time",
+          "A technology that only displays text and images",
+          "A technology used only for entertainment purposes"
+        ],
+        "correct": 1,
+        "explanation": "Augmented Reality is a technology that overlays digital information onto the real-world environment in real time, allowing users to see both the real system and additional contextual information simultaneously."
+      },
+      {
+        "id": 2,
+        "question": "Which of the following is NOT a device used to view AR content?",
+        "options": [
+          "Smart glasses",
+          "Tablets",
+          "Mobile phones",
+          "Closed-circuit television (CCTV)"
+        ],
+        "correct": 3,
+        "explanation": "CCTV is a surveillance system that doesn't support AR overlays. AR content is viewed through smart glasses, tablets, and mobile phones."
+      },
+      {
+        "id": 3,
+        "question": "What is the primary application of AR in industrial maintenance?",
+        "options": [
+          "Entertainment and games",
+          "Displaying step-by-step instructions directly on machines",
+          "Replacing workers completely",
+          "Storing large amounts of data"
+        ],
+        "correct": 1,
+        "explanation": "In maintenance, AR displays step-by-step instructions directly on machines, reducing dependency on manuals and minimizing human error."
+      },
+      {
+        "id": 4,
+        "question": "How does Virtual Reality (VR) differ from Augmented Reality (AR)?",
+        "options": [
+          "VR overlays information, AR replaces it",
+          "VR fully replaces the real environment, AR overlays digital information on the real world",
+          "VR is cheaper than AR",
+          "There is no difference"
+        ],
+        "correct": 1,
+        "explanation": "VR creates a completely immersive digital environment that fully replaces the real world, while AR overlays digital information onto the real environment."
+      },
+      {
+        "id": 5,
+        "question": "Which of the following is a primary use of VR in industrial settings?",
+        "options": [
+          "Only for entertainment",
+          "Operator training for complex or hazardous equipment",
+          "Replacing all workers",
+          "Storing production data"
+        ],
+        "correct": 1,
+        "explanation": "VR is used for operator training, virtual commissioning and testing, factory layout planning, and safety training simulations without risking equipment damage or human injury."
+      }
+    ]
+  }
+}

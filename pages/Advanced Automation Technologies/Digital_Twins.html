@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PLC Software</title>
+    <link rel="stylesheet" href="../defination.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+    <div class="container">
+        <header style="display: flex;">
+            <div class="logo-container">
+                <img src="../../assets/Scientech logo-2.png" alt="Scientech Logo">
+                <h1>Digital Twins</h1>
+            </div>
+        </header>
+
+        <main>
+            <a href="../../index.html" class="back-button">
+                <i class="fas fa-arrow-left"></i> Back to Course
+            </a>
+
+            <div class="content-wrapper">
+                <div class="image-section">
+                    <img style="border-radius: 20px;border: 2px solid black;" src="../../assets/Digital Twins.jpg"
+                        alt="Digital Twins">
+                </div>
+
+                <div class="theory-section">
+                    <h2>Digital Twins</h2>
+                    <p>A Digital Twin is a virtual representation of a physical system, machine, process, or entire
+                        production facility that continuously receives real-time data from its physical counterpart. In
+                        advanced automation and Industry 5.0 environments, digital twins enable industries to simulate,
+                        analyze, monitor, and optimize operations without directly interfering with the physical system.
+                        This technology bridges the gap between the physical and digital worlds, enabling smarter
+                        decision-making and predictive capabilities.
+                    </p>
+                    <h2>Concept of Digital Twins</h2>
+                    <p>
+                        The concept of a digital twin involves creating a detailed digital model that mirrors the
+                        behavior, performance, and condition of a real-world asset. This digital model is continuously
+                        updated using data collected from sensors, control systems, and IoT devices installed on the
+                        physical system. As a result, any change in the physical system is reflected in its digital
+                        twin.<br><br>Digital twins are not static models; they are dynamic and evolve over time. They
+                        allow engineers and operators to understand system behavior under various operating conditions
+                        and anticipate future outcomes.
+                    </p>
+                    <h2>Components of a Digital Twin</h2>
+                    <p>
+                        A digital twin system typically consists of:
+                    </p>
+                    <ul>
+                        <li>A physical asset such as a machine, motor, production line, or factory.</li>
+                        <li>Smart sensors and data acquisition systems for real-time data collection.</li>
+                        <li>Communication networks for data transfer.</li>
+                        <li>Simulation and analytics software to process and visualize data.</li>
+                    </ul>
+                    <p>
+                        These components work together to provide a complete and accurate digital representation of the
+                        physical system.
+                    </p>
+                    <h2>Applications of Digital Twins</h2>
+                    <p>Digital twins are widely used in:</p>
+                    <ul>
+                        <li>Predictive maintenance by identifying potential failures before they occur.</li>
+                        <li>Process optimization through virtual testing and parameter tuning.</li>
+                        <li>Product design and development by simulating performance before manufacturing.</li>
+                        <li>Training and skill development using realistic virtual environments.</li>
+                    </ul>
+                    <p>
+                        By reducing trial-and-error on physical systems, digital twins save time, cost, and resources.
+                    </p>
+                    <h2>Benefits of Digital Twins</h2>
+                    <p>Key benefits include:</p>
+                    <ul>
+                        <li>Improved operational efficiency and reduced downtime.</li>
+                        <li>Enhanced decision-making based on real-time insights.</li>
+                        <li>Reduced maintenance and operational costs.</li>
+                        <li>Better collaboration between engineers, operators, and management.</li>
+                    </ul>
+                    <p>
+                        Digital twins support human-centric automation by providing valuable insights that assist human
+                        judgment rather than replacing it.
+                    </p>
+                    <!-- <h2>Industrial automation tools</h2>
+                    <p>A wide range of tools are required for industrial automation. They include various control
+                        systems that incorporate different devices and systems impacting aspects of the manufacturing
+                        process. The key tools are explained here.</p>
+
+
+                    <ul>
+                        <li><b>Programmable Logic Controller (PLC): </b> A PLC is a ruggedized, industrial programmable
+                            logic controller, that is preprogrammed to carry out automatic operations in industrial
+                            processes. The PLC continuously monitors and receives information from input devices or
+                            sensors, processes the information, and triggers the connected output devices, to complete
+                            the task in the industrial process or machinery.</li>
+                        <img style="margin-left: 30px; border: 2px solid black; align-self: center;height: auto; width: 528px;border-radius: 20px;"
+                            src="../../assets/Pages/PLC_1.png" alt="">
+                        <li><b>Supervisory Control and Data Acquisition (SCADA): </b> SCADA systems control and monitor
+                            industrial processes. The system acquires and processes real-time data through direct
+                            interaction with devices, such as sensors and PLCs, and records events into a log file.
+                            SCADA is important for data analysis, and enables effective decision-making for optimization
+                            in industrial processes.</li>
+                        <img style="margin-left: 30px; border: 2px solid black; align-self: center;height: auto; width: 528px;border-radius: 20px;"
+                            src="../../assets/Pages/SCADA.png" alt="">
+                        <li><b>Human Machine Interface (HMI): </b> An HMI is a software application that enables
+                            interaction and communication between a human operator and the machine, or production
+                            system. It translates complex data into accessible information, enabling better control of
+                            the production process and its various applications.</li>
+                        <img style="margin-left: 30px; border: 2px solid black; align-self: center;height: auto; width: 528px;border-radius: 20px;"
+                            src="../../assets/Pages/HMI.png" alt="">
+                        <li><b>Artificial Neural Network (ANN): </b> An ANN is a computing system that is built like the
+                            human brain, a network of interconnected neuron nodes. ANNs simulate the way a human brain
+                            analyzes and processes information.</li>
+                        <img style="margin-left: 30px; border: 2px solid black; align-self: center;height: auto; width: 528px;border-radius: 20px;"
+                            src="../../assets/Pages/ANN.png" alt="">
+                        <li><b>Distributed Control System (DCS): </b> A DCS is a central monitoring network that
+                            interconnects devices to control different elements within an automated system.</li>
+                        <img style="margin-left: 30px; border: 2px solid black; align-self: center;height: auto; width: 528px;border-radius: 20px;"
+                            src="../../assets/Pages/DCNN.png" alt="">
+                        <li><b>Robotics: </b> Robots can efficiently perform tasks in complicated or dangerous
+                            situations, improve production flow and quality, and increase safety for employees.
+                            Additionally, robots can make daily life much more comfortable or convenient.</li>
+                        <img style="margin-left: 30px; border: 2px solid black; align-self: center;height: auto; width: 528px;border-radius: 20px;"
+                            src="../../assets/Pages/Robotics.png" alt="">
+                    </ul>
+                    <h2>Advantage of Industrial Automation</h2>
+                    <img style="margin-left: 30px; border: 2px solid black; align-self: center;height: auto; width: 528px;border-radius: 20px;"
+                        src="../../assets/Pages/advantages.png" alt="">
+                    <ul>
+                        <li><b>Evolution (Industrial Revolutions): </b>
+                            <ul>
+                                <li><b>Industry 1.0: </b> Mechanization of production using water and steam power;
+                                    introduction of mechanical machinery. (18th Century).</li>
+                                <li><b>Industry 2.0: </b> Mass production enabled by electrical power and assembly line
+                                    manufacturing. (Late 19th / Early 20th Century).</li>
+                                <li><b>Industry 3.0: </b> Introduction of electronics, computers, automation systems,
+                                    and early industrial robotics. (Mid-20th Century).</li>
+                                <li><b>Industry 4.0: </b> Integration of Cyber-Physical Systems (CPS), Industrial
+                                    Internet of Things (IIoT), Artificial Intelligence (AI), and smart, connected
+                                    factories (Current era).</li>
+                                <li><b>Industry 5.0: </b> Focus on human-centric manufacturing, collaborative robots
+                                    (cobots), sustainability, and human-machine collaboration for resilient and
+                                    personalized production (Emerging / Future-oriented).</li>
+                            </ul>
+                            <img style="margin-left: 30px; border: 2px solid black; align-self: center;height: auto; width: 528px;border-radius: 20px;"
+                                src="../../assets/Pages/evolution.png" alt="">
+                        </li>
+                    </ul>
+
+                    <h2>Applications</h2>
+                    <ul>
+                        <li>Manufacturing (Automotive, Aerospace, Pharma).</li>
+                        <img style="margin-left: 30px; border: 2px solid black; align-self: center;height: auto; width: 528px;border-radius: 20px;"
+                            src="../../assets/Pages/Manufacturing.jpg" alt="">
+                        <li>Material Handling.</li>
+                        <img style="margin-left: 30px; border: 2px solid black; align-self: center;height: auto; width: 528px;border-radius: 20px;"
+                            src="../../assets/Pages/Material_Handling.jpg" alt="">
+                        <li>Process Control (Chemical, Energy).</li>
+                        <img style="margin-left: 30px; border: 2px solid black; align-self: center;height: auto; width: 528px;border-radius: 20px;"
+                            src="../../assets/Pages/Process-Control.jpg" alt="">
+                    </ul> -->
+                    <!-- <ul>
+                        <li><b>Flexibility: </b> Control logic can be changed by modifying the program instead of
+                            rewiring hardware.</li>
+                        <li><b>Compact Size: </b> Replaces large relay panels, saving space.</li>
+                        <li><b>High Reliability: </b> Solid-state components reduce mechanical wear and failure.</li>
+                        <li><b>Easy Troubleshooting: </b> Diagnostic tools and status indicators simplify fault
+                            detection.</li>
+                        <li><b>Reduced Maintenance: </b> Quick response time compared to electromechanical relays.</li>
+                        <li><b>Faster Operation: </b> bottling, filling, and labeling processes.</li>
+                        <li><b>Scalability : </b> Easy expansion of inputs and outputs.</li>
+                    </ul> -->
+                    <!-- <img style="margin-left: 20px; border: 2px solid black; align-self: center;height: auto; width: 528px;border-radius: 20px;" src="../assets/Pages/Applications_of_plc.png" alt=""> -->
+
+                    <!-- <h2>PLC (Programmable Logic Controller)</h2>
+                    <p>A programmable Logic Controller(PLC) is a specialized digital computer employed in industrial
+                        settings for automation and control. Acting as the central brain of machinery and processes,
+                        PLCs receive input from sensors, process the data through programmed logic, and generate output
+                        signals to control devices like motors and valves. They use a programming language, often ladder
+                        logic, resembling electrical relay diagrams. PLCs are ruggedized for harsh industrial
+                        environments and play a crucial role in automating tasks and reducing manufacturing and energy.
+                        Their modular design allows scalability, making them versatile components in modern industrial
+                        control systems.</p>
+
+                    <img style="border: 2px solid black; align-self: center;border-radius: 20px;" src="../assets/Pages/PLC.jpg" alt="">
+
+                    <h2>Where Can PLC Be Used?</h2>
+                    <p>
+                        PLCs play a pivotal role in industrial automation, efficiently managing machinery and processes.
+                        They receive data from sensors, execute programmed logic, and control actuators, enhancing
+                        precision and reducing manual intervention. PLCs find application across diverse industries,
+                        from manufacturing to utilities, ensuring streamlined operations, increased productivity, and
+                        adaptability to evolving production needs. Their robust capabilities make PLCs indispensable in
+                        modern industrial settings, facilities with seamless control and automation for improved
+                        efficiency and reliability.
+                    </p> -->
+                    <!-- <p>
+                        A <strong>Programmable Logic Controller (PLC)</strong> is a digital computing device used to
+                        automate electromechanical processes such as control of machinery on factory assembly lines,
+                        amusement rides, or light fixtures. It is a specialized computer designed to monitor and control
+                        manufacturing processes and other automated systems.
+                    </p>
+
+                    <h3 style="margin-top: 20px; margin-bottom: 15px; color: var(--text-color);">Key Characteristics:
+                    </h3>
+                    <ul>
+                        <li><strong>Programmable:</strong> Can be programmed to perform specific tasks according to user
+                            requirements</li>
+                        <li><strong>Rugged Design:</strong> Built to withstand harsh industrial environments with
+                            temperature, humidity, and vibration</li>
+                        <li><strong>Reliable:</strong> Provides consistent and repeatable performance in critical
+                            applications</li>
+                        <li><strong>User-Friendly:</strong> Utilizes standard programming languages like Ladder Diagram,
+                            which resembles traditional electrical schematics</li>
+                        <li><strong>Fast Response:</strong> Provides real-time monitoring and control of industrial
+                            processes</li>
+                        <li><strong>Cost-Effective:</strong> Reduces wiring and maintenance costs compared to
+                            conventional relay systems</li>
+                    </ul>
+
+                    <h3 style="margin-top: 25px; margin-bottom: 15px; color: var(--text-color);">Main Components:</h3>
+                    <ul>
+                        <li><strong>Power Supply:</strong> Provides electrical power to the PLC</li>
+                        <li><strong>Processor (CPU):</strong> The brain of the PLC that executes the program</li>
+                        <li><strong>Memory:</strong> Stores the program and operational data</li>
+                        <li><strong>Input Modules:</strong> Receive signals from sensors and switches</li>
+                        <li><strong>Output Modules:</strong> Send control signals to actuators and motors</li>
+                        <li><strong>Communication Module:</strong> Enables communication with other devices and systems
+                        </li>
+                    </ul>
+
+                    <h3 style="margin-top: 25px; margin-bottom: 15px; color: var(--text-color);">Basic Operating Cycle:
+                    </h3>
+                    <ul>
+                        <li><strong>Input Scan:</strong> The PLC reads the status of all input devices</li>
+                        <li><strong>Program Execution:</strong> The processor executes the control program based on
+                            current inputs and stored data</li>
+                        <li><strong>Output Update:</strong> The PLC sends the results to output devices (solenoids,
+                            motors, lights, etc.)</li>
+                        <li><strong>Housekeeping:</strong> The PLC performs diagnostics and prepares for the next cycle
+                        </li>
+                    </ul>
+
+                    <p style="margin-top: 25px;">
+                        The entire cycle typically occurs in milliseconds, making PLCs suitable for real-time industrial
+                        automation and control applications. Modern PLCs are integral to industrial IoT and Industry 4.0
+                        initiatives, enabling seamless integration with cloud-based monitoring and data analytics
+                        systems.
+                    </p> -->
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Add smooth scroll behavior for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+    </script>
+
+                    <!-- MCQ Modal -->
+    <div id="mcq-modal" class="mcq-modal">
+        <div class="mcq-modal-content">
+            <div class="mcq-modal-header">
+                <h2>Multiple Choice Questions</h2>
+                <button class="close-btn" onclick="closeMCQModal()">&times;</button>
+            </div>
+            <div class="mcq-modal-body">
+                <div id="mcq-container"></div>
+            </div>
+            <div class="mcq-modal-footer">
+                <button class="reset-btn" onclick="resetMCQs()">Reset Answers</button>
+                <button class="close-modal-btn" onclick="closeMCQModal()">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MCQ Handler Script -->
+    <script src="../mcq-handler.js"></script>
+</body>
+
+</html>

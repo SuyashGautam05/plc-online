@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PLC Software</title>
+    <link rel="stylesheet" href="../defination.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+    <div class="container">
+        <header style="display: flex;">
+            <div class="logo-container">
+                <img src="../../assets/Scientech logo-2.png" alt="Scientech Logo">
+                <h1>Sinking (PNP) and Sourcing (NPN) Concept</h1>
+            </div>
+        </header>
+
+        <main>
+            <a href="../../index.html" class="back-button">
+                <i class="fas fa-arrow-left"></i> Back to Course
+            </a>
+
+            <div class="content-wrapper">
+                <div class="image-section">
+                    <img style="border-radius: 20px;" src="../../assets/Sinking (PNP) and Sourcing (NPN) Concept.png"
+                        alt="Sinking (PNP) and Sourcing (NPN) Concept">
+                </div>
+                <div class="theory-section">
+
+                    <h2>Sinking and Sourcing Concept</h2>
+                    <p>
+                        In PLC systems, sinking and sourcing describe how current flows between field devices and PLC
+                        input/output modules. Understanding this concept is essential for proper wiring and safe
+                        operation.
+                    </p>
+
+                    <h2>Basic Current Flow Concept</h2>
+                    <ul>
+                        <li>Conventional current flows from positive (+) to negative (-).</li>
+                        <li>The terms sinking and sourcing describe which device provides (+) or receives (-) current.
+                        </li>
+                    </ul>
+
+                    <h2>What is Sinking in PLC?</h2>
+                    <p>
+                        Sinking refers to a method of wiring in DC control systems where a device (such as a sensor,
+                        switch, or output module) connects the load or signal line to the negative terminal (0V or
+                        ground) of the power supply. In this setup, the current flows from the positive side of the
+                        power source, through the load or PLC input, and finally to ground through the sinking device.
+                    </p>
+
+                    <img style="margin-left: 80px;margin-bottom: 30px; border: 2px solid black; align-self: center;height: auto; width: 528px;border-radius: 20px;"
+                        src="../../assets/Pages/sinking_input_1.png" alt="sinking_input_1">
+
+                    <h3>Why Is It Called “Sinking”?</h3>
+                    <p>
+                        The term “sinking” comes from the idea that the device “sinks” or receives current into its
+                        terminal and routes it to 0V. This means the current enters the device (PLC input or output) and
+                        exits toward ground. The opposite concept is “sourcing,” where the device provides or “sources”
+                        current from the positive voltage.
+                    </p>
+
+                    <h3>Key Features of Sinking Circuits:</h3>
+                    <ul>
+                        <li><b>Current Direction: </b> Current flows into the PLC input or output terminal.</li>
+                        <li><b>Power Reference: </b> The device is connected to 0V (ground) of the DC power supply.</li>
+                        <li><b>Sensor Compatibility: </b> Requires PNP (sourcing) sensors or switches, which send positive
+                            voltage when active.</li>
+                        <li><b>Common Usage: </b> Frequently used in European and industrial automation standards.</li>
+                        <li><b>Logic Behavior: </b> The input is considered ON when voltage is present due to current flow into
+                            the terminal.</li>
+                    </ul>
+
+                    <h3>How a Sinking Input Works (Example):</h3>
+                    <ul>
+                        <li>The common terminal of the PLC input is wired to the +24V power supply.</li>
+                        <li>The PNP sensor has its output connected to the PLC input channel (e.g., I0.0).</li>
+                        <li>When the sensor detects an object, it sends +24V to the PLC input.</li>
+                        <li>Current flows from +24V (common), through the PLC input circuit, into the sensor, and
+                            finally down to 0V ground.</li>
+                        <li>This current flow activates the PLC input and registers it as an ON signal.</li>
+                    </ul>
+
+                    <img style="margin-left: 80px;margin-bottom: 30px; border: 2px solid black; align-self: center;height: auto; width: 528px;border-radius: 20px;"
+                        src="../../assets/Pages/sinking_input_2.png" alt="sinking_input_2">
+
+                    <h3>Sinking Output:</h3>
+                    <ul>
+                        <li>A sinking output module switches the negative (-) side of the load.</li>
+                        <li>The load is connected to +24V DC.</li>
+                        <li>When ON, current flows from the load into the PLC output.</li>
+                        <li>Also called: <ul>
+                                <li>NPN output.</li>
+                            </ul>
+                        </li>
+                    </ul>
+
+                    <img style="margin-left: 80px;margin-bottom: 30px; border: 2px solid black; align-self: center;height: auto; width: 528px;border-radius: 20px;"
+                        src="../../assets/Pages/sinking_output_1.png" alt="sinking_output_1">
+
+                    <h2>What is Sourcing in PLC?</h2>
+                    <p>
+                        Sourcing refers to a wiring method in DC PLC circuits where a device (such as a sensor, switch,
+                        or output module) provides current from the positive terminal (+24V) of the power supply to a
+                        connected load or PLC terminal. In this configuration, current flows out from the sourcing
+                        device and continues through the PLC input or output channel, finally reaching the ground (0V).
+                    </p>
+
+                    <img style="margin-left: 80px;margin-bottom: 30px; border: 2px solid black; align-self: center;height: auto; width: 528px;border-radius: 20px;"
+                        src="../../assets/Pages/sourcing_input_1.png" alt="sourcing_input_1">
+
+                    <h3>Why Is It Called “Sourcing”?</h3>
+                    <p>
+                        The term “sourcing” is used because the device “sources” or supplies the current into the
+                        circuit. That means it acts as the provider of positive voltage. The device sends +24V into the
+                        circuit when active, and this current continues toward a sinking component, such as a PLC input
+                        or another grounded load.
+                    </p>
+
+                    <h3>Key Features of Sourcing Circuits:</h3>
+                    <ul>
+                        <li><b>Current Direction: </b> Current flows from the device (sensor or PLC output) into the load or PLC
+                            input terminal.</li>
+                        <li><b>Power Reference: </b> The sourcing device is connected to the +24V side of the power supply.</li>
+                        <li><b>Sensor Compatibility: </b> Requires NPN (sinking) sensors or switches, which pull the signal down
+                            to 0V when active.</li>
+                        <li><b>Common Usage: </b> Frequently used in North American industrial automation systems.</li>
+                        <li><b>Logic Behavior: </b> The input is considered ON when current is sourced into the terminal from
+                            the field device.</li>
+                    </ul>
+
+                    <h3>How a Sourcing Input Works (Example):</h3>
+                    <ul>
+                        <li>The PLC input common terminal is connected to 0V (ground).</li>
+                        <li>The NPN sensor's output wire is connected to a specific PLC input channel (e.g., I0.0).</li>
+                        <li>When the sensor detects an object, it connects the signal wire to 0V (sinks current).</li>
+                        <li>Current flows from the +24V power supply, through the PLC input circuitry, into the sensor
+                            output, and finally down to 0V.</li>
+                        <li>This current flow is detected by the PLC, which registers the input as active (ON).</li>
+                    </ul>
+
+                    <img style="margin-left: 80px;margin-bottom: 30px; border: 2px solid black; align-self: center;height: auto; width: 528px;border-radius: 20px;"
+                        src="../../assets/Pages/sourcing_input_2.png" alt="sourcing_input_2">
+                    <img style="margin-left: 80px;margin-bottom: 30px; border: 2px solid black; align-self: center;height: auto; width: 528px;border-radius: 20px;"
+                        src="../../assets/Pages/sourcing_output_1.png" alt="sourcing_output_1">
+
+                    <h2>PNP and NPN Sensor Wiring</h2>
+
+                    <img style="margin-left: 80px;margin-bottom: 30px; border: 2px solid black; align-self: center;height: auto; width: 528px;border-radius: 20px;"
+                        src="../../assets/PNP and NPN Sensor Wiring.png" alt="PNP and NPN Sensor Wiring">
+
+
+                    <h2>Sinking vs. Sourcing Comparison Table</h2>
+                    <table class="comparison-table">
+                        <thead>
+                            <tr>
+                                <th>Feature</th>
+                                <th>Sinking</th>
+                                <th>Sourcing</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Current Direction</td>
+                                <td>Into the PLC input or output terminal</td>
+                                <td>Out of the PLC input or output terminal</td>
+                            </tr>
+                            <tr>
+                                <td>Wiring Connection</td>
+                                <td>Device connects to 0V (DC-)</td>
+                                <td>Device connects to +24V (DC+)</td>
+                            </tr>
+                            <tr>
+                                <td>PLC Common Terminal</td>
+                                <td>Connected to +24V</td>
+                                <td>Connected to 0V</td>
+                            </tr>
+                            <tr>
+                                <td>Sensor Type Used</td>
+                                <td>PNP (Sourcing sensor)</td>
+                                <td>NPN (Sinking sensor)</td>
+                            </tr>
+                            <tr>
+                                <td>Signal When Active</td>
+                                <td>0V (low signal)</td>
+                                <td>+24V (high signal)</td>
+                            </tr>
+                            <tr>
+                                <td>Regions Where Common</td>
+                                <td>Europe, Asia</td>
+                                <td>North America</td>
+                            </tr>
+                            <tr>
+                                <td>Common Application</td>
+                                <td>Field device pulls input down to 0V</td>
+                                <td>Field device drives input with +24V</td>
+                            </tr>
+                            <tr>
+                                <td>Typical Use Case</td>
+                                <td>Inputs that expect a 0V signal from device</td>
+                                <td>Inputs that expect a +24V signal from device</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Add smooth scroll behavior for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+    </script>
+
+    <!-- MCQ Modal -->
+    <div id="mcq-modal" class="mcq-modal">
+        <div class="mcq-modal-content">
+            <div class="mcq-modal-header">
+                <h2>Multiple Choice Questions</h2>
+                <button class="close-btn" onclick="closeMCQModal()">&times;</button>
+            </div>
+            <div class="mcq-modal-body">
+                <div id="mcq-container"></div>
+            </div>
+            <div class="mcq-modal-footer">
+                <button class="reset-btn" onclick="resetMCQs()">Reset Answers</button>
+                <button class="close-modal-btn" onclick="closeMCQModal()">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MCQ Handler Script -->
+    <script src="../mcq-handler.js"></script>
+</body>
+
+</html>

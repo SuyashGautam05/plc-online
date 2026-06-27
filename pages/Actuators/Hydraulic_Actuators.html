@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PLC Software</title>
+    <link rel="stylesheet" href="../defination.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+    <div class="container">
+        <header style="display: flex;">
+            <div class="logo-container">
+                <img src="../../assets/Scientech logo-2.png" alt="Scientech Logo">
+                <h1>Hydraulic Actuators</h1>
+            </div>
+        </header>
+
+        <main>
+            <div class="button-container">
+                <a href="../../index.html" class="back-button">
+                    <i class="fas fa-arrow-left"></i> Back to Course
+                </a>
+                <a href="./Hydraulic_plc_simulation.html" class="simulation-button">
+                    <i class="fas fa-flask"></i> Simulation
+                </a>
+            </div>
+
+            <div class="content-wrapper">
+                <div class="image-section">
+                    <img style="border-radius: 20px;border: 2px solid black;" src="../../assets/Hydraulic Actuators.png"
+                        alt="Hydraulic Actuators">
+                </div>
+
+                <div class="theory-section">
+                    <h2>1. Hydraulic Solenoid Valve</h2>
+                    <h2>Introduction</h2>
+                    <p>
+                        A hydraulic directional control valve (DCV) is a valve used to control the direction of flow of
+                        hydraulic fluid in a hydraulic system.<br><br>By changing the flow direction, it controls the
+                        start, stop, and direction of movement of hydraulic actuators such as hydraulic cylinders and
+                        motors.<br><br>Directional control valves are essential elements in hydraulic power transmission
+                        systems.
+                    </p>
+                    <h2>Components</h2>
+                    <p>
+                        Main components of a hydraulic directional control valve are:
+                    </p>
+                    <ul>
+                        <li><b>Valve body: </b> Contains internal passages for fluid flow.</li>
+                        <li><b>Spool or poppet: </b> Moves to change flow paths.</li>
+                        <li><b>Actuator: </b> Operates the valve (manual lever, solenoid, pneumatic, or hydraulic).</li>
+                        <li><b>Spring: </b> Returns the spool to normal position.</li>
+                        <li><b>Seals: </b> Prevent oil leakage.</li>
+                        <li><b>Ports</b> </li>
+                        <li><b>P: </b> Pressure port (from pump).</li>
+                        <li><b>A & B: </b> Actuator ports.</li>
+                        <li><b>T: </b> Tank (return line).</li>
+                    </ul>
+                    <h2>Working Principle</h2>
+                    <ul>
+                        <li>The working of a directional control valve depends on its spool position.</li>
+                        <li><b>Example: </b> 4/3 Hydraulic Directional Control Valve.</li>
+                        <li><b>Position 1: </b> Spool shifted to the left.</li>
+                        <li><b>Flow: </b> <br>P → A <br>B → T</li>
+                        <li>Hydraulic cylinder <b>extends.</b></li>
+                        <li><b>Position 2: </b> Spool in center (neutral).</li>
+                        <li>All ports may be blocked or connected depending on valve type <br>(closed center, open
+                            center,
+                            tandem center, etc.).</li>
+                        <li>Actuator <b>stops</b>.</li>
+                        <li><b>Position 3: </b> Spool shifted to the right.</li>
+                        <li><b>Flow: </b>
+                            <br>P → B
+                            <br>A → T
+                        </li>
+                        <p>Hydraulic cylinder retracts.</p>
+                    </ul>
+                    <h2>Flow Summary</h2>
+                    <ul>
+                        <li><b>Left position: </b> P → A , B → T</li>
+                        <li><b>Center position: </b> Neutral</li>
+                        <li><b>Right position: </b> P → B , A → T</li>
+                    </ul>
+                    <h2>Types of Hydraulic Directional Control Valves</h2>
+                    <ul>
+                        <li>2/2, 3/2, 4/2, 4/3 valves.</li>
+                        <li>Manual operated.</li>
+                        <li>Solenoid operated.</li>
+                        <li>Pilot operated.</li>
+                    </ul>
+                    <h2>Applications</h2>
+                    <ul>
+                        <li>Hydraulic presses.</li>
+                        <li>Excavators and earth-moving machines.</li>
+                        <li>Hydraulic lifts and jacks.</li>
+                        <li>Machine tools.</li>
+                        <li>Industrial automation systems.</li>
+                        <li>Mobile hydraulic equipment.</li>
+                    </ul>
+                    <h2>2. Hydraulic Single-Acting Cylinder</h2>
+                    <h2>Introduction</h2>
+                    <p>
+                        A hydraulic single-acting cylinder is a linear hydraulic actuator that uses pressurized
+                        hydraulic oil to produce motion in only one direction.<br><br>The return stroke is achieved by
+                        gravity, spring force, or external load, not by hydraulic pressure.<br><br>These cylinders are
+                        widely used where force is required in one direction only.
+                    </p>
+                    <img style="margin-left: 20px; border: 2px solid black;margin-bottom: 30px;  align-self: center;height: auto; width: auto;border-radius: 20px;"
+                        src="../../assets/Hydraulic Single-Acting Cylinder.png" alt="Hydraulic Single-Acting Cylinder">
+                    <h2>Components</h2>
+                    <p><b>Main components of a hydraulic single-acting cylinder are:</b></p>
+                    <ol>
+                        <li><b>Cylinder barrel: </b> Strong tube that holds hydraulic fluid.</li>
+                        <li><b>Piston: </b> Converts hydraulic pressure into linear motion.</li>
+                        <li><b>Piston rod: </b> Transfers motion to the load.</li>
+                        <li><b>End cover (head & cap): </b> Seal the cylinder ends.</li>
+                        <li><b>Hydraulic oil port: </b> Allows oil to enter and exit.</li>
+                        <li><b>Seals and gaskets: </b> Prevent oil leakage.</li>
+                        <li><b>Return spring / external load: </b> Provides return motion.</li>
+                    </ol>
+                    <h2>Working Principle</h2>
+                    <p>A hydraulic single-acting cylinder works in two stages:</p>
+                    <ul>
+                        <li><b>Forward Stroke (Extension): </b>
+                            <ul>
+                                <li>Pressurized hydraulic oil enters the cylinder through the oil port.</li>
+                                <li>Oil pressure acts on the piston, pushing it forward.</li>
+                                <li>The piston rod extends, performing work (lifting, pressing, etc.).</li>
+                            </ul>
+                        </li>
+                        <li><b>Return Stroke (Retraction): </b>
+                            <ul>
+                                <li>Oil supply is stopped or released to the tank.</li>
+                                <li>Oil flows back to the reservoir.</li>
+                                <li>The piston returns to its original position by spring force or gravity/external
+                                    load.</li>
+                                <li>The piston rod retracts.</li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <h2>Flow Representation</h2>
+                    <ul>
+                        <li><b>Extension: </b> Pump → Cylinder</li>
+                        <li><b>Retraction: </b> Cylinder → Tank</li>
+                    </ul>
+                    <h2>Applications</h2>
+                    <ul>
+                        <li>Hydraulic jacks.</li>
+                        <li>Lifting platforms.</li>
+                        <li>Dump trucks.</li>
+                        <li>Hydraulic presses (simple operations).</li>
+                        <li>Clamping devices.</li>
+                        <li>Agricultural machinery.</li>
+                    </ul>
+                    <h2>Hydraulic Double-Acting Cylinder</h2>
+                    <h2>Introduction</h2>
+                    <p>
+                        A hydraulic double-acting cylinder is a linear actuator that uses pressurized hydraulic oil to
+                        produce motion in both directions—extension and retraction.
+                        <br><br>Unlike a single-acting cylinder, hydraulic pressure acts on both sides of the piston, so
+                        no spring or gravity return is required.
+                        <br><br>It is widely used where high force, precise control, and bidirectional motion are
+                        required.
+                    </p>
+                    <img style="margin-left: 20px; border: 2px solid black;margin-bottom: 30px;  align-self: center;height: auto; width: auto;border-radius: 20px;"
+                        src="../../assets/Hydraulic Double-Acting Cylinder.png" alt="Hydraulic Double-Acting Cylinder">
+                    <h2>Components</h2>
+                    <p><b>Main components of a hydraulic double-acting cylinder are:</b></p>
+                    <ol>
+                        <li><b>Cylinder barrel: </b> Heavy-duty tube that holds hydraulic oil.</li>
+                        <li><b>Piston: </b> Separates the cylinder into two chambers.</li>
+                        <li><b>Piston rod: </b> Connects piston to external load.</li>
+                        <li><b>Head end cover: </b> Seals the front side.</li>
+                        <li><b>Cap end cover: </b> Seals the rear side.</li>
+                        <li><b>Hydraulic ports (A & B): </b> Oil inlet and outlet ports.</li>
+                        <li><b>Seals and wipers: </b> Prevent leakage and contamination.</li>
+                        <li><b>Bearings (guide rings): </b> Support smooth piston movement.</li>
+                    </ol>
+                    <h2>Working Principle</h2>
+                    <p>
+                        A double-acting cylinder works by alternately supplying pressurized oil to both sides of the
+                        piston using a directional control valve (usually 4/3 DCV).
+                    </p>
+                    <ul>
+                        <li><b>Forward Stroke (Extension): </b>
+                            <ul>
+                                <li>Pressurized oil enters through Port A (cap end).</li>
+                                <li>Oil pressure pushes the piston forward.</li>
+                                <li>Oil from the rod end flows out through Port B to the tank.</li>
+                                <li>The piston rod extends, doing useful work.</li>
+                            </ul>
+                        </li>
+                        <li><b>Return Stroke (Retraction): </b>
+                            <ul>
+                                <li>Pressurized oil enters through Port B (rod end).</li>
+                                <li>Oil pushes the piston backward.</li>
+                                <li>Oil from the cap end flows out through Port A to the tank.</li>
+                                <li>The piston rod retracts.</li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <h2>Flow Summary</h2>
+                    <ul>
+                        <li><b>Extension: </b> Pump → A | B → Tank</li>
+                        <li><b>Retraction: </b> Pump → B | A → Tank</li>
+                    </ul>
+                    <h2>Applications</h2>
+                    <ul>
+                        <li>Hydraulic presses.</li>
+                        <li>Excavators and backhoe machines.</li>
+                        <li>Hydraulic lifts and elevators.</li>
+                        <li>Machine tools (lathe, milling, CNC).</li>
+                        <li>Construction and earth-moving equipment.</li>
+                        <li>Industrial automation systems.</li>
+                    </ul>
+                    <h2>Hydraulic Motor</h2>
+                    <h2>Introduction</h2>
+                    <p>
+                        A <strong>hydraulic motor</strong> is a mechanical actuator that converts <strong>hydraulic energy (pressurized oil)</strong> into
+                        <strong>rotary mechanical motion.</strong><br><br>It is the reverse of a hydraulic pump and is used where <strong>high
+                        torque at low speed</strong> is required.<br><br>Hydraulic motors are commonly used in <strong>heavy-duty and
+                        mobile hydraulic systems.</strong>
+                    </p>
+                    <img style="margin-left: 20px; border: 2px solid black;margin-bottom: 30px;  align-self: center;height: auto; width: auto;border-radius: 20px;"
+                        src="../../assets/Hydraulic Motor.png" alt="Hydraulic Motor">
+                    <h2>Components</h2>
+                    <p>Main components of a hydraulic motor are:</p>
+                    <ul>
+                        <li><b>Inlet port: </b> Receives pressurized hydraulic oil.</li>
+                        <li><b>Outlet port: </b> Returns oil to the tank.</li>
+                        <li><b>Rotor: </b> Rotating element of the motor.</li>
+                        <li><b>Stator / housing: </b> Encloses and supports the motor.</li>
+                        <li><b>Gears / vanes / pistons: </b> Produce rotary motion (depends on motor type).</li>
+                        <li><b>Output shaft: </b> Delivers mechanical power.</li>
+                        <li><b>Bearings and seals: </b> Support rotation and prevent leakage.</li>
+                    </ul>
+                    <h2>Working Principle</h2>
+                    <p>The working of a hydraulic motor depends on its type (gear, vane, or piston type).</p>
+                    <p><b>General Working: </b></p>
+                    <ul>
+                        <li>Pressurized hydraulic oil enters the motor through the <b>inlet port.</b></li>
+                        <li>Oil acts on the internal components (gears, vanes, or pistons).</li>
+                        <li>Hydraulic pressure creates force, causing the <b>rotor to rotate.</b></li>
+                        <li>The rotor turns the <b>output shaft,</b> producing mechanical power.</li>
+                        <li>Used oil exits through the <b>outlet port</b> and returns to the reservoir.</li>
+                        <p><b>Speed</b> is controlled by flow rate, and torque is controlled by pressure.</p>
+                    </ul>
+                    <p><b>Simple Flow Representation: </b> Pump → Hydraulic Motor → Tank</p>
+                    <h2>Types of Hydraulic Motors</h2>
+                    <ul>
+                        <li>Gear motor.</li>
+                        <li>Vane motor.</li>
+                        <li>Piston motor (axial or radial).</li>
+                        <li>Gerotor motor.</li>
+                    </ul>
+                    <h2>Applications</h2>
+                    <ul>
+                        <li>Excavators and cranes.</li>
+                        <li>Conveyors and winches.</li>
+                        <li>Hydraulic presses.</li>
+                        <li>Agricultural machinery.</li>
+                        <li>Construction equipment.</li>
+                        <li>Machine tools.</li>
+                    </ul>
+                    <!-- <h2>Scope of Industrial Automation</h2>
+                    <p>The scope of industrial automation is broad and includes:</p>
+                    <ol>
+                        <li><b>Manufacturing Automation: </b> Automated assembly lines, CNC machines, and robotic
+                            systems used in mass production.</li>
+                        <li><b>Process Automation: </b> Control of continuous processes in industries like oil and gas,
+                            chemicals, pharmaceuticals, food, and beverages.</li>
+                        <li><b>Robotics and Mechatronics: </b> Use of industrial robots for tasks such as welding,
+                            packaging, material handling, and inspection.</li>
+                        <li><b>Control Systems: </b> PLCs, SCADA, and DCS systems for monitoring and controlling
+                            industrial operations.</li>
+                        <li><b>Quality Control and Inspection: </b> Automated testing, sensors, and vision systems to
+                            ensure product quality.</li>
+                        <li><b>Material Handling and Logistics: </b> Automated conveyors, storage systems, and smart
+                            warehouses.</li>
+                        <li><b>Safety and Monitoring: </b> Systems designed to reduce human risk and ensure safe
+                            operation of machinery.</li>
+                    </ol> -->
+
+
+                    <!-- <ul>
+                        <li><b>Flexibility: </b> Control logic can be changed by modifying the program instead of
+                            rewiring hardware.</li>
+                        <li><b>Compact Size: </b> Replaces large relay panels, saving space.</li>
+                        <li><b>High Reliability: </b> Solid-state components reduce mechanical wear and failure.</li>
+                        <li><b>Easy Troubleshooting: </b> Diagnostic tools and status indicators simplify fault
+                            detection.</li>
+                        <li><b>Reduced Maintenance: </b> Quick response time compared to electromechanical relays.</li>
+                        <li><b>Faster Operation: </b> bottling, filling, and labeling processes.</li>
+                        <li><b>Scalability : </b> Easy expansion of inputs and outputs.</li>
+                    </ul> -->
+                    <!-- <img style="margin-left: 20px; border: 2px solid black; align-self: center;height: auto; width: 528px;border-radius: 20px;" src="../assets/Pages/Applications_of_plc.png" alt=""> -->
+
+                    <!-- <h2>PLC (Programmable Logic Controller)</h2>
+                    <p>A programmable Logic Controller(PLC) is a specialized digital computer employed in industrial
+                        settings for automation and control. Acting as the central brain of machinery and processes,
+                        PLCs receive input from sensors, process the data through programmed logic, and generate output
+                        signals to control devices like motors and valves. They use a programming language, often ladder
+                        logic, resembling electrical relay diagrams. PLCs are ruggedized for harsh industrial
+                        environments and play a crucial role in automating tasks and reducing manufacturing and energy.
+                        Their modular design allows scalability, making them versatile components in modern industrial
+                        control systems.</p>
+
+                    <img style="border: 2px solid black; align-self: center;border-radius: 20px;" src="../assets/Pages/PLC.jpg" alt="">
+
+                    <h2>Where Can PLC Be Used?</h2>
+                    <p>
+                        PLCs play a pivotal role in industrial automation, efficiently managing machinery and processes.
+                        They receive data from sensors, execute programmed logic, and control actuators, enhancing
+                        precision and reducing manual intervention. PLCs find application across diverse industries,
+                        from manufacturing to utilities, ensuring streamlined operations, increased productivity, and
+                        adaptability to evolving production needs. Their robust capabilities make PLCs indispensable in
+                        modern industrial settings, facilities with seamless control and automation for improved
+                        efficiency and reliability.
+                    </p> -->
+                    <!-- <p>
+                        A <strong>Programmable Logic Controller (PLC)</strong> is a digital computing device used to
+                        automate electromechanical processes such as control of machinery on factory assembly lines,
+                        amusement rides, or light fixtures. It is a specialized computer designed to monitor and control
+                        manufacturing processes and other automated systems.
+                    </p>
+
+                    <h3 style="margin-top: 20px; margin-bottom: 15px; color: var(--text-color);">Key Characteristics:
+                    </h3>
+                    <ul>
+                        <li><strong>Programmable:</strong> Can be programmed to perform specific tasks according to user
+                            requirements</li>
+                        <li><strong>Rugged Design:</strong> Built to withstand harsh industrial environments with
+                            temperature, humidity, and vibration</li>
+                        <li><strong>Reliable:</strong> Provides consistent and repeatable performance in critical
+                            applications</li>
+                        <li><strong>User-Friendly:</strong> Utilizes standard programming languages like Ladder Diagram,
+                            which resembles traditional electrical schematics</li>
+                        <li><strong>Fast Response:</strong> Provides real-time monitoring and control of industrial
+                            processes</li>
+                        <li><strong>Cost-Effective:</strong> Reduces wiring and maintenance costs compared to
+                            conventional relay systems</li>
+                    </ul>
+
+                    <h3 style="margin-top: 25px; margin-bottom: 15px; color: var(--text-color);">Main Components:</h3>
+                    <ul>
+                        <li><strong>Power Supply:</strong> Provides electrical power to the PLC</li>
+                        <li><strong>Processor (CPU):</strong> The brain of the PLC that executes the program</li>
+                        <li><strong>Memory:</strong> Stores the program and operational data</li>
+                        <li><strong>Input Modules:</strong> Receive signals from sensors and switches</li>
+                        <li><strong>Output Modules:</strong> Send control signals to actuators and motors</li>
+                        <li><strong>Communication Module:</strong> Enables communication with other devices and systems
+                        </li>
+                    </ul>
+
+                    <h3 style="margin-top: 25px; margin-bottom: 15px; color: var(--text-color);">Basic Operating Cycle:
+                    </h3>
+                    <ul>
+                        <li><strong>Input Scan:</strong> The PLC reads the status of all input devices</li>
+                        <li><strong>Program Execution:</strong> The processor executes the control program based on
+                            current inputs and stored data</li>
+                        <li><strong>Output Update:</strong> The PLC sends the results to output devices (solenoids,
+                            motors, lights, etc.)</li>
+                        <li><strong>Housekeeping:</strong> The PLC performs diagnostics and prepares for the next cycle
+                        </li>
+                    </ul>
+
+                    <p style="margin-top: 25px;">
+                        The entire cycle typically occurs in milliseconds, making PLCs suitable for real-time industrial
+                        automation and control applications. Modern PLCs are integral to industrial IoT and Industry 4.0
+                        initiatives, enabling seamless integration with cloud-based monitoring and data analytics
+                        systems.
+                    </p> -->
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- MCQ Modal -->
+    <div id="mcq-modal" class="mcq-modal">
+        <div class="mcq-modal-content">
+            <div class="mcq-modal-header">
+                <h2>Multiple Choice Questions</h2>
+                <button class="close-btn" onclick="closeMCQModal()">&times;</button>
+            </div>
+            <div class="mcq-modal-body">
+                <div id="mcq-container"></div>
+            </div>
+            <div class="mcq-modal-footer">
+                <button class="reset-btn" onclick="resetMCQs()">Reset Answers</button>
+                <button class="close-modal-btn" onclick="closeMCQModal()">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Add smooth scroll behavior for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+    </script>
+
+    <!-- MCQ Handler Script -->
+    <script src="../mcq-handler.js"></script>
+</body>
+
+</html>

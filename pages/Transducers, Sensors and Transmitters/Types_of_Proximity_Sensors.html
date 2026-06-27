@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PLC Software</title>
+    <link rel="stylesheet" href="../defination.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+    <div class="container">
+        <header style="display: flex;">
+            <div class="logo-container">
+                <img src="../../assets/Scientech logo-2.png" alt="Scientech Logo">
+                <h1>Types of Proximity Sensors</h1>
+            </div>
+        </header>
+
+        <main>
+            <div class="button-container">
+                <a href="../../index.html" class="back-button">
+                <i class="fas fa-arrow-left"></i> Back to Course
+            </a>
+            <a href="./Proximity_sensor_simulation.html" class="simulation-button">
+                    <i class="fas fa-flask"></i> Simulation
+            </a>
+            </div>
+
+            <div class="content-wrapper">
+                <div class="image-section">
+                    <img style="border-radius: 20px;" src="../../assets/Pages/proximity_sensors.png"
+                        alt="PLC Definition Illustration">
+                </div>
+
+                <div class="theory-section">
+                    <!-- <h2>Basic Switch Wiring and Configuration</h2> -->
+                    <h2>Types of Proximity Sensors</h2>
+                    <p>
+                        A <strong>proximity sensor</strong> is a <strong>device that detects the presence or absence of
+                            an object</strong> or its <strong>distance
+                            from the sensor without any physical contact.</strong>
+                    </p>
+                    <p>
+                        <strong>Examples: </strong> Automatic doors, mobile phone touchless sensing, industrial
+                        automation for object detection.
+                    </p>
+
+                    <h2>Working Principle</h2>
+                    <p>
+                        Proximity sensors work by detecting changes in magnetic field, capacitance, inductance, or light
+                        caused by the nearby object.
+                    </p>
+                    <ol><strong>Steps:</strong>
+                        <li>The sensor emits a signal (magnetic, electric, or light).</li>
+                        <li>When an object enters the sensing range, it disturbs or reflects the signal.</li>
+                        <li>The sensor detects this disturbance.</li>
+                        <li>The sensor outputs a signal (digital ON/OFF or analog distance).</li>
+                    </ol>
+                    <h2 style="margin-top: 20px;">Types of Proximity Sensors</h2>
+                    <img style="margin-left: 30px; border: 2px solid black; align-self: center;height: auto; width: 528px;border-radius: 20px;"
+                        src="../../assets/Pages/types_of_proximity_sensors.gif" alt="">
+                    <ol>
+                        <li><b>Inductive Proximity Sensor: </b>
+                            An inductive proximity sensor detects the presence of metallic objects without touching them
+                            by using an electromagnetic field.
+                            <img style="margin-left: 30px; border: 2px solid black; align-self: center;height: auto; width: 528px;border-radius: 20px;"
+                                src="../../assets/Pages/inductive_proximity_sensor.jpg" alt="">
+                            <img style="margin-left: 30px; margin-top: 30px; border: 2px solid black; align-self: center;height: auto; width: 528px;border-radius: 20px;"
+                                src="../../assets/Pages/inductive_proximity_sensor_1.png" alt="">
+                            <p><strong>Principle: </strong> Changes in electromagnetic field induce current when a metal
+                                object is nearby.</p>
+                            <p><strong>Applications: </strong>
+                            <ul>
+                                <li>Industrial automation.</li>
+                                <li>Metal detection.</li>
+                                <li>Counting metal parts.</li>
+                            </ul>
+                            </p>
+                            <img style="margin-left: 30px; border: 2px solid black; align-self: center;height: auto; width: 528px;border-radius: 20px;"
+                                src="../../assets/Pages/inductive_proximity_sensor_2.png" alt="">
+                            <p><strong>Main Part of inductive Proximity Sensor</strong>
+                            <ul>
+                                <li><b>Coil: </b> The coil generate necessary electro magnetic field a cup shaped
+                                    magnetic core holds the coil. This core is necessary to concentrate coil magnetic
+                                    field on the front area of the sensor.</li>
+                                <li><b>Oscillator: </b> Oscillator is generally LC oscillator. It produce radio
+                                    frequency which helps to generate electro magnetic filed.</li>
+                                <li><b>Trigger Circuit: </b> The Trigger circuit senses the change in amplitude of
+                                    oscillation and give the signal to output circuit.</li>
+                                <li><b>Output Circuit: </b> The output circuit has a transistor after receiving the
+                                    signal , transistor switches on and gives an output.</li>
+                            </ul>
+                            </p>
+                            <p><strong>When no object in Sensing range of Inductive Proximity Sensor then Sensor output
+                                    low.</strong></p>
+                            <img style="margin-left: 30px; border: 2px solid black; align-self: center;height: auto; width: 528px;border-radius: 20px;"
+                                src="../../assets/Pages/inductive_proximity_sensor_3.png" alt="">
+                            <p><strong>When any object comes in Sensing range of Inductive Proximity Sensor then Sensor
+                                    output High.</strong></p>
+                            <img style="margin-left: 30px; border: 2px solid black; align-self: center;height: auto; width: 528px;border-radius: 20px;"
+                                src="../../assets/Pages/inductive_proximity_sensor_4.png" alt="">
+                        </li>
+                        <li><b>Capacitive Proximity Sensor: </b>
+                            Capacitive proximity sensors (CPS) are sensing device designed to detect both metallic and
+                            nonmetallic targets. They can detect lightweight or small objects that cannot be detected by
+                            mechanical limit switches. CPS are ideally suited for plastics and other nonmetallic
+                            targets, for liquid level control and for sensing powdered or granulated material.
+                            <img style="margin-left: 30px; border: 2px solid black; align-self: center;height: auto; width: 528px;border-radius: 20px;"
+                                src="../../assets/capacitive_proximity_sensor_5.png" alt="">
+                            <img style="margin-left: 30px; margin-top: 20px; border: 2px solid black; align-self: center;height: auto; width: 528px;border-radius: 20px;"
+                                src="../../assets/Pages/capacitive_proximity_sensor.png" alt="">
+                            <p><strong>Capacitive Proximity Sensor Components: </strong> Capacitive sensors are all
+                                about four key components: the body, the face that does the sensing a light to show
+                                what's happening, and the cable or where it hooks up. And here's the kicker: no moving
+                                parts are needed at all.
+                            <ul>
+                                <li><b>Body of the sensor: </b> Peek inside the sensor's body, and you will find all the
+                                    cool
+                                    sensing electronics tucked away. Plus, that plastic body? It's like a shield against
+                                    corrosion.</li>
+                                <li><b>Sensing face: </b> It is where the sensor gets its mojo, spotting targets with
+                                    its
+                                    oscillating field. It is like the sensor's radar.</li>
+                                <li><b>Indicator light: </b> It is at the opposite end of the sensor, keeping an eye out
+                                    for
+                                    action. It flips on when something is in the sensor range and off when it's not.
+                                </li>
+                                <li><b>Sensor electrical connection: </b> These sensors are pretty versatile. Some come
+                                    ready to
+                                    roll straight out of the box with a cable already hooked up and equipped with all
+                                    the necessary wires. </li>
+                            </ul>
+                            <img style="margin-left: 30px; border: 2px solid black; align-self: center;height: auto; width: 528px;border-radius: 20px;"
+                                src="../../assets/Pages/capacitive_proximity_sensor_1.png" alt="">
+                            </p>
+                            <p><strong>Capacitive Proximity Sensor Working Principle: </strong> Imagine the sensing head
+                                of a capacitive sensor. It's got two plates that behave like an open capacitor with a
+                                particular capacitance. The oscillator within the sensor charges a capacitor plate, thus
+                                forming an electrostatic field. This oscillator also produces a specific frequency
+                                waveform, establishing a reference point for the sensor's detector circuit.
+                            </p>
+                            <img style="margin-left: 30px; border: 2px solid black; align-self: center;height: auto; width: 528px;border-radius: 20px;"
+                                src="../../assets/Pages/capacitive_proximity_sensor_2.png" alt="">
+                            <p>
+                                When a target approaches the capacitive proximity sensor and disrupts the sensing field,
+                                two main actions occur. First, the disruption increases the capacitance of the
+                                electrostatic field. Secondly, due to the change in capacitance caused by the presence
+                                of the target, the frequency of the oscillator shifts. The detector circuit monitors
+                                this frequency shift and triggers a response, such as activating the sensor's output
+                                when the detected change exceeds a predetermined threshold.
+                            </p>
+                            <img style="margin-left: 30px;  border: 2px solid black; align-self: center;height: auto; width: 528px;border-radius: 20px;"
+                                src="../../assets/Pages/capacitive_proximity_sensor_4.png" alt="">
+                            <img style="margin-left: 30px; margin-top: 30px; border: 2px solid black; align-self: center;height: auto; width: 528px;border-radius: 20px;"
+                                src="../../assets/Pages/capacitive_proximity_sensor_3.png" alt="">
+                            <p><strong>Applications: </strong>
+                            <ul>
+                                <li>Liquid level detection.</li>
+                                <li>Food processing.</li>
+                                <li>Detecting non-metal objects.</li>
+                            </ul>
+                            </p>
+                            <!-- <img style="margin-left: 30px; border: 2px solid black; align-self: center;height: auto; width: 528px;border-radius: 20px;"
+                                src="../../assets/magnetic_sensor.png" alt=""> -->
+                        </li>
+                        <li><b>Magnetic Proximity Sensor: </b>
+                            Magnetic proximity sensors are electronic devices used to detect the presence, movement, or
+                            position of objects without physical contact. These sensors work by sensing magnetic fields,
+                            either from a permanent magnet or from changes in the surrounding magnetic environment. They
+                            are widely used in industrial automation, robotics, safety systems, automotive applications,
+                            and more.
+                            <img style="margin-left: 30px; border: 2px solid black; align-self: center;height: auto; width: 528px;border-radius: 20px;"
+                                src="../../assets/magnetic_sensor.png" alt="">
+                            <p><strong>Working Principle: </strong> The working of a magnetic proximity sensor depends
+                                on
+                                magnetic field detection.
+                            <ol>
+                                <li>The sensor has a magnetic field-sensitive element (such as a Hall effect sensor or
+                                    reed
+                                    switch).</li>
+                                <li>When a magnet or magnetic object comes close to the sensor, it disturbs the magnetic
+                                    field.</li>
+                                <li>This change is detected by the sensing element.</li>
+                                <li>The sensor then produces an electrical signal (ON/OFF or analog output).</li>
+                                <li>When the magnetic object moves away, the sensor returns to its normal state.</li>
+                            </ol>
+                            </p>
+                            <p><strong>Types (Briefly): </strong>
+                            <ul>
+                                <li><b>Reed Switch Sensor: </b> Reed switch-based magnetic sensors consist of a
+                                    hermetically
+                                    sealed glass bulb. The glass bulb encloses two ‘reeds’ that are magnetic. When a
+                                    magnet
+                                    is placed near the switch, the two reeds come into contact with each other,
+                                    completing
+                                    the circuit.<br><b>Uses magnetic contacts that close or open.</b>
+                                    <img style="margin-left: 30px; border: 2px solid black; align-self: center;height: auto; width: 528px;border-radius: 20px;"
+                                        src="../../assets/Pages/reed_switch_1.png" alt="">
+                                    <img style="margin-left: 30px; border: 2px solid black; align-self: center;height: auto; width: 528px;border-radius: 20px;"
+                                        src="../../assets/Pages/reed_switch_2.gif" alt="">
+                                </li>
+                                <li><b>Hall Effect Sensor: </b> Hall effect sensors use the principle of the same name
+                                    to
+                                    measure the magnetic field generated by a magnetic object. There are two types of
+                                    Hall
+                                    sensors, digital and analog. Digital sensors output a logic HIGH or LOW signal.
+                                    Analog
+                                    sensors output a voltage/current proportional to the strength of the magnetic field.
+                                    <img style="margin-left: 30px; border: 2px solid black; align-self: center;height: auto; width: 528px;border-radius: 20px;"
+                                        src="../../assets/Pages/hall_effect_sensor.png" alt="">
+                                    <img style="margin-left: 30px; border: 2px solid black; align-self: center;height: auto; width: 528px;border-radius: 20px;"
+                                        src="../../assets/Pages/hall_effect_sensor2.gif" alt="">
+                                </li>
+                            </ul>
+                            </p>
+                        </li>
+                        <li><b>Photoelectric Sensors: </b>
+                            Photoelectric Sensors detect objects, changes in surface conditions, and other items through
+                            a variety of optical properties.<br>A Photoelectric Sensor consists primarily of an Emitter
+                            for emitting light and a Receiver for receiving light. When emitted light is interrupted or
+                            reflected by the sensing object, it changes the amount of light that arrives at the
+                            Receiver. The Receiver detects this change and converts it to an electrical output. The
+                            light source for the majority of Photoelectric Sensors is infrared or visible light
+                            (generally red, or green/blue for identifying colors).
+                            <img style="margin-left: 30px; border: 2px solid black; align-self: center;height: auto; width: 528px;border-radius: 20px;"
+                                src="../../assets/Pages/photoelectric.jpg" alt="">
+                            <p>It is widely used in <b>automation, packaging, and safety systems.</b></p>
+                            <img style="margin-left: 30px; border: 2px solid black; align-self: center;height: auto; width: 528px;border-radius: 20px;"
+                                src="../../assets/Pages/photoelectric_1.png" alt="">
+                            <img style="margin-left: 30px; border: 2px solid black; align-self: center;height: auto; width: 528px;border-radius: 20px;"
+                                src="../../assets/Pages/photoelectric_2.png" alt="">
+                            <p><strong>Working Principle: </strong>
+                            <ol>
+                                <li>The sensor has a <b>light emitter</b> (LED or laser) and <b>a receiver</b>
+                                    (photodiode or phototransistor).</li>
+                                <li>The emitter sends a <b>light beam</b> toward the object or a reflector.</li>
+                                <li><b>When the object interrupts or reflects the light beam: </b>
+                                    <ul>
+                                        <li>The receiver detects the change in light intensity.</li>
+                                        <li>The sensor generates an electrical output signal (ON/OFF).</li>
+                                    </ul>
+                                </li>
+                                <li>This allows the system to detect the presence, position, or movement of the object
+                                    without physical contact.</li>
+                            </ol>
+                            </p>
+                            <h2>Types of Photoelectric Sensors</h2>
+                            <img style="margin-left: 30px; border: 2px solid black; align-self: center;height: auto; width: 528px;border-radius: 20px;"
+                                src="../../assets/Pages/types_of_photoelectric.png" alt="">
+                            <img style="margin-left: 30px; margin-top: 30px; border: 2px solid black; align-self: center;height: auto; width: 528px;border-radius: 20px;"
+                                src="../../assets/Pages/types_of_photoelectric_1.png" alt="">
+                            <ol>
+                                <li><b>Through-beam (Opposed) Sensor: </b> The Emitter and Receiver are installed
+                                    opposite each other to enable the light from the Emitter to enter the Receiver. When
+                                    a sensing object passing between the Emitter and Receiver interrupts the emitted
+                                    light, it reduces the amount of light that enters the Receiver. This reduction in
+                                    light intensity is used to detect an object. The sensing method is identical to that
+                                    of Through-beam Sensors and some models called Slot Sensors are configured with an
+                                    integrated Emitter and Receiver.
+                                    <p><b>Advantages: </b> Long sensing distance, reliable.</p>
+                                    <p><b>Applications: </b> Conveyor object detection.</p>
+                                    <img style="margin-left: 30px; border: 2px solid black; align-self: center;height: auto; width: 528px;border-radius: 20px;"
+                                        src="../../assets/Pages/through-beam_(opposed)_sensor.png" alt="">
+                                    <img style="margin-left: 30px;margin-top: 30px; border: 2px solid black; align-self: center;height: auto; width: 528px;border-radius: 20px;"
+                                        src="../../assets/Pages/through-beam_(opposed)_sensor_2.png" alt="">
+                                    <img style="margin-left: 30px;margin-top: 30px; border: 2px solid black; align-self: center;height: auto; width: 528px;border-radius: 20px;"
+                                        src="../../assets/Pages/through-beam_(opposed)_sensor_3.gif" alt="">
+                                </li>
+                                <li><b>Retro-reflective Sensor: </b> The Emitter and Receiver are installed in the same
+                                    housing and light from the Emitter is normally reflected back to the Receiver by a
+                                    Reflector installed on the opposite side. When the sensing object interrupts the
+                                    light, it reduces the amount of light received. This reduction in light intensity is
+                                    used to detect the object.
+                                    <p><b>Advantages: </b> Easier installation than through-beam.</p>
+                                    <p><b>Applications: </b> Packaging, counting products.</p>
+                                    <img style="margin-left: 30px; border: 2px solid black; align-self: center;height: auto; width: 528px;border-radius: 20px;"
+                                        src="../../assets/Pages/retro-reflective_sensor.png" alt="">
+                                    <img style="margin-left: 30px;margin-top: 30px; border: 2px solid black; align-self: center;height: auto; width: 528px;border-radius: 20px;"
+                                        src="../../assets/Pages/retro-reflective_sensor_2.png" alt="">
+                                    <img style="margin-left: 30px;margin-top: 30px; border: 2px solid black; align-self: center;height: auto; width: 528px;border-radius: 20px;"
+                                        src="../../assets/Pages/retro-reflective_sensor_3.gif" alt="">
+                                </li>
+                                <li><b>Diffuse (Proximity) Sensor: </b>
+                                    The Emitter and Receiver are installed in the same housing and light normally does
+                                    not return to the Receiver. When light from the Emitter strikes the sensing object,
+                                    the object reflects the light and it enters the Receiver where the intensity of
+                                    light is increased. This increase in light intensity is used to detect the object.
+                                    <p><b>Advantages: </b> Compact, easy setup.</p>
+                                    <p><b>Applications: </b> Short-range detection, small objects.</p>
+                                    <img style="margin-left: 30px; border: 2px solid black; align-self: center;height: auto; width: 528px;border-radius: 20px;"
+                                        src="../../assets/Pages/diffuse_sensor.png" alt="">
+                                    <img style="margin-left: 30px;margin-top: 30px; border: 2px solid black; align-self: center;height: auto; width: 528px;border-radius: 20px;"
+                                        src="../../assets/Pages/diffuse_sensor_2.png" alt="">
+                                    <img style="margin-left: 30px;margin-top: 30px; border: 2px solid black; align-self: center;height: auto; width: 528px;border-radius: 20px;"
+                                        src="../../assets/Pages/diffuse_sensor_3.gif" alt="">
+                                </li>
+                                <li><b>Ultrasonic Sensor: </b>
+                                    An ultrasonic sensor is an instrument that measures the distance to an object using
+                                    ultrasonic sound waves. What is an ultrasonic sensor? It is a device that uses a
+                                    transducer to send and receive ultrasonic pulses that relay back information about
+                                    an object’s proximity. High-frequency sound waves reflect across boundaries to
+                                    produce distinct echo patterns.
+                                    <img style="margin-left: 30px; border: 2px solid black; align-self: center;height: auto; width: 528px;border-radius: 20px;"
+                                        src="../../assets/Pages/ultrasonic_sensor.png" alt="">
+                                    <p><b>How Ultrasonic Sensors Work?</b> <br>
+                                        Ultrasonic sensors work by sending out a sound wave at a frequency above the
+                                        range of human hearing. The transducer of the sensor acts as a microphone to
+                                        receive and send the ultrasonic sound. Our sensors, like many others, use a
+                                        single transducer to send a pulse and to receive the echo. The sensor determines
+                                        the distance to a target by measuring time lapses between the sending and
+                                        receiving of the ultrasonic pulse. This process is a key aspect of ultrasonic
+                                        sensor working.
+                                    </p>
+                                    <img style="margin-left: 30px; border: 2px solid black; align-self: center;height: auto; width: 528px;border-radius: 20px;"
+                                        src="../../assets/Pages/ultrasonic_sensor_1.gif" alt="">
+                                    <p>Ultrasonic sensors work by sending out a sound wave at a frequency above the
+                                        range of human hearing. The transducer of the sensor acts as a microphone to
+                                        receive and send the ultrasonic sound. Our sensors, like many others, use a
+                                        single transducer to send a pulse and to receive the echo. The sensor determines
+                                        the distance to a target by measuring time lapses between the sending and
+                                        receiving of the ultrasonic pulse. This process is a key aspect of ultrasonic
+                                        sensor working.</p>
+                                </li>
+                            </ol>
+                        </li>
+                    </ol>
+
+
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Add smooth scroll behavior for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+    </script>
+
+            <!-- MCQ Modal -->
+    <div id="mcq-modal" class="mcq-modal">
+        <div class="mcq-modal-content">
+            <div class="mcq-modal-header">
+                <h2>Multiple Choice Questions</h2>
+                <button class="close-btn" onclick="closeMCQModal()">&times;</button>
+            </div>
+            <div class="mcq-modal-body">
+                <div id="mcq-container"></div>
+            </div>
+            <div class="mcq-modal-footer">
+                <button class="reset-btn" onclick="resetMCQs()">Reset Answers</button>
+                <button class="close-modal-btn" onclick="closeMCQModal()">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MCQ Handler Script -->
+    <script src="../mcq-handler.js"></script>
+</body>
+
+</html>

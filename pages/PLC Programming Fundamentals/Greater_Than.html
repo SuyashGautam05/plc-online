@@ -1,0 +1,196 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PLC Software</title>
+    <link rel="stylesheet" href="../defination.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+  </head>
+
+  <body>
+    <div class="container">
+      <header style="display: flex">
+        <div class="logo-container">
+          <img src="../../assets/Scientech logo-2.png" alt="Scientech Logo" />
+          <h1>Greater Than</h1>
+        </div>
+      </header>
+
+      <main>
+        <a href="../../index.html" class="back-button">
+          <i class="fas fa-arrow-left"></i> Back to Course
+        </a>
+
+        <div class="content-wrapper">
+          <!-- <div class="image-section">
+            <img style="border-radius: 20px;border: 2px solid black;"
+            src="../../assets/Pages/role_of_plc_In_automation.png" alt="PLC
+            Definition Illustration">
+          </div> -->
+
+          <div class="theory-section" style="width: 281%;">
+            <h2>Greater Than</h2>
+
+            <p>
+              A <b>Greater Than ( &gt; ) Compare Instruction</b> in PLC
+              programming is used to compare two values and determine whether
+              one value is greater than the other.
+            </p>
+
+            <ul>
+              <li>
+                <b>Function:</b> Evaluates a condition by comparing two operands
+                to check if the first value is greater than the second.
+              </li>
+              <li>
+                <b>Output:</b> Boolean (TRUE or FALSE) depending on whether the
+                comparison condition is satisfied.
+              </li>
+              <li>
+                <b>Type:</b>
+                <ul>
+                  <li>
+                    <b>Greater Than ( &gt; ): </b> Checks whether IN1 &gt; IN2.
+                  </li>
+                </ul>
+              </li>
+            </ul>
+
+            <h2>Applications</h2>
+            <ul>
+              <li>
+                Comparing process values such as temperature, pressure, or speed
+                against a predefined setpoint.
+              </li>
+              <li>
+                Monitoring sensor values to trigger alarms or control actions.
+              </li>
+              <li>
+                Verifying whether counters or timers have exceeded a specific
+                threshold.
+              </li>
+            </ul>
+
+            <h2>Examples</h2>
+            <ul>
+              <li>
+                Compare the current temperature of a system with the maximum
+                allowable temperature.
+              </li>
+              <li>
+                Check if a production count is greater than the required
+                quantity.
+              </li>
+              <li>
+                Determine whether a motor speed exceeds a safe operating limit.
+              </li>
+            </ul>
+
+            <h2>Syntax / Representation</h2>
+            <p><b>In LAD/FBD: </b></p>
+
+            <ul>
+              <li>The instruction is represented as a comparison block:</li>
+            </ul>
+
+            <p>|--[ &gt; ]--|</p>
+
+            <ul>
+              <li>
+                <b>Inputs:</b>
+                <ul>
+                  <li><b>IN1: </b> First value (e.g., sensor reading)</li>
+                  <li><b>IN2: </b> Second value (e.g., setpoint)</li>
+                </ul>
+              </li>
+              <li>
+                <b>Output:</b>
+                <ul>
+                  <li>
+                    <b>Q: </b> TRUE if <b>IN1 &gt; IN2</b>, otherwise FALSE
+                  </li>
+                </ul>
+              </li>
+            </ul>
+
+            <h2>Example of Greater Than Compare Instruction</h2>
+            <ul>
+              <li>
+                two retentive on-delay timers keep track of each electric
+                motor’s total run time, storing the run time values in two
+                registers in the PLC’s memory:
+              </li>
+              <li>
+                Motor A runtime and Motor B runtime. These two integer values
+                are input to the “greater than” instruction box for comparison.
+              </li>
+              <li>
+                If motor A has run longer than motor B, motor B will be the one
+                enabled to start up next time the “start” switch is pressed.
+              </li>
+              <li>
+                If motor A has run less time or the same amount of time as motor
+                B (the scenario shown by the blue-highlighted status
+                indications), motor A will be the one enabled to start.
+              </li>
+              <li>
+                The two series-connected virtual contacts OUT motor A and OUT
+                motor B ensure the comparison between motor run times is not
+                made until both motors are stopped.
+              </li>
+              <li>
+                If the comparison were continually made, a situation might arise
+                where both motors would start if someone happened to press the
+                Start pushbutton with one motor is already running.
+              </li>
+            </ul>
+
+            <img
+              style="
+                margin-left: 250px;
+                margin-bottom: 30px;
+                border: 2px solid black;
+                align-self: center;
+                height: 265px;
+                width: 660px;
+                border-radius: 20px;
+              "
+              src="../../assets/Greater_Than_2.png"
+              alt="Greater Than Compare Instruction Example"
+            />
+            <img
+              style="
+                margin-left: 247px;
+                margin-bottom: 30px;
+                border: 2px solid black;
+                align-self: center;
+                height: 568px;
+                width: 570px;
+                border-radius: 20px;
+              "
+              src="../../assets/Greater_Than_3.png"
+              alt="Greater Than Compare Instruction Example"
+            />
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <script>
+      // Add smooth scroll behavior for anchor links
+      document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+        anchor.addEventListener("click", function (e) {
+          e.preventDefault();
+          const target = document.querySelector(this.getAttribute("href"));
+          if (target) {
+            target.scrollIntoView({ behavior: "smooth" });
+          }
+        });
+      });
+    </script>
+  </body>
+</html>

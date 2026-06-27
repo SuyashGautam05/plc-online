@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PLC Software</title>
+    <link rel="stylesheet" href="../defination.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+    <div class="container">
+        <header style="display: flex;">
+            <div class="logo-container">
+                <img src="../../assets/Scientech logo-2.png" alt="Scientech Logo">
+                <h1>Definition of Transducers, Sensors and Transmitters</h1>
+            </div>
+        </header>
+
+        <main>
+            <a href="../../index.html" class="back-button">
+                <i class="fas fa-arrow-left"></i> Back to Course
+            </a>
+
+            <div class="content-wrapper">
+                <div class="image-section">
+                    <img style="border-radius: 20px;"
+                        src="../../assets/Definition of Transducers, Sensors and Transmitters.png"
+                        alt="Definition of Transducers, Sensors and Transmitters">
+                </div>
+
+
+
+
+
+                <div class="theory-section">
+
+                    <h2>What are Sensors?</h2>
+                    <p>
+                        Sensors are the devices that can detect and response to changes in the environment. These
+                        changes can be in form of light, temperature, motion, moisture or any other physical property.
+                        The sensor converts these physical changes into signal that can be measured. Sensors play an
+                        important role in IoT which will make an ecosystem for collecting, analyzing, and processing
+                        data about a specific environment so that it can be monitored, managed, and controlled more
+                        easily and efficiently. Sensors bridge the gap between the physical world and the logical world.
+                    </p>
+
+                    <img style="margin-left: 30px; border: 2px solid black; margin-bottom: 30px; align-self: center;height: auto; width: 85%;border-radius: 20px;"
+                        src="../../assets/Pages/definition_of_sensors.png" alt="">
+
+                    <h3>Examples</h3>
+                    <table class="comparison-table">
+                        <tr>
+                            <th>Sensor Type</th>
+                            <th>Physical Quantity Measured</th>
+                            <th>Example</th>
+                        </tr>
+                        <tr>
+                            <td>Temperature</td>
+                            <td>Heat</td>
+                            <td>Thermistor, RTD</td>
+                        </tr>
+                        <tr>
+                            <td>Light</td>
+                            <td>Illumination</td>
+                            <td>LDR (Light Dependent Resistor)</td>
+                        </tr>
+                        <tr>
+                            <td>Pressure</td>
+                            <td>Force per area</td>
+                            <td>Strain gauge, Pressure sensor</td>
+                        </tr>
+                        <tr>
+                            <td>Motion</td>
+                            <td>Movement</td>
+                            <td>PIR sensor (infrared)</td>
+                        </tr>
+                        <tr>
+                            <td>Proximity</td>
+                            <td>Distance</td>
+                            <td>Ultrasonic sensor, Reed switch</td>
+                        </tr>
+                    </table>
+
+                    <p>
+                        <strong>Transducer:</strong> It converts the signal from one physical form to another physical
+                        form. it is also called energy converter. For example, microphone converts sound to electrical
+                        signal. It is based on the principle of conservation of energy.
+                    </p>
+
+                    <h3>Examples</h3>
+                    <table class="comparison-table">
+                        <tr>
+                            <th>Transducer Type</th>
+                            <th>Input</th>
+                            <th>Output</th>
+                            <th>Example</th>
+                        </tr>
+                        <tr>
+                            <td>Temperature</td>
+                            <td>Heat</td>
+                            <td>Electrical</td>
+                            <td>Thermocouple</td>
+                        </tr>
+                        <tr>
+                            <td>Pressure</td>
+                            <td>Mechanical</td>
+                            <td>Electrical</td>
+                            <td>Strain gauge</td>
+                        </tr>
+                        <tr>
+                            <td>Light</td>
+                            <td>Optical</td>
+                            <td>Electrical</td>
+                            <td>Photodiode</td>
+                        </tr>
+                        <tr>
+                            <td>Sound</td>
+                            <td>Acoustic</td>
+                            <td>Electrical</td>
+                            <td>Microphone</td>
+                        </tr>
+                        <tr>
+                            <td>Electrical</td>
+                            <td>Electrical</td>
+                            <td>Mechanical</td>
+                            <td>Loudspeaker</td>
+                        </tr>
+                    </table>
+
+                    <p>
+                        <strong>Transmitter:</strong> A transmitter is a device that receives a signal from a sensor and
+                        converts or conditions it into a standardized electrical signal (e.g., 4-20 mA, 0-10 V, or
+                        digital) that can be transmitted over long distances to a PLC, DCS, or SCADA system.
+                    </p>
+
+                    <h3>Functions of a Transmitter:</h3>
+                    <ul>
+                        <li>Amplifies weak signals from the sensor.</li>
+                        <li>Converts signals to a standard format.</li>
+                        <li>Provides isolation between sensor and control system.</li>
+                        <li>Enables long-distance signal transmission without loss.</li>
+                    </ul>
+
+                    <h3>Simple Understanding:</h3>
+                    <ul>
+                        <li>Sensor → Detects.</li>
+                        <li>Transducer → Converts.</li>
+                        <li>Transmitter → Sends.</li>
+                    </ul>
+
+                    <h3>Examples</h3>
+                    <table class="comparison-table">
+                        <tr>
+                            <th>Signal Type</th>
+                            <th>Sensor Input</th>
+                            <th>Transmitter Output</th>
+                            <th>Example</th>
+                        </tr>
+                        <tr>
+                            <td>Temperature</td>
+                            <td>RTD</td>
+                            <td>4–20 mA current</td>
+                            <td>Temperature transmitter</td>
+                        </tr>
+                        <tr>
+                            <td>Pressure</td>
+                            <td>Strain gauge</td>
+                            <td>0–10 V</td>
+                            <td>Pressure transmitter</td>
+                        </tr>
+                        <tr>
+                            <td>Flow</td>
+                            <td>Flow sensor</td>
+                            <td>Digital signal over RS485</td>
+                            <td>Flow transmitter</td>
+                        </tr>
+                        <tr>
+                            <td>Level</td>
+                            <td>Ultrasonic sensor</td>
+                            <td>Analog or digital</td>
+                            <td>Level transmitter</td>
+                        </tr>
+                    </table>
+
+                    <h3>Comparison Table</h3>
+                    <table class="comparison-table">
+                        <tr>
+                            <th>Aspect</th>
+                            <th>Sensor</th>
+                            <th>Transducer</th>
+                            <th>Transmitter</th>
+                        </tr>
+                        <tr>
+                            <td>Definition</td>
+                            <td>A device that detects or measures a physical quantity</td>
+                            <td>A device that converts one form of energy into another</td>
+                            <td>A device that sends the measured signal to a control or display system</td>
+                        </tr>
+                        <tr>
+                            <td>Main Function</td>
+                            <td>Sensing or detecting a physical parameter</td>
+                            <td>Energy or signal conversion</td>
+                            <td>Signal transmission</td>
+                        </tr>
+                        <tr>
+                            <td>Input</td>
+                            <td>Physical quantity (temperature, pressure, light, etc.)</td>
+                            <td>Physical or electrical signal</td>
+                            <td>Electrical signal from sensor/transducer</td>
+                        </tr>
+                        <tr>
+                            <td>Output</td>
+                            <td>Usually a raw signal (often non-standard)</td>
+                            <td>Electrical signal (voltage, current, resistance, etc.)</td>
+                            <td>Standardized signal (e.g., 4-20 mA, 0-10 V)</td>
+                        </tr>
+                        <tr>
+                            <td>Signal Type</td>
+                            <td>May be mechanical, electrical, or optical</td>
+                            <td>Electrical output</td>
+                            <td>Electrical output suitable for long-distance transmission</td>
+                        </tr>
+                        <tr>
+                            <td>Accuracy & Processing</td>
+                            <td>Low processing</td>
+                            <td>Converts signal only</td>
+                            <td>Conditions, amplifies, and standardizes signal</td>
+                        </tr>
+                        <tr>
+                            <td>Examples</td>
+                            <td>Thermistor, RTD, LDR</td>
+                            <td>Thermocouple, Strain gauge</td>
+                            <td>Pressure transmitter, Temperature transmitter</td>
+                        </tr>
+                        <tr>
+                            <td>Role in Measurement System</td>
+                            <td>First element</td>
+                            <td>Middle element</td>
+                            <td>Final element before control/display</td>
+                        </tr>
+                        <tr>
+                            <td>Power Requirement</td>
+                            <td>Usually passive</td>
+                            <td>Active or passive</td>
+                            <td>Requires external power</td>
+                        </tr>
+                    </table>
+
+                    <h2>Classification of Sensors</h2>
+                    <p>Sensors can be classified based on measured parameter, output type, or working principle.</p>
+
+                    <ol>
+                        <li><b>Based on Measured Parameter:</b>
+                            <ul>
+                                <li><b>Temperature Sensors: </b> RTD, Thermocouple.</li>
+                                <li><b>Pressure Sensors: </b> Strain gauge, Piezoelectric.</li>
+                                <li><b>Level Sensors: </b> Float, Ultrasonic, Capacitive.</li>
+                                <li><b>Flow Sensors: </b> Electromagnetic, Turbine.</li>
+                                <li><b>Position / Proximity Sensors: </b> Inductive, Capacitive, Photoelectric.</li>
+                                <li><b>Speed / Rotation Sensors: </b> Incremental or Absolute Encoders.</li>
+                            </ul>
+                        </li>
+
+                        <li><b>Based on Output Type:</b>
+                            <ul>
+                                <li><b>Digital Sensors: </b> Provide discrete ON/OFF signals.</li>
+                                <li><b>Analog Sensors: </b> Provide continuous signals (voltage/current).</li>
+                            </ul>
+                        </li>
+
+                        <li><b>Based on Working Principle:</b>
+                            <ul>
+                                <li><b>Mechanical Sensors: </b> Switches, Levers, Bourdon tubes.</li>
+                                <li><b>Electromagnetic Sensors: </b> Inductive, Hall effect.</li>
+                                <li><b>Optical Sensors: </b> Photoelectric, Fiber optic.</li>
+                                <li><b>Thermal Sensors: </b> Thermocouples, RTDs.</li>
+                                <li><b>Pneumatic/Hydraulic Sensors: </b> Pressure switches, Flow transmitters.</li>
+                            </ul>
+                        </li>
+                    </ol>
+
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Add smooth scroll behavior for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+    </script>
+
+    <!-- MCQ Modal -->
+    <div id="mcq-modal" class="mcq-modal">
+        <div class="mcq-modal-content">
+            <div class="mcq-modal-header">
+                <h2>Multiple Choice Questions</h2>
+                <button class="close-btn" onclick="closeMCQModal()">&times;</button>
+            </div>
+            <div class="mcq-modal-body">
+                <div id="mcq-container"></div>
+            </div>
+            <div class="mcq-modal-footer">
+                <button class="reset-btn" onclick="resetMCQs()">Reset Answers</button>
+                <button class="close-modal-btn" onclick="closeMCQModal()">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MCQ Handler Script -->
+    <script src="../mcq-handler.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,3317 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PLC Software</title>
+    <link rel="stylesheet" href="../defination.css">
+    <style>
+      :root {
+        --primary-color: #f8f9fa;
+        --secondary-color: #e9ecef;
+        --text-color: #343a40;
+        --accent-color: #6c757d;
+        --border-color: #dee2e6;
+        --hover-color: #f1f3f5;
+        --shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        --green: #28a745;
+        --red: #dc3545;
+        --blue: #007bff;
+        --yellow: #ffc107;
+        --orange: #fd7e14;
+        --dark: #212529;
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: Georgia, "Times New Roman", Times, serif;
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        color: var(--text-color);
+        min-height: 100vh;
+        overflow-x: hidden;
+      }
+
+      /* ======= HEADER ======= */
+      header {
+        /* background: linear-gradient(135deg, #343a40 0%, #495057 100%); */
+        background: #dee2e6;
+        color: white;
+        padding: 18px 30px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+        position: sticky;
+        top: 0;
+        z-index: 100;
+      }
+
+      header h1 {
+        font-size: 1.4rem;
+        font-weight: 700;
+        color: white;
+        letter-spacing: 1px;
+      }
+
+      header .subtitle {
+        font-size: 0.8rem;
+        color: #adb5bd;
+        margin-top: 2px;
+      }
+
+      .status-badge {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        background: rgba(255, 255, 255, 0.1);
+        padding: 6px 14px;
+        border-radius: 20px;
+        font-size: 0.85rem;
+        margin-left: 363px;
+        width: 383px;
+    margin-top: -3px;
+      }
+
+      .status-dot {
+        width: 10px;
+        height: 10px;
+        border-radius: 50%;
+        background: var(--green);
+        animation: pulse 1.5s infinite;
+      }
+
+      @keyframes pulse {
+        0%,
+        100% {
+          box-shadow: 0 0 0 0 rgba(40, 167, 69, 0.5);
+        }
+        50% {
+          box-shadow: 0 0 0 6px rgba(40, 167, 69, 0);
+        }
+      }
+
+      /* ======= TABS ======= */
+      .tabs {
+        display: flex;
+        background: white;
+        border-bottom: 2px solid var(--border-color);
+        padding: 0 20px;
+        /* overflow-x: hidden; */
+        gap: 0;
+        box-shadow: var(--shadow);
+        margin-top: 19px;
+        height: 5pc;
+      }
+
+      .tab-btn {
+        padding: 14px 22px;
+        border: none;
+        background: none;
+        font-family: Georgia, serif;
+        font-size: 0.9rem;
+        color: var(--accent-color);
+        cursor: pointer;
+        border-bottom: 3px solid transparent;
+        margin-bottom: -2px;
+        transition: all 0.3s;
+        white-space: nowrap;
+        font-weight: 600;
+      }
+
+      .tab-btn.active {
+        color: var(--blue);
+        border-bottom-color: var(--blue);
+      }
+
+      .tab-btn:hover:not(.active) {
+        color: var(--text-color);
+        background: var(--hover-color);
+      }
+
+      /* ======= MAIN CONTENT ======= */
+      .tab-content {
+        display: none;
+        padding: 24px;
+      }
+      .tab-content.active {
+        display: block;
+      }
+
+      /* ======= SECTION CARDS ======= */
+      .card {
+        background: white;
+        border-radius: 12px;
+        box-shadow: var(--shadow);
+        padding: 24px;
+        margin-bottom: 20px;
+      }
+
+      .card h2 {
+        font-size: 1.2rem;
+        margin-bottom: 16px;
+        color: var(--text-color);
+        border-left: 4px solid var(--blue);
+        padding-left: 12px;
+      }
+
+      .card h3 {
+        font-size: 1rem;
+        margin-bottom: 10px;
+        color: var(--text-color);
+      }
+
+      .card p,
+      .card li {
+        font-size: 0.92rem;
+        line-height: 1.7;
+        color: var(--accent-color);
+        margin-bottom: 8px;
+      }
+
+      .card ul {
+        padding-left: 20px;
+      }
+
+      /* ======= SIMULATION LAYOUT ======= */
+      .sim-grid {
+        display: grid;
+        grid-template-columns: 320px 1fr 280px;
+        gap: 20px;
+        align-items: start;
+      }
+
+      @media (max-width: 1100px) {
+        .sim-grid {
+          grid-template-columns: 1fr 1fr;
+        }
+      }
+
+      @media (max-width: 700px) {
+        .sim-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      /* ======= PRESSURE GAUGE ======= */
+      .gauge-wrapper {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 16px;
+      }
+
+      .gauge-container {
+        position: relative;
+        width: 260px;
+        height: 260px;
+      }
+
+      #gaugeCanvas {
+        width: 260px;
+        height: 260px;
+      }
+
+      .gauge-label {
+        text-align: center;
+        font-size: 0.85rem;
+        color: var(--accent-color);
+        font-weight: 600;
+      }
+
+      /* ======= DIGITAL DISPLAY ======= */
+      .digital-display {
+        background: #1a1a2e;
+        border-radius: 10px;
+        padding: 16px;
+        border: 2px solid #333;
+        box-shadow:
+          inset 0 0 20px rgba(0, 0, 0, 0.5),
+          0 0 10px rgba(0, 200, 100, 0.1);
+      }
+
+      .display-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 8px 0;
+        border-bottom: 1px solid #2a2a4a;
+      }
+
+      .display-row:last-child {
+        border-bottom: none;
+      }
+
+      .display-label {
+        font-size: 0.75rem;
+        color: #7f8c8d;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        font-family: monospace;
+      }
+
+      .display-value {
+        font-size: 1.1rem;
+        font-family: "Courier New", monospace;
+        font-weight: bold;
+        color: #00ff88;
+        text-shadow: 0 0 10px rgba(0, 255, 136, 0.5);
+      }
+
+      .display-value.warning {
+        color: #ffc107;
+        text-shadow: 0 0 10px rgba(255, 193, 7, 0.5);
+      }
+      .display-value.danger {
+        color: #ff4444;
+        text-shadow: 0 0 10px rgba(255, 68, 68, 0.5);
+      }
+
+      /* ======= CONTROLS ======= */
+      .controls-panel {
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+      }
+
+      .slider-group {
+        background: var(--secondary-color);
+        border-radius: 10px;
+        padding: 16px;
+      }
+
+      .slider-group label {
+        display: block;
+        font-size: 0.85rem;
+        font-weight: 700;
+        color: var(--text-color);
+        margin-bottom: 8px;
+      }
+
+      input[type="range"] {
+        width: 100%;
+        height: 8px;
+        -webkit-appearance: none;
+        background: linear-gradient(
+          to right,
+          var(--green) 0%,
+          var(--yellow) 50%,
+          var(--red) 100%
+        );
+        border-radius: 4px;
+        outline: none;
+        cursor: pointer;
+      }
+
+      input[type="range"]::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
+        background: white;
+        border: 3px solid var(--blue);
+        cursor: pointer;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+        transition: transform 0.2s;
+      }
+
+      input[type="range"]::-webkit-slider-thumb:hover {
+        transform: scale(1.2);
+      }
+
+      .slider-val {
+        text-align: center;
+        font-size: 1rem;
+        font-weight: 700;
+        color: var(--blue);
+        margin-top: 6px;
+      }
+
+      /* ======= BUTTONS ======= */
+      .btn {
+        padding: 10px 20px;
+        border: none;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 0.9rem;
+        font-family: Georgia, serif;
+        font-weight: 700;
+        transition: all 0.3s;
+      }
+
+      .btn-primary {
+        background: var(--blue);
+        color: white;
+      }
+      .btn-primary:hover {
+        background: #0056b3;
+        transform: translateY(-1px);
+        box-shadow: 0 4px 12px rgba(0, 123, 255, 0.4);
+      }
+
+      .btn-success {
+        background: var(--green);
+        color: white;
+      }
+      .btn-success:hover {
+        background: #218838;
+        transform: translateY(-1px);
+      }
+
+      .btn-danger {
+        background: var(--red);
+        color: white;
+      }
+      .btn-danger:hover {
+        background: #c82333;
+        transform: translateY(-1px);
+      }
+
+      .btn-warning {
+        background: var(--yellow);
+        color: #333;
+      }
+      .btn-warning:hover {
+        background: #e0a800;
+        transform: translateY(-1px);
+      }
+
+      .btn-group {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap;
+      }
+
+      /* ======= CONTAINER ANIMATION ======= */
+      .container-visual {
+        position: relative;
+        width: 100%;
+        max-width: 340px;
+        margin: 0 auto;
+        top: 20px;
+      }
+
+      .container {
+    display: flex;
+    flex-direction: column;
+    min-height: 16vh;
+    height: 17%;
+    max-width: 100%;
+    margin: 0 auto;
+    /* padding: clamp(10px, 1.5vw, 40px) clamp(15px, 2vw, 50px); */
+    width: 100%;
+    max-width: 100%;
+}
+
+
+      .tank-wrapper {
+        position: relative;
+        width: 180px;
+        height: 280px;
+        margin: 0 auto;
+      }
+
+      .tank-body {
+        position: absolute;
+        bottom: 0;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 160px;
+        height: 260px;
+        border: 4px solid #555;
+        border-radius: 10px 10px 8px 8px;
+        background: linear-gradient(
+          to right,
+          rgba(200, 230, 255, 0.3),
+          rgba(255, 255, 255, 0.1),
+          rgba(200, 230, 255, 0.3)
+        );
+        overflow: hidden;
+        box-shadow:
+          inset 0 0 20px rgba(0, 0, 0, 0.1),
+          0 4px 20px rgba(0, 0, 0, 0.2);
+      }
+
+      .tank-top {
+        position: absolute;
+        top: 4px;
+        left: 48%;
+        transform: translateX(-50%);
+        width: 80px;
+        height: 16px;
+        background: linear-gradient(to bottom, #888, #666);
+        border-radius: 4px 4px 0 0;
+        border: 2px solid #555;
+      }
+
+      .air-fill {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        background: linear-gradient(
+          to top,
+          rgba(100, 160, 255, 0.6) 0%,
+          rgba(160, 200, 255, 0.3) 60%,
+          rgba(200, 220, 255, 0.15) 100%
+        );
+        transition: height 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        border-radius: 0 0 4px 4px;
+      }
+
+      .bubbles-container {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        pointer-events: none;
+      }
+
+      .bubble {
+        position: absolute;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.6);
+        animation: rise linear infinite;
+        bottom: 10px;
+      }
+
+      @keyframes rise {
+        0% {
+          transform: translateY(0) scale(1);
+          opacity: 0.7;
+        }
+        100% {
+          transform: translateY(-280px) scale(0.3);
+          opacity: 0;
+        }
+      }
+
+      .pressure-lines {
+        position: absolute;
+        top: 10px;
+        left: 10px;
+        right: 10px;
+        pointer-events: none;
+      }
+
+      .scale-mark {
+        position: absolute;
+        right: 0;
+        display: flex;
+        align-items: center;
+        gap: 4px;
+        font-size: 0.65rem;
+        color: #888;
+        font-family: monospace;
+      }
+
+      .scale-line {
+        width: 10px;
+        height: 1px;
+        background: #aaa;
+      }
+
+      /* Pipe system */
+      .pipe-system {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+      }
+
+      /* ======= FORMULA PANEL ======= */
+      .formula-box {
+        background: #f0f4ff;
+        border: 1px solid #c5d5ff;
+        border-radius: 10px;
+        padding: 16px;
+        margin-bottom: 12px;
+      }
+
+      .formula-title {
+        font-size: 0.8rem;
+        font-weight: 700;
+        color: var(--blue);
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 8px;
+      }
+
+      .formula-math {
+        font-family: "Courier New", monospace;
+        font-size: 0.95rem;
+        color: #2c3e50;
+        background: white;
+        padding: 10px;
+        border-radius: 6px;
+        border: 1px solid #dde;
+        margin-bottom: 6px;
+        word-break: break-word;
+      }
+
+      .formula-result {
+        font-size: 0.9rem;
+        color: var(--green);
+        font-weight: 700;
+        font-family: monospace;
+      }
+
+      /* ======= CALC INPUT ======= */
+      .calc-section {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+      }
+
+      .input-group {
+        display: flex;
+        flex-direction: column;
+        gap: 8px;
+      }
+
+      .input-group label {
+        font-size: 0.85rem;
+        font-weight: 700;
+        color: var(--text-color);
+      }
+
+      .input-group input {
+        padding: 10px 14px;
+        border: 2px solid var(--border-color);
+        border-radius: 8px;
+        font-size: 0.95rem;
+        font-family: monospace;
+        color: var(--text-color);
+        outline: none;
+        transition: border-color 0.3s;
+      }
+
+      .input-group input:focus {
+        border-color: var(--blue);
+      }
+
+      .calc-result-box {
+        background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+        border-radius: 10px;
+        padding: 16px;
+        margin-top: 16px;
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr;
+        gap: 12px;
+      }
+
+      .result-item {
+        text-align: center;
+      }
+
+      .result-lbl {
+        font-size: 0.7rem;
+        color: #7f8c8d;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 4px;
+        font-family: monospace;
+      }
+
+      .result-num {
+        font-size: 1.1rem;
+        font-family: monospace;
+        font-weight: bold;
+        color: #00ff88;
+        text-shadow: 0 0 8px rgba(0, 255, 136, 0.4);
+      }
+
+      /* ======= THEORY SECTION ======= */
+      .theory-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 20px;
+      }
+
+      @media (max-width: 700px) {
+        .theory-grid {
+          grid-template-columns: 1fr;
+        }
+        .calc-section {
+          grid-template-columns: 1fr;
+        }
+        .calc-result-box {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      .info-card {
+        background: white;
+        border-radius: 12px;
+        box-shadow: var(--shadow);
+        padding: 20px;
+        border-top: 4px solid var(--blue);
+      }
+
+      .info-card h3 {
+        font-size: 1rem;
+        margin-bottom: 12px;
+        color: var(--text-color);
+      }
+
+      .info-card p,
+      .info-card li {
+        font-size: 0.88rem;
+        line-height: 1.7;
+        color: var(--accent-color);
+      }
+
+      .info-card ul {
+        padding-left: 18px;
+      }
+
+      /* ======= MCQ SECTION ======= */
+      .mcq-container {
+        max-width: 800px;
+        margin: 0 auto;
+      }
+
+      .mcq-question {
+        background: white;
+        border-radius: 12px;
+        padding: 20px;
+        margin-bottom: 20px;
+        box-shadow: var(--shadow);
+        border-left: 4px solid var(--blue);
+      }
+
+      .question-num {
+        font-size: 0.75rem;
+        color: var(--blue);
+        font-weight: 700;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        margin-bottom: 8px;
+      }
+
+      .question-text {
+        font-size: 1rem;
+        font-weight: 700;
+        margin-bottom: 14px;
+        color: var(--text-color);
+        line-height: 1.5;
+      }
+
+      .options {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+      }
+
+      .option {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px 16px;
+        border: 2px solid var(--border-color);
+        border-radius: 8px;
+        cursor: pointer;
+        transition: all 0.3s;
+        background: white;
+      }
+
+      .option:hover {
+        background: var(--hover-color);
+        border-color: var(--blue);
+      }
+      .option.correct {
+        background: #d4edda;
+        border-color: var(--green);
+      }
+      .option.wrong {
+        background: #f8d7da;
+        border-color: var(--red);
+      }
+
+      .option input {
+        cursor: pointer;
+      }
+      .option-label {
+        font-size: 0.92rem;
+        color: var(--text-color);
+        cursor: pointer;
+      }
+
+      .check-btn {
+        margin-top: 12px;
+        padding: 8px 20px;
+        background: var(--green);
+        color: white;
+        border: none;
+        border-radius: 6px;
+        cursor: pointer;
+        font-size: 0.85rem;
+        font-family: Georgia, serif;
+        font-weight: 700;
+        transition: all 0.3s;
+      }
+
+      .check-btn:hover {
+        background: #218838;
+      }
+
+      .feedback {
+        margin-top: 10px;
+        padding: 10px 14px;
+        border-radius: 6px;
+        font-size: 0.88rem;
+        display: none;
+        line-height: 1.5;
+      }
+
+      .feedback.correct {
+        background: #d4edda;
+        color: #155724;
+        display: block;
+      }
+      .feedback.wrong {
+        background: #f8d7da;
+        color: #721c24;
+        display: block;
+      }
+
+      /* ======= SCORE ======= */
+      .score-board {
+        background: linear-gradient(135deg, #007bff 0%, #0056b3 100%);
+        color: white;
+        border-radius: 12px;
+        padding: 20px;
+        text-align: center;
+        margin-bottom: 24px;
+      }
+
+      .score-board h3 {
+        font-size: 1rem;
+        opacity: 0.9;
+      }
+      .score-val {
+        font-size: 2.5rem;
+        font-weight: 900;
+        margin: 8px 0;
+      }
+
+      /* ======= ALARM ======= */
+      .alarm-panel {
+        background: #fff3cd;
+        border: 2px solid var(--yellow);
+        border-radius: 10px;
+        padding: 14px 18px;
+        margin-bottom: 16px;
+        display: none;
+        align-items: center;
+        gap: 12px;
+        animation: flashBg 1s infinite;
+      }
+
+      .alarm-panel.show {
+        display: flex;
+      }
+      .alarm-panel.critical {
+        background: #f8d7da;
+        border-color: var(--red);
+        animation: flashBg2 0.5s infinite;
+      }
+
+      @keyframes flashBg {
+        0%,
+        100% {
+          background: #fff3cd;
+        }
+        50% {
+          background: #ffeaa7;
+        }
+      }
+
+      @keyframes flashBg2 {
+        0%,
+        100% {
+          background: #f8d7da;
+        }
+        50% {
+          background: #f5c6cb;
+        }
+      }
+
+      .alarm-icon {
+        font-size: 1.5rem;
+      }
+      .alarm-text {
+        font-size: 0.9rem;
+        font-weight: 700;
+      }
+
+      /* ======= SCENARIO BUTTONS ======= */
+      .scenario-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(136px, 1fr));
+        gap: 12px;
+        margin-bottom: 20px;
+      }
+
+      .scenario-btn {
+        padding: 12px 10px;
+        background: var(--secondary-color);
+        border: 2px solid var(--border-color);
+        border-radius: 10px;
+        cursor: pointer;
+        font-size: 0.82rem;
+        font-family: Georgia, serif;
+        text-align: center;
+        transition: all 0.3s;
+        font-weight: 600;
+        color: var(--text-color);
+        line-height: 1.4;
+      }
+
+      .scenario-btn:hover {
+        background: var(--blue);
+        color: white;
+        border-color: var(--blue);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 123, 255, 0.3);
+      }
+
+      /* ======= LOG TABLE ======= */
+      .log-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 0.82rem;
+      }
+
+      .log-table th {
+        background: var(--secondary-color);
+        padding: 10px 12px;
+        text-align: left;
+        color: var(--text-color);
+        font-weight: 700;
+        border: 1px solid var(--border-color);
+      }
+
+      .log-table td {
+        padding: 8px 12px;
+        border: 1px solid var(--border-color);
+        color: var(--accent-color);
+        font-family: monospace;
+      }
+
+      .log-table tr:nth-child(even) td {
+        background: #fafbfc;
+      }
+
+      /* ======= TOOLTIPS ======= */
+      .tooltip-wrap {
+        position: relative;
+        display: inline-block;
+      }
+      .tooltip-text {
+        position: absolute;
+        bottom: 120%;
+        left: 50%;
+        transform: translateX(-50%);
+        background: #343a40;
+        color: white;
+        padding: 6px 12px;
+        border-radius: 6px;
+        font-size: 0.78rem;
+        white-space: nowrap;
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.3s;
+        z-index: 10;
+      }
+      .tooltip-wrap:hover .tooltip-text {
+        opacity: 1;
+      }
+
+      /* ======= FLOW ANIMATION ======= */
+      .flow-arrow {
+        font-size: 1.5rem;
+        color: var(--blue);
+        animation: flow 1.5s infinite;
+        display: inline-block;
+      }
+
+      @keyframes flow {
+        0%,
+        100% {
+          opacity: 0.3;
+          transform: translateX(0);
+        }
+        50% {
+          opacity: 1;
+          transform: translateX(4px);
+        }
+      }
+
+      /* ======= RESPONSIVE ======= */
+      @media (max-width: 900px) {
+        .sim-grid {
+          grid-template-columns: 1fr 1fr;
+        }
+      }
+
+      .highlight {
+        background: #fff3cd;
+        padding: 2px 6px;
+        border-radius: 4px;
+        font-weight: 700;
+      }
+
+      .badge {
+        display: inline-block;
+        padding: 2px 10px;
+        border-radius: 20px;
+        font-size: 0.75rem;
+        font-weight: 700;
+      }
+
+      .badge-green {
+        background: #d4edda;
+        color: #155724;
+      }
+      .badge-yellow {
+        background: #fff3cd;
+        color: #856404;
+      }
+      .badge-red {
+        background: #f8d7da;
+        color: #721c24;
+      }
+      .sel-header-bar {
+        width: 100%;
+        max-width: 720px;
+        display: flex;
+        align-items: center;
+        /* margin-bottom: 1.4rem; */
+      }
+            .back-theory-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 9px 20px;
+        background: var(--secondary-color);
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        color: var(--text-color);
+        text-decoration: none;
+        cursor: pointer;
+        font-size: 15px;
+        font-family: "Source Sans 3", sans-serif;
+        font-weight: 700;
+        transition: all 0.25s ease;
+      }
+      .back-theory-btn:hover {
+        background: var(--hover-color);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+      }
+      #selection-screen {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: calc(100vh - 100px);
+        padding: 2rem;
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+      }
+      .sel-badge {
+        display: inline-block;
+        font-size: 0.7rem;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: var(--accent-color);
+        background: var(--secondary-color);
+        border: 1px solid var(--border-color);
+        padding: 4px 16px;
+        border-radius: 20px;
+        margin-bottom: 1rem;
+        font-family: "Source Sans 3", sans-serif;
+      }
+      .sel-title {
+        font-family: "Merriweather", serif;
+        font-size: clamp(1.6rem, 4vw, 2.8rem);
+        font-weight: 700;
+        color: var(--text-color);
+        text-align: center;
+        margin-bottom: 0.5rem;
+        line-height: 1.2;
+      }
+      .sel-sub {
+        color: var(--accent-color);
+        text-align: center;
+        font-size: clamp(0.85rem, 2vw, 1rem);
+        margin-bottom: 2.5rem;
+        max-width: 520px;
+        line-height: 1.6;
+      }
+      .sel-cards {
+        display: flex;
+        gap: 1.5rem;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+
+      .sel-card {
+        background: white;
+        border: 2px solid var(--border-color);
+        border-radius: 16px;
+        padding: 2rem 1.8rem;
+        width: clamp(260px, 38vw, 320px);
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-align: center;
+        box-shadow: var(--shadow);
+      }
+      .sel-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15);
+      }
+      .sel-card.ntc:hover {
+        border-color: #c0392b;
+      }
+      .sel-card.ptc:hover {
+        border-color: #2471a3;
+      }
+
+      .sel-card-icon {
+        width: 72px;
+        height: 72px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1.2rem;
+        font-size: 1.8rem;
+      }
+      .sel-card.ntc .sel-card-icon {
+        background: #fdecea;
+        border: 2px solid #f1948a;
+      }
+      .sel-card.ptc .sel-card-icon {
+        background: #eaf4fb;
+        border: 2px solid #7fb3d3;
+      }
+      .sel-card h2 {
+        font-family: "Merriweather", serif;
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-bottom: 0.2rem;
+      }
+      .sel-card.ntc h2 {
+        color: #c0392b;
+      }
+      .sel-card.ptc h2 {
+        color: #2471a3;
+      }
+      .sel-card .sel-card-full {
+        font-size: 0.7rem;
+        letter-spacing: 0.08em;
+        color: var(--accent-color);
+        margin-bottom: 0.9rem;
+        text-transform: uppercase;
+      }
+      .sel-card p {
+        color: var(--accent-color);
+        font-size: 0.88rem;
+        line-height: 1.6;
+        margin-bottom: 1.3rem;
+      }
+      .sel-tags {
+        display: flex;
+        gap: 6px;
+        flex-wrap: wrap;
+        justify-content: center;
+        margin-bottom: 1.3rem;
+      }
+      .sel-tag {
+        font-size: 0.68rem;
+        padding: 3px 10px;
+        border-radius: 12px;
+        letter-spacing: 0.04em;
+      }
+      .sel-card.ntc .sel-tag {
+        background: #fdecea;
+        color: #c0392b;
+        border: 1px solid #f1948a;
+      }
+      .sel-card.ptc .sel-tag {
+        background: #eaf4fb;
+        color: #2471a3;
+        border: 1px solid #7fb3d3;
+      }
+      .sel-go-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 26px;
+        border-radius: 8px;
+        border: none;
+        cursor: pointer;
+        font-size: 0.85rem;
+        font-weight: 600;
+        font-family: "Source Sans 3", sans-serif;
+        transition: all 0.25s ease;
+      }
+      .sel-card.ntc .sel-go-btn {
+        background: #c0392b;
+        color: white;
+      }
+      .sel-card.ntc .sel-go-btn:hover {
+        background: #a93226;
+      }
+      .sel-card.ptc .sel-go-btn {
+        background: #2471a3;
+        color: white;
+      }
+      .sel-card.ptc .sel-go-btn:hover {
+        background: #1a5276;
+      }
+      .logo-container i {
+        font-size: clamp(1.5rem, 3vw, 3.5rem);
+        color: var(--accent-color);
+      }
+    </style>
+  </head>
+  <body>
+<div class="container">
+      <header style="background: #f8f9fa;">
+  <div style="display:flex;align-items:center;gap:16px;">
+    <img style="height: 70px;margin-right: 184px;" src="../../assets/Scientech logo-2.png" alt="">
+    <h1 style="color: black;">Pressure Sensor Simulation</h1>
+  </div>
+  <div>
+     <a href="./Pressure_Transmitter.html" class="back-button">
+                    <i class="fas fa-arrow-left"></i><img style="height: 29px;" src="./left-arrow.png" alt=""> Back to Course
+                </a>
+  </div>
+</header>
+      </div>
+
+    <!-- TABS -->
+    <div class="tabs">
+      <button class="tab-btn active" onclick="showTab('simulation')">
+        Simulation
+      </button>
+      <button class="tab-btn" onclick="showTab('theory')">Theory</button>
+      <button class="tab-btn" onclick="showTab('calculator')">
+        Formula Calculator
+      </button>
+      <button class="tab-btn" onclick="showTab('scenarios')">
+        Scenarios
+      </button>
+      <button class="tab-btn" onclick="showTab('mcq')">Quiz</button>
+      <button class="tab-btn" onclick="showTab('datalog')">Data Log</button>
+      <div class="status-badge" style="gap: 5px;">
+          <div class="status-dot" id="sysStatusDot"></div>
+          <span style="color: black;font-size: 17px;" id="sysStatusText">System Online</span>
+      </div>
+    </div>
+
+    <!-- ===========================
+     TAB 1: SIMULATION
+=========================== -->
+    <div class="tab-content active" id="tab-simulation">
+      <!-- Alarms -->
+      <div class="alarm-panel" id="alarmHigh">
+        <span class="alarm-icon">⚠️</span>
+        <div>
+          <div class="alarm-text">HIGH PRESSURE ALARM</div>
+          <div style="font-size: 0.8rem; color: #856404">
+            Pressure exceeded 120 psi — Check system immediately
+          </div>
+        </div>
+      </div>
+      <div class="alarm-panel critical" id="alarmCritical">
+        <span class="alarm-icon">🚨</span>
+        <div>
+          <div class="alarm-text">CRITICAL PRESSURE — EMERGENCY SHUTDOWN</div>
+          <div style="font-size: 0.8rem; color: #721c24">
+            Pressure exceeded 140 psi — Safety relay triggered
+          </div>
+        </div>
+      </div>
+
+      <div class="sim-grid">
+        <!-- LEFT: GAUGE -->
+        <div class="card">
+          <h2>Pressure Gauge</h2>
+          <div class="gauge-wrapper">
+            <canvas id="gaugeCanvas" width="260" height="260"></canvas>
+            <div class="gauge-label">
+              Bourdon Tube Pressure Gauge<br /><small style="color: #aaa"
+                >Range: 0 – 150 psi</small
+              >
+            </div>
+          </div>
+
+          <div style="margin-top: 16px">
+            <div class="digital-display">
+              <div class="display-row">
+                <span class="display-label">Pressure (psi)</span>
+                <span class="display-value" id="disp-psi">0.00</span>
+              </div>
+              <div class="display-row">
+                <span class="display-label">Current (mA)</span>
+                <span class="display-value" id="disp-ma">4.00</span>
+              </div>
+              <div class="display-row">
+                <span class="display-label">Pressure (bar)</span>
+                <span class="display-value" id="disp-bar">0.000</span>
+              </div>
+              <div class="display-row">
+                <span class="display-label">Pressure (kPa)</span>
+                <span class="display-value" id="disp-kpa">0.00</span>
+              </div>
+              <div class="display-row">
+                <span class="display-label">PLC Status</span>
+                <span class="display-value" id="disp-status">NORMAL</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- MIDDLE: CONTAINER + CONTROLS -->
+        <div>
+          <div class="card">
+            <h2>Pressure Vessel</h2>
+            <div
+              style="
+                display: flex;
+                gap: 24px;
+                align-items: center;
+                flex-wrap: wrap;
+              "
+            >
+              <!-- Tank Visual -->
+              <div class="container-visual">
+                <div class="tank-wrapper">
+                  <!-- Inlet pipe top -->
+                  <div
+                    style="
+                      position: absolute;
+                      top: -30px;
+                      left: 47%;
+                      transform: translateX(-50%);
+                      width: 20px;
+                      height: 35px;
+                      background: linear-gradient(to bottom, #888, #666);
+                      border: 2px solid #555;
+                      border-radius: 3px 3px 0 0;
+                      z-index: 2;
+                    "
+                  ></div>
+
+                  <!-- Scale marks -->
+                  <div
+                    style="
+                      position: absolute;
+                      right: -36px;
+                      top: 20px;
+                      height: 260px;
+                      display: flex;
+                      flex-direction: column;
+                      justify-content: space-between;
+                      z-index: 5;
+                    "
+                  >
+                    <div
+                      style="
+                        font-size: 0.6rem;
+                        color: #888;
+                        font-family: monospace;
+                      "
+                    >
+                      150
+                    </div>
+                    <div
+                      style="
+                        font-size: 0.6rem;
+                        color: #888;
+                        font-family: monospace;
+                      "
+                    >
+                      120
+                    </div>
+                    <div
+                      style="
+                        font-size: 0.6rem;
+                        color: #888;
+                        font-family: monospace;
+                      "
+                    >
+                      90
+                    </div>
+                    <div
+                      style="
+                        font-size: 0.6rem;
+                        color: #888;
+                        font-family: monospace;
+                      "
+                    >
+                      60
+                    </div>
+                    <div
+                      style="
+                        font-size: 0.6rem;
+                        color: #888;
+                        font-family: monospace;
+                      "
+                    >
+                      30
+                    </div>
+                    <div
+                      style="
+                        font-size: 0.6rem;
+                        color: #888;
+                        font-family: monospace;
+                      "
+                    >
+                      0
+                    </div>
+                  </div>
+
+                  <div class="tank-top"></div>
+                  <div class="tank-body">
+                    <div class="air-fill" id="airFill" style="height: 0%">
+                      <div
+                        class="bubbles-container"
+                        id="bubblesContainer"
+                      ></div>
+                    </div>
+
+                    <!-- Pressure lines inside tank -->
+                    <div
+                      style="
+                        position: absolute;
+                        top: 0;
+                        left: 0;
+                        right: 0;
+                        bottom: 0;
+                        pointer-events: none;
+                      "
+                      id="pressureLines"
+                    ></div>
+                  </div>
+
+                  <!-- Outlet pipe -->
+                  <div
+                    style="
+                      position: absolute;
+                      bottom: 40px;
+                      right: -17px;
+                      width: 30px;
+                      height: 14px;
+                      background: linear-gradient(to right, #777, #888);
+                      border: 2px solid #555;
+                      border-radius: 0 3px 3px 0;
+                      z-index: 2;
+                    "
+                  ></div>
+                </div>
+
+                <!-- Legend -->
+                <div style="text-align: center; margin-top: 16px">
+                  <div style="font-size: 0.75rem; color: #888">
+                    <span
+                      style="
+                        display: inline-block;
+                        width: 12px;
+                        height: 12px;
+                        background: rgba(100, 160, 255, 0.6);
+                        border-radius: 2px;
+                        margin-right: 4px;
+                        vertical-align: middle;
+                      "
+                    ></span
+                    >Compressed Air/Gas
+                  </div>
+                </div>
+              </div>
+
+              <!-- Pressure Info -->
+              <div style="flex: 1; min-width: 180px">
+                <div style="margin-bottom: 12px">
+                  <div
+                    style="font-size: 0.78rem; color: #888; margin-bottom: 4px"
+                  >
+                    Fill Pressure
+                  </div>
+                  <div
+                    style="
+                      background: #e9ecef;
+                      border-radius: 10px;
+                      overflow: hidden;
+                      height: 16px;
+                    "
+                  >
+                    <div
+                      id="fillBar"
+                      style="
+                        height: 100%;
+                        background: linear-gradient(to right, #007bff, #28a745);
+                        border-radius: 10px;
+                        transition: width 0.5s;
+                        width: 0%;
+                      "
+                    ></div>
+                  </div>
+                  <div
+                    style="
+                      font-size: 0.78rem;
+                      color: #888;
+                      text-align: right;
+                      margin-top: 2px;
+                    "
+                    id="fillPct"
+                  >
+                    0%
+                  </div>
+                </div>
+
+                <div
+                  style="
+                    display: grid;
+                    grid-template-columns: 1fr 1fr;
+                    gap: 10px;
+                    margin-bottom: 12px;
+                  "
+                >
+                  <div
+                    style="
+                      background: #f0f4ff;
+                      border-radius: 8px;
+                      padding: 10px;
+                      text-align: center;
+                    "
+                  >
+                    <div style="font-size: 0.7rem; color: #888">
+                      Signal Range
+                    </div>
+                    <div
+                      style="
+                        font-size: 1rem;
+                        font-weight: 700;
+                        color: var(--blue);
+                      "
+                    >
+                      4 – 20 mA
+                    </div>
+                  </div>
+                  <div
+                    style="
+                      background: #f0fff4;
+                      border-radius: 8px;
+                      padding: 10px;
+                      text-align: center;
+                    "
+                  >
+                    <div style="font-size: 0.7rem; color: #888">
+                      Press. Range
+                    </div>
+                    <div
+                      style="
+                        font-size: 1rem;
+                        font-weight: 700;
+                        color: var(--green);
+                      "
+                    >
+                      0 – 150 psi
+                    </div>
+                  </div>
+                </div>
+
+                <div
+                  style="
+                    font-size: 0.82rem;
+                    color: var(--accent-color);
+                    line-height: 1.6;
+                  "
+                >
+                  <strong>mA = 4 + (P / 150) × 16</strong><br />
+                  Where P = pressure in psi
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- CONTROLS CARD -->
+          <div class="card">
+            <h2>Controls Panel</h2>
+            <div class="controls-panel">
+              <div class="slider-group">
+                <label>Set Pressure (0 - 150 psi)</label>
+                <input
+                  type="range"
+                  id="pressureSlider"
+                  min="0"
+                  max="150"
+                  value="0"
+                  step="0.5"
+                  oninput="updateSimulation(this.value)"
+                />
+                <div class="slider-val" id="sliderVal">0.0 psi</div>
+              </div>
+
+              <div class="btn-group">
+                <button class="btn btn-success" onclick="startAutoRamp()">
+                  Auto Ramp Up
+                </button>
+                <button class="btn btn-warning" onclick="stopRamp()">
+                  Stop
+                </button>
+                <button class="btn btn-danger" onclick="emergencyStop()">
+                  Emergency Stop
+                </button>
+                <button class="btn btn-primary" onclick="resetSim()">
+                  Reset
+                </button>
+              </div>
+
+              <!-- Setpoints -->
+              <div
+                style="
+                  background: #f8f9fa;
+                  border-radius: 10px;
+                  padding: 14px;
+                  border: 1px solid #dee2e6;
+                "
+              >
+                <div
+                  style="
+                    font-weight: 700;
+                    font-size: 0.9rem;
+                    margin-bottom: 12px;
+                  "
+                >
+                  PLC Setpoints
+                </div>
+                <div
+                  style="
+                    display: grid;
+                    grid-template-columns: 1fr 1fr 1fr;
+                    gap: 10px;
+                  "
+                >
+                  <div>
+                    <label style="font-size: 0.75rem; color: #888"
+                      >Low Alarm (psi)</label
+                    >
+                    <input
+                      type="number"
+                      id="spLow"
+                      value="20"
+                      min="0"
+                      max="150"
+                      style="
+                        width: 100%;
+                        padding: 6px 8px;
+                        border: 2px solid #dee2e6;
+                        border-radius: 6px;
+                        font-size: 0.9rem;
+                      "
+                      oninput="updateSetpoints()"
+                    />
+                  </div>
+                  <div>
+                    <label style="font-size: 0.75rem; color: #888"
+                      >High Alarm (psi)</label
+                    >
+                    <input
+                      type="number"
+                      id="spHigh"
+                      value="120"
+                      min="0"
+                      max="150"
+                      style="
+                        width: 100%;
+                        padding: 6px 8px;
+                        border: 2px solid #dee2e6;
+                        border-radius: 6px;
+                        font-size: 0.9rem;
+                      "
+                      oninput="updateSetpoints()"
+                    />
+                  </div>
+                  <div>
+                    <label style="font-size: 0.75rem; color: #888"
+                      >Critical (psi)</label
+                    >
+                    <input
+                      type="number"
+                      id="spCrit"
+                      value="140"
+                      min="0"
+                      max="150"
+                      style="
+                        width: 100%;
+                        padding: 6px 8px;
+                        border: 2px solid #dee2e6;
+                        border-radius: 6px;
+                        font-size: 0.9rem;
+                      "
+                      oninput="updateSetpoints()"
+                    />
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- RIGHT: FORMULA LIVE -->
+        <div class="card">
+          <h2>Live Calculations</h2>
+
+          <div class="formula-box">
+            <div class="formula-title">Forward Formula (mA → psi)</div>
+            <div class="formula-math">P = (I − 4) × (150 / 16)</div>
+            <div class="formula-result" id="fwd-result">
+              P = (4 - 4) × 9.375 = 0.00 psi
+            </div>
+          </div>
+
+          <div class="formula-box">
+            <div class="formula-title">Reverse Formula (psi → mA)</div>
+            <div class="formula-math">mA = 4 + (P / 150) × 16</div>
+            <div class="formula-result" id="rev-result">
+              mA = 4 + (0/150) × 16 = 4.00 mA
+            </div>
+          </div>
+
+          <div class="formula-box">
+            <div class="formula-title">Span Calculation</div>
+            <div class="formula-math">
+              Span = 20 − 4 = 16 mA<br />Range = 150 − 0 = 150 psi<br />Scale =
+              150/16 = 9.375 psi/mA
+            </div>
+            <div class="formula-result">Scale Factor: 9.375 psi/mA</div>
+          </div>
+
+          <div
+            class="formula-box"
+            style="background: #f0fff4; border-color: #b2dfdb"
+          >
+            <div class="formula-title" style="color: var(--green)">
+              % of Range
+            </div>
+            <div class="formula-math">% = (P / 150) × 100</div>
+            <div class="formula-result" id="pct-result">
+              % = (0 / 150) × 100 = 0.00%
+            </div>
+          </div>
+
+          <!-- Mini lookup table -->
+          <div
+            style="
+              font-size: 0.8rem;
+              font-weight: 700;
+              margin-bottom: 8px;
+              margin-top: 4px;
+            "
+          >
+            Quick Reference Table
+          </div>
+          <table class="log-table">
+            <thead>
+              <tr>
+                <th>mA</th>
+                <th>psi</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>4</td>
+                <td>0</td>
+                <td><span class="badge badge-green">Normal</span></td>
+              </tr>
+              <tr>
+                <td>8</td>
+                <td>37.5</td>
+                <td><span class="badge badge-green">Normal</span></td>
+              </tr>
+              <tr>
+                <td>12</td>
+                <td>75</td>
+                <td><span class="badge badge-green">Normal</span></td>
+              </tr>
+              <tr>
+                <td>16</td>
+                <td>112.5</td>
+                <td><span class="badge badge-yellow">Caution</span></td>
+              </tr>
+              <tr>
+                <td>20</td>
+                <td>150</td>
+                <td><span class="badge badge-red">Max</span></td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===========================
+     TAB 2: THEORY
+=========================== -->
+    <div class="tab-content" id="tab-theory">
+      <div class="theory-grid">
+        <div class="info-card" style="border-top-color: #007bff">
+          <h3>What is a Pressure Sensor?</h3>
+          <p>
+            A pressure sensor (or pressure transmitter) is an instrument that
+            measures the force exerted by a fluid (liquid or gas) on a surface
+            per unit area. In industrial automation, it converts mechanical
+            pressure into an electrical signal.
+          </p>
+          <p>
+            The standard output signal in PLC/SCADA systems is
+            <strong>4-20 mA</strong>, which represents a linear relationship
+            between the measured pressure and the electrical output.
+          </p>
+          <ul>
+            <li>
+              <strong>4 mA</strong> → 0 psi (minimum pressure / live zero)
+            </li>
+            <li>
+              <strong>20 mA</strong> → 150 psi (maximum pressure / full scale)
+            </li>
+            <li>
+              <strong>Live Zero (4 mA)</strong> helps detect broken wire vs zero
+              pressure
+            </li>
+          </ul>
+        </div>
+
+        <div class="info-card" style="border-top-color: #28a745">
+          <h3>How PLC Uses the Signal</h3>
+          <p>
+            The PLC (Programmable Logic Controller) reads the 4-20 mA current
+            signal via an analog input module. It then converts this current
+            value into engineering units (psi) using scaling functions.
+          </p>
+          <ul>
+            <li>
+              <strong>Analog Input Module</strong> — Receives 4-20 mA signal
+            </li>
+            <li>
+              <strong>A/D Converter</strong> — Converts current to digital
+              counts (e.g., 0-4095)
+            </li>
+            <li><strong>Scaling Block</strong> — Maps digital counts to psi</li>
+            <li>
+              <strong>Setpoint Comparison</strong> — Triggers alarms or control
+              actions
+            </li>
+            <li>
+              <strong>HMI/SCADA</strong> — Displays real-time value to operators
+            </li>
+          </ul>
+        </div>
+
+        <div class="info-card" style="border-top-color: #fd7e14">
+          <h3>Types of Pressure Measurement</h3>
+          <ul>
+            <li>
+              <strong>Gauge Pressure (PSIG)</strong> — Measured relative to
+              atmospheric pressure (most common in industrial)
+            </li>
+            <li>
+              <strong>Absolute Pressure (PSIA)</strong> — Measured relative to
+              perfect vacuum
+            </li>
+            <li>
+              <strong>Differential Pressure (PSID)</strong> — Difference between
+              two pressure points (e.g., flow measurement)
+            </li>
+            <li>
+              <strong>Sealed Gauge</strong> — Referenced to atmospheric pressure
+              at sea level
+            </li>
+          </ul>
+        </div>
+
+        <div class="info-card" style="border-top-color: #dc3545">
+          <h3>Working Principle — Bourdon Tube</h3>
+          <p>
+            The Bourdon tube is a C-shaped or coiled metal tube that straightens
+            when internal pressure increases. This mechanical movement is
+            converted to an electrical signal via:
+          </p>
+          <ul>
+            <li>
+              <strong>Strain Gauge</strong> — Resistance changes with
+              deformation
+            </li>
+            <li>
+              <strong>Piezoelectric</strong> — Generates voltage from pressure
+            </li>
+            <li>
+              <strong>Capacitive</strong> — Membrane deflection changes
+              capacitance
+            </li>
+          </ul>
+          <p>
+            The transmitter circuit amplifies this tiny signal and converts it
+            to the standardized 4-20 mA loop current.
+          </p>
+        </div>
+
+        <div
+          class="info-card"
+          style="border-top-color: #6f42c1; grid-column: 1/-1"
+        >
+          <h3>The 4-20 mA Formula — Complete Explanation</h3>
+          <div
+            style="
+              display: grid;
+              grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+              gap: 16px;
+              margin-top: 12px;
+            "
+          >
+            <div class="formula-box">
+              <div class="formula-title">General Linear Formula</div>
+              <div class="formula-math">
+                I = I_min + [(P − P_min) / (P_max − P_min)] × (I_max − I_min)
+              </div>
+            </div>
+            <div class="formula-box">
+              <div class="formula-title">Simplified (0–150 psi)</div>
+              <div class="formula-math">mA = 4 + (P / 150) × 16</div>
+            </div>
+            <div class="formula-box">
+              <div class="formula-title">Reverse (mA → psi)</div>
+              <div class="formula-math">
+                P = (I − 4) × (150 / 16)<br />P = (I − 4) × 9.375
+              </div>
+            </div>
+            <div class="formula-box">
+              <div class="formula-title">Example: 12 mA</div>
+              <div class="formula-math">
+                P = (12 − 4) × 9.375<br />P = 8 × 9.375 = 75 psi
+              </div>
+              <div class="formula-result">Result: 75 psi (50% of range)</div>
+            </div>
+          </div>
+        </div>
+
+        <div class="info-card" style="border-top-color: #20c997">
+          <h3>PLC Alarm Logic</h3>
+          <p>
+            The PLC continuously monitors the sensor output and compares it
+            against programmed setpoints:
+          </p>
+          <ul>
+            <li>
+              <strong>Low-Low (LL)</strong> — Sensor failure / empty vessel
+            </li>
+            <li><strong>Low (L)</strong> — Below normal operating range</li>
+            <li><strong>Normal</strong> — Within acceptable range</li>
+            <li><strong>High (H)</strong> — Above normal, operator alert</li>
+            <li>
+              <strong>High-High (HH)</strong> — Critical, safety interlock
+              activated
+            </li>
+          </ul>
+        </div>
+
+        <div class="info-card" style="border-top-color: #e83e8c">
+          <h3>4-Wire vs 2-Wire Transmitter</h3>
+          <ul>
+            <li>
+              <strong>2-Wire (Loop Powered)</strong> — Power and signal on same
+              two wires. Most common. Current loop: 4–20 mA powers the
+              transmitter itself.
+            </li>
+            <li>
+              <strong>4-Wire</strong> — Separate power supply and signal wires.
+              Used for transmitters requiring more power (displays, complex
+              electronics).
+            </li>
+          </ul>
+          <p>
+            The <strong>4 mA live zero</strong> is critical — if a wire breaks,
+            current drops to 0 mA (not 4), so PLC can distinguish "no pressure"
+            from "broken wire".
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===========================
+     TAB 3: FORMULA CALCULATOR
+=========================== -->
+    <div class="tab-content" id="tab-calculator">
+      <div class="card">
+        <h2>Interactive Formula Calculator</h2>
+        <p
+          style="
+            color: var(--accent-color);
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+          "
+        >
+          Enter any value and calculate the corresponding output. Based on 4–20
+          mA transmitter with 0–150 psi range.
+        </p>
+
+        <div
+          style="display: grid; grid-template-columns: 1fr 1fr; gap: 24px"
+          class="calc-section"
+        >
+          <!-- mA to psi -->
+          <div class="card" style="margin: 0; border: 2px solid #c5d5ff">
+            <h3 style="color: var(--blue); margin-bottom: 16px">
+              🔵 Current → Pressure
+            </h3>
+            <div class="input-group" style="margin-bottom: 14px">
+              <label>Input Current (mA)</label>
+              <input
+                type="number"
+                id="calc-ma-in"
+                min="4"
+                max="20"
+                value="4"
+                step="0.1"
+                oninput="calcFromMA()"
+                placeholder="Enter 4–20 mA"
+              />
+            </div>
+            <div class="formula-box">
+              <div class="formula-title">Formula Applied</div>
+              <div class="formula-math">P = (I − 4) × 9.375</div>
+              <div class="formula-result" id="calc-ma-result">
+                P = (4 − 4) × 9.375 = 0.00 psi
+              </div>
+            </div>
+            <div
+              style="
+                display: grid;
+                grid-template-columns: 1fr 1fr 1fr;
+                gap: 8px;
+                margin-top: 12px;
+              "
+              id="calcMAOutputs"
+            >
+              <div
+                style="
+                  text-align: center;
+                  background: #f0f4ff;
+                  padding: 10px;
+                  border-radius: 8px;
+                "
+              >
+                <div style="font-size: 0.7rem; color: #888; margin-bottom: 4px">
+                  Pressure
+                </div>
+                <div
+                  style="
+                    font-size: 1.1rem;
+                    font-weight: 700;
+                    color: var(--blue);
+                  "
+                  id="o-psi-ma"
+                >
+                  0.00 psi
+                </div>
+              </div>
+              <div
+                style="
+                  text-align: center;
+                  background: #f0fff4;
+                  padding: 10px;
+                  border-radius: 8px;
+                "
+              >
+                <div style="font-size: 0.7rem; color: #888; margin-bottom: 4px">
+                  Bar
+                </div>
+                <div
+                  style="
+                    font-size: 1.1rem;
+                    font-weight: 700;
+                    color: var(--green);
+                  "
+                  id="o-bar-ma"
+                >
+                  0.000
+                </div>
+              </div>
+              <div
+                style="
+                  text-align: center;
+                  background: #fff8f0;
+                  padding: 10px;
+                  border-radius: 8px;
+                "
+              >
+                <div style="font-size: 0.7rem; color: #888; margin-bottom: 4px">
+                  % Range
+                </div>
+                <div
+                  style="
+                    font-size: 1.1rem;
+                    font-weight: 700;
+                    color: var(--orange);
+                  "
+                  id="o-pct-ma"
+                >
+                  0.0%
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- psi to mA -->
+          <div class="card" style="margin: 0; border: 2px solid #b2dfdb">
+            <h3 style="color: var(--green); margin-bottom: 16px">
+              🟢 Pressure → Current
+            </h3>
+            <div class="input-group" style="margin-bottom: 14px">
+              <label>Input Pressure (psi)</label>
+              <input
+                type="number"
+                id="calc-psi-in"
+                min="0"
+                max="150"
+                value="0"
+                step="0.5"
+                oninput="calcFromPSI()"
+                placeholder="Enter 0–150 psi"
+              />
+            </div>
+            <div
+              class="formula-box"
+              style="background: #f0fff4; border-color: #b2dfdb"
+            >
+              <div class="formula-title" style="color: var(--green)">
+                Formula Applied
+              </div>
+              <div class="formula-math">mA = 4 + (P / 150) × 16</div>
+              <div class="formula-result" id="calc-psi-result">
+                mA = 4 + (0/150) × 16 = 4.00 mA
+              </div>
+            </div>
+            <div
+              style="
+                display: grid;
+                grid-template-columns: 1fr 1fr 1fr;
+                gap: 8px;
+                margin-top: 12px;
+              "
+            >
+              <div
+                style="
+                  text-align: center;
+                  background: #f0fff4;
+                  padding: 10px;
+                  border-radius: 8px;
+                "
+              >
+                <div style="font-size: 0.7rem; color: #888; margin-bottom: 4px">
+                  Current
+                </div>
+                <div
+                  style="
+                    font-size: 1.1rem;
+                    font-weight: 700;
+                    color: var(--green);
+                  "
+                  id="o-ma-psi"
+                >
+                  4.00 mA
+                </div>
+              </div>
+              <div
+                style="
+                  text-align: center;
+                  background: #f0f4ff;
+                  padding: 10px;
+                  border-radius: 8px;
+                "
+              >
+                <div style="font-size: 0.7rem; color: #888; margin-bottom: 4px">
+                  kPa
+                </div>
+                <div
+                  style="
+                    font-size: 1.1rem;
+                    font-weight: 700;
+                    color: var(--blue);
+                  "
+                  id="o-kpa-psi"
+                >
+                  0.00
+                </div>
+              </div>
+              <div
+                style="
+                  text-align: center;
+                  background: #fff8f0;
+                  padding: 10px;
+                  border-radius: 8px;
+                "
+              >
+                <div style="font-size: 0.7rem; color: #888; margin-bottom: 4px">
+                  % Range
+                </div>
+                <div
+                  style="
+                    font-size: 1.1rem;
+                    font-weight: 700;
+                    color: var(--orange);
+                  "
+                  id="o-pct-psi"
+                >
+                  0.0%
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Example calculations table -->
+        <div style="margin-top: 24px">
+          <h3 style="margin-bottom: 14px">Standard Calibration Points</h3>
+          <table class="log-table">
+            <thead>
+              <tr>
+                <th>Current (mA)</th>
+                <th>Pressure (psi)</th>
+                <th>Pressure (bar)</th>
+                <th>Pressure (kPa)</th>
+                <th>% of Range</th>
+                <th>PLC Status</th>
+              </tr>
+            </thead>
+            <tbody id="calcTableBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===========================
+     TAB 4: SCENARIOS
+=========================== -->
+    <div class="tab-content" id="tab-scenarios">
+      <div class="card">
+        <h2>Learning Scenarios</h2>
+        <p
+          style="
+            color: var(--accent-color);
+            font-size: 0.9rem;
+            margin-bottom: 20px;
+          "
+        >
+          Select a real-world scenario to simulate. Observe how the system
+          responds and learn what the PLC does in each case.
+        </p>
+
+        <div class="scenario-grid">
+          <button class="scenario-btn" onclick="runScenario('startup')">
+            System Startup<br /><small>Cold start ramp-up</small>
+          </button>
+          <button class="scenario-btn" onclick="runScenario('normal')">
+            Normal Operation<br /><small>75 psi steady state</small>
+          </button>
+          <button class="scenario-btn" onclick="runScenario('high')">
+            High Pressure<br /><small>Alarm trigger at 120 psi</small>
+          </button>
+          <button class="scenario-btn" onclick="runScenario('critical')">
+            Critical Shutdown<br /><small>Emergency at 145 psi</small>
+          </button>
+          <button class="scenario-btn" onclick="runScenario('leak')">
+            Pressure Drop<br /><small>Simulates pipe leak</small>
+          </button>
+          <button class="scenario-btn" onclick="runScenario('sensor_fail')">
+            Sensor Failure<br /><small>4 mA → 0 mA open loop</small>
+          </button>
+          <button class="scenario-btn" onclick="runScenario('oscillate')">
+            Pressure Cycling<br /><small>Control loop hunting</small>
+          </button>
+          <button class="scenario-btn" onclick="runScenario('calibrate')">
+            Calibration Check<br /><small>5 point calibration</small>
+          </button>
+        </div>
+
+        <!-- Scenario Info Panel -->
+        <div id="scenarioInfo" class="formula-box" style="display: none">
+          <div class="formula-title" id="scenTitle"></div>
+          <div
+            style="
+              font-size: 0.9rem;
+              color: var(--text-color);
+              line-height: 1.6;
+            "
+            id="scenDesc"
+          ></div>
+        </div>
+
+        <!-- Scenario Live Display -->
+        <div id="scenLive" style="display: none">
+          <div
+            style="
+              display: grid;
+              grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+              gap: 14px;
+              margin-top: 16px;
+            "
+          >
+            <div
+              style="
+                background: #1a1a2e;
+                border-radius: 10px;
+                padding: 16px;
+                text-align: center;
+              "
+            >
+              <div
+                style="
+                  font-size: 0.7rem;
+                  color: #7f8c8d;
+                  font-family: monospace;
+                  margin-bottom: 6px;
+                "
+              >
+                PRESSURE
+              </div>
+              <div
+                style="
+                  font-size: 1.8rem;
+                  font-family: monospace;
+                  font-weight: 900;
+                  color: #00ff88;
+                "
+                id="scen-psi"
+              >
+                0.0 psi
+              </div>
+            </div>
+            <div
+              style="
+                background: #1a1a2e;
+                border-radius: 10px;
+                padding: 16px;
+                text-align: center;
+              "
+            >
+              <div
+                style="
+                  font-size: 0.7rem;
+                  color: #7f8c8d;
+                  font-family: monospace;
+                  margin-bottom: 6px;
+                "
+              >
+                CURRENT
+              </div>
+              <div
+                style="
+                  font-size: 1.8rem;
+                  font-family: monospace;
+                  font-weight: 900;
+                  color: #00c3ff;
+                "
+                id="scen-ma"
+              >
+                4.0 mA
+              </div>
+            </div>
+            <div
+              style="
+                background: #1a1a2e;
+                border-radius: 10px;
+                padding: 16px;
+                text-align: center;
+              "
+            >
+              <div
+                style="
+                  font-size: 0.7rem;
+                  color: #7f8c8d;
+                  font-family: monospace;
+                  margin-bottom: 6px;
+                "
+              >
+                ALARM
+              </div>
+              <div
+                style="
+                  font-size: 1.2rem;
+                  font-family: monospace;
+                  font-weight: 900;
+                "
+                id="scen-alarm"
+                style="color: #00ff88"
+              >
+                OK
+              </div>
+            </div>
+            <div
+              style="
+                background: #1a1a2e;
+                border-radius: 10px;
+                padding: 16px;
+                text-align: center;
+              "
+            >
+              <div
+                style="
+                  font-size: 0.7rem;
+                  color: #7f8c8d;
+                  font-family: monospace;
+                  margin-bottom: 6px;
+                "
+              >
+                PLC ACTION
+              </div>
+              <div
+                style="
+                  font-size: 1.05rem;
+                  font-family: monospace;
+                  font-weight: 900;
+                  color: #ffaa00;
+                "
+                id="scen-action"
+              >
+                MONITORING
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===========================
+     TAB 5: MCQ QUIZ
+=========================== -->
+    <div class="tab-content" id="tab-mcq">
+      <div class="mcq-container">
+        <div class="score-board">
+          <h3>Your Score</h3>
+          <div class="score-val" id="scoreDisplay">0 / 10</div>
+          <div style="font-size: 0.85rem; opacity: 0.8" id="scoreMsg">
+            Answer all questions to see your result
+          </div>
+        </div>
+
+        <div id="mcqArea"></div>
+
+        <div class="btn-group" style="margin-top: 20px">
+          <button class="btn btn-warning" onclick="resetQuiz()">
+            ↺ Reset Quiz
+          </button>
+          <button class="btn btn-primary" onclick="showAllAnswers()">
+            👁 Show All Answers
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===========================
+     TAB 6: DATA LOG
+=========================== -->
+    <div class="tab-content" id="tab-datalog">
+      <div class="card">
+        <h2>Real-Time Data Log</h2>
+        <div class="btn-group" style="margin-bottom: 16px">
+          <button class="btn btn-danger" onclick="clearLog()">
+            Clear Log
+          </button>
+          <button class="btn btn-primary" onclick="exportLog()">
+            Export CSV
+          </button>
+        </div>
+        <div style="overflow-x: auto">
+          <table class="log-table" id="dataLogTable">
+            <thead>
+              <tr>
+                <th>#</th>
+                <th>Time</th>
+                <th>Pressure (psi)</th>
+                <th>Current (mA)</th>
+                <th>Pressure (bar)</th>
+                <th>% Range</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody id="logBody">
+              <tr>
+                <td
+                  colspan="7"
+                  style="text-align: center; color: #aaa; padding: 20px"
+                >
+                  No data yet — use the simulation to generate readings
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+</div>
+
+    <script>
+      // =====================================================
+      // STATE
+      // =====================================================
+      let currentPressure = 0;
+      let rampInterval = null;
+      let logData = [];
+      let spLow = 20,
+        spHigh = 120,
+        spCrit = 140;
+
+      // =====================================================
+      // TABS
+      // =====================================================
+      function showTab(tab) {
+        document
+          .querySelectorAll(".tab-content")
+          .forEach((t) => t.classList.remove("active"));
+        document
+          .querySelectorAll(".tab-btn")
+          .forEach((b) => b.classList.remove("active"));
+        document.getElementById("tab-" + tab).classList.add("active");
+        event.target.classList.add("active");
+      }
+
+      // =====================================================
+      // GAUGE DRAWING
+      // =====================================================
+      function drawGauge(pressure) {
+        const canvas = document.getElementById("gaugeCanvas");
+        const ctx = canvas.getContext("2d");
+        const W = canvas.width,
+          H = canvas.height;
+        const cx = W / 2,
+          cy = H / 2 + 10;
+        const R = 110;
+        ctx.clearRect(0, 0, W, H);
+
+        // Background
+        ctx.beginPath();
+        ctx.arc(cx, cy, R + 8, 0, Math.PI * 2);
+        ctx.fillStyle = "#2d2d2d";
+        ctx.fill();
+
+        ctx.beginPath();
+        ctx.arc(cx, cy, R + 4, 0, Math.PI * 2);
+        const bgGrad = ctx.createRadialGradient(
+          cx - 20,
+          cy - 20,
+          0,
+          cx,
+          cy,
+          R + 4,
+        );
+        bgGrad.addColorStop(0, "#4a4a4a");
+        bgGrad.addColorStop(1, "#1a1a1a");
+        ctx.fillStyle = bgGrad;
+        ctx.fill();
+
+        // Arc zones
+        const startAngle = Math.PI * 0.75;
+        const endAngle = Math.PI * 2.25;
+        const totalSpan = endAngle - startAngle;
+
+        // Green zone 0-80%
+        ctx.beginPath();
+        ctx.arc(
+          cx,
+          cy,
+          R - 5,
+          startAngle,
+          startAngle + totalSpan * 0.533,
+          false,
+        );
+        ctx.strokeStyle = "rgba(40,167,69,0.8)";
+        ctx.lineWidth = 12;
+        ctx.stroke();
+
+        // Yellow zone 80-93%
+        ctx.beginPath();
+        ctx.arc(
+          cx,
+          cy,
+          R - 5,
+          startAngle + totalSpan * 0.533,
+          startAngle + totalSpan * 0.8,
+          false,
+        );
+        ctx.strokeStyle = "rgba(255,193,7,0.8)";
+        ctx.lineWidth = 12;
+        ctx.stroke();
+
+        // Red zone 93-100%
+        ctx.beginPath();
+        ctx.arc(cx, cy, R - 5, startAngle + totalSpan * 0.8, endAngle, false);
+        ctx.strokeStyle = "rgba(220,53,69,0.8)";
+        ctx.lineWidth = 12;
+        ctx.stroke();
+
+        // Tick marks
+        for (let i = 0; i <= 15; i++) {
+          const angle = startAngle + (totalSpan * i) / 15;
+          const isMajor = i % 3 === 0;
+          const innerR = R - (isMajor ? 22 : 15);
+          const outerR = R - 6;
+          ctx.beginPath();
+          ctx.moveTo(
+            cx + Math.cos(angle) * innerR,
+            cy + Math.sin(angle) * innerR,
+          );
+          ctx.lineTo(
+            cx + Math.cos(angle) * outerR,
+            cy + Math.sin(angle) * outerR,
+          );
+          ctx.strokeStyle = isMajor ? "white" : "rgba(255,255,255,0.5)";
+          ctx.lineWidth = isMajor ? 2.5 : 1;
+          ctx.stroke();
+
+          if (isMajor) {
+            const val = Math.round((i / 15) * 150);
+            const labelR = R - 34;
+            ctx.fillStyle = "rgba(255,255,255,0.85)";
+            ctx.font = "bold 10px monospace";
+            ctx.textAlign = "center";
+            ctx.textBaseline = "middle";
+            ctx.fillText(
+              val,
+              cx + Math.cos(angle) * labelR,
+              cy + Math.sin(angle) * labelR,
+            );
+          }
+        }
+
+        // Needle
+        const needleAngle = 1.66 * startAngle + (pressure / 150) * totalSpan;
+        ctx.save();
+        ctx.translate(cx, cy);
+        ctx.rotate(needleAngle);
+        ctx.beginPath();
+        ctx.moveTo(-8, 0);
+        ctx.lineTo(0, -R + 22);
+        ctx.lineTo(8, 0);
+        ctx.closePath();
+        const needleGrad = ctx.createLinearGradient(0, -R + 22, 0, 8);
+        needleGrad.addColorStop(0, "#ff3333");
+        needleGrad.addColorStop(1, "#cc0000");
+        ctx.fillStyle = needleGrad;
+        ctx.fill();
+        ctx.restore();
+
+        // Center cap
+        ctx.beginPath();
+        ctx.arc(cx, cy, 12, 0, Math.PI * 2);
+        const capGrad = ctx.createRadialGradient(cx - 3, cy - 3, 0, cx, cy, 12);
+        capGrad.addColorStop(0, "#888");
+        capGrad.addColorStop(1, "#333");
+        ctx.fillStyle = capGrad;
+        ctx.fill();
+        ctx.beginPath();
+        ctx.arc(cx, cy, 5, 0, Math.PI * 2);
+        ctx.fillStyle = "#aaa";
+        ctx.fill();
+
+        // PSI label
+        ctx.fillStyle = "rgba(255,255,255,0.9)";
+        ctx.font = "bold 13px monospace";
+        ctx.textAlign = "center";
+        ctx.fillText(pressure.toFixed(1) + " psi", cx, cy + 38);
+
+        // Brand label
+        ctx.fillStyle = "rgba(255,255,255,0.4)";
+        ctx.font = "9px monospace";
+        ctx.fillText("0-150 PSI", cx, cy + 52);
+      }
+
+      // =====================================================
+      // UPDATE SIMULATION
+      // =====================================================
+      function updateSimulation(val) {
+        currentPressure = parseFloat(val);
+        document.getElementById("pressureSlider").value = currentPressure;
+        document.getElementById("sliderVal").textContent =
+          currentPressure.toFixed(1) + " psi";
+
+        const mA = 4 + (currentPressure / 150) * 16;
+        const bar = currentPressure * 0.0689476;
+        const kPa = currentPressure * 6.89476;
+        const pct = (currentPressure / 150) * 100;
+
+        // Draw gauge
+        drawGauge(currentPressure);
+
+        // Update digital display
+        document.getElementById("disp-psi").textContent =
+          currentPressure.toFixed(2);
+        document.getElementById("disp-ma").textContent = mA.toFixed(2);
+        document.getElementById("disp-bar").textContent = bar.toFixed(3);
+        document.getElementById("disp-kpa").textContent = kPa.toFixed(2);
+
+        // Color coding
+        const psiEl = document.getElementById("disp-psi");
+        const maEl = document.getElementById("disp-ma");
+        const statusEl = document.getElementById("disp-status");
+
+        psiEl.className = "display-value";
+        maEl.className = "display-value";
+
+        if (currentPressure >= spCrit) {
+          psiEl.classList.add("danger");
+          maEl.classList.add("danger");
+          statusEl.textContent = "CRITICAL";
+          statusEl.className = "display-value danger";
+        } else if (currentPressure >= spHigh) {
+          psiEl.classList.add("warning");
+          maEl.classList.add("warning");
+          statusEl.textContent = "HIGH ALARM";
+          statusEl.className = "display-value warning";
+        } else if (currentPressure < spLow && currentPressure > 0) {
+          statusEl.textContent = "LOW";
+          statusEl.className = "display-value warning";
+        } else {
+          statusEl.textContent = "NORMAL";
+          statusEl.className = "display-value";
+        }
+
+        // Alarms
+        document.getElementById("alarmHigh").className =
+          "alarm-panel" +
+          (currentPressure >= spHigh && currentPressure < spCrit
+            ? " show"
+            : "");
+        document.getElementById("alarmCritical").className =
+          "alarm-panel critical" + (currentPressure >= spCrit ? " show" : "");
+
+        // Status dot
+        if (currentPressure >= spCrit) {
+          document.getElementById("sysStatusDot").style.background = "#dc3545";
+          document.getElementById("sysStatusText").textContent = "CRITICAL";
+        } else if (currentPressure >= spHigh) {
+          document.getElementById("sysStatusDot").style.background = "#ffc107";
+          document.getElementById("sysStatusText").textContent = "Alarm Active";
+        } else {
+          document.getElementById("sysStatusDot").style.background = "#28a745";
+          document.getElementById("sysStatusText").textContent =
+            "System Online";
+        }
+
+        // Air fill animation
+        const fillPct = pct;
+        document.getElementById("airFill").style.height = fillPct + "%";
+        document.getElementById("fillBar").style.width = fillPct + "%";
+        document.getElementById("fillPct").textContent =
+          fillPct.toFixed(1) + "%";
+
+        // Change fill color based on pressure
+        const fillColor =
+          currentPressure >= spCrit
+            ? "linear-gradient(to top, rgba(220,53,69,0.7) 0%, rgba(255,100,100,0.3) 100%)"
+            : currentPressure >= spHigh
+              ? "linear-gradient(to top, rgba(255,165,0,0.7) 0%, rgba(255,200,50,0.3) 100%)"
+              : "linear-gradient(to top, rgba(100,160,255,0.6) 0%, rgba(160,200,255,0.3) 60%, rgba(200,220,255,0.15) 100%)";
+        document.getElementById("airFill").style.background = fillColor;
+
+        // Update bubbles speed
+        updateBubbles(currentPressure);
+
+        // Live formula
+        document.getElementById("fwd-result").textContent =
+          `P = (${mA.toFixed(2)} − 4) × 9.375 = ${currentPressure.toFixed(2)} psi`;
+        document.getElementById("rev-result").textContent =
+          `mA = 4 + (${currentPressure.toFixed(1)}/150) × 16 = ${mA.toFixed(2)} mA`;
+        document.getElementById("pct-result").textContent =
+          `% = (${currentPressure.toFixed(1)} / 150) × 100 = ${pct.toFixed(2)}%`;
+
+        // Log data every 2 seconds worth of change
+        logReading(currentPressure, mA, bar, pct);
+      }
+
+      let lastLogTime = 0;
+      function logReading(psi, mA, bar, pct) {
+        const now = Date.now();
+        if (now - lastLogTime > 1500) {
+          lastLogTime = now;
+          const entry = {
+            time: new Date().toLocaleTimeString(),
+            psi,
+            mA,
+            bar,
+            pct,
+          };
+          logData.unshift(entry);
+          if (logData.length > 50) logData.pop();
+          renderLog();
+        }
+      }
+
+      function renderLog() {
+        const tbody = document.getElementById("logBody");
+        if (logData.length === 0) {
+          tbody.innerHTML =
+            '<tr><td colspan="7" style="text-align:center;color:#aaa;padding:20px;">No data yet</td></tr>';
+          return;
+        }
+        tbody.innerHTML = logData
+          .map((d, i) => {
+            const status =
+              d.psi >= spCrit
+                ? '<span class="badge badge-red">CRITICAL</span>'
+                : d.psi >= spHigh
+                  ? '<span class="badge badge-yellow">HIGH</span>'
+                  : '<span class="badge badge-green">NORMAL</span>';
+            return `<tr>
+      <td>${logData.length - i}</td>
+      <td>${d.time}</td>
+      <td>${d.psi.toFixed(2)}</td>
+      <td>${d.mA.toFixed(3)}</td>
+      <td>${d.bar.toFixed(4)}</td>
+      <td>${d.pct.toFixed(1)}%</td>
+      <td>${status}</td>
+    </tr>`;
+          })
+          .join("");
+      }
+
+      // =====================================================
+      // BUBBLES
+      // =====================================================
+      function updateBubbles(pressure) {
+        const container = document.getElementById("bubblesContainer");
+        const existingBubbles = container.querySelectorAll(".bubble");
+
+        // Remove excess
+        const maxBubbles = Math.floor(pressure / 20);
+        while (container.querySelectorAll(".bubble").length > maxBubbles) {
+          const b = container.querySelector(".bubble");
+          if (b) b.remove();
+        }
+
+        // Add new
+        while (container.querySelectorAll(".bubble").length < maxBubbles) {
+          const b = document.createElement("div");
+          b.className = "bubble";
+          const size = 4 + Math.random() * 8;
+          b.style.width = size + "px";
+          b.style.height = size + "px";
+          b.style.left = 5 + Math.random() * 85 + "%";
+          b.style.animationDuration = 2 + Math.random() * 3 + "s";
+          b.style.animationDelay = Math.random() * 2 + "s";
+          container.appendChild(b);
+        }
+      }
+
+      // =====================================================
+      // AUTO RAMP
+      // =====================================================
+      function startAutoRamp() {
+        stopRamp();
+        rampInterval = setInterval(() => {
+          if (currentPressure < 150) {
+            updateSimulation(Math.min(150, currentPressure + 1));
+          } else {
+            stopRamp();
+          }
+        }, 100);
+      }
+
+      function stopRamp() {
+        if (rampInterval) {
+          clearInterval(rampInterval);
+          rampInterval = null;
+        }
+      }
+
+      function emergencyStop() {
+        stopRamp();
+        // Rapid ramp down
+        const downInterval = setInterval(() => {
+          if (currentPressure > 0) {
+            updateSimulation(Math.max(0, currentPressure - 5));
+          } else {
+            clearInterval(downInterval);
+          }
+        }, 80);
+      }
+
+      function resetSim() {
+        stopRamp();
+        updateSimulation(0);
+      }
+
+      function updateSetpoints() {
+        spLow = parseFloat(document.getElementById("spLow").value) || 20;
+        spHigh = parseFloat(document.getElementById("spHigh").value) || 120;
+        spCrit = parseFloat(document.getElementById("spCrit").value) || 140;
+        updateSimulation(currentPressure);
+      }
+
+      // =====================================================
+      // CALCULATORS
+      // =====================================================
+      function calcFromMA() {
+        const mA = parseFloat(document.getElementById("calc-ma-in").value) || 4;
+        const psi = Math.max(0, (mA - 4) * 9.375);
+        const bar = psi * 0.0689476;
+        const pct = (psi / 150) * 100;
+        document.getElementById("calc-ma-result").textContent =
+          `P = (${mA.toFixed(2)} − 4) × 9.375 = ${psi.toFixed(2)} psi`;
+        document.getElementById("o-psi-ma").textContent =
+          psi.toFixed(2) + " psi";
+        document.getElementById("o-bar-ma").textContent = bar.toFixed(4);
+        document.getElementById("o-pct-ma").textContent = pct.toFixed(1) + "%";
+      }
+
+      function calcFromPSI() {
+        const psi =
+          parseFloat(document.getElementById("calc-psi-in").value) || 0;
+        const mA = 4 + (psi / 150) * 16;
+        const kPa = psi * 6.89476;
+        const pct = (psi / 150) * 100;
+        document.getElementById("calc-psi-result").textContent =
+          `mA = 4 + (${psi.toFixed(1)}/150) × 16 = ${mA.toFixed(2)} mA`;
+        document.getElementById("o-ma-psi").textContent = mA.toFixed(3) + " mA";
+        document.getElementById("o-kpa-psi").textContent = kPa.toFixed(2);
+        document.getElementById("o-pct-psi").textContent = pct.toFixed(1) + "%";
+      }
+
+      // Build calibration table
+      function buildCalcTable() {
+        const points = [0, 25, 50, 75, 100, 112.5, 120, 140, 150];
+        const tbody = document.getElementById("calcTableBody");
+        tbody.innerHTML = points
+          .map((psi) => {
+            const mA = 4 + (psi / 150) * 16;
+            const bar = psi * 0.0689476;
+            const kPa = psi * 6.89476;
+            const pct = (psi / 150) * 100;
+            const status =
+              psi >= 140
+                ? '<span class="badge badge-red">Critical</span>'
+                : psi >= 120
+                  ? '<span class="badge badge-yellow">High</span>'
+                  : '<span class="badge badge-green">Normal</span>';
+            return `<tr>
+      <td>${mA.toFixed(2)}</td>
+      <td>${psi.toFixed(1)}</td>
+      <td>${bar.toFixed(4)}</td>
+      <td>${kPa.toFixed(2)}</td>
+      <td>${pct.toFixed(1)}%</td>
+      <td>${status}</td>
+    </tr>`;
+          })
+          .join("");
+      }
+
+      // =====================================================
+      // SCENARIOS
+      // =====================================================
+      const scenarios = {
+        startup: {
+          title: "🚀 System Startup",
+          desc: "During cold start, the system pressurizes gradually from 0 psi. PLC monitors for stable pressure. After 5 seconds, system reaches normal operating pressure of 80 psi.",
+          action: (cb) => {
+            let p = 0;
+            const iv = setInterval(() => {
+              p = Math.min(80, p + 2);
+              cb(p, p < 20 ? "FILLING" : p < 80 ? "RAMPING" : "STABLE", "");
+              if (p >= 80) clearInterval(iv);
+            }, 150);
+          },
+        },
+        normal: {
+          title: "✅ Normal Operation",
+          desc: "System maintains 75 psi steady state. The transmitter outputs 12 mA. PLC is in normal monitoring mode with no alarms active.",
+          action: (cb) => {
+            setTimeout(() => cb(75, "NORMAL", ""), 500);
+          },
+        },
+        high: {
+          title: "⚠️ High Pressure Alarm",
+          desc: "Pressure rises above 120 psi setpoint. PLC activates HIGH ALARM, sends alert to SCADA, and opens relief valve.",
+          action: (cb) => {
+            let p = 75;
+            const iv = setInterval(() => {
+              p = Math.min(128, p + 1.5);
+              cb(
+                p,
+                p >= 120 ? "HIGH ALARM" : "RISING",
+                p >= 120 ? "RELIEF VALVE OPEN" : "MONITORING",
+              );
+              if (p >= 128) clearInterval(iv);
+            }, 100);
+          },
+        },
+        critical: {
+          title: "🚨 Critical Emergency Shutdown",
+          desc: "Pressure exceeds 140 psi critical setpoint. PLC triggers emergency shutdown, closes inlet valve, activates relief valve, and sounds siren.",
+          action: (cb) => {
+            let p = 100;
+            const iv = setInterval(() => {
+              p = Math.min(145, p + 2);
+              cb(
+                p,
+                p >= 140 ? "CRITICAL!" : p >= 120 ? "HIGH" : "RISING",
+                p >= 140
+                  ? "⚡ SHUTDOWN"
+                  : p >= 120
+                    ? "OPEN RELIEF"
+                    : "MONITORING",
+              );
+              if (p >= 145) {
+                clearInterval(iv);
+              }
+            }, 100);
+          },
+        },
+        leak: {
+          title: "💧 Pressure Drop — Simulated Leak",
+          desc: "Sudden pressure loss from 75 psi. PLC detects rapid rate-of-change and triggers LEAK alarm. Safety shutdown if below 20 psi.",
+          action: (cb) => {
+            let p = 75;
+            const iv = setInterval(() => {
+              p = Math.max(5, p - 3);
+              cb(
+                p,
+                p <= 20 ? "LOW ALARM" : "DROPPING",
+                p <= 20 ? "ISOLATE SYSTEM" : "MONITORING ROC",
+              );
+              if (p <= 5) clearInterval(iv);
+            }, 120);
+          },
+        },
+        sensor_fail: {
+          title: "❌ Sensor/Wire Failure",
+          desc: "If transmitter output drops to 0 mA (below 4 mA live zero), PLC interprets this as BROKEN WIRE or sensor failure — NOT zero pressure. This is the key advantage of 4-20 mA over 0-20 mA.",
+          action: (cb) => {
+            setTimeout(() => cb(-1, "SENSOR FAIL", "CHECK WIRING"), 500);
+          },
+        },
+        oscillate: {
+          title: "〰️ Pressure Cycling — Control Loop Hunting",
+          desc: "Poorly tuned PID controller causes pressure to oscillate around setpoint (75 psi). PLC observes instability; engineer must retune control loop.",
+          action: (cb) => {
+            let t = 0;
+            const iv = setInterval(() => {
+              t += 0.3;
+              const p = 75 + 25 * Math.sin(t) * Math.exp(-t * 0.05);
+              cb(p, "CYCLING", "RETUNE PID");
+              if (t > 20) clearInterval(iv);
+            }, 100);
+          },
+        },
+        calibrate: {
+          title: "🔧 5-Point Calibration",
+          desc: "Technician applies known pressures (0%, 25%, 50%, 75%, 100%) and checks transmitter output. Expected mA: 4, 8, 12, 16, 20 mA.",
+          action: (cb) => {
+            const pts = [0, 37.5, 75, 112.5, 150];
+            let i = 0;
+            const iv = setInterval(() => {
+              if (i < pts.length) {
+                cb(pts[i], "CAL POINT " + (i + 1) + "/5", "COMPARE ACTUAL");
+                i++;
+              } else clearInterval(iv);
+            }, 1200);
+          },
+        },
+      };
+
+      let scenInterval = null;
+      function runScenario(key) {
+        stopRamp();
+        if (scenInterval) clearInterval(scenInterval);
+
+        const sc = scenarios[key];
+        const info = document.getElementById("scenarioInfo");
+        info.style.display = "block";
+        document.getElementById("scenTitle").textContent = sc.title;
+        document.getElementById("scenDesc").textContent = sc.desc;
+        document.getElementById("scenLive").style.display = "block";
+
+        sc.action((psi, alarm, action) => {
+          if (psi < 0) {
+            // Sensor failure
+            document.getElementById("scen-psi").textContent = "ERR";
+            document.getElementById("scen-ma").textContent = "0.00 mA";
+            document.getElementById("scen-alarm").textContent = alarm;
+            document.getElementById("scen-alarm").style.color = "#ff4444";
+            document.getElementById("scen-action").textContent =
+              action || "CHECK WIRING";
+            updateSimulation(0);
+          } else {
+            const mA = 4 + (psi / 150) * 16;
+            document.getElementById("scen-psi").textContent =
+              psi.toFixed(1) + " psi";
+            document.getElementById("scen-ma").textContent =
+              mA.toFixed(3) + " mA";
+            document.getElementById("scen-alarm").textContent = alarm || "OK";
+            document.getElementById("scen-alarm").style.color =
+              alarm === "NORMAL" || alarm === "STABLE"
+                ? "#00ff88"
+                : alarm.includes("CRITICAL") || alarm.includes("FAIL")
+                  ? "#ff4444"
+                  : "#ffaa00";
+            document.getElementById("scen-action").textContent =
+              action || "MONITORING";
+            updateSimulation(psi);
+          }
+        });
+
+        // Switch to simulation tab
+        document
+          .querySelectorAll(".tab-content")
+          .forEach((t) => t.classList.remove("active"));
+        document
+          .querySelectorAll(".tab-btn")
+          .forEach((b) => b.classList.remove("active"));
+        document.getElementById("tab-scenarios").classList.add("active");
+        document.querySelectorAll(".tab-btn")[3].classList.add("active");
+      }
+
+      // =====================================================
+      // MCQ
+      // =====================================================
+      const questions = [
+        {
+          q: "What does a 4 mA output signal indicate in a 4-20 mA pressure transmitter with 0-150 psi range?",
+          opts: [
+            "50 psi (midrange)",
+            "0 psi (minimum pressure)",
+            "Sensor failure / broken wire",
+            "150 psi (maximum pressure)",
+          ],
+          ans: 1,
+          exp: "In a 4-20 mA system, 4 mA represents the minimum (live zero) — 0 psi. This 'live zero' allows the PLC to distinguish between zero pressure (4 mA) and a broken wire (0 mA).",
+        },
+        {
+          q: "A pressure transmitter outputs 12 mA. Using P = (I − 4) × 9.375, what is the pressure?",
+          opts: ["50.0 psi", "75.0 psi", "100.0 psi", "112.5 psi"],
+          ans: 1,
+          exp: "P = (12 − 4) × 9.375 = 8 × 9.375 = 75.0 psi. This represents exactly 50% of the 0-150 psi range, corresponding to the midpoint current of 12 mA.",
+        },
+        {
+          q: "A pressure of 150 psi is applied. What output current should the transmitter produce?",
+          opts: ["4 mA", "12 mA", "16 mA", "20 mA"],
+          ans: 3,
+          exp: "mA = 4 + (150/150) × 16 = 4 + 16 = 20 mA. At full scale pressure (150 psi), the transmitter outputs maximum current (20 mA).",
+        },
+        {
+          q: "What is the 'span' of a 4-20 mA transmitter?",
+          opts: ["4 mA", "12 mA", "16 mA", "20 mA"],
+          ans: 2,
+          exp: "Span = Maximum − Minimum = 20 − 4 = 16 mA. The span represents the usable signal range. The scale factor becomes 150 psi / 16 mA = 9.375 psi/mA.",
+        },
+        {
+          q: "The transmitter reads 0 mA. What does the PLC interpret this as?",
+          opts: [
+            "Zero pressure (0 psi)",
+            "Broken wire or sensor failure",
+            "Maximum pressure (150 psi)",
+            "Normal standby mode",
+          ],
+          ans: 1,
+          exp: "0 mA is BELOW the live zero of 4 mA. The PLC interprets this as a fault condition (broken wire/sensor failure), NOT as zero pressure. This is the key advantage of the live zero concept.",
+        },
+        {
+          q: "What is the scale factor for a 0-150 psi / 4-20 mA transmitter?",
+          opts: ["7.5 psi/mA", "8.0 psi/mA", "9.375 psi/mA", "10.0 psi/mA"],
+          ans: 2,
+          exp: "Scale Factor = Pressure Range / mA Span = 150 / 16 = 9.375 psi/mA. This means every 1 mA increase in current corresponds to 9.375 psi increase in pressure.",
+        },
+        {
+          q: "Which type of transmitter is 'loop powered' and uses the signal current to power itself?",
+          opts: [
+            "4-wire transmitter",
+            "2-wire transmitter",
+            "Wireless transmitter",
+            "Optical transmitter",
+          ],
+          ans: 1,
+          exp: "2-wire transmitters are loop-powered — the same two wires carry both power and signal. The 4 mA minimum ensures enough current to power the transmitter electronics while representing zero pressure.",
+        },
+        {
+          q: "At what current does the pressure equal exactly 50% of the full scale (75 psi)?",
+          opts: ["8 mA", "10 mA", "12 mA", "14 mA"],
+          ans: 2,
+          exp: "mA = 4 + (75/150) × 16 = 4 + 0.5 × 16 = 4 + 8 = 12 mA. The midpoint of the 4-20 mA range (12 mA) always represents 50% of the measured range.",
+        },
+        {
+          q: "A PLC reads 16 mA from a pressure transmitter (0-150 psi range). What is the pressure?",
+          opts: ["96.5 psi", "100.0 psi", "112.5 psi", "120.0 psi"],
+          ans: 2,
+          exp: "P = (16 − 4) × 9.375 = 12 × 9.375 = 112.5 psi. This represents 75% of the full scale range (112.5/150 = 75%).",
+        },
+        {
+          q: "What is the primary advantage of using 4-20 mA over 0-20 mA for pressure transmission?",
+          opts: [
+            "Better accuracy at low pressures",
+            "Wire failure detection (live zero)",
+            "Lower power consumption",
+            "Higher update rate",
+          ],
+          ans: 1,
+          exp: "The '4 mA live zero' allows the PLC to distinguish between zero pressure (4 mA) and a broken/open circuit (0 mA). With 0-20 mA, zero pressure and wire failure look identical, making fault detection impossible.",
+        },
+      ];
+
+      let answered = new Array(questions.length).fill(false);
+      let scores = new Array(questions.length).fill(null);
+
+      function buildMCQ() {
+        const area = document.getElementById("mcqArea");
+        area.innerHTML = questions
+          .map(
+            (q, qi) => `
+    <div class="mcq-question" id="q-${qi}">
+      <div class="question-num">Question ${qi + 1} of ${questions.length}</div>
+      <div class="question-text">${q.q}</div>
+      <div class="options">
+        ${q.opts
+          .map(
+            (opt, oi) => `
+          <div class="option" id="opt-${qi}-${oi}" onclick="selectOption(${qi}, ${oi})">
+            <input type="radio" name="q${qi}" value="${oi}" id="r-${qi}-${oi}">
+            <label class="option-label" for="r-${qi}-${oi}">${String.fromCharCode(65 + oi)}. ${opt}</label>
+          </div>
+        `,
+          )
+          .join("")}
+      </div>
+      <button class="check-btn" onclick="checkAnswer(${qi})">Check Answer</button>
+      <div class="feedback" id="fb-${qi}"></div>
+    </div>
+  `,
+          )
+          .join("");
+      }
+
+      function selectOption(qi, oi) {
+        if (answered[qi]) return;
+        document
+          .querySelectorAll(`[id^="opt-${qi}-"]`)
+          .forEach((el) => (el.style.background = ""));
+        document.getElementById(`opt-${qi}-${oi}`).style.background =
+          "var(--hover-color)";
+        document.querySelector(`#r-${qi}-${oi}`).checked = true;
+      }
+
+      function checkAnswer(qi) {
+        if (answered[qi]) return;
+        const selected = document.querySelector(`input[name="q${qi}"]:checked`);
+        if (!selected) {
+          alert("Please select an answer first!");
+          return;
+        }
+
+        answered[qi] = true;
+        const userAns = parseInt(selected.value);
+        const correct = questions[qi].ans;
+        const isCorrect = userAns === correct;
+        scores[qi] = isCorrect;
+
+        // Style options
+        for (let i = 0; i < questions[qi].opts.length; i++) {
+          const el = document.getElementById(`opt-${qi}-${i}`);
+          el.style.cursor = "default";
+          if (i === correct) el.className = "option correct";
+          else if (i === userAns && !isCorrect) el.className = "option wrong";
+        }
+
+        // Feedback
+        const fb = document.getElementById(`fb-${qi}`);
+        fb.className = "feedback " + (isCorrect ? "correct" : "wrong");
+        fb.innerHTML =
+          (isCorrect ? "✅ Correct! " : "❌ Incorrect. ") + questions[qi].exp;
+
+        updateScore();
+      }
+
+      function updateScore() {
+        const total = scores.filter((s) => s !== null).length;
+        const correct = scores.filter((s) => s === true).length;
+        document.getElementById("scoreDisplay").textContent =
+          `${correct} / ${questions.length}`;
+        if (total === questions.length) {
+          const pct = Math.round((correct / questions.length) * 100);
+          document.getElementById("scoreMsg").textContent =
+            `Quiz complete! You scored ${pct}% — ${pct >= 80 ? "🎉 Excellent!" : pct >= 60 ? "👍 Good job!" : "📚 Keep studying!"}`;
+        }
+      }
+
+      function resetQuiz() {
+        answered = new Array(questions.length).fill(false);
+        scores = new Array(questions.length).fill(null);
+        buildMCQ();
+        document.getElementById("scoreDisplay").textContent = "0 / 10";
+        document.getElementById("scoreMsg").textContent =
+          "Answer all questions to see your result";
+      }
+
+      function showAllAnswers() {
+        questions.forEach((q, qi) => {
+          if (!answered[qi]) {
+            const correctOpt = document.getElementById(`opt-${qi}-${q.ans}`);
+            if (correctOpt) correctOpt.className = "option correct";
+            const fb = document.getElementById(`fb-${qi}`);
+            if (fb) {
+              fb.className = "feedback correct";
+              fb.innerHTML = "💡 Answer: " + q.exp;
+            }
+            answered[qi] = true;
+            scores[qi] = false;
+          }
+        });
+        updateScore();
+      }
+
+      // =====================================================
+      // LOG
+      // =====================================================
+      function clearLog() {
+        logData = [];
+        renderLog();
+      }
+
+      function exportLog() {
+        const headers =
+          "Time,Pressure (psi),Current (mA),Pressure (bar),% Range\n";
+        const rows = logData
+          .map(
+            (d) =>
+              `${d.time},${d.psi.toFixed(2)},${d.mA.toFixed(3)},${d.bar.toFixed(4)},${d.pct.toFixed(1)}`,
+          )
+          .join("\n");
+        const blob = new Blob([headers + rows], { type: "text/csv" });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "pressure_log.csv";
+        a.click();
+        URL.revokeObjectURL(url);
+      }
+
+      // =====================================================
+      // INIT
+      // =====================================================
+      window.onload = () => {
+        drawGauge(0);
+        buildMCQ();
+        buildCalcTable();
+        calcFromMA();
+        calcFromPSI();
+      };
+    </script>
+  </body>
+</html>

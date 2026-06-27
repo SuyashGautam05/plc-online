@@ -1,0 +1,28 @@
+{
+  "name": "plc-simtel-web",
+  "version": "1.0.0",
+  "description": "PLC (Programmable Logic Controller) interactive training website - Scientech Technology Pvt. Ltd.",
+  "private": true,
+  "author": "Scientech Technology Pvt. Ltd.",
+  "license": "UNLICENSED",
+  "keywords": [
+    "plc",
+    "industrial-automation",
+    "training",
+    "simtel"
+  ],
+  "engines": {
+    "node": ">=16.7.0"
+  },
+  "scripts": {
+    "dev": "live-server --port=5500 --no-css-inject",
+    "start": "serve . -l 5500",
+    "build": "node build.js",
+    "preview": "serve dist -l 5500",
+    "clean": "rm -rf dist"
+  },
+  "devDependencies": {
+    "live-server": "^1.2.2",
+    "serve": "^14.2.1"
+  }
+}

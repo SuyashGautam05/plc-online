@@ -1,0 +1,285 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PLC Software</title>
+    <link rel="stylesheet" href="../defination.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+  </head>
+
+  <body>
+    <div class="container">
+      <header style="display: flex">
+        <div class="logo-container">
+          <img src="../../assets/Scientech logo-2.png" alt="Scientech Logo" />
+          <h1>CTU</h1>
+        </div>
+      </header>
+
+      <main>
+        <a href="../../index.html" class="back-button">
+          <i class="fas fa-arrow-left"></i> Back to Course
+        </a>
+
+        <div class="content-wrapper">
+          <div class="image-section">
+            <img
+              style="border-radius: 20px; border: 2px solid black"
+              src="../../assets/CTU.png"
+              alt="CTU"
+            />
+          </div>
+          <div class="theory-section">
+            <h2>CTU</h2>
+            <p>
+              PLC counters are logic functions that count signal transitions.
+              These transitions usually happen on rising edges (positive
+              flanks), meaning the input changes from 0 to 1 (OFF to ON).<br /><br />
+              Each counter maintains an accumulated value and compares it to a
+              preset value (PV). When the accumulated count reaches PV, the
+              counter triggers an output (.Q), which you can use to control
+              other actions in your logic.
+            </p>
+
+            <p>
+              CTU (Count Up) is a fundamental ladder logic element or
+              instruction used to implement control logic in PLC programs. A
+              counter that increments its accumulated value each time the input
+              transitions from false to true, used for counting parts, cycles,
+              or events. This instruction type enables programmers to create
+              specific control behaviors, implement timing functions, or manage
+              data within ladder logic programs. Understanding and properly
+              utilizing CTU (Count Up) is essential for developing effective
+              ladder logic programs that meet application requirements.
+            </p>
+
+            <img
+            style="
+              margin-left: 160px;
+              margin-bottom: 30px;
+              border: 2px solid black;
+              align-self: center;
+              height: 221px;
+              width: 338px;
+              border-radius: 20px;
+            "
+            src="../../assets/CTU (Count Up).png"
+            alt="CTU (Count Up)"
+          />
+
+            <p>
+              The implementation of CTU (Count Up) follows established
+              conventions and best practices for ladder logic programming.
+              Programmers must consider scan time impacts, proper placement
+              within ladder rungs, and interaction with other instructions when
+              using CTU (Count Up). Common applications include sequential
+              control, state machine implementation, and process interlocking.
+              Effective use of CTU (Count Up) contributes to clear, maintainable
+              ladder logic programs that can be easily understood and modified
+              by maintenance personnel.
+            </p>
+
+            <p>
+              A CTU (Counter Up) is a PLC counter that counts upward by one each
+              time a rising edge (OFF → ON transition) is detected at its count
+              input. When the accumulated count reaches the preset value, the
+              output becomes TRUE.
+            </p>
+
+            <table style="margin-left: 100px" class="comparison-table">
+            <thead>
+              <tr>
+                <th>Parameter</th>
+                <th>Description</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>CU</td>
+                <td>Count-up input (counts on rising edge)</td>
+              </tr>
+              <tr>
+                <td>R</td>
+                <td>Reset input (resets count to zero)</td>
+              </tr>
+              <tr>
+                <td>PV</td>
+                <td>Preset value (target count)</td>
+              </tr>
+              <tr>
+                <td>Q</td>
+                <td>Output (TRUE when CV ≥ PV)</td>
+              </tr>
+              <tr>
+                <td>CV</td>
+                <td>Current count value</td>
+              </tr>
+            </tbody>
+          </table>
+
+            <h2>Why It Matters</h2>
+            <p>
+              Understanding CTU (Count Up) is fundamental in PLC programming and
+              industrial automation. This concept plays a vital role in:
+            </p>
+            <ul>
+              <li>Part counting</li>
+              <li>Batch counting</li>
+              <li>Production tracking</li>
+            </ul>
+
+            <h2>Working Principle</h2>
+            <ol>
+              <li>
+                Each rising edge at CU increases the counter value (CV) by 1
+              </li>
+              <li>When CV ≥ PV, output Q turns ON</li>
+              <li>Counter continues counting unless reset</li>
+              <li>
+                When Reset (R) is activated:
+                <ul>
+                  <li>CV resets to 0</li>
+                  <li>Q turns OFF</li>
+                </ul>
+              </li>
+            </ol>
+
+            <p>
+              The CTU (Count Up) counter increments its count value each time
+              the input condition transitions from FALSE to TRUE. This
+              transition is commonly referred to as a rising edge.
+            </p>
+
+            <img
+            style="
+              margin-left: 77px;
+              margin-bottom: 30px;
+              border: 2px solid black;
+              align-self: center;
+              height: 290px;
+              width: 547px;
+              border-radius: 20px;
+            "
+            src="../../assets/Working Principle.png"
+            alt="Working Principle of CTU"
+          />
+
+            <p>
+              When the accumulated count reaches the preset value, the counter’s
+              output becomes TRUE, indicating that the desired count has been
+              achieved. The count value remains stored until it is reset using a
+              reset instruction.
+            </p>
+
+            <img
+            style="
+              margin-left: 77px;
+              margin-bottom: 30px;
+              border: 2px solid black;
+              align-self: center;
+              height: 290px;
+              width: 547px;
+              border-radius: 20px;
+            "
+            src="../../assets/Working Principle_2.png"
+            alt="Working Principle of CTU"
+          />
+
+            <p>
+              CTU counters are commonly used in applications such as product
+              counting on conveyors, counting machine cycles, and tracking the
+              number of operations performed.
+            </p>
+
+            <img
+            style="
+              margin-left: 77px;
+              margin-bottom: 30px;
+              border: 2px solid black;
+              align-self: center;
+              height: 345px;
+              width: 547px;
+              border-radius: 20px;
+            "
+            src="../../assets/Working Principle_3.png"
+            alt="Working Principle of CTU"
+          />
+          <img
+            style="
+              margin-left: 77px;
+              margin-bottom: 30px;
+              border: 2px solid black;
+              align-self: center;
+              height: 345px;
+              width: 547px;
+              border-radius: 20px;
+            "
+            src="../../assets/Working Principle_4.png"
+            alt="Working Principle of CTU"
+          />
+
+            <h2>The sequential task is as follows:</h2>
+            <ol>
+              <li>The START button is pressed to start the conveyor motor.</li>
+              <li>
+                Cases move past proximity switch and increment the counter’s
+                accumulated value.
+              </li>
+              <li>
+                After a count of 10, the conveyor motor stops automatically and
+                the counter’s accumulated value is reset to zero with SP2.
+              </li>
+              <li>
+                The conveyor motor can be stopped manually without loss of the
+                accumulated count.
+              </li>
+              <li>
+                The accumulated count of the counter can be reset by means of
+                the COUNTER RESET button.
+              </li>
+            </ol>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <script>
+      // Add smooth scroll behavior for anchor links
+      document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+        anchor.addEventListener("click", function (e) {
+          e.preventDefault();
+          const target = document.querySelector(this.getAttribute("href"));
+          if (target) {
+            target.scrollIntoView({ behavior: "smooth" });
+          }
+        });
+      });
+    </script>
+
+    <!-- MCQ Modal -->
+    <div id="mcq-modal" class="mcq-modal">
+      <div class="mcq-modal-content">
+        <div class="mcq-modal-header">
+          <h2>Multiple Choice Questions</h2>
+          <button class="close-btn" onclick="closeMCQModal()">&times;</button>
+        </div>
+        <div class="mcq-modal-body">
+          <div id="mcq-container"></div>
+        </div>
+        <div class="mcq-modal-footer">
+          <button class="reset-btn" onclick="resetMCQs()">Reset Answers</button>
+          <button class="close-modal-btn" onclick="closeMCQModal()">
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MCQ Handler Script -->
+    <script src="../mcq-handler.js"></script>
+  </body>
+</html>

@@ -1,0 +1,363 @@
+.svgOverlay{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  pointer-events: none;
+}
+
+.lines {
+  stroke-width: 2;
+  stroke: #000;
+  z-index: 2;
+}
+
+.svgLabels{
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  font-size: 14px;
+  font-weight: bold;
+}
+
+#app {
+  display: flex;
+  flex: 1; /* Take up remaining height */
+  overflow: hidden;
+  background: #c9c9c9;
+}
+
+#left-column {
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  margin: 10px 25px;
+  margin-right: 0;
+  height: 90vh;
+  justify-content: space-around;
+  align-items: center;
+  z-index: 1;
+}
+
+.powerSupply-box {
+  display: flex;
+  flex-direction: column;
+  background: white;
+  justify-content: space-around;
+  align-items: center;
+  padding: 20px;
+  border: 2px solid #000;
+  border-radius: 12px;
+  height: 15%;
+  margin: 50px 0 20px 0px;
+  width: 165px;
+  z-index: 1;
+}
+
+#speedControl {
+  display: flex;
+  flex-direction: column;
+  background: white;
+  align-items: center;
+  justify-content: space-around;
+  padding: 15px;
+  border: 2px solid #000;
+  border-radius: 12px;
+  height: 50%;
+  margin: 5px 0px;
+  width: 215px;
+  z-index: 1;
+}
+
+.speedControlLabel {
+  font-size: 14px;
+  font-weight: bold;
+}
+
+.percetangeBox{
+  border: 2px solid #000;
+  padding: 10px;
+  border-radius: 6px;
+  width: 65px;
+  text-align: center;
+}
+
+#knobPercentage{
+  margin: 0;
+}
+
+.knob-img {
+  width: 105px;
+}
+
+#center-column div p{
+  text-align: center;
+  font-weight: bold;
+}
+
+.toggle-img{
+  width: 40px;
+  rotate: -90deg;
+}
+
+.toggle1-img{
+  width: 40px;
+  rotate: 90deg;
+}
+
+#switchLabel{
+  font-size: 12px;
+  font-weight: bold;
+  width: 25%;
+  text-align: center;
+}
+
+#switch-box{
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  background-color: white;
+  border: 2px solid #000;
+  border-radius: 12px;
+  width: 195px;
+  height: 55px;
+  margin-top: 15px;
+  
+}
+
+#direction-box{
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  background-color: white;
+  border: 2px solid #000;
+  border-radius: 12px;
+  width: 195px;
+  height: 55px;
+}
+
+
+#switchCircuit-box{
+  background-color: white;
+  border: 2px solid #000;
+  border-radius: 12px;
+  padding: 10px;
+  margin: 10px 0 0 0;
+  height: 50px;
+  z-index: 0;
+}
+
+#switchCircuitLabel {
+  font-size: 14px;
+  margin: 0;
+}
+
+.bottom-row{
+  width: 100%;
+  gap: 50px;
+  display: flex;
+}
+
+.circuit-container{
+  width: 70%;
+  position: relative;
+}
+
+#current-box {
+  position: absolute;
+  top: 10%;
+  left: 8%;
+  background-color: white;
+  border: 2px solid #000;
+  border-radius: 12px;
+  padding: 10px;
+  margin: 22px 0;
+  color: black;
+  z-index: 1;
+}
+
+#currentLabel, #voltageLabel{
+  font-weight: bold;
+  margin: 0;
+}
+
+#voltage-box {
+  position: absolute;
+  top: 30%;
+  left: 1%;
+  background-color: white;
+  border: 2px solid #000;
+  border-radius: 12px;
+  padding: 10px;
+  margin: 20px 0;
+  color: black;
+  z-index: 1;
+}
+
+.motor-img{
+  position: absolute;
+  width: 100%;
+  bottom: 15px;
+  left: 0px;
+  /* width: 165px; */
+  /* margin: 0 0 10px 0; */
+}
+
+.tire-img{
+  width: 85%;
+  margin: 0 0 10px 0;
+}
+
+#motor-box {
+  display: flex;
+  width: 30%;
+  height: 90%;
+  padding: 20px;
+  flex-direction: column;
+  background-color: white;
+  border: 2px solid #000;
+  border-radius: 12px;
+  justify-content: space-around;
+  align-items: center;
+}
+
+.motorLabel {
+  font-weight: bold;
+  margin-top: 10px;
+  margin-bottom: 5px;
+}
+
+.rpm-container{
+  border: 2px solid #000;
+  padding: 10px;
+  border-radius: 6px;
+  width: 80px;
+  text-align: center;
+}
+
+#rpm{
+  margin: 0;
+}
+
+@keyframes rotateTire {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.rotating {
+  animation: rotateTire 1s linear infinite;
+}
+
+#circuitMotor {
+  display: flex;
+  flex-direction: column;
+  background-color: white;
+  border: 2px solid #000;
+  border-radius: 12px;
+  width: 205px;
+  height: 205px;
+  justify-content: center;
+  align-items: center;
+  z-index: 0;
+}
+
+
+
+#right-column {
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  height: 82.5vh;
+  margin: 10px 10px 10px 0;
+  width: 100%;
+  gap: 25px;
+  justify-content: space-between;
+  align-items: end;
+  z-index: 1;
+}
+
+#powerButton {
+  font-size: 18px;
+  padding: 10px 20px;
+  background: white;
+  border: 2px solid red;
+  color: red;
+  border-radius: 8px;
+  box-shadow: 4px 2px 7px black;
+
+}
+
+#chart-section {
+  display: flex;
+  background-color: white;
+  border: 2px solid #000;
+  border-radius: 12px;
+  padding: 15px;
+  width: 1000px;
+  height: 100%;
+
+}
+
+#graphSwitch{
+  position: absolute;
+  border: 0;
+  padding: 5px 10px;
+  background: #007BFF;
+  color: white;
+  border-radius: 5px;
+  margin-top: -5px;
+  cursor: pointer;
+}
+
+.light-img {
+  width: 50px;
+  height: auto;
+  display: block;
+  margin: auto -5px;
+  rotate: 90deg;
+}
+
+#lightImgOn{
+  position: absolute;
+  opacity: 0;
+}
+
+.light {
+  display: flex;
+  background: white;
+  text-align: center;
+  width: 85px;
+  height: 85px;
+  border: 2px solid;
+  color: black;
+  border-radius: 50%;
+}
+#pwm-chart-container1, #pwm-chart-container2, #pwm-chart-container3  {
+  display: none;
+}
+
+#voltage-chart-container, #current-chart-container, #power-chart-container, #pwm-chart-container1, #pwm-chart-container2, #pwm-chart-container3 {
+  width: 33%;
+  height: 100%;
+  flex: 2;
+}
+
+#load-section{
+  height: 360px;
+  width: 100%;
+  /* border: 2px solid #000; */
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+.loads{
+  display: flex;
+  width: 35%;
+  align-items: center;
+  justify-content: space-between;
+  margin-top: 65px;
+}
+

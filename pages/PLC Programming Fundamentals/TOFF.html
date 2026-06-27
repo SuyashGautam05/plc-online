@@ -1,0 +1,239 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PLC Software</title>
+    <link rel="stylesheet" href="../defination.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+  </head>
+
+  <body>
+    <div class="container">
+      <header style="display: flex">
+        <div class="logo-container">
+          <img src="../../assets/Scientech logo-2.png" alt="Scientech Logo" />
+          <h1>TOFF (Off-Delay)</h1>
+        </div>
+      </header>
+
+      <main>
+        <a href="../../index.html" class="back-button">
+          <i class="fas fa-arrow-left"></i> Back to Course
+        </a>
+
+        <div class="content-wrapper">
+          <div class="image-section">
+            <img
+              style="border-radius: 20px; border: 2px solid black"
+              src="../../assets/TOFF (Off-Delay).png"
+              alt="TOFF (Off-Delay)"
+            />
+          </div>
+
+          <div class="theory-section">
+            <h2>TOFF (Off-Delay)</h2>
+            <p>
+              A TOF (Timer OFF-Delay) is a PLC timer that delays turning OFF an
+              output after the input signal changes from ON to OFF.<br /><br />
+              When the input is ON, the output turns ON immediately.<br />
+              When the input turns OFF, the timer starts counting, and the
+              output remains ON for the preset time.<br />
+              After the preset time expires, the output turns OFF.<br /><br />
+            </p>
+
+            <img
+              style="
+                margin-left: 176px;
+                margin-bottom: 30px;
+                border: 2px solid black;
+                align-self: center;
+                height: 161px;
+                width: 310px;
+                border-radius: 20px;
+              "
+              src="../../assets/TOFF (Off-Delay)_2.png"
+              alt="TOFF (Off-Delay) Ladder Diagram"
+            />
+
+            <h3>Key Points</h3>
+            <ul>
+              <li>Output ON immediately when input is ON</li>
+              <li>Output OFF after delay when input turns OFF</li>
+              <li>
+                Used when a device must continue running for a short time after
+                the stop signal
+              </li>
+            </ul>
+
+            <img
+              style="
+                margin-left: 70px;
+                margin-bottom: 30px;
+                border: 2px solid black;
+                align-self: center;
+                height: 260px;
+                width: 563px;
+                border-radius: 20px;
+              "
+              src="../../assets/TOFF Key Points.png"
+              alt="TOFF Key Points"
+            />
+
+            <h3>Explanation of Components</h3>
+            <ul>
+              <li>
+                <b>IN (Input): </b> The signal that triggers the timer (usually a BOOL).
+              </li>
+              <li>
+                <b>PT (Preset Time): </b> The time delay setting (e.g., 10 seconds).
+              </li>
+              <li><b>ET (Elapsed Time): </b> The current time counted by the timer.</li>
+              <li><b>Q (Output): </b> The timer output (TRUE after preset time).</li>
+            </ul>
+
+            <h3>Principle of Operation</h3>
+            <ul>
+              <li>
+                The TOF timer works opposite to TON. When the signal at IN
+                changes from 1 to 0, the timer starts counting the preset time
+                PT.
+              </li>
+              <li>
+                At that moment, output Q immediately switches to 1 and stays
+                active during the countdown. After the preset time expires, Q
+                returns to 0.
+              </li>
+              <li>
+                If IN goes back to 1 during counting, the timer resets
+                instantly, and Q switches to 0.
+              </li>
+            </ul>
+
+            <img
+              style="
+                margin-left: 70px;
+                margin-bottom: 30px;
+                border: 2px solid black;
+                align-self: center;
+                height: 260px;
+                width: 563px;
+                border-radius: 20px;
+                padding: 26px;
+              "
+              src="../../assets/TOFF Principle of Operation.png"
+              alt="Principle of Operation"
+            />
+
+
+            <h3>Example of TOFF Timer</h3>
+            <img
+              style="
+                margin-left: 70px;
+                margin-bottom: 30px;
+                border: 2px solid black;
+                align-self: center;
+                height: 260px;
+                width: 563px;
+                border-radius: 20px;
+              "
+              src="../../assets/TOFF Example.png"
+              alt="Example of TOFF Timer"
+            />
+            <p>
+              This network implements an OFF-Delay Timer (TOF) to control Motor
+              2.<br />
+              When Switch 2 is ON, the motor runs immediately. When Switch 2 is
+              turned OFF, the motor continues running for a preset delay time
+              before stopping.
+            </p>
+
+            <h3>Operation Logic</h3>
+            <ol>
+              <li>
+                <b>When Switch 2 (%I0.1) is ON: </b>
+                <ul>
+                  <li>The TOF timer input (IN) becomes TRUE</li>
+                  <li>The timer output Q turns ON immediately</li>
+                  <li>Motor 2 (%Q0.1) runs</li>
+                </ul>
+              </li>
+              <li>
+                <b>When Switch 2 (%I0.1) is turned OFF: </b>
+                <ul>
+                  <li>
+                    The timer starts counting the preset time (10 seconds)
+                  </li>
+                  <li>During this delay, Q remains ON</li>
+                  <li>Motor 2 continues running</li>
+                </ul>
+              </li>
+              <li>
+                <b>After 10 seconds: </b>
+                <ul>
+                  <li>Timer output Q turns OFF</li>
+                  <li>Motor 2 stops</li>
+                </ul>
+              </li>
+            </ol>
+
+            <h3>Key Behavior of TOF Timer</h3>
+            <ul>
+              <li>Output Q turns ON immediately when IN is TRUE</li>
+              <li>
+                Output Q turns OFF after preset time (PT) when IN goes FALSE
+              </li>
+              <li>ET shows elapsed delay time while timing</li>
+            </ul>
+
+            <h3>Application Example</h3>
+            <ul>
+              <li>Cooling fan run-on after machine stop</li>
+              <li>Conveyor belt stopping delay</li>
+              <li>Motor cooldown period</li>
+              <li>Exhaust or ventilation delay</li>
+            </ul>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <script>
+      // Add smooth scroll behavior for anchor links
+      document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+        anchor.addEventListener("click", function (e) {
+          e.preventDefault();
+          const target = document.querySelector(this.getAttribute("href"));
+          if (target) {
+            target.scrollIntoView({ behavior: "smooth" });
+          }
+        });
+      });
+    </script>
+
+    <!-- MCQ Modal -->
+    <div id="mcq-modal" class="mcq-modal">
+      <div class="mcq-modal-content">
+        <div class="mcq-modal-header">
+          <h2>Multiple Choice Questions</h2>
+          <button class="close-btn" onclick="closeMCQModal()">&times;</button>
+        </div>
+        <div class="mcq-modal-body">
+          <div id="mcq-container"></div>
+        </div>
+        <div class="mcq-modal-footer">
+          <button class="reset-btn" onclick="resetMCQs()">Reset Answers</button>
+          <button class="close-modal-btn" onclick="closeMCQModal()">
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MCQ Handler Script -->
+    <script src="../mcq-handler.js"></script>
+  </body>
+</html>

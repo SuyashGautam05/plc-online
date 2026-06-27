@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>PLC Simtel Software</title>
+        <!-- <link rel="stylesheet" href="../../../styles.css" /> -->
+        <link rel="stylesheet" href="styles.css" />
+        <script src="./shared/js/chart.umd.js"></script>
+        <script src="./shared/js/chartjs-plugin-annotation.js"></script>
+        <style>
+            @keyframes fadeIn {
+  from {
+      opacity: 0;
+  }
+  to {
+      opacity: 1;
+  }
+}
+
+@keyframes fadeInFromBottom {
+  from {
+      bottom: -40px;
+      opacity: 0;
+  }
+  to {
+      bottom: 40px;
+      opacity: 1;
+  }
+}
+
+body {
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  height: 100vh; /* Ensure full height */
+  overflow: hidden;
+  user-select: none;
+  transform: scale(calc(100vw / 1920))
+}
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #fff;
+  color: black;
+  /* padding: 10px; */
+  border-top: 1px solid #dee2e6;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.left-header {
+  background: #f8f9fa;
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  border-right: 1px solid #000; /* Right border for company name */
+  margin-left: 50px /* Right border for company name */
+}
+
+#header-logo, #header-title, #header-company {
+  font-size: 18px;
+  font-weight: bold;
+  flex: 1;
+}
+
+#header-logo {
+  height: 52px;   
+  object-fit: contain;
+  margin-left: -20px; /* Pushes all other elements to the right */
+}
+
+#header-title {
+  flex-grow: 1;
+  text-align: center;
+  margin-left: 20px; /* Space between border and title */
+  font-size: 1.5vw;
+}
+
+#header-company {
+  font-size: 16px;
+  width: 280px;
+  margin-left: -30px;
+  margin-right: 10px; /* This will push the company name to the right */
+}
+
+.back-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #E8E8E8;
+  color: #333;
+  text-decoration: none;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-weight: 500;
+  font-size: 16px;
+  transition: 0.2s ease-in-out;
+  margin-right: 20px;
+}
+
+.back-button:hover {
+  background-color: #f1f3f5;
+}
+
+.back-button i {
+  font-size: 18px;
+}
+
+.back-btn {
+  position: absolute;
+  width: 20px;
+  left: 415px;
+  top: 20px;
+  background: white;
+  padding: 8px;
+  border-radius: 50%;
+  border: 2px solid black;
+  transition: 0.2s ease-in-out;
+}
+
+.back-btn:hover {
+  filter: invert(1);
+  border: 2px solid white;
+}
+
+#sim-title{
+  animation-name: fadeIn;
+  animation-duration: 1s;
+  animation-fill-mode: forwards;
+  position: absolute;
+  bottom: 90px;
+  z-index: 1;
+  font-size: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: #000f0c;
+}
+
+
+#sim-start{
+  animation-name: fadeInFromBottom;
+  animation-duration: 1s;
+  animation-fill-mode: forwards;
+  position: absolute;
+  bottom: 40px;
+  z-index: 1;
+  left: 50%;
+  text-decoration: none;
+  color: #000f0c;
+  font-weight: bold;
+  font-size: 14px;
+  transform: translateX(-50%);
+  padding: 10px 50px;
+  border: 2px solid #000f0c;
+  border-radius: 24px;
+  transition: 0.2s ease-in-out;
+}
+
+#sim-start:hover{
+  background: #000f0c;
+  color: white;
+
+}
+
+
+
+
+#logo {
+  animation-name: fadeIn;
+  animation-duration: 2s;
+  animation-fill-mode: forwards;
+  position: absolute;
+  height: 50px;
+  top: 20px;
+  right: 20px;
+  z-index: 1;
+}
+
+.sims-container {
+  margin-top: 450px;
+  margin-left: 20px;
+  z-index: 1;
+}
+
+.simLinkButton {
+  background: #007BFF;
+  border: none;
+  color: white;
+  border-radius: 5px;
+  padding: 10px;
+  margin: 5px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+
+.banner-container{
+  animation-name: fadeIn;
+  animation-duration: 2s;
+  animation-fill-mode: forwards;
+  position: absolute;
+  height: 105%;
+  z-index: 0;
+  margin: 0 auto;
+  top: -25px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.banner-container img{
+  height: 100%;
+}
+
+#app {
+  display: flex;
+  flex: 1; /* Take up remaining height */
+  overflow: hidden;
+  background: #c9c9c9;
+  justify-content: space-between;
+}
+
+
+#app > div {
+  display: flex;
+  flex-direction: column;
+}
+        </style>
+    </head>
+    <body>
+        <header style="background: #f8f9fa;">
+            <div class="left-header">
+                <img id="header-logo" src="../../../assets/Scientech logo-2.png" alt="Logo" />
+            </div>
+            <div id="header-title">Three Phase Induction AC Motor</div>
+            <div style="gap: clamp(12px, 2vw, 25px);flex-wrap: wrap;align-items: center;">
+              <a style="width: 170px;height: 39px;background-color: #edeff1;transform: translateY(-2px);box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);border-radius: clamp(4px, 0.8vw, 10px);border: 1px solid #dee2e6;" href="../AC_Motors.html" class="back-button">
+                <i class="fas fa-arrow-left"></i> <img style="height: 28px" src="../../../assets/left-arrow.png" alt=""> Back to Course
+            </a>
+            </div>
+            <!-- <a href="../AC_Motors.html"><img src="./img/back.png" alt="back" class="back-btn" /></a> -->
+        </header>
+
+        <div id="app">
+            <svg class="svgOverlay">
+              
+              <line class="lines" id="mainLine1" />
+              <line class="lines" id="mainLine2" />
+              <line class="lines" id="mainLine3" />
+              
+              <line class="lines" id="smpsLine1" />
+              <line class="lines" id="smpsLine2" />
+              <line class="lines" id="smpsLine3" />
+              
+              <text class="svgLabels" id="main-smpsN">B</text>
+              <text class="svgLabels" id="main-smpsL">R</text>
+              <text class="svgLabels" id="main-smpsT">Y</text>
+              
+              <line class="lines" id="horizontalLine1" />
+              <line class="lines" id="horizontalLine2" />
+              <line class="lines" id="horizontalLine3" />
+
+              <circle id="neutralCircle" r="8" stroke="black" stroke-width="2" fill="blue" />
+              <circle id="liveCircle" r="8" stroke="black" stroke-width="2" fill="red" />
+              <circle id="liveCircle2" r="8" stroke="black" stroke-width="2" fill="yellow" />
+              
+            </svg>
+            <div id="left-column">
+                <div class="powerSupply-box">
+                    <button id="powerButton">Power</button>
+                    <p><b>415V AC, 50Hz</b></p>
+                </div>
+
+                <div id="speedControl">
+                    <p class="speedControlLabel"></p>
+                    <div class="switches">
+                        <div id="direction-box">
+                            <img id="toggle" class="toggle1-img" />
+                        </div>
+                    </div>
+                </div>
+
+                <div class="load" id="loadDiv">
+                    <img src="img/knob.png" id="knob" class="knob-img" />
+                    <div class="percetangeBox">
+                        <p id="knobPercentage">0.00%</p>
+                    </div>
+                    <p class="speedControlLabel">Electrical Load</p>
+                </div>
+            </div>
+
+            <div id="right-column">
+                <div class="top-row">
+                    <div class="chart-container" id="currentTorque-chart-container">
+                        <canvas id="currentTorqueChart"></canvas>
+                    </div>
+                    <div class="chart-container" id="torqueRPM-chart-container">
+                        <canvas id="torqueRPMChart"></canvas>
+                    </div>
+                    <div class="chart-container" id="currentRPM-chart-container">
+                        <canvas id="currentRPMChart"></canvas>
+                    </div>
+                </div>
+                <div class="bottom-row">
+                    <div class="left-col">
+                        <div id="voltage-box">
+                            <p id="voltageLabel">0.00V</p>
+                        </div>
+                        <div id="current-box">
+                            <p id="currentLabel">0.00A</p>
+                        </div>
+                        <img src="img/threePhase.jpeg" id="motor" class="motor-img" />
+
+                        <div class="load2" id="loadDiv2">
+                            <img src="img/knob.png" id="knob2" class="knob-img" />
+                            <div class="percetangeBox2">
+                                <p id="knobPercentage2">0</p>
+                            </div>
+                        </div>
+                    </div>
+
+
+                    <div class="right-col" id="motor-box">
+                        <img src="img/tire.png" id="tire" class="tire-img" />
+                        <div class="rpm-container">
+                            <p id="rpm">0 RPM</p>
+                        </div>
+                        <p class="motorLabel">Three Phase Induction Motor</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <script src="renderer.js"></script>
+        <link rel="stylesheet" href="https://unpkg.com/webtour@1.1.0/dist/webtour.min.css" />
+        <script src="https://unpkg.com/webtour@1.1.0/dist/webtour.min.js"></script>
+    </body>
+</html>

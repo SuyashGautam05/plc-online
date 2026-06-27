@@ -1,0 +1,222 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PLC Software</title>
+    <link rel="stylesheet" href="../defination.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+  </head>
+
+  <body>
+    <div class="container">
+      <header style="display: flex">
+        <div class="logo-container">
+          <img src="../../assets/Scientech logo-2.png" alt="Scientech Logo" />
+          <h1>Profinet</h1>
+        </div>
+      </header>
+
+      <main>
+        <a href="../../index.html" class="back-button">
+          <i class="fas fa-arrow-left"></i> Back to Course
+        </a>
+
+        <div class="content-wrapper">
+          <div class="image-section">
+            <img
+              style="border-radius: 20px; border: 2px solid black"
+              src="../../assets/Profinet.png"
+              alt="Profinet"
+            />
+          </div>
+
+          <div class="theory-section">
+            <h2>Profinet</h2>
+
+            <p>
+              Profinet (Process Field Network) is an industrial Ethernet
+              communication protocol developed by Siemens as the successor to
+              Profibus. It enables high-speed, real-time data exchange between
+              automation devices such as PLCs, VFDs, sensors, actuators, and
+              HMIs.
+            </p>
+
+            <p>
+              Unlike Profibus, which is fieldbus-based, Profinet uses standard
+              Ethernet, combining the advantages of Ethernet networks with
+              industrial deterministic performance.
+            </p>
+
+            <h2>Key Features of Profinet</h2>
+            <ul>
+              <li>Ethernet-based (100 Mbps or more)</li>
+              <li>
+                Real-time and isochronous communication for automation and
+                motion control
+              </li>
+              <li>Deterministic data transfer for fast control loops</li>
+              <li>Supports large device networks</li>
+              <li>
+                Seamless integration with IT networks and Industry 4.0 systems
+              </li>
+              <li>Uses standard TCP/IP for non-time-critical data</li>
+            </ul>
+
+            <h2>Types of Profinet Communication</h2>
+
+            <h3>1. Profinet RT (Real-Time)</h3>
+            <ul>
+              <li>For standard industrial automation</li>
+              <li>Cyclic data transfer between controllers and devices</li>
+              <li>Fast response time (~1 ms cycle)</li>
+            </ul>
+            <p><b>Applications:</b></p>
+            <ul>
+              <li>VFD control</li>
+              <li>PLC–I/O communication</li>
+              <li>Sensors and actuators in production lines</li>
+            </ul>
+
+            <h3>2. Profinet IRT (Isochronous Real-Time)</h3>
+            <ul>
+              <li>For motion control and robotics</li>
+              <li>Extremely low jitter and precise timing</li>
+              <li>Cycle times can be less than 1 ms</li>
+              <li>Ensures synchronized motion across multiple axes</li>
+            </ul>
+            <p><b>Applications:</b></p>
+            <ul>
+              <li>CNC machines</li>
+              <li>Multi-axis robotics</li>
+              <li>Packaging and assembly machines</li>
+            </ul>
+
+            <h3>
+              3. Profinet CBA (Component-Based Automation) – less common now
+            </h3>
+            <ul>
+              <li>
+                Modular system design for distributed automation components
+              </li>
+              <li>Mainly replaced by RT and IRT in modern systems</li>
+            </ul>
+
+            <p><b>Advantages of Profinet</b></p>
+            <ul>
+              <li>High-speed communication (100 Mbps or more)</li>
+              <li>Deterministic and real-time control</li>
+              <li>Supports plug-and-play device replacement</li>
+              <li>Scalable for small to very large automation systems</li>
+              <li>Integrates easily with IT systems and Industry 4.0</li>
+              <li>Reduces wiring compared to traditional fieldbuses</li>
+            </ul>
+
+            <h2>Profinet vs Profibus (Quick Comparison)</h2>
+            <table class="comparison-table">
+              <tr>
+                <th>Feature</th>
+                <th>Profibus</th>
+                <th>Profinet</th>
+              </tr>
+              <tr>
+                <td>Medium</td>
+                <td>Serial fieldbus</td>
+                <td>Ethernet</td>
+              </tr>
+              <tr>
+                <td>Speed</td>
+                <td>Up to 12 Mbps</td>
+                <td>100 Mbps or more</td>
+              </tr>
+              <tr>
+                <td>Real-Time</td>
+                <td>DP/PA deterministic</td>
+                <td>RT/IRT deterministic</td>
+              </tr>
+              <tr>
+                <td>Integration</td>
+                <td>Limited with IT</td>
+                <td>Full TCP/IP & IT integration</td>
+              </tr>
+              <tr>
+                <td>Topology</td>
+                <td>Line, tree, star</td>
+                <td>Star, line, ring</td>
+              </tr>
+              <tr>
+                <td>Use</td>
+                <td>Traditional factory & process automation</td>
+                <td>
+                  Modern industrial automation, motion control, Industry 4.0
+                </td>
+              </tr>
+            </table>
+
+            <h2>Typical Applications of Profinet</h2>
+            <ul>
+              <li>PLC → VFD communication in high-speed processes</li>
+              <li>Motion control and robotics</li>
+              <li>Factory automation: packaging, conveyor systems, CNC</li>
+              <li>Large-scale distributed automation networks</li>
+            </ul>
+
+            <h2>Working Principle – Example: PLC to VFD via Profinet</h2>
+            <ol>
+              <li>PLC acts as Profinet controller (master).</li>
+              <li>VFD acts as Profinet device (slave).</li>
+              <li>
+                PLC sends speed and torque setpoints to VFD over Profinet RT.
+              </li>
+              <li>
+                VFD returns feedback signals (motor current, speed, status) in
+                real-time.
+              </li>
+              <li>
+                IRT can be used if multiple axes require synchronized motion.
+              </li>
+            </ol>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <script>
+      // Add smooth scroll behavior for anchor links
+      document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+        anchor.addEventListener("click", function (e) {
+          e.preventDefault();
+          const target = document.querySelector(this.getAttribute("href"));
+          if (target) {
+            target.scrollIntoView({ behavior: "smooth" });
+          }
+        });
+      });
+    </script>
+
+    <!-- MCQ Modal -->
+    <div id="mcq-modal" class="mcq-modal">
+      <div class="mcq-modal-content">
+        <div class="mcq-modal-header">
+          <h2>Multiple Choice Questions</h2>
+          <button class="close-btn" onclick="closeMCQModal()">&times;</button>
+        </div>
+        <div class="mcq-modal-body">
+          <div id="mcq-container"></div>
+        </div>
+        <div class="mcq-modal-footer">
+          <button class="reset-btn" onclick="resetMCQs()">Reset Answers</button>
+          <button class="close-modal-btn" onclick="closeMCQModal()">
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MCQ Handler Script -->
+    <script src="../mcq-handler.js"></script>
+  </body>
+</html>

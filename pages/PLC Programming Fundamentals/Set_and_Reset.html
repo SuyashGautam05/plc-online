@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PLC Software</title>
+    <link rel="stylesheet" href="../defination.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+  </head>
+
+  <body>
+    <div class="container">
+      <header style="display: flex">
+        <div class="logo-container">
+          <img src="../../assets/Scientech logo-2.png" alt="Scientech Logo" />
+          <h1>Set and Reset</h1>
+        </div>
+      </header>
+
+      <main>
+        <a href="../../index.html" class="back-button">
+          <i class="fas fa-arrow-left"></i> Back to Course
+        </a>
+
+        <div class="content-wrapper">
+          <div class="image-section">
+            <img
+              style="
+                border-radius: 20px;
+                border: 2px solid black;
+                height: 400px;
+              "
+              src="../../assets/Set and Reset.png"
+              alt="Set and Reset"
+            />
+          </div>
+
+          <div class="theory-section">
+            <h2>Set and Reset</h2>
+
+            <p>
+              Set and Reset instructions are used in PLC programming to latch
+              outputs or internal memory bits. Latching means that once an
+              output is turned ON, it remains ON even after the activating
+              condition is removed, until a separate reset condition is applied.
+            </p>
+
+            <p>
+              The <b>Set (SET)</b> instruction is used to turn ON a specific output or
+              memory bit and keep it ON. Once the SET instruction is executed,
+              the output remains energized regardless of changes in the input
+              condition that activated it.
+            </p>
+
+            <p>
+              The <b>Reset (RESET)</b> instruction is used to turn OFF a previously set
+              output or memory bit. The output remains OFF until it is set again
+              by a SET instruction.
+            </p>
+
+            <h2>How do Set and Reset work?</h2>
+
+            <table class="comparison-table">
+              <tr>
+                <th>Instruction</th>
+                <th>Functionality</th>
+                <th>Behavior</th>
+              </tr>
+              <tr>
+                <td>SET</td>
+                <td>Turns ON a bit (sets it to 1/TRUE)</td>
+                <td>Once set, the bit stays ON until reset</td>
+              </tr>
+              <tr>
+                <td>RESET</td>
+                <td>Turns OFF a bit (resets it to 0/FALSE)</td>
+                <td>Once reset, the bit stays OFF until set</td>
+              </tr>
+            </table>
+
+            <p>
+              Unlike normal outputs controlled directly by logic, SET/RESET
+              latch or unlatch the output, ignoring input changes until the
+              opposite instruction occurs.
+            </p>
+
+            <p>
+              Set and Reset instructions are commonly used in applications where
+              memory of an event is required, such as start-stop circuits, alarm
+              systems, fault latching, and mode selection. These instructions
+              reduce the need for complex interlocking logic and simplify
+              program design.
+            </p>
+
+            <p>
+              Care must be taken while using Set and Reset instructions to avoid
+              unwanted latching conditions. Proper program structure ensures
+              that the reset condition is always reachable and clearly defined.
+            </p>
+
+            <h2>Example of Set and Reset Bit</h2>
+
+            <p>The rungs below show the basic code.</p>
+
+            <p>
+              When both Input A and Input B are FALSE then the state of Output Y
+              does not change. If Output Y is FALSE then it stays FALSE….
+            </p>
+
+            <img style="margin-left: 92px;margin-bottom: 30px; border: 2px solid black; align-self: center;height: auto; width: 528px;border-radius: 20px;"
+                    src="../../assets/Example of Set and Reset Bit.png" alt="Example of Set and Reset Bit">
+
+            <p>
+              If Input A goes TRUE momentarily then the SET symbol changes the
+              state of Output Y to TRUE.
+            </p>
+
+            <p>
+              Then, after subsequent scans, if Input A changes state to FALSE it
+              does not affect the state of Output Y. In other words, Output Y is
+              latched TRUE…
+            </p>
+
+            <img style="margin-left: 92px;margin-bottom: 30px; border: 2px solid black; align-self: center;height: auto; width: 528px;border-radius: 20px;"
+                    src="../../assets/Example of Set and Reset Bit_2.png" alt="Example of Set and Reset Bit_2">
+
+            <p>
+              Only when Input B changes state to TRUE will the RESET symbol
+              change the state of Output Y back to FALSE. In other words, Output
+              Y is now unlatched….
+            </p>
+
+            <img style="margin-left: 92px;margin-bottom: 30px; border: 2px solid black; align-self: center;height: auto; width: 528px;border-radius: 20px;"
+                    src="../../assets/Example of Set and Reset Bit_3.png" alt="Example of Set and Reset Bit_3">
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <script>
+      // Add smooth scroll behavior for anchor links
+      document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+        anchor.addEventListener("click", function (e) {
+          e.preventDefault();
+          const target = document.querySelector(this.getAttribute("href"));
+          if (target) {
+            target.scrollIntoView({ behavior: "smooth" });
+          }
+        });
+      });
+    </script>
+
+    <!-- MCQ Modal -->
+    <div id="mcq-modal" class="mcq-modal">
+      <div class="mcq-modal-content">
+        <div class="mcq-modal-header">
+          <h2>Multiple Choice Questions</h2>
+          <button class="close-btn" onclick="closeMCQModal()">&times;</button>
+        </div>
+        <div class="mcq-modal-body">
+          <div id="mcq-container"></div>
+        </div>
+        <div class="mcq-modal-footer">
+          <button class="reset-btn" onclick="resetMCQs()">Reset Answers</button>
+          <button class="close-modal-btn" onclick="closeMCQModal()">
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MCQ Handler Script -->
+    <script src="../mcq-handler.js"></script>
+  </body>
+</html>

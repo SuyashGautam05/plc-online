@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PLC Software</title>
+    <link rel="stylesheet" href="../defination.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+    <div class="container">
+        <header style="display: flex;">
+            <div class="logo-container">
+                <img src="../../assets/Scientech logo-2.png" alt="Scientech Logo">
+                <h1>AC Motors</h1>
+            </div>
+        </header>
+
+        <main>
+            <div class="button-container">
+                <a href="../../index.html" class="back-button">
+                <i class="fas fa-arrow-left"></i> Back to Course
+            </a>
+            <a href="./AC_simulations/index.html" class="simulation-button">
+                    <i class="fas fa-flask"></i> Simulation
+            </a>
+            </div>
+
+            <div class="content-wrapper">
+                <div class="image-section">
+                    <img style="border-radius: 20px;border: 2px solid black;" src="../../assets/AC Motors.png"
+                        alt="AC Motors">
+                </div>
+
+                <div class="theory-section">
+                    <h2>AC Motors</h2>
+                    <p>
+                        Alternating current (AC) powers nearly every modern device. However, many people may not realize
+                        the critical role AC motors play in powering countless machines. Understanding AC motors and
+                        their types can help you optimize applications and enhance operational efficiency.<br><br>AC
+                        motors are driven by alternating current and work based on the principles of electromagnetism.
+                        This connection between AC power and electromagnetism enables motors to convert electrical
+                        energy into mechanical movement.<br><br>AC motors are essential components in various industrial
+                        and household applications. To dive deeper into their functionality, let's explore how they work
+                        and why they are indispensable.
+                    </p>
+                    <h2>How AC Motors Work?</h2>
+                    <p>
+                        AC motors convert electrical energy into mechanical energy through the interaction of a magnetic
+                        field and a conductor. The process involves alternating current flowing through coils in the
+                        stator, which generates a rotating magnetic field. This field induces current in the rotor,
+                        causing it to turn. The motion of the rotor creates mechanical torque that powers the machinery
+                        or equipment connected to the motor. There are two primary types of AC motors: synchronous
+                        motors and induction motors.
+                    </p>
+                    <h2>Single-Phase Induction Motor</h2>
+                    <p>
+                        Single-phase induction motors are commonly used in household appliances such as fans,
+                        refrigerators, and washing machines. They require only one phase of power supply and are
+                        typically used for smaller loads. However, single-phase induction motors are not self-starting,
+                        so they require an auxiliary mechanism like a starting capacitor or a split-phase to initiate
+                        motion.
+                    </p>
+                    <img style="margin-left: 20px; border: 2px solid black;margin-bottom: 30px; align-self: center;height: auto; width: 528px;border-radius: 20px;"
+                        src="../../assets/Single-Phase Induction Motor.png"
+                        alt="Single-Phase Induction Motor Illustration">
+                    <p><b>Single phase induction motor constructed in two main parts: </b></p>
+                    <img style="margin-left: 20px; border: 2px solid black; margin-bottom: 30px; align-self: center;height: auto; width: 528px;border-radius: 20px;"
+                        src="../../assets/Single phase induction motor constructed in two main parts.png"
+                        alt="Single phase induction motor constructed in two main parts">
+                    <ol>
+                        <li><b>Stator: </b>
+                            The stator is the stationary part of the motor, and it has a core made of laminated steel to
+                            reduce energy losses. Inside the stator, there are copper windings where the alternating
+                            current (AC) flows. These windings are responsible for creating the magnetic field needed to
+                            make the rotor spin. Some motors also have an auxiliary winding or a capacitor connected to
+                            the stator to help the motor start.
+                        </li>
+                        <li><b>Rotor: </b>
+                            The rotor is the part that rotates. It’s usually a squirrel cage design, meaning it has bars
+                            made of copper or aluminum connected at the ends by rings. These bars form a closed loop.
+                            When the magnetic field from the stator interacts with the rotor, it induces a current in
+                            these bars, which causes the rotor to spin. The motor also includes a shaft connected to the
+                            rotor, bearings to support the shaft and allow it to rotate smoothly, and a frame to hold
+                            everything together.
+                        </li>
+                    </ol>
+                    <p><b>Working Principle of Single-Phase Induction Motors</b></p>
+                    <p>Single-phase induction motors work through electromagnetic induction. When connected to a
+                        single-phase AC power supply, the stator winding creates a changing magnetic field. This field
+                        induces a current in the rotor, which then forms its own magnetic field. The interaction between
+                        these magnetic fields produces the force needed to rotate the rotor. <br><br>The alternating
+                        magnetic field in the stator, driven by the AC supply, induces an electromotive force (EMF) in
+                        the rotor conductors based on Faraday's Law of Electromagnetic Induction. This induced EMF
+                        generates currents in the rotor bars, typically made of aluminum or copper. These currents
+                        create a secondary magnetic field around the rotor bars. The interaction between the stator's
+                        and rotor's magnetic fields generates a force, known as Lorentz force, which produces the torque
+                        to spin the rotor. <br><br>The motor reaches a steady state where the rotor speed is slightly
+                        less than the synchronous speed of the stator's magnetic field. This speed difference, called
+                        slip, is needed for the continuous induction of current in the rotor, keeping the motor running.
+                        As long as the AC power supply is present, this process continues, driving the motor's rotation.
+                        <br><br>To start the motor, mechanisms such as capacitors or auxiliary windings are used to
+                        create an initial phase shift, generating a rotating magnetic field to start the rotor. Once the
+                        rotor gains enough speed, these starting aids are usually disconnected, allowing the motor to
+                        run on the main winding. Regular maintenance, including checking the load and ensuring proper
+                        ventilation, helps prevent issues like overheating and mechanical wear, ensuring good
+                        performance and long life.
+                    </p>
+                    <img style="margin-left: 20px; border: 2px solid black;margin-bottom: 30px; align-self: center;height: auto; width: 528px;border-radius: 20px;"
+                        src="../../assets/Working Principle of Single-Phase Induction Motors.png">
+                    <p><b>Applications</b></p>
+                    <ul>
+                        <li><b>Industrial Sector: </b>
+                            <ul>
+                                <li><b>Manufacturing: </b> Drive systems in assembly lines and machine tools.</li>
+                                <li><b>Textiles & Food Processing: </b> Efficiently powering conveyors, mixers, and
+                                    pumps.</li>
+                                <li><b>Mining and Extraction: </b> Robust motors for heavy-duty applications in
+                                    extraction industries.</li>
+                            </ul>
+                        </li>
+                        <li><b>Commercial and Domestic Use: </b>
+                            <ul>
+                                <li><b>HVAC Systems: </b> Ventilation and air conditioning systems in residential and
+                                    commercial buildings.</li>
+                                <li><b>Household Appliances: </b> Washing machines, fans, and refrigerators.</li>
+                                <li><b>Water Pumping: </b> Agricultural irrigation systems and municipal water supply.
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                    <img style="margin-left: 20px; border: 2px solid black;margin-bottom: 30px; align-self: center;height: auto; width: 528px;border-radius: 20px;"
+                        src="../../assets/Applications.png">
+                    <h2>Three-Phase Induction Motor</h2>
+                    <p>
+                        A three-phase induction motor is a type of AC induction motor that deals with a phase supply
+                        when diverged from the single-phase induction motor where the single-phase supply is supposed to
+                        work. The three-phase supply current makes an electromagnetic field in the stator winding which
+                        prompts the production of the torque in the rotor bending of the three-phase induction motor
+                        having a magnetic field.
+                    </p>
+                    <img style="margin-left: 20px; border: 2px solid black;margin-bottom: 30px; align-self: center;height: auto; width: 528px;border-radius: 20px;"
+                        src="../../assets/Three-Phase Induction Motor.png">
+                    <p><b>Construction of 3 Phase Induction Motor: </b></p>
+                    <p>
+                        The construction of an induction motor is exceptionally basic and robust. It has predominantly
+                        two sections :
+                    </p>
+                    <img style="margin-left: 20px; border: 2px solid black;margin-bottom: 30px; align-self: center;height: auto; width: 528px;border-radius: 20px;"
+                        src="../../assets/Construction of 3 Phase Induction Motor.png">
+                    <ul>
+                        <li><b>Stator</b></li>
+                        <li><b>Rotor</b></li>
+                    </ul>
+                    <p>Stator of 3 Phase Induction Motor <br><br> As the name recommends, the stator is a fixed piece of
+                        the motor. The stator of the induction motor comprises of three primary parts;</p>
+                    <ul>
+                        <li><b>Stator Casing: </b>
+                            The stator outline is the external piece of the motor. The capability of the stator outline
+                            is to offer help to the stator core and stator winding. It gives mechanical strength to the
+                            inward pieces of the motor. The casing has balances on the external surface for heat
+                            dissemination and cooling of the motor.
+                            <br><br>The enclosure is cast for small machines and is produced for a large machine.
+                            Depending on the applications, the enclosure is constructed from die-cast or fabricated
+                            steel, aluminum/aluminum alloys, or stainless steel.
+                        </li>
+                        <li><b>Stator Core: </b>
+                            The stator core's function is to carry the alternating magnetic flux, leading to hysteresis
+                            and eddy current losses. To limit these losses, the core is coated with high-quality steel
+                            stampings with a thickness ranging from 0.3 to 0.6 mm.
+                            <br><br>These stampings are protected from one another by stain. All stampings stamp
+                            together looking like the stator center and fixed it with the stator outline.
+                            <br><br>An inward layer of the stator core has various number of slots.
+                        </li>
+                        <li><b>Stator Winding: </b>
+                            The stator winding is positioned within the available spaces inside the stator core. The
+                            stator winding consists of three phases, and a three-phase power supply is provided to it.
+                            <br><br>The motor's pole count is determined by the internal arrangement of the stator
+                            winding, and it Controls the motor's speed. When the number of poles is higher, the speed is
+                            lower, whereas if the number of poles is fewer, the speed is higher. The poles are generally
+                            two by two. Subsequently, the absolute number of poles generally a much number. The
+                            connection between simultaneous speed and number poles is as displayed in the below
+                            equation, <br><br>
+                            <strong style="color: black;">N<sub>s</sub> = 120f / P</strong> <br>
+                            Where: <br>
+                            f = Supply Frequency <br>
+                            P = Total Number of Poles <br>
+                            N<sub>s</sub> = Synchronous Speed <br><br>
+                            As the end of winding connected with the terminal box. Consequently, there are six terminals
+                            (two of each phase) in the terminal box.
+
+                        </li>
+                    </ul>
+                    <p><b>Applications</b></p>
+                    <ul>
+                        <li>Pumps.</li>
+                        <li>Compressors.</li>
+                        <li>Conveyors.</li>
+                        <li>Elevators.</li>
+                        <li>Machine tools.</li>
+                        <li>Rolling mills.</li>
+                    </ul>
+                    <!-- <h2>Scope of Industrial Automation</h2>
+                    <p>The scope of industrial automation is broad and includes:</p>
+                    <ol>
+                        <li><b>Manufacturing Automation: </b> Automated assembly lines, CNC machines, and robotic
+                            systems used in mass production.</li>
+                        <li><b>Process Automation: </b> Control of continuous processes in industries like oil and gas,
+                            chemicals, pharmaceuticals, food, and beverages.</li>
+                        <li><b>Robotics and Mechatronics: </b> Use of industrial robots for tasks such as welding,
+                            packaging, material handling, and inspection.</li>
+                        <li><b>Control Systems: </b> PLCs, SCADA, and DCS systems for monitoring and controlling
+                            industrial operations.</li>
+                        <li><b>Quality Control and Inspection: </b> Automated testing, sensors, and vision systems to
+                            ensure product quality.</li>
+                        <li><b>Material Handling and Logistics: </b> Automated conveyors, storage systems, and smart
+                            warehouses.</li>
+                        <li><b>Safety and Monitoring: </b> Systems designed to reduce human risk and ensure safe
+                            operation of machinery.</li>
+                    </ol> -->
+
+
+                    <!-- <ul>
+                        <li><b>Flexibility: </b> Control logic can be changed by modifying the program instead of
+                            rewiring hardware.</li>
+                        <li><b>Compact Size: </b> Replaces large relay panels, saving space.</li>
+                        <li><b>High Reliability: </b> Solid-state components reduce mechanical wear and failure.</li>
+                        <li><b>Easy Troubleshooting: </b> Diagnostic tools and status indicators simplify fault
+                            detection.</li>
+                        <li><b>Reduced Maintenance: </b> Quick response time compared to electromechanical relays.</li>
+                        <li><b>Faster Operation: </b> bottling, filling, and labeling processes.</li>
+                        <li><b>Scalability : </b> Easy expansion of inputs and outputs.</li>
+                    </ul> -->
+                    <!-- <img style="margin-left: 20px; border: 2px solid black; align-self: center;height: auto; width: 528px;border-radius: 20px;" src="../assets/Pages/Applications_of_plc.png" alt=""> -->
+
+                    <!-- <h2>PLC (Programmable Logic Controller)</h2>
+                    <p>A programmable Logic Controller(PLC) is a specialized digital computer employed in industrial
+                        settings for automation and control. Acting as the central brain of machinery and processes,
+                        PLCs receive input from sensors, process the data through programmed logic, and generate output
+                        signals to control devices like motors and valves. They use a programming language, often ladder
+                        logic, resembling electrical relay diagrams. PLCs are ruggedized for harsh industrial
+                        environments and play a crucial role in automating tasks and reducing manufacturing and energy.
+                        Their modular design allows scalability, making them versatile components in modern industrial
+                        control systems.</p>
+
+                    <img style="border: 2px solid black; align-self: center;border-radius: 20px;" src="../assets/Pages/PLC.jpg" alt="">
+
+                    <h2>Where Can PLC Be Used?</h2>
+                    <p>
+                        PLCs play a pivotal role in industrial automation, efficiently managing machinery and processes.
+                        They receive data from sensors, execute programmed logic, and control actuators, enhancing
+                        precision and reducing manual intervention. PLCs find application across diverse industries,
+                        from manufacturing to utilities, ensuring streamlined operations, increased productivity, and
+                        adaptability to evolving production needs. Their robust capabilities make PLCs indispensable in
+                        modern industrial settings, facilities with seamless control and automation for improved
+                        efficiency and reliability.
+                    </p> -->
+                    <!-- <p>
+                        A <strong>Programmable Logic Controller (PLC)</strong> is a digital computing device used to
+                        automate electromechanical processes such as control of machinery on factory assembly lines,
+                        amusement rides, or light fixtures. It is a specialized computer designed to monitor and control
+                        manufacturing processes and other automated systems.
+                    </p>
+
+                    <h3 style="margin-top: 20px; margin-bottom: 15px; color: var(--text-color);">Key Characteristics:
+                    </h3>
+                    <ul>
+                        <li><strong>Programmable:</strong> Can be programmed to perform specific tasks according to user
+                            requirements</li>
+                        <li><strong>Rugged Design:</strong> Built to withstand harsh industrial environments with
+                            temperature, humidity, and vibration</li>
+                        <li><strong>Reliable:</strong> Provides consistent and repeatable performance in critical
+                            applications</li>
+                        <li><strong>User-Friendly:</strong> Utilizes standard programming languages like Ladder Diagram,
+                            which resembles traditional electrical schematics</li>
+                        <li><strong>Fast Response:</strong> Provides real-time monitoring and control of industrial
+                            processes</li>
+                        <li><strong>Cost-Effective:</strong> Reduces wiring and maintenance costs compared to
+                            conventional relay systems</li>
+                    </ul>
+
+                    <h3 style="margin-top: 25px; margin-bottom: 15px; color: var(--text-color);">Main Components:</h3>
+                    <ul>
+                        <li><strong>Power Supply:</strong> Provides electrical power to the PLC</li>
+                        <li><strong>Processor (CPU):</strong> The brain of the PLC that executes the program</li>
+                        <li><strong>Memory:</strong> Stores the program and operational data</li>
+                        <li><strong>Input Modules:</strong> Receive signals from sensors and switches</li>
+                        <li><strong>Output Modules:</strong> Send control signals to actuators and motors</li>
+                        <li><strong>Communication Module:</strong> Enables communication with other devices and systems
+                        </li>
+                    </ul>
+
+                    <h3 style="margin-top: 25px; margin-bottom: 15px; color: var(--text-color);">Basic Operating Cycle:
+                    </h3>
+                    <ul>
+                        <li><strong>Input Scan:</strong> The PLC reads the status of all input devices</li>
+                        <li><strong>Program Execution:</strong> The processor executes the control program based on
+                            current inputs and stored data</li>
+                        <li><strong>Output Update:</strong> The PLC sends the results to output devices (solenoids,
+                            motors, lights, etc.)</li>
+                        <li><strong>Housekeeping:</strong> The PLC performs diagnostics and prepares for the next cycle
+                        </li>
+                    </ul>
+
+                    <p style="margin-top: 25px;">
+                        The entire cycle typically occurs in milliseconds, making PLCs suitable for real-time industrial
+                        automation and control applications. Modern PLCs are integral to industrial IoT and Industry 4.0
+                        initiatives, enabling seamless integration with cloud-based monitoring and data analytics
+                        systems.
+                    </p> -->
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- MCQ Modal -->
+    <div id="mcq-modal" class="mcq-modal">
+        <div class="mcq-modal-content">
+            <div class="mcq-modal-header">
+                <h2>Multiple Choice Questions</h2>
+                <button class="close-btn" onclick="closeMCQModal()">&times;</button>
+            </div>
+            <div class="mcq-modal-body">
+                <div id="mcq-container"></div>
+            </div>
+            <div class="mcq-modal-footer">
+                <button class="reset-btn" onclick="resetMCQs()">Reset Answers</button>
+                <button class="close-modal-btn" onclick="closeMCQModal()">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Add smooth scroll behavior for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+    </script>
+
+    <!-- MCQ Handler Script -->
+    <script src="../mcq-handler.js"></script>
+</body>
+
+</html>

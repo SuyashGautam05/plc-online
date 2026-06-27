@@ -1,0 +1,229 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PLC Software</title>
+    <link rel="stylesheet" href="../defination.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+  </head>
+
+  <body>
+    <div class="container">
+      <header style="display: flex">
+        <div class="logo-container">
+          <img src="../../assets/Scientech logo-2.png" alt="Scientech Logo" />
+          <h1>NO and NC</h1>
+        </div>
+      </header>
+
+      <main>
+        <a href="../../index.html" class="back-button">
+          <i class="fas fa-arrow-left"></i> Back to Course
+        </a>
+
+        <div class="content-wrapper">
+          <div class="image-section">
+            <img
+              style="border-radius: 20px; border: 2px solid black"
+              src="../../assets/NO and NC.png"
+              alt="NO and NC"
+            />
+          </div>
+
+          <div class="theory-section">
+            <h2>NO and NC</h2>
+
+            <p>
+              Normally Open (NO) and Normally Closed (NC) are fundamental
+              logical elements used in PLC programming to represent input
+              conditions and internal logic states. These terms describe the
+              logical behavior of contacts in a PLC program and are derived from
+              traditional electrical control systems.
+            </p>
+
+            <img style="margin-left: 82px;margin-bottom: 30px; border: 2px solid black; align-self: center;height: auto; width: 528px;border-radius: 20px;"
+                src="../../assets/NO and NC_2.png" alt="NO and NC">
+
+            <p>
+              A Normally Open (NO) contact represents a condition that is FALSE
+              when the associated input or variable is inactive. When the input
+              becomes active, the NO contact changes its state to TRUE, allowing
+              logic continuity. In PLC programs, NO contacts are commonly used
+              to represent start buttons, sensors, or conditions that should
+              activate an output when they become true.
+            </p>
+
+            <img style="margin-left: 83px;margin-bottom: 30px; border: 2px solid black; align-self: center;height: auto; width: 528px;border-radius: 20px;"
+                src="../../assets/NO and NC_3.png" alt="NO and NC">
+            <img style="margin-left: 148px;margin-bottom: 30px; border: 2px solid black; align-self: center;height: 239px; width: 395px;border-radius: 20px;"
+                src="../../assets/NO and NC_4.png" alt="NO and NC">
+
+            <p>
+              A Normally Closed (NC) contact represents a condition that is TRUE
+              when the associated input or variable is inactive. When the input
+              becomes active, the NC contact opens logically and becomes FALSE.
+              NC contacts are widely used in safety circuits such as emergency
+              stop buttons and fault detection logic, where a broken wire or
+              inactive signal should result in stopping the process.
+            </p>
+
+            <img style="margin-left: 83px;margin-bottom: 30px; border: 2px solid black; align-self: center;height: auto; width: 528px;border-radius: 20px;"
+                src="../../assets/NO and NC_5.png" alt="NO and NC">
+            <img style="margin-left: 148px;margin-bottom: 30px; border: 2px solid black; align-self: center;height: 239px; width: 395px;border-radius: 20px;"
+                src="../../assets/NO and NC_6.png" alt="NO and NC">
+
+            <p>
+              When you create a new boolean instruction in your PLC program you
+              will give it a certain address. This is the address of a single
+              bit (boolean is 0 or 1 and so is a single bit).
+            </p>
+
+            <p>
+              Once you’ve given the instruction an address, the state of that
+              particular bit will now be represented as the state of that
+              instruction.
+            </p>
+
+            <p>
+              For example you can give an instruction the address of one of the
+              PLC inputs. When doing so, the state of the instruction will now
+              represent the state of the input. Because each PLC input has its
+              own bit in the PLC memory.
+            </p>
+
+            <p>
+              The state of each of these bits represents the state of the
+              corresponding input.
+            </p>
+
+            <img style="margin-left: 83px;margin-bottom: 30px; border: 2px solid black; align-self: center;height: auto; width: 528px;border-radius: 20px;"
+                src="../../assets/NO and NC_7.png" alt="NO and NC">
+            <img style="margin-left: 83px;margin-bottom: 30px; border: 2px solid black; align-self: center;height: auto; width: 528px;border-radius: 20px;"
+                src="../../assets/NO and NC_8.png" alt="NO and NC">
+
+            <h2>Example of NO and NC Contact</h2>
+
+            <img style="margin-left: 83px;margin-bottom: 30px; border: 2px solid black; align-self: center;height: auto; width: 528px;border-radius: 20px;"
+                src="../../assets/Example of NO and NC Contact.png" alt="Example of NO and NC Contact">
+
+            <p>
+              This ladder diagram illustrates a basic Start-Stop motor control
+              circuit implemented in a PLC.
+            </p>
+
+            <ul>
+              <li>
+                <b>Inputs:</b>
+                <ul>
+                  <li>Start push button connected to input I0.0.</li>
+                  <li>Stop push button connected to input I0.1.</li>
+                </ul>
+              </li>
+
+              <li>
+                <b>Memory Bit:</b>
+                <ul>
+                  <li>
+                    M10.0 is an internal relay or memory bit used to maintain
+                    the motor’s running state (also called a seal-in or holding
+                    contact).
+                  </li>
+                </ul>
+              </li>
+
+              <li>
+                <b>Output:</b>
+                <ul>
+                  <li>Q0.0 controls the motor or lamp indicator.</li>
+                </ul>
+              </li>
+            </ul>
+
+            <h2>Operation:</h2>
+
+            <ol>
+              <li>
+                When the Start button (I0.0) is pressed:
+                <ul>
+                  <li>
+                    The normally open contact labeled "Start" (I0.0) closes.
+                  </li>
+                  <li>
+                    This energizes memory bit M10.0 which latches itself through
+                    its own contact M10.0 in parallel with the Start button.
+                  </li>
+                  <li>
+                    This holding or seal-in circuit keeps M10.0 energized even
+                    after the Start button is released.
+                  </li>
+                </ul>
+              </li>
+
+              <li>
+                The output coil Q0.0 (motor/lamp) is energized as long as:
+                <ul>
+                  <li>The Start condition is latched (M10.0 closed), AND</li>
+                  <li>
+                    The Stop button (I0.1) is NOT pressed (represented by the
+                    normally closed contact I0.1).
+                  </li>
+                </ul>
+              </li>
+
+              <li>
+                Pressing the Stop button (I0.1):
+                <ul>
+                  <li>Opens the Stop contact, breaking the circuit.</li>
+                  <li>De-energizes the memory bit M10.0.</li>
+                  <li>
+                    De-energizes the output Q0.0, stopping the motor or turning
+                    off the lamp.
+                  </li>
+                </ul>
+              </li>
+            </ol>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <script>
+      // Add smooth scroll behavior for anchor links
+      document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+        anchor.addEventListener("click", function (e) {
+          e.preventDefault();
+          const target = document.querySelector(this.getAttribute("href"));
+          if (target) {
+            target.scrollIntoView({ behavior: "smooth" });
+          }
+        });
+      });
+    </script>
+
+    <!-- MCQ Modal -->
+    <div id="mcq-modal" class="mcq-modal">
+      <div class="mcq-modal-content">
+        <div class="mcq-modal-header">
+          <h2>Multiple Choice Questions</h2>
+          <button class="close-btn" onclick="closeMCQModal()">&times;</button>
+        </div>
+        <div class="mcq-modal-body">
+          <div id="mcq-container"></div>
+        </div>
+        <div class="mcq-modal-footer">
+          <button class="reset-btn" onclick="resetMCQs()">Reset Answers</button>
+          <button class="close-modal-btn" onclick="closeMCQModal()">
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MCQ Handler Script -->
+    <script src="../mcq-handler.js"></script>
+  </body>
+</html>

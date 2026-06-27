@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PLC Software</title>
+    <link rel="stylesheet" href="../defination.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+    <div class="container">
+        <header style="display: flex;">
+            <div class="logo-container">
+                <img src="../../assets/Scientech logo-2.png" alt="Scientech Logo">
+                <h1 style="margin-left: 0px;">Temperature Sensors and Temperature Transmitter</h1>
+            </div>
+        </header>
+
+        <main>
+            <div class="button-container">
+                <a href="../../index.html" class="back-button">
+                    <i class="fas fa-arrow-left"></i> Back to Course
+                </a>
+                <a href="./Temperature_Sensor_Simulation.html" class="simulation-button">
+                    <i class="fas fa-flask"></i> Simulation
+                </a>
+            </div>
+
+            <div class="content-wrapper">
+                <div class="image-section">
+                    <img style="border-radius: 20px;"
+                        src="../../assets/Temperature Sensors and Temperature Transmitter.png"
+                        alt="Temperature Sensors and Temperature Transmitter">
+                </div>
+
+                <div class="theory-section">
+                    <!-- <h2>Basic Switch Wiring and Configuration</h2> -->
+                    <h2>Temperature Sensors and Temperature Transmitter</h2>
+                    <p>
+                        A temperature sensor is a device that measures the temperature of a medium (like air, water, or
+                        a solid object) and converts it into an electrical signal that can be read or processed.
+                    </p>
+                    <h2>Working Principle</h2>
+                    <ul>
+                        <li>Most temperature sensors work by detecting changes in physical properties (like resistance,
+                            voltage, or current) caused by temperature changes.</li>
+                        <li>The sensor’s output can be analog (like voltage or resistance change) or digital (like a
+                            direct temperature reading in °C).</li>
+                    </ul>
+                    <ol>
+                        <li><b>RTD (Resistance Temperature Detector): </b>
+                            An RTD (Resistance Temperature Detector) is a sensor whose resistance changes as its
+                            temperature changes. The resistance increases as the temperature of the sensor increases.
+                            The resistance vs temperature relationship is well known and is repeatable over time. An RTD
+                            is a passive device. It does not produce an output on its own. External electronic devices
+                            are used to measure the resistance of the sensor by passing a small electrical current
+                            through the sensor to generate a voltage.
+                            <img style="margin-left: 30px; border: 2px solid black; align-self: center;height: auto; width: 528px;border-radius: 20px;"
+                                src="../../assets/rtd.png" alt="">
+                            <p><b>Internal Structure</b></p>
+                            <img style="margin-left: 30px; border: 2px solid black; align-self: center;height: auto; width: 528px;border-radius: 20px;"
+                                src="../../assets/Internal Structure.png" alt="">
+                            <img style="margin-left: 30px; margin-top: 30px; border: 2px solid black; align-self: center;height: auto; width: 528px;border-radius: 20px;"
+                                src="../../assets/Internal Structure_2.png" alt="">
+                            <p><b>Principle of Operation: </b> Resistance Temperature Detectors (RTD) operates on the
+                                principle that the electrical resistance of a metal changes predictably in an
+                                essentially linear and repeatable manner with changes in temperature. RTD have a
+                                positive temperature coefficient (resistance increases with temperature). The resistance
+                                of the element at a base temperature is proportional to the length of the element and
+                                the inverse of the cross sectional area.<br>A typical electrical circuit designed to
+                                measure temperature with RTDs actually measures a change in resistance of the RTD, which
+                                is then used to calculate a change in temperature. The resistance of an RTD increases
+                                with increasing temperature, just as the resistance of a strain gage increases with
+                                increasing strain.
+                            </p>
+                            <img style="margin-left: 30px; margin-top: 30px; border: 2px solid black; align-self: center;height: auto; width: 528px;border-radius: 20px;"
+                                src="../../assets/Principle of Operation.png" alt="">
+                        </li>
+                        <li><b>Thermocouple: </b>
+                            A thermocouple is made up of two dissimilar metals, joined together at one end, that produce
+                            a voltage (expressed in millivolts) with a change in temperature. The junction of the two
+                            metals, called the sensing junction, is connected to extension wires. Any two dissimilar
+                            metals may be used to make a thermocouple.
+                            <img style="margin-left: 30px; border: 2px solid black; align-self: center;height: auto; width: 528px;border-radius: 20px;"
+                                src="../../assets/thermocouple.png" alt="">
+                            <p><b>Principle of Operation: </b>
+                            <ul>
+                                <li>When two dissimilar metals are connected together, a small voltage called a
+                                    thermo-junction voltage is generated at the junction. This is called the Peltier
+                                    effect.</li>
+                                <li>If the temperature of the junction changes, it causes voltage to change too, which
+                                    can be measured by the input circuits of an electronic controller. The output is a
+                                    voltage proportional to the temperature difference between the junction and the free
+                                    ends. This is called the Thompson effect.</li>
+                                <li>Both of these effects can be combined to measure temperature. By holding one
+                                    junction at a known temperature (reference junction) and measuring the voltage, the
+                                    temperature at the sensing junction can be deduced. The voltage generated is
+                                    directly proportional to the temperature difference. The combined effect is known as
+                                    the thermo-junction effect or the Seebeck effect.</li>
+                            </ul>
+                            <img style="margin-left: 30px; border: 2px solid black; align-self: center;height: auto; width: auto;border-radius: 20px;"
+                                src="../../assets/Principle of Operation_2.png" alt="">
+                            </p>
+                            <p>
+                                The voltage is measured to infer the temperature. In practical operation, wires A and B
+                                are connected to a digital voltmeter (DVM), digital multimeter (DMM), digital data
+                                acquisition system, or some other voltage measuring device. If the measuring device has
+                                very high input impedance, the voltage produced by the thermo-junction can be measured
+                                accurately.
+                            </p>
+                            <h2>How to Measure Temperature with a Thermocouple?</h2>
+                            <p>
+                                Though the theory and the working of a thermocouple look very simple, it's not easy to
+                                convert voltage generated by a thermocouple to a precise temperature reading, because
+                                the voltage signal is small. The voltage and temperature reading is non-linear, other
+                                than that you need different compensations and conditioning circuits to reduce the
+                                environment and radio noise picked up by the long wire of the thermocouple. With this
+                                little description, you can understand the difficulty of measuring temperature with a
+                                thermocouple.
+                            </p>
+                            <img style="margin-left: 30px; border: 2px solid black; align-self: center;height: auto; width: auto;border-radius: 20px;"
+                                src="../../assets/How to Measure Temperature with a Thermocouple.jpg" alt="">
+                            <p><b>Characteristics of Thermocouple</b></p>
+                            <img style="margin-left: 30px; border: 2px solid black; align-self: center;height: auto; width: auto;border-radius: 20px;"
+                                src="../../assets/Characteristics of Thermocouple.jpg" alt="">
+                        </li>
+                        <li><b>Thermistor: </b>
+                            <p>
+                                A thermistor is a resistance thermometer, or a resistor whose resistance is dependent on
+                                temperature. The term is a combination of “thermal” and “resistor”. It is made of
+                                metallic oxides, pressed into a bead, disk, or cylindrical shape and then encapsulated
+                                with an impermeable material such as epoxy or glass.<br>There are two types of
+                                thermistors: Negative Temperature Coefficient (NTC) and Positive Temperature Coefficient
+                                (PTC). With an NTC thermistor, when the temperature increases, resistance decreases.
+                                Conversely, when temperature decreases, resistance increases. This type of thermistor is
+                                used the most.
+                            </p>
+                            <img style="margin-left: 30px; border: 2px solid black; align-self: center;height: auto; width: auto;border-radius: 20px;"
+                                src="../../assets/Thermistor.jpg" alt="">
+                            <p>
+                                A PTC thermistor works a little differently. When temperature increases, the resistance
+                                increases, and when temperature decreases, resistance decreases. This type of thermistor
+                                is generally used as a fuse. <br>Typically, a thermistor achieves high precision within
+                                a limited temperature range of about 50ºC around the target temperature. This range is
+                                dependent on the base resistance.
+                            </p>
+                            <img style="margin-left: 30px; border: 2px solid black; align-self: center;height: auto; width: auto;border-radius: 20px;"
+                                src="../../assets/Thermistor_2.gif" alt="">
+                            <h2>Working Principle of Thermistors</h2>
+                            <p>
+                                The thermistor works on the simple principle of change in resistance due to a change in
+                                temperature. When the ambient temperature changes the thermistor starts self-heating its
+                                elements. its resistance value is changed with respect to this change in temperature.
+                                This change depends on the type of thermistor used. The resistance temperature
+                                characteristics of different types of thermistors are given in the following
+                                section.<br><br>A thermistor is similar to an RTD, but a semiconductor material is used
+                                instead of a metal. A thermistor is a solid state device and has larger sensitivity than
+                                does an RTD. Unlike RTD’s, the temperature-resistance characteristic of a thermistor is
+                                non-linear, and cannot be characterized by a single coefficient. Furthermore, unlike
+                                RTDs, the resistance of a thermistor decreases with increasing temperature.
+                            </p>
+                            <p><b>Characteristics of Thermistor </b></p>
+                            <img style="margin-left: 30px; border: 2px solid black; align-self: center;height: auto; width: auto;border-radius: 20px;"
+                                src="../../assets/Characteristics of Thermistor.png" alt="">
+                            <img style="margin-left: 30px; margin-top: 30px; border: 2px solid black; align-self: center;height: auto; width: auto;border-radius: 20px;"
+                                src="../../assets/Characteristics of Thermistor_2.gif" alt="">
+                        </li>
+                        <li><b>Temperature Transmitter : </b>
+                            A Temperature Transmitter is a device that converts the signal produced by a temperature
+                            sensor into a standard instrumentation signal representing a process variable temperature
+                            being measured and controlled.
+                            <br><br>The most common transmitter instrumentation output signal is 4 to 20 mA.
+                            <br><br>The signal from the Temperature Transmitter is sent to a Controller that determines
+                            what
+                            action is required and generates an appropriate output signal. Controllers are either a PLC
+                            or a DCS in process control today.
+                            <img style="margin-left: 30px; border: 2px solid black; align-self: center;height: auto; width: auto;border-radius: 20px;"
+                                src="../../assets/Temperature Transmitter.png" alt="">
+                            <h2>Working Principle</h2>
+                            <ol>
+                                <li>The temperature sensor senses the process temperature.</li>
+                                <li><b>The sensor’s electrical property changes: </b>
+                                    <ul>
+                                        <li><b>RTD: </b> resistance changes with temperature</li>
+                                        <li><b>Thermocouple: </b> generates a small voltage due to temperature
+                                            difference</li>
+                                    </ul>
+                                </li>
+                                <li><b>The transmitter: </b>
+                                    <ul>
+                                        <li>Amplifies the weak signal</li>
+                                        <li>Linearizes it</li>
+                                        <li>Compensates for errors</li>
+                                    </ul>
+                                </li>
+                                <li><b>The final signal is converted into a standard output, typically: </b>
+                                    <ul>
+                                        <li>4 mA = minimum temperature</li>
+                                        <li>20 mA = maximum temperature</li>
+                                    </ul>
+                                </li>
+                                <li>This signal is sent to a control or monitoring system.</li>
+                            </ol>
+                            <img style="margin-left: 30px; border: 2px solid black; align-self: center;height: auto; width: auto;border-radius: 20px;"
+                                src="../../assets/Working Principle of Temperature Transmitter.jpg" alt="">
+                            <p>
+                                A two wire temperature transmitter accept a thermocouple or RTD input and convert
+                                temperature output into 4-20mA current signal. The Transmitter usually requires a 24VDC
+                                supply which is connected in series with two wire interface or provided by the host
+                                instruments. The amplified temperature signal can be transmitted via long cable run if
+                                required.
+                            </p>
+                        </li>
+                    </ol>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Add smooth scroll behavior for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+    </script>
+
+            <!-- MCQ Modal -->
+    <div id="mcq-modal" class="mcq-modal">
+        <div class="mcq-modal-content">
+            <div class="mcq-modal-header">
+                <h2>Multiple Choice Questions</h2>
+                <button class="close-btn" onclick="closeMCQModal()">&times;</button>
+            </div>
+            <div class="mcq-modal-body">
+                <div id="mcq-container"></div>
+            </div>
+            <div class="mcq-modal-footer">
+                <button class="reset-btn" onclick="resetMCQs()">Reset Answers</button>
+                <button class="close-modal-btn" onclick="closeMCQModal()">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MCQ Handler Script -->
+    <script src="../mcq-handler.js"></script>
+</body>
+
+</html>

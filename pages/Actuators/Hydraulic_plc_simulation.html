@@ -1,0 +1,1982 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link rel="stylesheet" href="../defination.css">
+<title>PLC Hydraulic Actuator Simulation</title>
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Rajdhani:wght@400;500;600;700&family=Orbitron:wght@400;700;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg-dark: #f0f4f8;
+  --bg-panel: #ffffff;
+  --bg-card: #ffffff;
+  --bg-card2: #f8fafc;
+  --primary: #1e293b;
+  --secondary: #475569;
+  --text: #1e293b;
+  --accent: #64748b;
+  --border: #e2e8f0;
+  --hover: #f1f5f9;
+  --neon-blue: #2563eb;
+  --neon-green: #16a34a;
+  --neon-red: #dc2626;
+  --neon-yellow: #d97706;
+  --neon-orange: #ea580c;
+  --neon-purple: #7c3aed;
+  --oil-color: #c8850a;
+  --oil-light: #f5a623;
+  --steel: #94a3b8;
+  --steel-light: #cbd5e1;
+  --chrome: #e2e8f0;
+  --shadow-glow: 0 0 20px rgba(37,99,235,0.15);
+  --shadow-card: 0 2px 12px rgba(0,0,0,0.08);
+  --gold: #d97706;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  background: #f0f4f8;
+  color: #1e293b;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* Scanline overlay removed for light theme */
+body::before {
+  display: none;
+}
+
+/* ===== HEADER ===== */
+/* Header styles handled by defination.css (.site-header) */
+.header-title {
+  display:flex;
+  align-items:center;
+  gap:16px;
+}
+.header-badge {
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: 6px;
+  padding: 6px 14px;
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  font-size: 10px;
+  color: #2563eb;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+.header-title h1 {
+  font-family:'Orbitron', monospace;
+  font-size:18px;
+  font-weight:700;
+  color: #1e293b;
+  letter-spacing:1px;
+}
+.header-title h1 span { color: #2563eb; }
+.header-status {
+  display:flex;
+  align-items:center;
+  gap:20px;
+}
+.status-pill {
+  display:flex;
+  align-items:center;
+  gap:7px;
+  font-family:'Share Tech Mono', monospace;
+  font-size:12px;
+  color: #2563eb;
+}
+.status-dot {
+  width:8px; height:8px;
+  border-radius:50%;
+  background: #2563eb;
+  
+  animation: blink 2s infinite;
+}
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.4} }
+
+/* ===== TABS NAV ===== */
+.tabs-nav {
+  display:flex;
+  background: #ffffff;
+  border-bottom: 1px solid #e2e8f0;
+  padding: 0 24px;
+  gap:4px;
+  overflow-x:auto;
+}
+.tab-btn {
+  font-family:Georgia, 'Times New Roman', Times, serif;
+  font-weight:600;
+  font-size:13px;
+  letter-spacing:1px;
+  text-transform:uppercase;
+  padding:12px 20px;
+  background:none;
+  border:none;
+  border-bottom:2px solid transparent;
+  color: #64748b;
+  cursor:pointer;
+  white-space:nowrap;
+  transition: all .25s;
+}
+.tab-btn:hover { color:#1e293b; }
+.tab-btn.active {
+  color: #2563eb;
+  border-bottom-color: #2563eb;
+  text-shadow: none;
+}
+
+/* ===== MAIN LAYOUT ===== */
+.tab-panel { display:none; padding:20px 24px; background: #f0f4f8; }
+.tab-panel.active { display:block; }
+
+/* ===== SECTION TITLES ===== */
+.section-title {
+  font-family:Georgia, 'Times New Roman', Times, serif;
+  font-size:13px;
+  font-weight: 700;
+  letter-spacing:1px;
+  text-transform:uppercase;
+  color: #2563eb;
+  margin-bottom:16px;
+  padding-bottom:8px;
+  border-bottom: 1px solid #bfdbfe;
+  display:flex;
+  align-items:center;
+  gap:10px;
+}
+.section-title::before {
+  content:'';
+  display:inline-block;
+  width:4px; height:14px;
+  background: #2563eb;
+  
+  border-radius:2px;
+}
+
+/* ===== CARDS ===== */
+.card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius:10px;
+  padding:18px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+.card2 {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius:8px;
+  padding:14px;
+}
+
+/* ===== LEARN TAB ===== */
+.learn-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  margin-bottom:20px;
+}
+@media(max-width:900px){ .learn-grid{grid-template-columns:1fr;} }
+
+.info-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius:10px;
+  padding:20px;
+  transition: border-color .3s;
+}
+.info-card:hover { border-color: #93c5fd; box-shadow: 0 4px 12px rgba(37,99,235,0.08); }
+.info-card h3 {
+  font-family:Georgia, 'Times New Roman', Times, serif;
+  font-size:11px;
+  letter-spacing:1px;
+  color: #2563eb;
+  margin-bottom:12px;
+  text-transform:uppercase;
+}
+.info-card p, .info-card li {
+  font-size:13.5px;
+  line-height:1.7;
+  color: #475569;
+  margin-bottom:6px;
+}
+.info-card ul { padding-left:16px; }
+.tag {
+  display:inline-block;
+  padding:2px 10px;
+  border-radius:20px;
+  font-size:11px;
+  font-weight:600;
+  margin:3px 2px;
+  letter-spacing:.5px;
+}
+.tag-blue { background:#eff6ff; color:#2563eb; border:1px solid rgba(77,166,255,0.3); }
+.tag-green { background:rgba(192,192,192,0.1); color:#16a34a; border:1px solid rgba(192,192,192,0.25); }
+.tag-orange { background:rgba(255,140,0,0.15); color:#ea580c; border:1px solid rgba(255,140,0,0.3); }
+.tag-red { background:rgba(255,61,90,0.12); color:#dc2626; border:1px solid rgba(255,61,90,0.25); }
+
+/* Parts diagram table */
+.parts-table { width:100%; border-collapse:collapse; margin-top:10px; }
+.parts-table th {
+  font-family:Georgia, 'Times New Roman', Times, serif;
+  font-size:11px;
+  text-transform:uppercase;
+  letter-spacing:1px;
+  color: #2563eb;
+  border-bottom:1px solid #bfdbfe;
+  padding:8px 10px;
+  text-align:left;
+}
+.parts-table td {
+  font-size:12.5px;
+  color: #475569;
+  padding:7px 10px;
+  border-bottom:1px solid #f1f5f9;
+}
+.parts-table tr:hover td { background:#f0f7ff; }
+
+/* ===== SIMULATION TAB ===== */
+.sim-layout {
+  display:grid;
+  grid-template-columns: 320px 1fr 260px;
+  gap:16px;
+  min-height: calc(100vh - 160px);
+}
+@media(max-width:1100px){ .sim-layout{grid-template-columns:1fr; } }
+
+/* Controls Panel */
+.controls-panel { display:flex; flex-direction:column; gap:12px; }
+
+.control-group { margin-bottom:14px; }
+.control-label {
+  font-family:Georgia, 'Times New Roman', Times, serif;
+  font-size:11px;
+  text-transform:uppercase;
+  letter-spacing:1px;
+  color: #64748b;
+  margin-bottom:8px;
+  display:block;
+}
+
+/* Toggle Switch */
+.toggle-row {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  margin-bottom:10px;
+}
+.toggle-name {
+  font-size:13px;
+  font-weight:600;
+  color: #1e293b;
+}
+.toggle-wrap { display:flex; align-items:center; gap:8px; }
+.toggle {
+  position:relative;
+  width:48px; height:24px;
+  cursor:pointer;
+}
+.toggle input { opacity:0; width:0; height:0; }
+.toggle-slider {
+  position:absolute;
+  inset:0;
+  background: #e2e8f0;
+  border:1px solid #cbd5e1;
+  border-radius:24px;
+  transition:.3s;
+}
+.toggle-slider:before {
+  content:'';
+  position:absolute;
+  width:18px; height:18px;
+  left:2px; top:2px;
+  background: #94a3b8;
+  border-radius:50%;
+  transition:.3s;
+}
+input:checked + .toggle-slider { background: #dbeafe; border-color: #2563eb; }
+input:checked + .toggle-slider:before {
+  transform:translateX(24px);
+  background: #2563eb;
+  
+}
+.toggle-state { font-family:'Share Tech Mono',monospace; font-size:11px; width:28px; color:#94a3b8; }
+.toggle-state.on { color: #2563eb; }
+
+/* Slider control */
+.sim-slider {
+  -webkit-appearance:none;
+  width:100%;
+  height:4px;
+  border-radius:4px;
+  background: #e2e8f0;
+  outline:none;
+  margin-top:6px;
+}
+.sim-slider::-webkit-slider-thumb {
+  -webkit-appearance:none;
+  width:16px; height:16px;
+  border-radius:50%;
+  background: #2563eb;
+  
+  cursor:pointer;
+}
+.slider-val {
+  font-family:'Share Tech Mono',monospace;
+  font-size:12px;
+  color: #2563eb;
+  float:right;
+  margin-top:4px;
+}
+
+/* Valve selector */
+.valve-btns { display:grid; grid-template-columns:1fr 1fr; gap:6px; margin-top:6px; }
+.valve-btn {
+  padding:8px;
+  border-radius:6px;
+  border: 1px solid #e2e8f0;
+  background: #f8fafc;
+  color: #64748b;
+  font-family:'Share Tech Mono',monospace;
+  font-size:11px;
+  cursor:pointer;
+  text-align:center;
+  transition:.25s;
+  letter-spacing:.5px;
+}
+.valve-btn:hover { border-color:#93c5fd; color:#2563eb; background:#f0f7ff; }
+.valve-btn.active { background:#eff6ff; border-color:#2563eb; color:#2563eb; }
+
+/* Big action buttons */
+.action-btn {
+  width:100%;
+  padding:12px;
+  border-radius:8px;
+  border:none;
+  font-family:Georgia, 'Times New Roman', Times, serif;
+  font-size:14px;
+  font-weight:700;
+  letter-spacing:1px;
+  text-transform:uppercase;
+  cursor:pointer;
+  transition:.25s;
+  margin-bottom:8px;
+}
+.btn-extend {
+  background: #eff6ff;
+  border:1px solid #93c5fd;
+  color: #2563eb;
+}
+.btn-extend:hover { background:#dbeafe; box-shadow: 0 2px 8px rgba(37,99,235,0.2); }
+.btn-retract {
+  background: #fef2f2;
+  border:1px solid #fca5a5;
+  color: #dc2626;
+}
+.btn-retract:hover { background:#fee2e2; box-shadow:0 2px 8px rgba(220,38,38,0.2); }
+.btn-hold {
+  background: #fffbeb;
+  border:1px solid #fcd34d;
+  color: var(--gold);
+}
+.btn-hold:hover { background:#fef3c7; box-shadow:0 2px 8px rgba(217,119,6,0.2); }
+.btn-reset {
+  background:#f8fafc;
+  border:1px solid #e2e8f0;
+  color:#64748b;
+}
+.btn-reset:hover { background:#f1f5f9; color:#1e293b; }
+
+/* ===== CANVAS AREA ===== */
+.canvas-wrap {
+  background: #ffffff;
+  border:1px solid #e2e8f0;
+  border-radius:10px;
+  padding:20px;
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+  position:relative;
+}
+#hydraulicCanvas {
+  width:100%;
+  border-radius:6px;
+  background: #f8fafc;
+  border:1px solid #e2e8f0;
+  display:block;
+}
+
+/* ===== METRICS PANEL ===== */
+.metrics-panel { display:flex; flex-direction:column; gap:10px; }
+
+.metric-card {
+  background: #ffffff;
+  border:1px solid #e2e8f0;
+  border-radius:8px;
+  padding:14px 16px;
+}
+.metric-label {
+  font-family:Georgia, 'Times New Roman', Times, serif;
+  font-size:10px;
+  text-transform:uppercase;
+  letter-spacing:1.5px;
+  color:#94a3b8;
+  margin-bottom:4px;
+}
+.metric-value {
+  font-family:Georgia, 'Times New Roman', Times, serif;
+  font-size:22px;
+  font-weight:700;
+  color:#1e293b;
+  line-height:1;
+}
+.metric-value span { font-size:12px; color:#94a3b8; margin-left:4px; }
+.metric-bar-wrap { margin-top:8px; height:4px; background:#f1f5f9; border-radius:4px; overflow:hidden; }
+.metric-bar { height:100%; border-radius:4px; transition: width .3s; }
+.bar-blue { background: linear-gradient(90deg, #1d4ed8, #60a5fa); box-shadow:0 1px 4px rgba(37,99,235,0.3); }
+.bar-green { background: linear-gradient(90deg, #15803d, #4ade80); box-shadow:0 1px 4px rgba(22,163,74,0.3); }
+.bar-orange { background: linear-gradient(90deg, #c2410c, #fb923c); }
+.bar-red { background: linear-gradient(90deg, #991b1b, #f87171); }
+
+/* Gauges row */
+.gauges-row { display:grid; grid-template-columns:1fr 1fr; gap:10px; }
+
+/* Event log */
+.event-log {
+  background: #ffffff;
+  border:1px solid #e2e8f0;
+  border-radius:8px;
+  padding:12px;
+  height:180px;
+  overflow-y:auto;
+  flex:1;
+}
+.event-log::-webkit-scrollbar { width:4px; }
+.event-log::-webkit-scrollbar-thumb { background:#93c5fd; border-radius:4px; }
+.log-entry {
+  font-family:Georgia, 'Times New Roman', Times, serif;
+  font-size:10.5px;
+  line-height:1.8;
+  color:#475569;
+  border-bottom:1px solid #f1f5f9;
+  padding:3px 0;
+}
+.log-entry .ts { color:#2563eb; margin-right:6px; }
+.log-entry.warn { color: #d97706; }
+.log-entry.err { color: #dc2626; }
+.log-entry.ok { color: #16a34a; }
+
+/* ===== PLC LADDER TAB ===== */
+.ladder-section { margin-bottom:24px; }
+.ladder-canvas-wrap {
+  background: #f8fafc;
+  border:1px solid #e2e8f0;
+  border-radius:8px;
+  padding:20px;
+  overflow-x:auto;
+}
+#ladderCanvas { display:block; }
+
+/* ===== QUIZ TAB ===== */
+.quiz-wrap { max-width:700px; margin:0 auto; }
+.quiz-question {
+  background: #ffffff;
+  border:1px solid #e2e8f0;
+  border-radius:10px;
+  padding:22px;
+  margin-bottom:16px;
+  border-left:3px solid #2563eb;
+}
+.q-num {
+  font-family:'Share Tech Mono',monospace;
+  font-size:10px;
+  color: #2563eb;
+  letter-spacing:2px;
+  margin-bottom:8px;
+}
+.q-text {
+  font-size:15px;
+  font-weight:600;
+  color:#1e293b;
+  margin-bottom:14px;
+  line-height:1.5;
+}
+.options { display:flex; flex-direction:column; gap:8px; }
+.opt {
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:10px 14px;
+  border-radius:6px;
+  border:1px solid #e2e8f0;
+  background:#f8fafc;
+  cursor:pointer;
+  transition:.25s;
+}
+.opt:hover { background:#eff6ff; border-color:#93c5fd; }
+.opt input { accent-color: #2563eb; width:15px; height:15px; cursor:pointer; }
+.opt-label { font-size:13.5px; color:#475569; cursor:pointer; }
+.opt.correct { background:#f0fdf4; border-color:#86efac; }
+.opt.wrong { background:#fef2f2; border-color:#fca5a5; }
+.q-feedback { font-size:12.5px; margin-top:10px; padding:10px 12px; border-radius:6px; font-style:italic; }
+.q-feedback.correct { background:#f0fdf4; color:#16a34a; border-left:3px solid #16a34a; }
+.q-feedback.wrong { background:#fef2f2; color:#dc2626; border-left:3px solid #dc2626; }
+.check-btn {
+  margin-top:10px;
+  padding:8px 18px;
+  border-radius:6px;
+  border:1px solid #93c5fd;
+  background:#eff6ff;
+  color: #2563eb;
+  font-family:'Rajdhani',sans-serif;
+  font-weight:700;
+  font-size:13px;
+  letter-spacing:1px;
+  cursor:pointer;
+  transition:.25s;
+}
+.check-btn:hover { background:#dbeafe; }
+.score-banner {
+  background: linear-gradient(135deg, #eff6ff, #fffbeb);
+  border:1px solid #bfdbfe;
+  border-radius:10px;
+  padding:20px;
+  text-align:center;
+  margin-top:20px;
+}
+.score-banner h2 { font-family:'Orbitron',monospace; font-size:28px; color: #2563eb; margin-bottom:8px; }
+.score-banner p { color:#475569; font-size:14px; }
+.reset-quiz-btn {
+  margin-top:14px;
+  padding:10px 24px;
+  border-radius:8px;
+  border:1px solid #fcd34d;
+  background:#fffbeb;
+  color:#d97706;
+  font-family:'Rajdhani',sans-serif;
+  font-weight:700;
+  font-size:14px;
+  letter-spacing:1px;
+  cursor:pointer;
+}
+
+/* ===== FAULT TAB ===== */
+.fault-grid { display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+@media(max-width:800px){ .fault-grid{grid-template-columns:1fr;} }
+.fault-card {
+  background: #ffffff;
+  border:1px solid #fecaca;
+  border-radius:10px;
+  padding:16px;
+  cursor:pointer;
+  transition:.3s;
+}
+.fault-card:hover { border-color:#f87171; transform:translateY(-2px); box-shadow: 0 4px 12px rgba(220,38,38,0.1); }
+.fault-card.active { border-color:#dc2626; background:#fef2f2; }
+.fault-title { font-size:14px; font-weight:700; color:#1e293b; margin-bottom:6px; display:flex; align-items:center; gap:8px; }
+.fault-icon { font-size:16px; }
+.fault-desc { font-size:12.5px; color:#475569; line-height:1.6; margin-bottom:10px; }
+.fault-symptoms h4 { font-size:11px; font-family:Georgia, 'Times New Roman', Times, serif; letter-spacing:1px; color:#d97706; text-transform:uppercase; margin-bottom:6px; }
+.fault-symptoms ul { padding-left:14px; }
+.fault-symptoms li { font-size:12px; color:#64748b; margin-bottom:3px; }
+.fault-fix { margin-top:8px; padding:8px 12px; background:#f0fdf4; border-left:2px solid #16a34a; border-radius:4px; font-size:12px; color:#15803d; }
+
+/* Alarms */
+.alarm-panel {
+  background: #ffffff;
+  border:1px solid #fde68a; background:#fffbeb;
+  border-radius:10px;
+  padding:16px;
+  margin-top:16px;
+}
+.alarm-item {
+  display:flex;
+  align-items:center;
+  gap:12px;
+  padding:8px 10px;
+  border-radius:6px;
+  margin-bottom:6px;
+  font-size:13px;
+}
+.alarm-item.active-alarm {
+  background:rgba(255,61,90,0.1);
+  border:1px solid rgba(255,61,90,0.25);
+  animation: alarmPulse 1.5s infinite;
+}
+@keyframes alarmPulse {
+  0%,100%{background:rgba(255,61,90,0.1)}
+  50%{background:rgba(255,61,90,0.18)}
+}
+.alarm-item.inactive-alarm { background:#f8fafc; border:1px solid #e2e8f0; opacity:.5; }
+.alarm-led { width:10px; height:10px; border-radius:50%; flex-shrink:0; }
+.alarm-led.red { background:#dc2626; box-shadow:0 0 6px rgba(220,38,38,0.4); }
+.alarm-led.off { background:#cbd5e1; }
+.alarm-text { font-weight:600; }
+.alarm-code { font-family:'Share Tech Mono',monospace; font-size:10px; color:#94a3b8; margin-left:auto; }
+
+/* ===== PLC CODE TAB ===== */
+.code-block {
+  background: #f8fafc;
+  border:1px solid #e2e8f0;
+  border-radius:8px;
+  padding:20px;
+  font-family:Georgia, 'Times New Roman', Times, serif;
+  font-size:13px;
+  line-height:1.8;
+  color:#1e293b;
+  overflow-x:auto;
+  margin-bottom:16px;
+  white-space:pre;
+}
+.code-kw { color:#7c3aed; }
+.code-fn { color: #2563eb; }
+.code-str { color: #16a34a; }
+.code-num { color: #ea580c; }
+.code-cmt { color:#94a3b8; font-style:italic; }
+.code-var { color:#0f766e; }
+
+/* Utility */
+.flex { display:flex; }
+.gap2 { gap:8px; }
+.mt1 { margin-top:6px; }
+.mt2 { margin-top:12px; }
+.mt3 { margin-top:20px; }
+.bold { font-weight:700; }
+.text-sm { font-size:12px; }
+.text-xs { font-size:11px; }
+</style>
+</head>
+<body>
+
+<!-- Hidden span keeps JS updateMetrics() working without error -->
+<span id="sys-mode" style="display:none;">STANDBY</span>
+
+<header style="margin-bottom: 0px;" class="site-header">
+  <div class="logo-container" style="margin-bottom: 0px; gap: clamp(16px, 12vw, 172px);">
+    <img style="margin-left: -3pc" src="../../assets/Scientech logo-2.png" alt="Scientech Logo" />
+    <h1 style="margin-left: 2px; margin-right: -8pc;">
+      Hydraulic Actuator PLC Simulation
+    </h1>
+    <div class="button-container" style="margin-bottom: 0px;">
+      <a href="./Hydraulic_Actuators.html" class="back-button" style="margin-left: 105px;">
+        <i class="fas fa-arrow-left"></i>
+        <img style="height: 30px; width: 30px;" src="../Transducers, Sensors and Transmitters/left-arrow.png" alt=""> Back to Course
+      </a>
+    </div>
+  </div>
+</header>
+
+<nav class="tabs-nav">
+  <button class="tab-btn active" onclick="switchTab('learn')">📚 Learn</button>
+  <button class="tab-btn" onclick="switchTab('sim')">⚙️ Simulation</button>
+  <button class="tab-btn" onclick="switchTab('ladder')">🔗 Ladder Logic</button>
+  <button class="tab-btn" onclick="switchTab('plccode')">💻 PLC Code</button>
+  <button class="tab-btn" onclick="switchTab('faults')">⚠️ Faults & Alarms</button>
+  <button class="tab-btn" onclick="switchTab('quiz')">🧠 Quiz</button>
+</nav>
+
+<!-- ===== LEARN TAB ===== -->
+<div class="tab-panel active" id="tab-learn">
+  <div class="section-title">Hydraulic Actuator Fundamentals</div>
+  <div class="learn-grid">
+    <div class="info-card">
+      <h3>What is a Hydraulic Actuator?</h3>
+      <p>A hydraulic actuator converts hydraulic energy (pressurized fluid) into mechanical motion. Controlled by a PLC, it enables precise linear or rotary movement in industrial machinery.</p>
+      <p>Key principle: <strong>Pascal's Law</strong> — pressure applied at any point in a confined fluid transmits equally in all directions.</p>
+      <div style="margin-top:10px;">
+        <span class="tag tag-blue">Linear Motion</span>
+        <span class="tag tag-green">High Force</span>
+        <span class="tag tag-orange">Precise Control</span>
+        <span class="tag tag-red">High Pressure</span>
+      </div>
+    </div>
+    <div class="info-card">
+      <h3>Types of Hydraulic Actuators</h3>
+      <ul>
+        <li><strong style="color:#2563eb">Single-Acting Cylinder</strong> — Pressure on one side only; spring or gravity returns it</li>
+        <li><strong style="color:#16a34a">Double-Acting Cylinder</strong> — Pressure on both sides; full bidirectional control</li>
+        <li><strong style="color:#ea580c">Telescopic Cylinder</strong> — Multi-stage for long stroke in short body</li>
+        <li><strong style="color:#d97706">Rotary Actuator</strong> — Converts fluid pressure to rotary motion</li>
+        <li><strong style="color:#7c3aed">Hydraulic Motor</strong> — Continuous rotation, high torque</li>
+      </ul>
+    </div>
+    <div class="info-card">
+      <h3>System Components</h3>
+      <table class="parts-table">
+        <thead><tr><th>Component</th><th>Function</th><th>Symbol</th></tr></thead>
+        <tbody>
+          <tr><td>Hydraulic Pump</td><td>Creates flow/pressure</td><td style="color:#2563eb">P</td></tr>
+          <tr><td>Directional Control Valve</td><td>Routes fluid flow</td><td style="color:#2563eb">DCV</td></tr>
+          <tr><td>Relief Valve</td><td>Max pressure safety</td><td style="color:#dc2626">RV</td></tr>
+          <tr><td>Flow Control Valve</td><td>Regulates speed</td><td style="color:#ea580c">FCV</td></tr>
+          <tr><td>Cylinder/Actuator</td><td>Output motion</td><td style="color:#16a34a">CYL</td></tr>
+          <tr><td>Position Sensor</td><td>Feedback to PLC</td><td style="color:#d97706">PS</td></tr>
+          <tr><td>Pressure Transducer</td><td>Monitors pressure</td><td style="color:#7c3aed">PT</td></tr>
+          <tr><td>Hydraulic Reservoir</td><td>Fluid storage/cooling</td><td style="color:#64748b">T</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="info-card">
+      <h3>PLC Control Principles</h3>
+      <p>The PLC reads <strong>inputs</strong> (sensors, switches, HMI commands) and controls <strong>outputs</strong> (solenoid valves, pump motors) using programmed logic.</p>
+      <p style="margin-top:8px;"><strong style="color:#16a34a">Scan Cycle:</strong> Input Read → Logic Execute → Output Write → Repeat (~10ms cycle)</p>
+      <div style="margin-top:12px;">
+        <div class="card2" style="margin-bottom:8px;">
+          <div style="font-size:12px;color:#2563eb;font-weight:700;margin-bottom:4px;">EXTEND SEQUENCE</div>
+          <div style="font-size:12px;color:#475569;">PLC energizes SOL-A → DCV shifts → Pump flow to cap end → Piston extends → PS confirms position → PLC de-energizes</div>
+        </div>
+        <div class="card2">
+          <div style="font-size:12px;color:#dc2626;font-weight:700;margin-bottom:4px;">RETRACT SEQUENCE</div>
+          <div style="font-size:12px;color:#475569;">PLC energizes SOL-B → DCV shifts → Flow to rod end → Piston retracts → PS confirms → Solenoid off</div>
+        </div>
+      </div>
+    </div>
+    <div class="info-card">
+      <h3>Key Formulas</h3>
+      <div class="card2" style="margin-bottom:8px; font-family:Georgia, 'Times New Roman', Times, serif; font-size:12px; line-height:3;font-weight: 600; letter-spacing: 1px;">
+        <div><span style="color:#d97706">Force (F)</span> = Pressure (P) × Area (A)</div>
+        <div><span style="color:#2563eb">Flow (Q)</span> = Area (A) × Velocity (v)</div>
+        <div><span style="color:#16a34a">Pressure (P)</span> = Force (F) / Area (A)</div>
+        <div><span style="color:#ea580c">Power (W)</span> = Pressure × Flow Rate</div>
+        <div><span style="color:#7c3aed">Bore Area (A)</span> = π × (d/2)²</div>
+      </div>
+      <p style="font-size:12px;color:#64748b;margin-top:8px;">Units: P in bar, A in cm², F in kN, Q in L/min, v in m/s</p>
+    </div>
+    <div class="info-card">
+      <h3>Safety & Standards</h3>
+      <ul>
+        <li><strong style="color:#dc2626">Over-pressure protection</strong> — Relief valves prevent system damage</li>
+        <li><strong style="color:#d97706">E-Stop integration</strong> — Dumps pressure on emergency stop</li>
+        <li><strong style="color:#2563eb">Position limits</strong> — Hard stops + limit switch redundancy</li>
+        <li><strong style="color:#16a34a">Lockout/Tagout</strong> — Mandatory before maintenance</li>
+        <li><strong style="color:#ea580c">Leak detection</strong> — Pressure drop monitoring</li>
+      </ul>
+      <div style="margin-top:12px;padding:10px 12px;background:#fef2f2;border-left:2px solid #dc2626;border-radius:4px;font-size:12px;color:#dc2626;">
+        ⚠️ Hydraulic fluid injection injuries are life-threatening. Never break connections under pressure.
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SIMULATION TAB ===== -->
+<div class="tab-panel" id="tab-sim">
+  <div class="sim-layout">
+
+    <!-- Controls -->
+    <div class="controls-panel">
+      <div class="card">
+        <div class="section-title" style="font-size:11px;">PLC Outputs</div>
+        <div class="control-group">
+          <span class="control-label">Solenoid Valves</span>
+          <div class="toggle-row">
+            <span class="toggle-name">SOL-A (Extend)</span>
+            <div class="toggle-wrap">
+              <span class="toggle-state" id="st-sola">OFF</span>
+              <label class="toggle"><input type="checkbox" id="sol-a" onchange="updateSol()"><span class="toggle-slider"></span></label>
+            </div>
+          </div>
+          <div class="toggle-row">
+            <span class="toggle-name">SOL-B (Retract)</span>
+            <div class="toggle-wrap">
+              <span class="toggle-state" id="st-solb">OFF</span>
+              <label class="toggle"><input type="checkbox" id="sol-b" onchange="updateSol()"><span class="toggle-slider"></span></label>
+            </div>
+          </div>
+          <div class="toggle-row">
+            <span class="toggle-name">Pump Motor</span>
+            <div class="toggle-wrap">
+              <span class="toggle-state" id="st-pump">OFF</span>
+              <label class="toggle"><input type="checkbox" id="pump-on" onchange="updateSol()"><span class="toggle-slider"></span></label>
+            </div>
+          </div>
+        </div>
+
+        <div class="control-group">
+          <span class="control-label">System Pressure Setpoint</span>
+          <input type="range" class="sim-slider" id="pressure-sp" min="10" max="250" value="150" oninput="updateSliders()">
+          <span class="slider-val" id="psp-val">150 bar</span>
+        </div>
+
+        <div class="control-group">
+          <span class="control-label" style="clear:both;display:block;margin-top:14px;">Flow Rate</span>
+          <input type="range" class="sim-slider" id="flow-rate" min="1" max="100" value="60" oninput="updateSliders()">
+          <span class="slider-val" id="fr-val">60 L/min</span>
+        </div>
+
+        <div class="control-group" style="margin-top:16px;">
+          <span class="control-label">Valve Configuration</span>
+          <div class="valve-btns">
+            <button class="valve-btn active" onclick="setValve('4/3-center')" id="v-1">4/3 Center</button>
+            <button class="valve-btn" onclick="setValve('4/2')" id="v-2">4/2 Valve</button>
+            <button class="valve-btn" onclick="setValve('3/2')" id="v-3">3/2 Valve</button>
+            <button class="valve-btn" onclick="setValve('prop')" id="v-4">Proportional</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="section-title" style="font-size:11px;">Actions</div>
+        <button class="action-btn btn-extend" onclick="cmdExtend()">▶ Extend Cylinder</button>
+        <button class="action-btn btn-retract" onclick="cmdRetract()">◀ Retract Cylinder</button>
+        <button class="action-btn btn-hold" onclick="cmdHold()">⏸ Hold Position</button>
+        <button class="action-btn btn-reset" onclick="cmdReset()">↺ Reset System</button>
+        <div style="margin-top:10px;padding:10px 12px;border-radius:6px;background:#f8fafc;border:1px solid #e2e8f0;">
+          <div style="font-size:11px;color:#94a3b8;font-family:Georgia, 'Times New Roman', Times, serif;margin-bottom:6px;">CYLINDER TYPE</div>
+          <select id="cyl-type" onchange="setCylType()" style="width:100%;background:#f8fafc;border:1px solid #e2e8f0;color:#1e293b;padding:8px;border-radius:6px;font-family:Georgia, 'Times New Roman', Times, serif;font-size:13px;cursor:pointer;">
+            <option value="double">Double-Acting</option>
+            <option value="single">Single-Acting</option>
+            <option value="tele">Telescopic</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <!-- Canvas -->
+    <div class="canvas-wrap">
+      <div class="section-title" style="font-size:11px;">Hydraulic Circuit Visualization</div>
+      <canvas id="hydraulicCanvas" width="670" height="420"></canvas>
+      <div style="display:flex;gap:16px;flex-wrap:wrap;margin-top:4px;">
+        <div style="display:flex;align-items:center;gap:6px;font-size:11px;color:#64748b;">
+          <div style="width:20px;height:4px;background:#ea580c;border-radius:2px;"></div> Pressurized Oil
+        </div>
+        <div style="display:flex;align-items:center;gap:6px;font-size:11px;color:#64748b;">
+          <div style="width:20px;height:4px;background:#bfdbfe;border-radius:2px;"></div> Return Oil
+        </div>
+        <div style="display:flex;align-items:center;gap:6px;font-size:11px;color:#64748b;">
+          <div style="width:20px;height:4px;background:#e2e8f0;border-radius:2px;"></div> Unpressurized
+        </div>
+      </div>
+    </div>
+
+    <!-- Metrics -->
+    <div class="metrics-panel">
+      <div class="metric-card">
+        <div class="metric-label">System Pressure</div>
+        <div class="metric-value" id="m-pressure">0<span>bar</span></div>
+        <div class="metric-bar-wrap"><div class="metric-bar bar-blue" id="bar-pressure" style="width:0%"></div></div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">Cylinder Position</div>
+        <div class="metric-value" id="m-position">0<span>%</span></div>
+        <div class="metric-bar-wrap"><div class="metric-bar bar-green" id="bar-position" style="width:0%"></div></div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">Flow Rate</div>
+        <div class="metric-value" id="m-flow">0<span>L/min</span></div>
+        <div class="metric-bar-wrap"><div class="metric-bar bar-orange" id="bar-flow" style="width:0%"></div></div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">Output Force</div>
+        <div class="metric-value" id="m-force">0<span>kN</span></div>
+        <div class="metric-bar-wrap"><div class="metric-bar bar-red" id="bar-force" style="width:0%"></div></div>
+      </div>
+      <div class="metric-card">
+        <div class="metric-label">Oil Temperature</div>
+        <div class="metric-value" id="m-temp">35<span>°C</span></div>
+        <div class="metric-bar-wrap"><div class="metric-bar" id="bar-temp" style="width:20%;background:linear-gradient(90deg,#0080ff,#ff8c00);"></div></div>
+      </div>
+      <div class="card" style="flex:1;">
+        <div class="section-title" style="font-size:10px;margin-bottom:8px;">Event Log</div>
+        <div class="event-log" id="event-log">
+          <div class="log-entry"><span class="ts">00:00:00</span>System initialized — Standby mode</div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ===== LADDER LOGIC TAB ===== -->
+<div class="tab-panel" id="tab-ladder">
+  <div class="section-title">PLC Ladder Logic Diagram</div>
+  <div style="margin-bottom:12px;font-size:13px;color:#475569;">Ladder logic represents PLC programs visually. Each rung is a logic condition controlling an output. Click a rung to highlight it.</div>
+  <div class="ladder-canvas-wrap">
+    <canvas id="ladderCanvas" width="860" height="480"></canvas>
+  </div>
+  <div class="learn-grid" style="margin-top:20px;">
+    <div class="info-card">
+      <h3>Ladder Logic Elements</h3>
+      <table class="parts-table">
+        <thead><tr><th>Symbol</th><th>Name</th><th>Description</th></tr></thead>
+        <tbody>
+          <tr><td style="color:#16a34a">—| |—</td><td>NO Contact</td><td>Normally Open — passes when ON</td></tr>
+          <tr><td style="color:#dc2626">—|/|—</td><td>NC Contact</td><td>Normally Closed — passes when OFF</td></tr>
+          <tr><td style="color:#2563eb">—( )—</td><td>Output Coil</td><td>Energizes when rung is true</td></tr>
+          <tr><td style="color:#ea580c">—(S)—</td><td>Set Coil</td><td>Latches ON until reset</td></tr>
+          <tr><td style="color:#d97706">—(R)—</td><td>Reset Coil</td><td>Unlatches a set coil</td></tr>
+          <tr><td style="color:#7c3aed">TON</td><td>Timer On-Delay</td><td>Delays activation</td></tr>
+        </tbody>
+      </table>
+    </div>
+    <div class="info-card">
+      <h3>Rung Descriptions</h3>
+      <ul>
+        <li><strong style="color:#2563eb">Rung 1:</strong> If E-STOP not pressed AND pump start pressed → energize pump motor output</li>
+        <li><strong style="color:#16a34a">Rung 2:</strong> If pump running AND extend button pressed AND not at max limit → energize SOL-A</li>
+        <li><strong style="color:#dc2626">Rung 3:</strong> If pump running AND retract button pressed AND not at min limit → energize SOL-B</li>
+        <li><strong style="color:#d97706">Rung 4:</strong> If pressure > 220 bar → set over-pressure alarm AND de-energize pump</li>
+        <li><strong style="color:#ea580c">Rung 5:</strong> If SOL-A AND SOL-B both ON simultaneously → fault → shut down system</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ===== PLC CODE TAB ===== -->
+<div class="tab-panel" id="tab-plccode">
+  <div class="section-title">Structured Text (IEC 61131-3)</div>
+  <p style="font-size:13px;color:#475569;margin-bottom:16px;">Real PLC code written in Structured Text — the most versatile IEC 61131-3 language, similar to Pascal/C.</p>
+  <div class="code-block"><span class="code-cmt">// ============================================
+// Hydraulic Actuator PLC Control Program
+// IEC 61131-3 Structured Text
+// ============================================</span>
+
+<span class="code-kw">PROGRAM</span> <span class="code-fn">HydraulicActuatorControl</span>
+
+<span class="code-cmt">// Variable Declarations</span>
+<span class="code-kw">VAR</span>
+    <span class="code-var">btnExtend</span>    : BOOL;       <span class="code-cmt">// HMI extend button input</span>
+    <span class="code-var">btnRetract</span>   : BOOL;       <span class="code-cmt">// HMI retract button input</span>
+    <span class="code-var">btnEStop</span>     : BOOL;       <span class="code-cmt">// Emergency stop (NC contact)</span>
+    <span class="code-var">lsMaxExtend</span>  : BOOL;       <span class="code-cmt">// Limit switch: fully extended</span>
+    <span class="code-var">lsMaxRetract</span> : BOOL;       <span class="code-cmt">// Limit switch: fully retracted</span>
+    <span class="code-var">ptPressure</span>   : REAL;       <span class="code-cmt">// Pressure transducer [bar]</span>
+    <span class="code-var">posEncoder</span>   : REAL;       <span class="code-cmt">// Position encoder [mm]</span>
+    <span class="code-var">tempSensor</span>   : REAL;       <span class="code-cmt">// Oil temperature [°C]</span>
+
+    <span class="code-var">solA</span>         : BOOL;       <span class="code-cmt">// Output: Solenoid A (extend)</span>
+    <span class="code-var">solB</span>         : BOOL;       <span class="code-cmt">// Output: Solenoid B (retract)</span>
+    <span class="code-var">pumpMotor</span>    : BOOL;       <span class="code-cmt">// Output: Pump motor contactor</span>
+
+    <span class="code-var">alarmOverPressure</span> : BOOL;
+    <span class="code-var">alarmOverTemp</span>     : BOOL;
+    <span class="code-var">alarmValveFault</span>   : BOOL;
+
+    <span class="code-var">timerDelay</span>   : TON;       <span class="code-cmt">// On-delay timer for pump start</span>
+    <span class="code-var">systemReady</span>  : BOOL := FALSE;
+<span class="code-kw">END_VAR</span>
+
+<span class="code-cmt">// ============================================
+// RUNG 1: Pump Motor Control
+// ============================================</span>
+<span class="code-kw">IF</span> (NOT <span class="code-var">btnEStop</span>) AND
+   (NOT <span class="code-var">alarmOverPressure</span>) AND
+   (NOT <span class="code-var">alarmOverTemp</span>) AND
+   (<span class="code-var">btnExtend</span> OR <span class="code-var">btnRetract</span>)
+<span class="code-kw">THEN</span>
+    <span class="code-var">pumpMotor</span> := <span class="code-num">TRUE</span>;
+    <span class="code-var">timerDelay</span>(IN := <span class="code-num">TRUE</span>, PT := T#<span class="code-num">500ms</span>);
+    <span class="code-var">systemReady</span> := <span class="code-var">timerDelay</span>.Q;
+<span class="code-kw">ELSE</span>
+    <span class="code-var">pumpMotor</span> := <span class="code-num">FALSE</span>;
+    <span class="code-var">systemReady</span> := <span class="code-num">FALSE</span>;
+    <span class="code-var">timerDelay</span>(IN := <span class="code-num">FALSE</span>);
+<span class="code-kw">END_IF</span>
+
+<span class="code-cmt">// ============================================
+// RUNG 2: Extend Cylinder
+// ============================================</span>
+<span class="code-kw">IF</span> <span class="code-var">systemReady</span> AND
+   <span class="code-var">btnExtend</span> AND
+   NOT <span class="code-var">lsMaxExtend</span> AND
+   NOT <span class="code-var">solB</span>           <span class="code-cmt">// Interlock: prevent both on</span>
+<span class="code-kw">THEN</span>
+    <span class="code-var">solA</span> := <span class="code-num">TRUE</span>;
+<span class="code-kw">ELSE</span>
+    <span class="code-var">solA</span> := <span class="code-num">FALSE</span>;
+<span class="code-kw">END_IF</span>
+
+<span class="code-cmt">// ============================================
+// RUNG 3: Retract Cylinder
+// ============================================</span>
+<span class="code-kw">IF</span> <span class="code-var">systemReady</span> AND
+   <span class="code-var">btnRetract</span> AND
+   NOT <span class="code-var">lsMaxRetract</span> AND
+   NOT <span class="code-var">solA</span>
+<span class="code-kw">THEN</span>
+    <span class="code-var">solB</span> := <span class="code-num">TRUE</span>;
+<span class="code-kw">ELSE</span>
+    <span class="code-var">solB</span> := <span class="code-num">FALSE</span>;
+<span class="code-kw">END_IF</span>
+
+<span class="code-cmt">// ============================================
+// RUNG 4: Alarm Processing
+// ============================================</span>
+<span class="code-kw">IF</span> <span class="code-var">ptPressure</span> > <span class="code-num">220.0</span> <span class="code-kw">THEN</span>
+    <span class="code-var">alarmOverPressure</span> := <span class="code-num">TRUE</span>;
+    <span class="code-var">solA</span> := <span class="code-num">FALSE</span>;
+    <span class="code-var">solB</span> := <span class="code-num">FALSE</span>;
+    <span class="code-var">pumpMotor</span> := <span class="code-num">FALSE</span>;
+<span class="code-kw">END_IF</span>
+
+<span class="code-kw">IF</span> <span class="code-var">tempSensor</span> > <span class="code-num">80.0</span> <span class="code-kw">THEN</span>
+    <span class="code-var">alarmOverTemp</span> := <span class="code-num">TRUE</span>;
+<span class="code-kw">END_IF</span>
+
+<span class="code-kw">IF</span> <span class="code-var">solA</span> AND <span class="code-var">solB</span> <span class="code-kw">THEN</span>
+    <span class="code-var">alarmValveFault</span> := <span class="code-num">TRUE</span>;
+    <span class="code-var">solA</span> := <span class="code-num">FALSE</span>;
+    <span class="code-var">solB</span> := <span class="code-num">FALSE</span>;
+<span class="code-kw">END_IF</span>
+
+<span class="code-kw">END_PROGRAM</span></div>
+
+  <div class="learn-grid">
+    <div class="info-card">
+      <h3>IEC 61131-3 Languages</h3>
+      <ul>
+        <li><strong style="color:#2563eb">Ladder Diagram (LD)</strong> — Relay logic, most common</li>
+        <li><strong style="color:#16a34a">Structured Text (ST)</strong> — High-level, algebraic</li>
+        <li><strong style="color:#ea580c">Function Block Diagram (FBD)</strong> — Graphical dataflow</li>
+        <li><strong style="color:#d97706">Instruction List (IL)</strong> — Assembly-like, legacy</li>
+        <li><strong style="color:#7c3aed">Sequential Function Chart (SFC)</strong> — State machine</li>
+      </ul>
+    </div>
+    <div class="info-card">
+      <h3>Key Safety Interlocks in Code</h3>
+      <ul>
+        <li><strong style="color:#dc2626">NOT solB</strong> in extend rung — prevents both solenoids activating simultaneously (valve conflict)</li>
+        <li><strong style="color:#d97706">Pressure &gt; 220 bar</strong> — automatic pump shutdown, prevents component damage</li>
+        <li><strong style="color:#2563eb">lsMaxExtend/Retract</strong> — hard limit enforcement in software before hardware limit switch</li>
+        <li><strong style="color:#16a34a">timerDelay</strong> — allows pump pressure to build before valve opens</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ===== FAULTS TAB ===== -->
+<div class="tab-panel" id="tab-faults">
+  <div class="section-title">Fault Diagnosis & Alarms</div>
+  <p style="font-size:13px;color:#475569;margin-bottom:16px;">Click any fault card to simulate it in the system. Learn to identify symptoms and apply corrective actions.</p>
+
+  <div class="fault-grid">
+    <div class="fault-card" id="fc-1" onclick="triggerFault(1)">
+      <div class="fault-title"><span class="fault-icon">🔴</span> Over-Pressure Fault</div>
+      <div class="fault-desc">System pressure exceeds relief valve setpoint. Common cause: blocked return line, valve stuck closed, or incorrect setpoint.</div>
+      <div class="fault-symptoms">
+        <h4>Symptoms</h4>
+        <ul>
+          <li>Pressure gauge reads above 220 bar</li>
+          <li>Relief valve opens — audible hissing</li>
+          <li>Cylinder movement stops</li>
+          <li>Pump motor current spike</li>
+        </ul>
+      </div>
+      <div class="fault-fix">✅ Fix: Check return line, inspect DCV, verify relief valve setpoint</div>
+    </div>
+    <div class="fault-card" id="fc-2" onclick="triggerFault(2)">
+      <div class="fault-title"><span class="fault-icon">🟡</span> Slow Cylinder Movement</div>
+      <div class="fault-desc">Cylinder extends/retracts slower than expected. Usually flow-related: pump wear, blocked filter, or FCV restriction.</div>
+      <div class="fault-symptoms">
+        <h4>Symptoms</h4>
+        <ul>
+          <li>Cycle time longer than setpoint</li>
+          <li>Flow meter reads below setpoint</li>
+          <li>Pressure normal or slightly low</li>
+          <li>No position errors initially</li>
+        </ul>
+      </div>
+      <div class="fault-fix">✅ Fix: Check/replace filter, inspect pump output, check FCV setting</div>
+    </div>
+    <div class="fault-card" id="fc-3" onclick="triggerFault(3)">
+      <div class="fault-title"><span class="fault-icon">🔵</span> Position Sensor Fault</div>
+      <div class="fault-desc">PLC receives incorrect or no signal from linear position encoder. Causes erratic or no movement response.</div>
+      <div class="fault-symptoms">
+        <h4>Symptoms</h4>
+        <ul>
+          <li>Position reads 0% or stuck value</li>
+          <li>PLC fault code: I/O error</li>
+          <li>Cylinder may drift past limits</li>
+          <li>Control system goes to safe state</li>
+        </ul>
+      </div>
+      <div class="fault-fix">✅ Fix: Check wiring, sensor power supply, verify encoder calibration</div>
+    </div>
+    <div class="fault-card" id="fc-4" onclick="triggerFault(4)">
+      <div class="fault-title"><span class="fault-icon">🟠</span> Valve Solenoid Fault</div>
+      <div class="fault-desc">Solenoid coil failure or DCV spool stuck. PLC output active but valve doesn't respond mechanically.</div>
+      <div class="fault-symptoms">
+        <h4>Symptoms</h4>
+        <ul>
+          <li>Solenoid LED on but no movement</li>
+          <li>No pressure change on actuation</li>
+          <li>Coil resistance out of range</li>
+          <li>Valve may stay in last position</li>
+        </ul>
+      </div>
+      <div class="fault-fix">✅ Fix: Measure coil resistance (typically 10–50Ω), check DCV manually</div>
+    </div>
+    <div class="fault-card" id="fc-5" onclick="triggerFault(5)">
+      <div class="fault-title"><span class="fault-icon">🌡️</span> High Oil Temperature</div>
+      <div class="fault-desc">Oil temp exceeds 80°C. Causes fluid viscosity drop, seal degradation, and reduced lubrication effectiveness.</div>
+      <div class="fault-symptoms">
+        <h4>Symptoms</h4>
+        <ul>
+          <li>Temp sensor alarm active</li>
+          <li>System may slow or stall</li>
+          <li>Oil smell or discoloration</li>
+          <li>Seals begin to leak</li>
+        </ul>
+      </div>
+      <div class="fault-fix">✅ Fix: Check cooler/heat exchanger, reduce cycle rate, check oil level</div>
+    </div>
+    <div class="fault-card" id="fc-6" onclick="triggerFault(6)">
+      <div class="fault-title"><span class="fault-icon">💧</span> Internal Cylinder Leak</div>
+      <div class="fault-desc">Piston seal bypassing fluid internally. Cylinder cannot hold position under load and drifts.</div>
+      <div class="fault-symptoms">
+        <h4>Symptoms</h4>
+        <ul>
+          <li>Cylinder drifts under load</li>
+          <li>Position error grows over time</li>
+          <li>Pressure equalization across piston</li>
+          <li>Lower force output than expected</li>
+        </ul>
+      </div>
+      <div class="fault-fix">✅ Fix: Replace piston seals, check for cylinder bore scoring</div>
+    </div>
+  </div>
+
+  <div class="alarm-panel">
+    <div class="section-title" style="font-size:11px;margin-bottom:12px;">Active Alarm Register</div>
+    <div id="alarm-list">
+      <div class="alarm-item inactive-alarm"><div class="alarm-led off"></div><span class="alarm-text">AL001 — Over-Pressure</span><span class="alarm-code">P > 220bar</span></div>
+      <div class="alarm-item inactive-alarm"><div class="alarm-led off"></div><span class="alarm-text">AL002 — Under-Pressure</span><span class="alarm-code">P < 10bar running</span></div>
+      <div class="alarm-item inactive-alarm"><div class="alarm-led off"></div><span class="alarm-text">AL003 — High Temperature</span><span class="alarm-code">T > 80°C</span></div>
+      <div class="alarm-item inactive-alarm"><div class="alarm-led off"></div><span class="alarm-text">AL004 — Position Sensor Fault</span><span class="alarm-code">AI fault</span></div>
+      <div class="alarm-item inactive-alarm"><div class="alarm-led off"></div><span class="alarm-text">AL005 — Valve Solenoid Fault</span><span class="alarm-code">DO open-circuit</span></div>
+      <div class="alarm-item inactive-alarm"><div class="alarm-led off"></div><span class="alarm-text">AL006 — E-Stop Active</span><span class="alarm-code">DI estop</span></div>
+    </div>
+    <div style="margin-top:12px;display:flex;gap:10px;">
+      <button onclick="clearAllFaults()" style="padding:8px 18px;border-radius:6px;border:1px solid rgba(77,166,255,0.4);background:rgba(192,192,192,0.1);color:#16a34a;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:13px;cursor:pointer;letter-spacing:1px;">✓ CLEAR ALL ALARMS</button>
+      <button onclick="triggerFault(Math.ceil(Math.random()*6))" style="padding:8px 18px;border-radius:6px;border:1px solid rgba(255,61,90,0.4);background:rgba(255,61,90,0.1);color:#dc2626;font-family:'Rajdhani',sans-serif;font-weight:700;font-size:13px;cursor:pointer;letter-spacing:1px;">⚡ INJECT RANDOM FAULT</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== QUIZ TAB ===== -->
+<div class="tab-panel" id="tab-quiz">
+  <div class="section-title">Knowledge Assessment</div>
+  <div class="quiz-wrap" id="quiz-container">
+    <!-- Questions injected by JS -->
+  </div>
+</div>
+
+<script>
+// ===================================================
+// TAB SWITCHING
+// ===================================================
+function switchTab(id) {
+  document.querySelectorAll('.tab-btn').forEach((b,i) => b.classList.remove('active'));
+  document.querySelectorAll('.tab-panel').forEach(p => p.classList.remove('active'));
+  const panels = ['learn','sim','ladder','plccode','faults','quiz'];
+  const idx = panels.indexOf(id);
+  document.querySelectorAll('.tab-btn')[idx].classList.add('active');
+  document.getElementById('tab-'+id).classList.add('active');
+  if(id==='sim') { startSimLoop(); drawHydraulic(); }
+  if(id==='ladder') drawLadder();
+  if(id==='quiz') renderQuiz();
+}
+
+// ===================================================
+// SIMULATION STATE
+// ===================================================
+const sim = {
+  pump: false,
+  solA: false,
+  solB: false,
+  position: 0,       // 0-100%
+  pressure: 0,       // bar
+  flow: 0,           // L/min
+  force: 0,          // kN
+  temp: 35,          // °C
+  targetPos: 0,
+  pressureSP: 150,
+  flowSP: 60,
+  valveType: '4/3-center',
+  cylType: 'double',
+  mode: 'STANDBY',
+  faultActive: false,
+  activeFaults: [],
+  simRunning: false,
+  loopId: null,
+  startTime: Date.now(),
+};
+
+let logEntries = [];
+function addLog(msg, type='') {
+  const elapsed = Math.floor((Date.now() - sim.startTime)/1000);
+  const h=String(Math.floor(elapsed/3600)).padStart(2,'0');
+  const m=String(Math.floor((elapsed%3600)/60)).padStart(2,'0');
+  const s=String(elapsed%60).padStart(2,'0');
+  logEntries.unshift({ts:`${h}:${m}:${s}`, msg, type});
+  if(logEntries.length>60) logEntries.pop();
+  renderLog();
+}
+function renderLog() {
+  const el = document.getElementById('event-log');
+  if(!el) return;
+  el.innerHTML = logEntries.map(e =>
+    `<div class="log-entry ${e.type}"><span class="ts">${e.ts}</span>${e.msg}</div>`
+  ).join('');
+}
+
+function updateMetrics() {
+  const setM = (id, val, unit) => {
+    const el = document.getElementById('m-'+id);
+    if(el) el.innerHTML = val + `<span>${unit}</span>`;
+  };
+  const setB = (id, pct, cap=100) => {
+    const el = document.getElementById('bar-'+id);
+    if(el) el.style.width = Math.min(100, (pct/cap)*100) + '%';
+  };
+
+  setM('pressure', Math.round(sim.pressure), 'bar');
+  setM('position', Math.round(sim.position), '%');
+  setM('flow', Math.round(sim.flow), 'L/min');
+  setM('force', (sim.force/1000).toFixed(1), 'kN');
+  setM('temp', Math.round(sim.temp), '°C');
+
+  setB('pressure', sim.pressure, 250);
+  setB('position', sim.position, 100);
+  setB('flow', sim.flow, 100);
+  setB('force', sim.force, 200000);
+  setB('temp', sim.temp, 100);
+
+  const sysModeEl = document.getElementById('sys-mode');
+  if(sysModeEl) sysModeEl.textContent = sim.mode;
+}
+
+// Simulation physics loop
+function simTick() {
+  const pump = sim.pump;
+  const solA = sim.solA;
+  const solB = sim.solB;
+
+  // Pressure buildup
+  if(pump && !sim.faultActive) {
+    const target = sim.pressureSP;
+    sim.pressure += (target - sim.pressure) * 0.08;
+  } else {
+    sim.pressure *= 0.96;
+  }
+  sim.pressure = Math.max(0, sim.pressure);
+
+  // Flow
+  if(pump && (solA || solB) && !sim.faultActive) {
+    sim.flow += (sim.flowSP - sim.flow) * 0.1;
+  } else {
+    sim.flow *= 0.92;
+  }
+
+  // Position
+  const speed = (sim.flow / 100) * 1.2;
+  if(solA && !solB && pump) {
+    sim.position = Math.min(100, sim.position + speed);
+    if(sim.position >= 100) { sim.position = 100; sim.solA = false; document.getElementById('sol-a').checked = false; updateToggleStates(); addLog('Cylinder fully extended — SOL-A off','ok'); }
+  } else if(solB && !solA && pump) {
+    sim.position = Math.max(0, sim.position - speed);
+    if(sim.position <= 0) { sim.position = 0; sim.solB = false; document.getElementById('sol-b').checked = false; updateToggleStates(); addLog('Cylinder fully retracted — SOL-B off','ok'); }
+  }
+
+  // Force (F = P x A, bore 80mm)
+  const boreArea = Math.PI * Math.pow(0.04, 2); // m²
+  sim.force = sim.pressure * 1e5 * boreArea; // N
+
+  // Temperature drift
+  if(pump) {
+    sim.temp = Math.min(95, sim.temp + 0.01 * (sim.pressure/200));
+  } else {
+    sim.temp = Math.max(25, sim.temp - 0.02);
+  }
+
+  // Over-pressure fault
+  if(sim.pressure > 240) {
+    addLog('FAULT: Over-pressure detected! System shutdown','err');
+    cmdReset();
+    triggerAlarm(0, true);
+  }
+
+  // Mode
+  if(!pump) sim.mode = 'STANDBY';
+  else if(solA) sim.mode = 'EXTENDING';
+  else if(solB) sim.mode = 'RETRACTING';
+  else if(pump) sim.mode = 'PRESSURIZED';
+
+  updateMetrics();
+  drawHydraulic();
+}
+
+function startSimLoop() {
+  if(sim.simRunning) return;
+  sim.simRunning = true;
+  sim.loopId = setInterval(simTick, 50);
+}
+
+// Controls
+function updateSol() {
+  sim.solA = document.getElementById('sol-a').checked;
+  sim.solB = document.getElementById('sol-b').checked;
+  sim.pump = document.getElementById('pump-on').checked;
+  // Interlock: can't have both solenoids on
+  if(sim.solA && sim.solB) {
+    sim.solB = false;
+    document.getElementById('sol-b').checked = false;
+    addLog('INTERLOCK: SOL-A and SOL-B conflict prevented','warn');
+  }
+  updateToggleStates();
+}
+function updateToggleStates() {
+  const sa = sim.solA, sb = sim.solB, pu = sim.pump;
+  const setTog = (id, state) => {
+    const el = document.getElementById(id);
+    if(el) { el.textContent = state ? 'ON' : 'OFF'; el.className = 'toggle-state' + (state?' on':''); }
+  };
+  setTog('st-sola', sa); setTog('st-solb', sb); setTog('st-pump', pu);
+}
+function updateSliders() {
+  sim.pressureSP = +document.getElementById('pressure-sp').value;
+  sim.flowSP = +document.getElementById('flow-rate').value;
+  document.getElementById('psp-val').textContent = sim.pressureSP + ' bar';
+  document.getElementById('fr-val').textContent = sim.flowSP + ' L/min';
+}
+function setValve(v) {
+  sim.valveType = v;
+  document.querySelectorAll('.valve-btn').forEach(b => b.classList.remove('active'));
+  const map = {'4/3-center':'v-1','4/2':'v-2','3/2':'v-3','prop':'v-4'};
+  document.getElementById(map[v]).classList.add('active');
+  addLog('Valve type changed to: ' + v);
+}
+function setCylType() {
+  sim.cylType = document.getElementById('cyl-type').value;
+  addLog('Cylinder type: ' + sim.cylType);
+}
+
+function cmdExtend() {
+  if(!sim.pump) { sim.pump = true; document.getElementById('pump-on').checked = true; }
+  sim.solA = true; sim.solB = false;
+  document.getElementById('sol-a').checked = true;
+  document.getElementById('sol-b').checked = false;
+  updateToggleStates();
+  addLog('CMD: Extend cylinder — SOL-A energized','ok');
+  startSimLoop();
+}
+function cmdRetract() {
+  if(!sim.pump) { sim.pump = true; document.getElementById('pump-on').checked = true; }
+  sim.solB = true; sim.solA = false;
+  document.getElementById('sol-b').checked = true;
+  document.getElementById('sol-a').checked = false;
+  updateToggleStates();
+  addLog('CMD: Retract cylinder — SOL-B energized','ok');
+  startSimLoop();
+}
+function cmdHold() {
+  sim.solA = false; sim.solB = false;
+  document.getElementById('sol-a').checked = false;
+  document.getElementById('sol-b').checked = false;
+  updateToggleStates();
+  addLog('CMD: Hold position — All solenoids de-energized','warn');
+}
+function cmdReset() {
+  sim.pump = false; sim.solA = false; sim.solB = false;
+  sim.pressure = 0; sim.flow = 0; sim.position = 0;
+  sim.faultActive = false; sim.activeFaults = [];
+  document.getElementById('sol-a').checked = false;
+  document.getElementById('sol-b').checked = false;
+  document.getElementById('pump-on').checked = false;
+  updateToggleStates();
+  clearAllFaults();
+  addLog('System reset complete','ok');
+}
+
+// ===================================================
+// CANVAS DRAWING
+// ===================================================
+function drawHydraulic() {
+  const canvas = document.getElementById('hydraulicCanvas');
+  if(!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  ctx.clearRect(0,0,W,H);
+
+  // Background grid
+  ctx.strokeStyle = 'rgba(100,116,139,0.08)';
+  ctx.lineWidth = 1;
+  for(let x=0;x<W;x+=30) { ctx.beginPath();ctx.moveTo(x,0);ctx.lineTo(x,H);ctx.stroke(); }
+  for(let y=0;y<H;y+=30) { ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(W,y);ctx.stroke(); }
+
+  const pump = sim.pump;
+  const solA = sim.solA;
+  const solB = sim.solB;
+  const pos = sim.position / 100;
+  const pressureRatio = sim.pressure / sim.pressureSP;
+
+  // Color helpers
+  const pressColor = (on) => on ? `rgba(234,88,12,${0.7+0.3*pressureRatio})` : 'rgba(148,163,184,0.5)';
+  const pipeW = 4;
+
+  // ---- RESERVOIR (bottom left) ----
+  const res = {x:40, y:330, w:80, h:60};
+  ctx.fillStyle = '#ffffff';
+  ctx.strokeStyle = '#94a3b8';
+  ctx.lineWidth = 1.5;
+  roundRect(ctx, res.x, res.y, res.w, res.h, 6);
+  ctx.fill(); ctx.stroke();
+  // Oil level
+  const oilH = 40;
+  ctx.fillStyle = 'rgba(234,179,8,0.3)';
+  roundRect(ctx, res.x+2, res.y+res.h-oilH+2, res.w-4, oilH-4, 4);
+  ctx.fill();
+  label(ctx, 'RESERVOIR', res.x+res.w/2, res.y+res.h+14, 10, '#64748b');
+  label(ctx, 'T', res.x+res.w/2, res.y+res.h/2+4, 13, '#475569');
+
+  // ---- PUMP ----
+  const px = 80, py = 240, pr = 28;
+  drawPump(ctx, px, py, pr, pump);
+  label(ctx, 'PUMP', px, py+pr+14, 10, '#64748b');
+
+  // Reservoir to pump line
+  drawPipe(ctx, res.x+res.w/2, res.y, px, py+pr, pipeW, 'rgba(148,163,184,0.6)');
+
+  // ---- DIRECTIONAL CONTROL VALVE ----
+  const dcv = {x:240, y:220, w:120, h:60};
+  drawDCV(ctx, dcv.x, dcv.y, dcv.w, dcv.h, solA, solB, sim.valveType);
+  label(ctx, 'DIRECTIONAL CONTROL VALVE', dcv.x+dcv.w/2, dcv.y+dcv.h+16, 10, '#64748b');
+  label(ctx, 'DCV', dcv.x+dcv.w/2, dcv.y+dcv.h/2+4, 12, '#475569');
+
+  // Pump to DCV (pressure line)
+  const pumpActive = pump;
+  drawPipe(ctx, px+pr, py, dcv.x, dcv.y+dcv.h/2, pipeW, pressColor(pumpActive));
+
+  // Relief valve
+  const rv = {x:190, y:155};
+  drawReliefValve(ctx, rv.x, rv.y);
+  label(ctx, 'RV', rv.x, rv.y+22, 10, 'rgba(255,61,90,0.7)');
+  drawPipe(ctx, rv.x, rv.y, rv.x, rv.y+65, 2, 'rgba(255,68,68,0.35)');
+
+  // Pressure transducer
+  drawSensor(ctx, 200, 200, 'PT', '#7c3aed');
+
+  // ---- CYLINDER ----
+  const cyl = {x:430, y:170, w:160, h:80};
+  drawCylinder(ctx, cyl.x, cyl.y, cyl.w, cyl.h, pos, sim.cylType, solA, solB);
+  label(ctx, 'HYDRAULIC CYLINDER', cyl.x+cyl.w/2, cyl.y+cyl.h+14, 10, '#64748b');
+
+  // DCV to cylinder (cap end = Port A, left side) — SOL-A pressurizes this for EXTEND
+  const capEnd = {x:cyl.x, y:cyl.y+15};
+  // Route: DCV top-right port → across → down → cap-end port A
+  ctx.strokeStyle = pressColor(solA);
+  ctx.lineWidth = pipeW;
+  ctx.lineCap = 'round';
+  ctx.beginPath();
+  ctx.moveTo(dcv.x+dcv.w, dcv.y+10);
+  ctx.lineTo(cyl.x - 20, dcv.y+10);
+  ctx.lineTo(cyl.x - 20, capEnd.y);
+  ctx.lineTo(capEnd.x, capEnd.y);
+  ctx.stroke();
+
+  // DCV to cylinder (rod end = Port B, right side) — SOL-B pressurizes this for RETRACT
+  const rodEnd = {x:cyl.x+cyl.w, y:cyl.y+cyl.h-15};
+  // Route: DCV bottom-right port → across → down → rod-end port B
+  ctx.strokeStyle = pressColor(solB);
+  ctx.lineWidth = pipeW;
+  ctx.lineCap = 'round';
+  ctx.beginPath();
+  ctx.moveTo(dcv.x+dcv.w, dcv.y+dcv.h-10);
+  ctx.lineTo(cyl.x + cyl.w + 20, dcv.y+dcv.h-10);
+  ctx.lineTo(cyl.x + cyl.w + 20, rodEnd.y);
+  ctx.lineTo(rodEnd.x, rodEnd.y);
+  ctx.stroke();
+
+  // Return line (DCV to tank) — bottom port of DCV goes back to reservoir
+  const retColor = solA ? pressColor(false) : (solB ? pressColor(false) : 'rgba(148,163,184,0.5)');
+  drawPipe(ctx, dcv.x+50, dcv.y+dcv.h, dcv.x+50, res.y, pipeW, retColor);
+
+  // Position sensor — moved further right to avoid rod-end pipe collision
+  const psX = cyl.x + cyl.w + 55;
+  const psY = cyl.y + cyl.h/2;
+  drawSensor(ctx, psX, psY, 'PS', '#475569');
+  ctx.strokeStyle = 'rgba(100,116,139,0.35)';
+  ctx.setLineDash([4,4]);
+  ctx.beginPath();
+  ctx.moveTo(psX-12, psY);
+  ctx.lineTo(cyl.x+cyl.w, psY);
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  // ---- PLC BOX ----
+  const plc = {x:480, y:320, w:140, h:70};
+  drawPLC(ctx, plc.x, plc.y, plc.w, plc.h, sim);
+
+  // Dashed signal lines
+  ctx.strokeStyle = 'rgba(37,99,235,0.3)';
+  ctx.setLineDash([3,5]);
+  ctx.lineWidth = 1.5;
+  // PLC to DCV (control signals)
+  ctx.beginPath(); ctx.moveTo(plc.x, plc.y+15); ctx.lineTo(dcv.x+dcv.w/2, dcv.y+dcv.h); ctx.stroke();
+  // PLC to PS (feedback signal)
+  ctx.beginPath(); ctx.moveTo(plc.x+plc.w, plc.y+20); ctx.lineTo(psX, psY); ctx.stroke();
+  ctx.setLineDash([]);
+
+  // ---- FLOW METER ----
+  drawFlowMeter(ctx, 155, 235, sim.flow);
+  label(ctx, 'FM', 155, 235+20, 10, '#64748b');
+
+  // ---- Pressure gauge ----
+  drawGauge(ctx, 340, 140, sim.pressure, sim.pressureSP);
+  label(ctx, 'P', 340, 175, 10, '#64748b');
+}
+
+function roundRect(ctx, x, y, w, h, r) {
+  ctx.beginPath();
+  ctx.moveTo(x+r,y);
+  ctx.lineTo(x+w-r,y);
+  ctx.arcTo(x+w,y,x+w,y+r,r);
+  ctx.lineTo(x+w,y+h-r);
+  ctx.arcTo(x+w,y+h,x+w-r,y+h,r);
+  ctx.lineTo(x+r,y+h);
+  ctx.arcTo(x,y+h,x,y+h-r,r);
+  ctx.lineTo(x,y+r);
+  ctx.arcTo(x,y,x+r,y,r);
+  ctx.closePath();
+}
+
+function drawPipe(ctx, x1, y1, x2, y2, w, color) {
+  ctx.strokeStyle = color;
+  ctx.lineWidth = w;
+  ctx.lineCap = 'round';
+  ctx.beginPath();
+  if(Math.abs(x2-x1) > 5 && Math.abs(y2-y1) > 5) {
+    ctx.moveTo(x1,y1);
+    ctx.lineTo(x2,y1);
+    ctx.lineTo(x2,y2);
+  } else {
+    ctx.moveTo(x1,y1);
+    ctx.lineTo(x2,y2);
+  }
+  ctx.stroke();
+}
+
+function drawPump(ctx, cx, cy, r, active) {
+  const grd = ctx.createRadialGradient(cx,cy,0,cx,cy,r);
+  grd.addColorStop(0, active ? 'rgba(37,99,235,0.25)' : 'rgba(148,163,184,0.4)');
+  grd.addColorStop(1, 'rgba(248,250,252,0.9)');
+  ctx.beginPath(); ctx.arc(cx,cy,r,0,Math.PI*2);
+  ctx.fillStyle = grd; ctx.fill();
+  ctx.strokeStyle = active ? '#2563eb' : '#94a3b8';
+  ctx.lineWidth = 2; ctx.stroke();
+  // Arrow
+  ctx.fillStyle = active ? '#2563eb' : '#94a3b8';
+  ctx.beginPath();
+  ctx.moveTo(cx-10,cy-8); ctx.lineTo(cx+12,cy); ctx.lineTo(cx-10,cy+8); ctx.closePath();
+  ctx.fill();
+  if(active) {
+    ctx.shadowColor = 'rgba(37,99,235,0.4)'; ctx.shadowBlur = 10;
+    ctx.beginPath(); ctx.arc(cx,cy,r,0,Math.PI*2);
+    ctx.strokeStyle = 'rgba(37,99,235,0.3)'; ctx.lineWidth = 4; ctx.stroke();
+    ctx.shadowBlur = 0;
+  }
+}
+
+function drawDCV(ctx, x, y, w, h, solA, solB, type) {
+  // Body
+  ctx.fillStyle = '#ffffff';
+  ctx.strokeStyle = '#cbd5e1';
+  ctx.lineWidth = 1.5;
+  roundRect(ctx, x, y, w, h, 5); ctx.fill(); ctx.stroke();
+
+  // Position indicator
+  let posX = x + w/2;
+  if(solA) posX = x + w*0.25;
+  if(solB) posX = x + w*0.75;
+
+  ctx.fillStyle = solA ? 'rgba(37,99,235,0.15)' : (solB ? 'rgba(220,38,38,0.12)' : 'rgba(217,119,6,0.12)');
+  ctx.strokeStyle = solA ? '#2563eb' : (solB ? '#dc2626' : '#d97706');
+  roundRect(ctx, posX-22, y+4, 44, h-8, 3); ctx.fill(); ctx.stroke();
+
+  // Arrow inside
+  ctx.fillStyle = solA ? '#2563eb' : (solB ? '#dc2626' : '#94a3b8');
+  ctx.beginPath();
+  if(solA) {
+    ctx.moveTo(posX-10,y+h/2); ctx.lineTo(posX+10,y+h/2-10); ctx.lineTo(posX+10,y+h/2+10); ctx.closePath();
+  } else if(solB) {
+    ctx.moveTo(posX+10,y+h/2); ctx.lineTo(posX-10,y+h/2-10); ctx.lineTo(posX-10,y+h/2+10); ctx.closePath();
+  } else {
+    ctx.moveTo(posX-8,y+h/2); ctx.lineTo(posX+8,y+h/2); ctx.moveTo(posX-3,y+h/2-6); ctx.lineTo(posX+3,y+h/2-6);
+  }
+  ctx.fill();
+
+  // Solenoid indicators — SOL-A = blue, SOL-B = red
+  const solaColor = solA ? '#2563eb' : '#cbd5e1';
+  const solbColor = solB ? '#dc2626' : '#cbd5e1';
+  ctx.fillStyle = solaColor; ctx.beginPath(); ctx.arc(x+14,y+h/2,6,0,Math.PI*2); ctx.fill();
+  ctx.fillStyle = solbColor; ctx.beginPath(); ctx.arc(x+w-14,y+h/2,6,0,Math.PI*2); ctx.fill();
+  if(solA) { ctx.shadowColor=solaColor; ctx.shadowBlur=12; ctx.fill(); ctx.shadowBlur=0; }
+  if(solB) { ctx.fillStyle=solbColor; ctx.beginPath(); ctx.arc(x+w-14,y+h/2,6,0,Math.PI*2); ctx.fill(); ctx.shadowColor=solbColor; ctx.shadowBlur=12; ctx.fill(); ctx.shadowBlur=0; }
+}
+
+function drawCylinder(ctx, x, y, w, h, pos, type, solA, solB) {
+  // Barrel
+  ctx.fillStyle = '#ffffff';
+  ctx.strokeStyle = '#cbd5e1';
+  ctx.lineWidth = 2;
+  roundRect(ctx, x, y, w, h, 4); ctx.fill(); ctx.stroke();
+
+  // Cap-end oil (left chamber) — orange/pressurized when extending (SOL-A), blue/return when retracting
+  const capColor = solA ? 'rgba(234,179,8,0.35)' : (solB ? 'rgba(37,99,235,0.2)' : 'rgba(226,232,240,0.5)');
+  ctx.fillStyle = capColor;
+  roundRect(ctx, x+2, y+2, (w-4)*pos - 2, h-4, 3); ctx.fill();
+
+  // Rod-end oil (right chamber) — orange/pressurized when retracting (SOL-B), blue/return when extending
+  const rodColor = solB ? 'rgba(234,179,8,0.35)' : (solA ? 'rgba(37,99,235,0.2)' : 'rgba(226,232,240,0.5)');
+  const pistonX = x + (w-4)*pos + 2;
+  if(pistonX < x+w-4) {
+    ctx.fillStyle = rodColor;
+    roundRect(ctx, pistonX+8, y+2, (x+w-4)-pistonX-8, h-4, 3); ctx.fill();
+  }
+
+  // Piston
+  const pw = 8;
+  const pistonPos = x + Math.max(4, Math.min((w-4)*pos, w-pw-4));
+  const grd = ctx.createLinearGradient(pistonPos,y,pistonPos+pw,y);
+  grd.addColorStop(0,'#94a3b8'); grd.addColorStop(0.5,'#f1f5f9'); grd.addColorStop(1,'#94a3b8');
+  ctx.fillStyle = grd;
+  roundRect(ctx, pistonPos, y+4, pw, h-8, 2); ctx.fill();
+  ctx.strokeStyle = '#64748b'; ctx.lineWidth = 1; ctx.stroke();
+
+  // Rod (extending right)
+  const rodLength = (w*0.5) * pos;
+  ctx.fillStyle = '#94a3b8';
+  ctx.fillRect(x+w, y+h/2-5, rodLength+20, 10);
+  ctx.fillStyle = '#e2e8f0';
+  ctx.fillRect(x+w, y+h/2-3, rodLength+20, 6);
+
+  // Port A (cap-end, LEFT side) — blue label
+  ctx.fillStyle = 'rgba(37,99,235,0.8)';
+  ctx.beginPath(); ctx.arc(x+10, y, 5, 0, Math.PI*2); ctx.fill();
+  ctx.strokeStyle = '#93c5fd'; ctx.lineWidth=1; ctx.stroke();
+  label(ctx,'A', x+10, y-12, 9, '#2563eb');
+
+  // Port B (rod-end, RIGHT side) — red label
+  ctx.fillStyle = 'rgba(220,38,38,0.8)';
+  ctx.beginPath(); ctx.arc(x+w-10, y, 5, 0, Math.PI*2); ctx.fill();
+  ctx.strokeStyle = '#fca5a5'; ctx.lineWidth=1; ctx.stroke();
+  label(ctx,'B', x+w-10, y-12, 9, '#dc2626');
+
+  // Position text
+  label(ctx, Math.round(pos*100)+'%', x+w/2, y+h/2+5, 14, '#1e293b');
+}
+
+function drawReliefValve(ctx, x, y) {
+  ctx.fillStyle = '#fff1f2';
+  ctx.strokeStyle = '#fca5a5';
+  ctx.lineWidth = 1.5;
+  ctx.beginPath(); ctx.arc(x,y,10,0,Math.PI*2); ctx.fill(); ctx.stroke();
+  ctx.fillStyle = '#dc2626';
+  ctx.font = 'bold 10px Share Tech Mono';
+  ctx.textAlign='center'; ctx.textBaseline='middle';
+  ctx.fillText('RV',x,y);
+}
+
+function drawSensor(ctx, x, y, name, color) {
+  ctx.fillStyle = '#ffffff';
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 1.5;
+  ctx.beginPath(); ctx.arc(x,y,10,0,Math.PI*2); ctx.fill(); ctx.stroke();
+  ctx.fillStyle = color;
+  ctx.font = 'bold 9px Share Tech Mono';
+  ctx.textAlign='center'; ctx.textBaseline='middle';
+  ctx.fillText(name,x,y);
+}
+
+function drawFlowMeter(ctx, x, y, flow) {
+  ctx.fillStyle = '#ffffff';
+  ctx.strokeStyle = 'rgba(77,166,255,0.5)';
+  ctx.lineWidth = 1.5;
+  ctx.beginPath(); ctx.rect(x-14,y-14,28,28); ctx.fill(); ctx.stroke();
+  ctx.fillStyle = '#2563eb';
+  ctx.font = '8px Share Tech Mono'; ctx.textAlign='center'; ctx.textBaseline='middle';
+  ctx.fillText(Math.round(flow),x,y);
+}
+
+function drawGauge(ctx, cx, cy, val, max) {
+  const r = 20;
+  ctx.beginPath(); ctx.arc(cx,cy,r,Math.PI,2*Math.PI);
+  ctx.strokeStyle = '#e2e8f0'; ctx.lineWidth = 4; ctx.stroke();
+  const pct = Math.min(1, val/max);
+  const start = Math.PI, end = Math.PI + Math.PI*pct;
+  const gc = pct > 0.85 ? '#dc2626' : (pct > 0.6 ? '#d97706' : '#2563eb');
+  ctx.beginPath(); ctx.arc(cx,cy,r,start,end);
+  ctx.strokeStyle = gc; ctx.lineWidth = 4;
+  ctx.shadowColor = gc; ctx.shadowBlur = 8; ctx.stroke(); ctx.shadowBlur=0;
+  label(ctx, Math.round(val)+' bar', cx, cy+8, 9, gc);
+}
+
+function drawPLC(ctx, x, y, w, h, sim) {
+  ctx.fillStyle = '#ffffff';
+  ctx.strokeStyle = '#93c5fd';
+  ctx.lineWidth = 1.5;
+  roundRect(ctx,x,y,w,h,5); ctx.fill(); ctx.stroke();
+  label(ctx,'PLC CONTROLLER',x+w/2,y+12,9,'#2563eb');
+
+  const indicators = [
+    {lbl:'SOL-A', on:sim.solA, col:'#2563eb'},
+    {lbl:'SOL-B', on:sim.solB, col:'#dc2626'},
+    {lbl:'PUMP',  on:sim.pump, col:'#64748b'},
+    {lbl:'FAULT', on:sim.faultActive, col:'#d97706'},
+  ];
+  indicators.forEach((ind,i) => {
+    const ix = x+14 + (i%2)*65, iy = y+28 + Math.floor(i/2)*22;
+    ctx.beginPath(); ctx.arc(ix,iy,5,0,Math.PI*2);
+    ctx.fillStyle = ind.on ? ind.col : '#e2e8f0'; ctx.fill();
+    if(ind.on) { ctx.shadowColor=ind.col; ctx.shadowBlur=8; ctx.fill(); ctx.shadowBlur=0; }
+    ctx.fillStyle = ind.on ? ind.col : '#94a3b8';
+    ctx.font = '8px Share Tech Mono'; ctx.textAlign='left'; ctx.textBaseline='middle';
+    ctx.fillText(ind.lbl, ix+8, iy);
+  });
+  ctx.textAlign='center';
+}
+
+function label(ctx, txt, x, y, size, color) {
+  ctx.fillStyle = color;
+  ctx.font = `${size}px Share Tech Mono`;
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  ctx.fillText(txt, x, y);
+}
+
+// ===================================================
+// LADDER LOGIC DRAWING
+// ===================================================
+function drawLadder() {
+  const canvas = document.getElementById('ladderCanvas');
+  if(!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const W=canvas.width, H=canvas.height;
+  ctx.clearRect(0,0,W,H);
+  ctx.fillStyle = '#f8fafc';
+  ctx.fillRect(0,0,W,H);
+
+  const rungs = [
+    { label: 'RUNG 1: Pump Motor Control', contacts: [
+      {type:'NC',name:'E-STOP',x:120},
+      {type:'NO',name:'BTN_START',x:240},
+    ], coil: {name:'PUMP_MTR', x:720, color:'#d0d0d0'} },
+    { label: 'RUNG 2: Extend Cylinder', contacts: [
+      {type:'NO',name:'PUMP_RUN',x:120},
+      {type:'NO',name:'BTN_EXT',x:240},
+      {type:'NC',name:'LS_MAX',x:360},
+    ], coil: {name:'SOL_A', x:720, color:'#4da6ff'} },
+    { label: 'RUNG 3: Retract Cylinder', contacts: [
+      {type:'NO',name:'PUMP_RUN',x:120},
+      {type:'NO',name:'BTN_RET',x:240},
+      {type:'NC',name:'LS_MIN',x:360},
+    ], coil: {name:'SOL_B', x:720, color:'#ff4444'} },
+    { label: 'RUNG 4: Over-Pressure Alarm', contacts: [
+      {type:'NO',name:'P>220bar',x:120},
+    ], coil: {name:'ALM_PRES', x:720, color:'#ffd700'} },
+    { label: 'RUNG 5: Valve Conflict Fault', contacts: [
+      {type:'NO',name:'SOL_A',x:120},
+      {type:'NO',name:'SOL_B',x:240},
+    ], coil: {name:'SYS_FAULT', x:720, color:'#ff8c00'} },
+  ];
+
+  const busL = 40, busR = 800;
+  rungs.forEach((rung,i) => {
+    const y = 60 + i*88;
+    // Rung label
+    ctx.fillStyle = 'rgba(37,99,235,0.8)';
+    ctx.font = '10px Share Tech Mono';
+    ctx.textAlign = 'left';
+    ctx.fillText(rung.label, busL, y-16);
+
+    // Power rails
+    ctx.strokeStyle = '#94a3b8';
+    ctx.lineWidth = 3;
+    ctx.beginPath(); ctx.moveTo(busL,y-8); ctx.lineTo(busL,y+28); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(busR,y-8); ctx.lineTo(busR,y+28); ctx.stroke();
+
+    // Horizontal line
+    ctx.strokeStyle = '#94a3b8';
+    ctx.lineWidth = 2;
+    ctx.beginPath(); ctx.moveTo(busL,y+10); ctx.lineTo(busR,y+10); ctx.stroke();
+
+    // Contacts
+    rung.contacts.forEach(c => {
+      drawContact(ctx, c.x, y+10, c.type, c.name);
+    });
+
+    // Coil
+    drawCoil(ctx, rung.coil.x, y+10, rung.coil.name, rung.coil.color);
+  });
+}
+
+function drawContact(ctx, x, y, type, name) {
+  const cw = 20, hw = 10;
+  ctx.strokeStyle = type==='NO' ? 'rgba(192,192,192,0.85)' : 'rgba(255,68,68,0.9)';
+  ctx.lineWidth = 2;
+  // Left bar
+  ctx.beginPath(); ctx.moveTo(x-cw,y); ctx.lineTo(x-hw,y); ctx.stroke();
+  // Right bar
+  ctx.beginPath(); ctx.moveTo(x+hw,y); ctx.lineTo(x+cw,y); ctx.stroke();
+  // Left vertical
+  ctx.beginPath(); ctx.moveTo(x-hw,y-12); ctx.lineTo(x-hw,y+12); ctx.stroke();
+  // Right vertical
+  ctx.beginPath(); ctx.moveTo(x+hw,y-12); ctx.lineTo(x+hw,y+12); ctx.stroke();
+  // NC diagonal
+  if(type==='NC') {
+    ctx.beginPath(); ctx.moveTo(x-hw-2,y-14); ctx.lineTo(x+hw+2,y+14); ctx.stroke();
+  }
+  // Name
+  ctx.fillStyle = type==='NO' ? '#2563eb' : '#dc2626';
+  ctx.font = '9px Share Tech Mono'; ctx.textAlign='center';
+  ctx.fillText(name, x, y-18);
+}
+
+function drawCoil(ctx, x, y, name, color) {
+  ctx.strokeStyle = color;
+  ctx.lineWidth = 2;
+  ctx.beginPath(); ctx.arc(x+18,y,14,0,Math.PI*2); ctx.stroke();
+  ctx.fillStyle = `${color}22`;
+  ctx.fill();
+  // Brackets
+  ctx.beginPath(); ctx.moveTo(x,y); ctx.lineTo(x+5,y); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(x+31,y); ctx.lineTo(x+40,y); ctx.stroke();
+  ctx.fillStyle = color;
+  ctx.font = '9px Share Tech Mono'; ctx.textAlign='center';
+  ctx.fillText(name, x+18, y+4);
+  ctx.fillStyle = '#94a3b8';
+  ctx.fillText('( )', x+18, y-22);
+}
+
+// ===================================================
+// FAULT SIMULATION
+// ===================================================
+function triggerFault(n) {
+  document.querySelectorAll('.fault-card').forEach(c=>c.classList.remove('active'));
+  document.getElementById('fc-'+n)?.classList.add('active');
+  const alarms = document.querySelectorAll('.alarm-item');
+  const faultMessages = {
+    1: ['FAULT: Over-Pressure! System shutdown','err', 0],
+    2: ['WARN: Slow flow — check filter/pump','warn', null],
+    3: ['FAULT: Position sensor fault — AI error','err', 3],
+    4: ['FAULT: Solenoid valve fault — no response','err', 4],
+    5: ['WARN: High oil temperature 83°C','warn', 2],
+    6: ['WARN: Internal cylinder leak detected','warn', null],
+  };
+  const [msg, type, alarmIdx] = faultMessages[n];
+  addLog(msg, type);
+  sim.faultActive = true;
+  if(alarmIdx !== null) {
+    alarms[alarmIdx]?.classList.remove('inactive-alarm');
+    alarms[alarmIdx]?.classList.add('active-alarm');
+    alarms[alarmIdx]?.querySelector('.alarm-led')?.classList.remove('off');
+    alarms[alarmIdx]?.querySelector('.alarm-led')?.classList.add('red');
+  }
+  if(n===1) { sim.pressure = 245; alarms[0].classList.add('active-alarm'); alarms[0].querySelector('.alarm-led').classList.add('red'); }
+  if(n===5) { sim.temp = 83; }
+}
+function clearAllFaults() {
+  sim.faultActive = false; sim.activeFaults = [];
+  document.querySelectorAll('.fault-card').forEach(c=>c.classList.remove('active'));
+  document.querySelectorAll('.alarm-item').forEach(a => {
+    a.classList.remove('active-alarm'); a.classList.add('inactive-alarm');
+    a.querySelector('.alarm-led')?.classList.remove('red');
+    a.querySelector('.alarm-led')?.classList.add('off');
+  });
+  addLog('All alarms cleared','ok');
+}
+function triggerAlarm(idx, active) {
+  const alarms = document.querySelectorAll('.alarm-item');
+  if(active) {
+    alarms[idx]?.classList.add('active-alarm');
+    alarms[idx]?.querySelector('.alarm-led')?.classList.add('red');
+  }
+}
+
+// ===================================================
+// QUIZ
+// ===================================================
+const questions = [
+  { q: "What law governs hydraulic pressure transmission in a confined fluid?", opts:["Newton's Third Law","Pascal's Law","Boyle's Law","Bernoulli's Principle"], ans:1, exp:"Pascal's Law states that pressure applied at any point in a confined fluid is transmitted equally in all directions." },
+  { q: "In a PLC, what does 'SOL-A' typically control in an extend sequence?", opts:["Return line valve","Cap-end solenoid for extending","Rod-end solenoid for retracting","Relief valve bypass"], ans:1, exp:"SOL-A (Solenoid A) shifts the DCV to route hydraulic flow to the cap end of the cylinder, causing extension." },
+  { q: "What is the purpose of a relief valve in a hydraulic system?", opts:["Increases system pressure","Measures flow rate","Limits maximum system pressure","Controls cylinder speed"], ans:2, exp:"A relief valve opens to bypass oil back to tank when pressure exceeds its set value, protecting the system from damage." },
+  { q: "What IEC 61131-3 language uses visual relay-contact symbols?", opts:["Structured Text","Function Block Diagram","Ladder Diagram","Sequential Function Chart"], ans:2, exp:"Ladder Diagram (LD) represents PLC logic using coil and contact symbols that resemble relay logic circuits." },
+  { q: "A cylinder that uses pressure on both sides for bidirectional motion is called:", opts:["Single-acting","Double-acting","Telescopic","Differential"], ans:1, exp:"A double-acting cylinder has hydraulic connections to both cap end and rod end, giving full powered motion in both directions." },
+  { q: "What happens in a PLC if both SOL-A and SOL-B are simultaneously energized?", opts:["Cylinder moves faster","Nothing — it's normal","A valve conflict fault occurs","Pressure increases"], ans:2, exp:"Simultaneous energization of both solenoids is a fault condition. PLCs must include interlocks to prevent this." },
+  { q: "Which formula correctly calculates hydraulic force output?", opts:["F = Flow × Velocity","F = Pressure ÷ Area","F = Pressure × Bore Area","F = Speed × Time"], ans:2, exp:"Force = Pressure × Area. With pressure in Pascals and area in m², the result is in Newtons." },
+  { q: "In a hydraulic circuit, the directional control valve (DCV) is responsible for:", opts:["Setting maximum pressure","Routing fluid flow direction","Measuring oil temperature","Filtering contamination"], ans:1, exp:"The DCV (Directional Control Valve) determines which port receives pressurized oil, controlling extend or retract movement." },
+];
+
+let quizState = {};
+function renderQuiz() {
+  const wrap = document.getElementById('quiz-container');
+  if(wrap.children.length > 0) return;
+  quizState = {};
+  wrap.innerHTML = questions.map((q,i) => `
+    <div class="quiz-question" id="qq-${i}">
+      <div class="q-num">QUESTION ${i+1} / ${questions.length}</div>
+      <div class="q-text">${q.q}</div>
+      <div class="options">
+        ${q.opts.map((o,j) => `
+          <label class="opt" id="opt-${i}-${j}">
+            <input type="radio" name="q${i}" value="${j}" onchange="selectOpt(${i},${j})">
+            <span class="opt-label">${o}</span>
+          </label>`).join('')}
+      </div>
+      <button class="check-btn" onclick="checkAnswer(${i})">Check Answer</button>
+      <div class="q-feedback" id="fb-${i}" style="display:none;"></div>
+    </div>
+  `).join('') + `<div class="score-banner" id="score-banner" style="display:none;">
+    <h2 id="score-val">0 / ${questions.length}</h2>
+    <p id="score-msg"></p>
+    <button class="reset-quiz-btn" onclick="resetQuiz()">↺ Retake Quiz</button>
+  </div>`;
+}
+
+function selectOpt(qi, oi) { quizState['sel-'+qi] = oi; }
+
+function checkAnswer(qi) {
+  const sel = quizState['sel-'+qi];
+  if(sel === undefined) return;
+  const q = questions[qi];
+  const correct = sel === q.ans;
+  quizState['done-'+qi] = true;
+  quizState['correct-'+qi] = correct;
+
+  for(let j=0;j<q.opts.length;j++) {
+    const el = document.getElementById(`opt-${qi}-${j}`);
+    if(j===q.ans) el.classList.add('correct');
+    else if(j===sel && !correct) el.classList.add('wrong');
+  }
+  const fb = document.getElementById('fb-'+qi);
+  fb.style.display='block';
+  fb.className = 'q-feedback ' + (correct?'correct':'wrong');
+  fb.innerHTML = (correct ? '✅ Correct! ' : '❌ Incorrect. ') + q.exp;
+
+  // Check if all done
+  if(questions.every((_,i) => quizState['done-'+i])) {
+    const score = questions.filter((_,i)=>quizState['correct-'+i]).length;
+    const banner = document.getElementById('score-banner');
+    document.getElementById('score-val').textContent = score + ' / ' + questions.length;
+    const pct = Math.round(score/questions.length*100);
+    document.getElementById('score-msg').textContent = pct>=80 ? '🏆 Excellent! You have strong knowledge of hydraulic PLC systems.' : pct>=60 ? '👍 Good work! Review the topics you missed.' : '📚 Keep studying — revisit the Learn and Simulation tabs.';
+    banner.style.display='block';
+    banner.scrollIntoView({behavior:'smooth'});
+  }
+}
+
+function resetQuiz() {
+  quizState = {};
+  document.getElementById('quiz-container').innerHTML = '';
+  renderQuiz();
+}
+
+// ===== INIT =====
+window.addEventListener('load', () => {
+  startSimLoop();
+  addLog('PLC Hydraulic Simulation ready — select Simulation tab to start');
+});
+</script>
+</body>
+</html>

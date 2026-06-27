@@ -1,0 +1,984 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PLC Ladder Logic Simulator</title>
+    <link rel="stylesheet" href="../defination.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #2c3e50, #34495e);
+            color: white;
+            padding: 20px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: white;
+        }
+
+        .controls {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .btn-primary { background: #3498db; color: white; }
+        .btn-primary:hover { background: #2980b9; transform: translateY(-2px); }
+        .btn-success { background: #27ae60; color: white; }
+        .btn-success:hover { background: #229954; transform: translateY(-2px); }
+        .btn-danger { background: #e74c3c; color: white; }
+        .btn-danger:hover { background: #c0392b; transform: translateY(-2px); }
+
+        .main-content {
+            display: flex;
+            height: calc(100vh - 140px);
+        }
+
+        .sidebar {
+            width: 200px;
+            background: #34495e;
+            color: white;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .component-category { margin-bottom: 25px; }
+
+        .category-title {
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+            color: #bdc3c7;
+        }
+
+        .component {
+            background: #2c3e50;
+            padding: 12px;
+            margin-bottom: 8px;
+            border-radius: 5px;
+            cursor: move;
+            transition: all 0.3s;
+            border: 2px solid transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .component:hover {
+            background: #1abc9c;
+            border-color: #16a085;
+            transform: translateX(5px);
+        }
+
+        .component svg { width: 80px; height: 40px; }
+
+        .workspace {
+            flex: 1;
+            background: #ecf0f1;
+            padding: 20px;
+            overflow: auto;
+            position: relative;
+        }
+
+        .grid-container {
+            display: inline-block;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 20px;
+            width: 100%;
+            height: 100%;
+        }
+
+        .ladder-grid {
+            display: grid;
+            grid-template-columns: repeat(5, 206px);
+            grid-template-rows: repeat(3, 153px);
+            gap: 0;
+            position: relative;
+        }
+
+        .grid-cell {
+            border: 1px solid #0d4163;
+            position: relative;
+            background: white;
+            transition: all 0.2s;
+            /* FIX 1: establish stacking context so wire stays behind component */
+            isolation: isolate;
+        }
+
+        .grid-cell:hover { background: #e8f8f5; border-color: #1abc9c; }
+        .grid-cell.rail {
+            background: #345e84;
+            border: none;
+            cursor: not-allowed;
+        }
+        .grid-cell.rail:hover { background: #1a252f; border-color: transparent; }
+        .rail-label {
+            position: absolute;
+            top: 30%;
+            left: 50%;
+            transform: translate(-50%, -50%) rotate(359deg);
+            color: #ecf0f1;
+            font-size: 19px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            white-space: nowrap;
+            pointer-events: none;
+            z-index: 5;
+            opacity: 0.75;
+        }
+        .grid-cell.occupied { background: #d5f4e6; }
+
+        .placed-component {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            cursor: pointer;
+            /* FIX 1: component sits above the wire */
+            z-index: 2;
+        }
+
+        .placed-component svg { width: 80%; height: 60%; }
+
+        .component-label {
+            position: absolute;
+            bottom: 2px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 11px;
+            font-weight: 600;
+            background: #3498db;
+            color: white;
+            padding: 2px 8px;
+            border-radius: 3px;
+            white-space: nowrap;
+            z-index: 3;
+        }
+
+        .component-value {
+            position: absolute;
+            top: 2px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 10px;
+            font-weight: 600;
+            background: #e67e22;
+            color: white;
+            padding: 2px 6px;
+            border-radius: 3px;
+            white-space: nowrap;
+            z-index: 3;
+        }
+
+        /* FIX 1: wire goes BEHIND the component, only visible in empty space */
+        .wire {
+            position: absolute;
+            background: #95a5a6;
+            transition: background 0.3s;
+            /* z-index 1 = above cell background but below placed-component (z-index 2) */
+            z-index: 1;
+        }
+
+        .wire.energized {
+            background: #f39c12;
+            box-shadow: 0 0 10px #f39c12;
+        }
+
+        .wire-horizontal {
+            height: 3px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .wire-vertical {
+            width: 3px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+
+        .power-rail {
+            position: absolute;
+            width: 4px;
+            background: #2c3e50;
+            top: 0;
+            bottom: 0;
+            z-index: 0;
+        }
+
+        .power-rail.left { left: 0; }
+        .power-rail.right { right: 0; }
+
+        .power-rail.energized {
+            background: #27ae60;
+            box-shadow: 0 0 15px #27ae60;
+        }
+
+        .delete-btn {
+            position: absolute;
+            top: 2px;
+            right: 2px;
+            background: #e74c3c;
+            color: white;
+            border: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            cursor: pointer;
+            font-size: 12px;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 4;
+        }
+
+        .placed-component:hover .delete-btn { display: flex; }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal.active { display: flex; }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            max-width: 400px;
+            width: 90%;
+        }
+
+        .modal-header { font-size: 20px; font-weight: 600; margin-bottom: 20px; color: #2c3e50; }
+
+        .form-group { margin-bottom: 15px; }
+
+        .form-group label { display: block; margin-bottom: 5px; font-weight: 600; color: #34495e; }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 10px;
+            border: 2px solid #bdc3c7;
+            border-radius: 5px;
+            font-size: 14px;
+            transition: border-color 0.3s;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus { outline: none; border-color: #3498db; }
+
+        .modal-buttons { display: flex; gap: 10px; margin-top: 20px; }
+        .modal-buttons .btn { flex: 1; }
+
+        .status-bar {
+            background: #2c3e50;
+            color: white;
+            padding: 10px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 12px;
+        }
+
+        .status-indicator { display: flex; align-items: center; gap: 8px; }
+
+        .status-dot {
+            width: 10px; height: 10px;
+            border-radius: 50%;
+            background: #95a5a6;
+        }
+
+        .status-dot.active { background: #27ae60; box-shadow: 0 0 10px #27ae60; }
+
+        .help-text { color: #7f8c8d; font-size: 12px; margin-top: 5px; }
+
+        .simulation-panel {
+            background: #34495e;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+        }
+
+        .simulation-controls { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+
+        .input-toggle {
+            background: #2c3e50;
+            padding: 10px;
+            border-radius: 5px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .input-toggle:hover { background: #1abc9c; }
+        .input-toggle.active { background: #27ae60; }
+
+        .toggle-switch {
+            width: 40px; height: 20px;
+            background: #95a5a6;
+            border-radius: 10px;
+            position: relative;
+            transition: background 0.3s;
+        }
+
+        .input-toggle.active .toggle-switch { background: #2ecc71; }
+
+        .toggle-switch::after {
+            content: '';
+            position: absolute;
+            width: 16px; height: 16px;
+            background: white;
+            border-radius: 50%;
+            top: 2px; left: 2px;
+            transition: left 0.3s;
+        }
+
+        .input-toggle.active .toggle-switch::after { left: 22px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header style="display: flex; margin-bottom: 0px">
+            <div class="logo-container">
+                <img src="../../assets/Scientech logo-2.png" alt="Scientech Logo">
+                <h1>Ladder Logic Simulator</h1>
+            </div>
+            <div class="button-container" style="margin-bottom: 0px;;margin-left: 25pc;">
+                <a href="./Ladder_Diagram_(LD).html" class="back-button">
+                    <i class="fas fa-arrow-left"></i> Back to Course
+                </a>
+            </div>
+        </header>
+        <div class="header" style="margin-top: 10px;">
+            <h1>
+                <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="3" width="18" height="18" rx="2"/>
+                    <path d="M3 9h18M9 3v18"/>
+                </svg>
+                PLC Ladder Logic Simulator
+            </h1>
+            <div class="controls">
+                <button class="btn btn-success" onclick="runSimulation()">▶ Run</button>
+                <button class="btn btn-danger" onclick="stopSimulation()">⬛ Stop</button>
+                <button class="btn btn-primary" onclick="clearWorkspace()">🗑 Clear</button>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="sidebar">
+                <div class="simulation-panel">
+                    <div class="category-title">Inputs</div>
+                    <div class="simulation-controls" id="inputControls"></div>
+                </div>
+
+                <div class="component-category">
+                    <div class="category-title">Contacts</div>
+                    <div class="component" draggable="true" data-type="NO" ondragstart="dragStart(event)">
+                        <svg viewBox="0 0 80 40">
+                            <line x1="0" y1="20" x2="25" y2="20" stroke="white" stroke-width="2"/>
+                            <line x1="25" y1="10" x2="25" y2="30" stroke="white" stroke-width="2"/>
+                            <line x1="55" y1="10" x2="55" y2="30" stroke="white" stroke-width="2"/>
+                            <line x1="55" y1="20" x2="80" y2="20" stroke="white" stroke-width="2"/>
+                        </svg>
+                    </div>
+                    <div class="component" draggable="true" data-type="NC" ondragstart="dragStart(event)">
+                        <svg viewBox="0 0 80 40">
+                            <line x1="0" y1="20" x2="25" y2="20" stroke="white" stroke-width="2"/>
+                            <line x1="25" y1="10" x2="25" y2="30" stroke="white" stroke-width="2"/>
+                            <line x1="55" y1="10" x2="55" y2="30" stroke="white" stroke-width="2"/>
+                            <line x1="55" y1="20" x2="80" y2="20" stroke="white" stroke-width="2"/>
+                            <line x1="25" y1="25" x2="55" y2="15" stroke="white" stroke-width="2"/>
+                        </svg>
+                    </div>
+                </div>
+
+                <div class="component-category">
+                    <div class="category-title">Coils</div>
+                    <div class="component" draggable="true" data-type="COIL" ondragstart="dragStart(event)">
+                        <svg viewBox="0 0 80 40">
+                            <line x1="0" y1="20" x2="28" y2="20" stroke="white" stroke-width="2"/>
+                            <circle cx="40" cy="20" r="12" stroke="white" stroke-width="2" fill="none"/>
+                            <line x1="51" y1="20" x2="80" y2="20" stroke="white" stroke-width="2"/>
+                        </svg>
+                    </div>
+                </div>
+
+                <div class="component-category">
+                    <div class="category-title">Timers</div>
+                    <div class="component" draggable="true" data-type="TON" ondragstart="dragStart(event)">
+                        <svg viewBox="0 0 80 40">
+                            <rect x="15" y="5" width="50" height="30" stroke="white" stroke-width="2" fill="none"/>
+                            <text x="40" y="25" text-anchor="middle" fill="white" font-size="12">TON</text>
+                        </svg>
+                    </div>
+                    <div class="component" draggable="true" data-type="TOF" ondragstart="dragStart(event)">
+                        <svg viewBox="0 0 80 40">
+                            <rect x="15" y="5" width="50" height="30" stroke="white" stroke-width="2" fill="none"/>
+                            <text x="40" y="25" text-anchor="middle" fill="white" font-size="12">TOF</text>
+                        </svg>
+                    </div>
+                </div>
+
+                <div class="component-category">
+                    <div class="category-title">Counters</div>
+                    <div class="component" draggable="true" data-type="CTU" ondragstart="dragStart(event)">
+                        <svg viewBox="0 0 80 40">
+                            <rect x="15" y="5" width="50" height="30" stroke="white" stroke-width="2" fill="none"/>
+                            <text x="40" y="25" text-anchor="middle" fill="white" font-size="12">CTU</text>
+                        </svg>
+                    </div>
+                </div>
+
+                <div class="component-category">
+                    <div class="category-title">Logic</div>
+                    <div class="component" draggable="true" data-type="SERIES" ondragstart="dragStart(event)">
+                        <svg viewBox="0 0 80 40">
+                            <line x1="0" y1="20" x2="80" y2="20" stroke="white" stroke-width="3"/>
+                            <text x="40" y="15" text-anchor="middle" fill="white" font-size="10">AND</text>
+                        </svg>
+                    </div>
+                </div>
+            </div>
+
+            <div class="workspace" ondrop="drop(event)" ondragover="allowDrop(event)">
+                <div class="grid-container">
+                    <div class="ladder-grid" id="ladderGrid"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="status-bar">
+            <div class="status-indicator">
+                <span>Status:</span>
+                <div class="status-dot" id="statusDot"></div>
+                <span id="statusText">Stopped</span>
+            </div>
+            <div>
+                <span>Components: <span id="componentCount">0</span></span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Naming Modal -->
+    <div class="modal" id="namingModal">
+        <div class="modal-content">
+            <div class="modal-header">Configure Component</div>
+            <div class="form-group">
+                <label>Component Type</label>
+                <input type="text" id="componentType" readonly>
+            </div>
+            <div class="form-group">
+                <label>Component Name</label>
+                <input type="text" id="componentName" placeholder="e.g., X0, Y0, T0">
+                <div class="help-text">Use X for inputs, Y for outputs, T for timers, C for counters</div>
+            </div>
+            <div class="form-group" id="timerValueGroup" style="display: none;">
+                <label>Timer Value (ms)</label>
+                <input type="number" id="timerValue" placeholder="1000" min="0">
+            </div>
+            <div class="form-group" id="counterValueGroup" style="display: none;">
+                <label>Counter Preset</label>
+                <input type="number" id="counterValue" placeholder="10" min="0">
+            </div>
+            <div class="modal-buttons">
+                <button class="btn btn-primary" onclick="saveComponent()">Save</button>
+                <button class="btn btn-danger" onclick="closeModal()">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let ladderData = {};
+        let currentCell = null;
+        let currentComponentType = null;
+        let simulationRunning = false;
+        let simulationInterval = null;
+        let inputStates = {};
+        let outputStates = {};
+        let timerStates = {};
+        let counterStates = {};
+        let wireStates = {};
+
+        function initializeGrid() {
+            const grid = document.getElementById('ladderGrid');
+            grid.innerHTML = '';
+            for (let row = 0; row < 3; row++) {
+                for (let col = 0; col < 5; col++) {
+                    const cell = document.createElement('div');
+                    cell.className = 'grid-cell';
+                    cell.dataset.row = row;
+                    cell.dataset.col = col;
+                    cell.id = `cell-${row}-${col}`;
+
+                    if (col === 0 || col === 4) {
+                        cell.classList.add('rail');
+
+                        const rail = document.createElement('div');
+                        rail.className = `power-rail ${col === 0 ? 'left' : 'right'}`;
+                        rail.id = `rail-${row}-${col}`;
+                        cell.appendChild(rail);
+
+                        // Label only on the middle row so it appears once per rail
+                        if (row === 1) {
+                            const label = document.createElement('div');
+                            label.className = 'rail-label';
+                            label.textContent = col === 0 ? 'L Rail' : 'R Rail';
+                            cell.appendChild(label);
+                        }
+
+                        // Stub wire
+                        const stub = document.createElement('div');
+                        stub.className = 'wire wire-horizontal';
+                        stub.id = `wire-${row}-${col}`;
+                        stub.style.width = '50%';
+                        stub.style.left = col === 0 ? '50%' : '0';
+                        cell.appendChild(stub);
+                    } else {
+                        const wire = document.createElement('div');
+                        wire.className = 'wire wire-horizontal';
+                        wire.id = `wire-${row}-${col}`;
+                        wire.style.width = '100%';
+                        cell.appendChild(wire);
+                    }
+
+                    grid.appendChild(cell);
+                }
+            }
+        }
+
+        function dragStart(event) {
+            currentComponentType = event.target.closest('.component').dataset.type;
+            event.dataTransfer.effectAllowed = 'copy';
+        }
+
+        function allowDrop(event) { event.preventDefault(); }
+
+        function drop(event) {
+            event.preventDefault();
+            const target = event.target.closest('.grid-cell');
+            if (!target || !currentComponentType) return;
+            const row = target.dataset.row;
+            const col = target.dataset.col;
+            if (col === '0' || col === '4') { alert('Cannot place components on power rails!'); return; }
+            if (ladderData[`${row}-${col}`]) { alert('Cell is already occupied!'); return; }
+            currentCell = { row, col };
+            openModal(currentComponentType);
+        }
+
+        function openModal(type) {
+            const modal = document.getElementById('namingModal');
+            document.getElementById('componentType').value = type;
+            document.getElementById('componentName').value = '';
+            document.getElementById('timerValueGroup').style.display = (type === 'TON' || type === 'TOF') ? 'block' : 'none';
+            document.getElementById('counterValueGroup').style.display = type === 'CTU' ? 'block' : 'none';
+            const prefix = type === 'TON' || type === 'TOF' ? 'T' : type === 'CTU' ? 'C' : type === 'COIL' ? 'Y' : 'X';
+            const count = Object.keys(ladderData).filter(k => ladderData[k].name && ladderData[k].name.startsWith(prefix)).length;
+            document.getElementById('componentName').value = prefix + count;
+            modal.classList.add('active');
+            document.getElementById('componentName').focus();
+        }
+
+        function closeModal() {
+            document.getElementById('namingModal').classList.remove('active');
+            currentCell = null;
+            currentComponentType = null;
+        }
+
+        function saveComponent() {
+            const name = document.getElementById('componentName').value.trim().toUpperCase();
+            const type = currentComponentType;
+            if (!name) { alert('Please enter a component name!'); return; }
+            const component = { type, name, row: currentCell.row, col: currentCell.col };
+            if (type === 'TON' || type === 'TOF') {
+                component.timerValue = parseInt(document.getElementById('timerValue').value) || 1000;
+                component.currentValue = 0;
+            }
+            if (type === 'CTU') {
+                component.counterPreset = parseInt(document.getElementById('counterValue').value) || 10;
+                component.currentValue = 0;
+            }
+            ladderData[`${currentCell.row}-${currentCell.col}`] = component;
+            renderComponent(currentCell.row, currentCell.col, component);
+            updateComponentCount();
+            updateInputControls();
+            closeModal();
+        }
+
+        function renderComponent(row, col, component) {
+            const cell = document.getElementById(`cell-${row}-${col}`);
+            cell.classList.add('occupied');
+
+            // Preserve the existing wire and rail — only remove old component if any
+            const existingComp = cell.querySelector('.placed-component');
+            if (existingComp) existingComp.remove();
+
+            // Component div sits on top (z-index:2); wire stays at z-index:1
+            const componentDiv = document.createElement('div');
+            componentDiv.className = 'placed-component';
+            componentDiv.id = `comp-${row}-${col}`;
+            componentDiv.innerHTML = getComponentSVG(component.type);
+
+            const label = document.createElement('div');
+            label.className = 'component-label';
+            label.textContent = component.name;
+            componentDiv.appendChild(label);
+
+            if (component.type === 'TON' || component.type === 'TOF' || component.type === 'CTU') {
+                const valueDisplay = document.createElement('div');
+                valueDisplay.className = 'component-value';
+                valueDisplay.id = `value-${row}-${col}`;
+                valueDisplay.textContent = component.type === 'CTU'
+                    ? `0/${component.counterPreset}`
+                    : `0/${component.timerValue}ms`;
+                componentDiv.appendChild(valueDisplay);
+            }
+
+            const deleteBtn = document.createElement('button');
+            deleteBtn.className = 'delete-btn';
+            deleteBtn.textContent = '×';
+            deleteBtn.onclick = () => deleteComponent(row, col);
+            componentDiv.appendChild(deleteBtn);
+
+            cell.appendChild(componentDiv);
+        }
+
+        function getComponentSVG(type) {
+            const svgs = {
+                'NO': `<svg viewBox="0 0 80 40">
+                    <line x1="0" y1="20" x2="25" y2="20" stroke="#2c3e50" stroke-width="2"/>
+                    <line x1="25" y1="10" x2="25" y2="30" stroke="#2c3e50" stroke-width="2"/>
+                    <line x1="55" y1="10" x2="55" y2="30" stroke="#2c3e50" stroke-width="2"/>
+                    <line x1="55" y1="20" x2="80" y2="20" stroke="#2c3e50" stroke-width="2"/>
+                </svg>`,
+                'NC': `<svg viewBox="0 0 80 40">
+                    <line x1="0" y1="20" x2="25" y2="20" stroke="#2c3e50" stroke-width="2"/>
+                    <line x1="25" y1="10" x2="25" y2="30" stroke="#2c3e50" stroke-width="2"/>
+                    <line x1="55" y1="10" x2="55" y2="30" stroke="#2c3e50" stroke-width="2"/>
+                    <line x1="55" y1="20" x2="80" y2="20" stroke="#2c3e50" stroke-width="2"/>
+                    <line x1="25" y1="25" x2="55" y2="15" stroke="#2c3e50" stroke-width="2"/>
+                </svg>`,
+                'COIL': `<svg viewBox="0 0 80 40">
+                    <line x1="0" y1="20" x2="28" y2="20" stroke="#2c3e50" stroke-width="2"/>
+                    <circle cx="40" cy="20" r="12" stroke="#2c3e50" stroke-width="2" fill="none"/>
+                    <line x1="51" y1="20" x2="80" y2="20" stroke="#2c3e50" stroke-width="2"/>
+                </svg>`,
+                'TON': `<svg viewBox="0 0 80 40">
+                    <rect x="15" y="5" width="50" height="30" stroke="#2c3e50" stroke-width="2" fill="#ecf0f1"/>
+                    <text x="40" y="25" text-anchor="middle" fill="#2c3e50" font-size="12" font-weight="bold">TON</text>
+                </svg>`,
+                'TOF': `<svg viewBox="0 0 80 40">
+                    <rect x="15" y="5" width="50" height="30" stroke="#2c3e50" stroke-width="2" fill="#ecf0f1"/>
+                    <text x="40" y="25" text-anchor="middle" fill="#2c3e50" font-size="12" font-weight="bold">TOF</text>
+                </svg>`,
+                'CTU': `<svg viewBox="0 0 80 40">
+                    <rect x="15" y="5" width="50" height="30" stroke="#2c3e50" stroke-width="2" fill="#ecf0f1"/>
+                    <text x="40" y="25" text-anchor="middle" fill="#2c3e50" font-size="12" font-weight="bold">CTU</text>
+                </svg>`,
+                'SERIES': `<svg viewBox="0 0 80 40">
+                    <line x1="0" y1="20" x2="80" y2="20" stroke="#2c3e50" stroke-width="3"/>
+                </svg>`
+            };
+            return svgs[type] || '';
+        }
+
+        function deleteComponent(row, col) {
+            if (confirm('Delete this component?')) {
+                delete ladderData[`${row}-${col}`];
+                const cell = document.getElementById(`cell-${row}-${col}`);
+                cell.classList.remove('occupied');
+                // Only remove the placed-component div; keep rail and wire intact
+                const comp = cell.querySelector('.placed-component');
+                if (comp) comp.remove();
+                updateComponentCount();
+                updateInputControls();
+            }
+        }
+
+        function updateComponentCount() {
+            document.getElementById('componentCount').textContent = Object.keys(ladderData).length;
+        }
+
+        function updateInputControls() {
+            const container = document.getElementById('inputControls');
+            const inputs = Object.values(ladderData).filter(c =>
+                c.name && c.name.startsWith('X') && (c.type === 'NO' || c.type === 'NC')
+            );
+            container.innerHTML = '';
+            inputs.forEach(input => {
+                const toggle = document.createElement('div');
+                toggle.className = 'input-toggle';
+                toggle.onclick = () => toggleInput(input.name);
+                if (inputStates[input.name]) toggle.classList.add('active');
+                toggle.innerHTML = `
+                    <span style="color: white; font-size: 12px; font-weight: 600;">${input.name}</span>
+                    <div class="toggle-switch"></div>
+                `;
+                container.appendChild(toggle);
+            });
+        }
+
+        function toggleInput(name) {
+            inputStates[name] = !inputStates[name];
+            updateInputControls();
+            if (simulationRunning) evaluateLogic();
+        }
+
+        function runSimulation() {
+            simulationRunning = true;
+            document.getElementById('statusDot').classList.add('active');
+            document.getElementById('statusText').textContent = 'Running';
+
+            Object.values(ladderData).forEach(comp => {
+                if (comp.type === 'TON' || comp.type === 'TOF') {
+                    if (!timerStates[comp.name]) {
+                        timerStates[comp.name] = {
+                            currentValue: 0,
+                            preset: comp.timerValue,
+                            output: false,
+                            lastUpdate: Date.now()
+                        };
+                    }
+                }
+                if (comp.type === 'CTU') {
+                    if (!counterStates[comp.name]) {
+                        counterStates[comp.name] = {
+                            currentValue: 0,
+                            preset: comp.counterPreset,
+                            output: false,
+                            lastInput: false
+                        };
+                    }
+                }
+            });
+
+            if (simulationInterval) clearInterval(simulationInterval);
+            simulationInterval = setInterval(evaluateLogic, 50);
+        }
+
+        function stopSimulation() {
+            simulationRunning = false;
+            document.getElementById('statusDot').classList.remove('active');
+            document.getElementById('statusText').textContent = 'Stopped';
+            if (simulationInterval) { clearInterval(simulationInterval); simulationInterval = null; }
+            document.querySelectorAll('.wire').forEach(w => w.classList.remove('energized'));
+            document.querySelectorAll('.power-rail').forEach(r => r.classList.remove('energized'));
+            document.querySelectorAll('.placed-component').forEach(c => c.style.filter = 'none');
+            timerStates = {};
+            counterStates = {};
+            outputStates = {};
+        }
+
+        function evaluateLogic() {
+            wireStates = {};
+
+            for (let rowNum = 0; rowNum < 3; rowNum++) {
+                // Build a map of components in this row keyed by col
+                const rowComps = {};
+                Object.values(ladderData).forEach(c => {
+                    if (parseInt(c.row) === rowNum) rowComps[parseInt(c.col)] = c;
+                });
+
+                const hasComponents = Object.keys(rowComps).length > 0;
+
+                // Rows with NO components stay completely dark
+                if (!hasComponents) {
+                    for (let col = 0; col < 5; col++) {
+                        const wire = document.getElementById(`wire-${rowNum}-${col}`);
+                        if (wire) wire.classList.remove('energized');
+                    }
+                    const lr = document.getElementById(`rail-${rowNum}-0`);
+                    const rr = document.getElementById(`rail-${rowNum}-4`);
+                    if (lr) lr.classList.remove('energized');
+                    if (rr) rr.classList.remove('energized');
+                    continue;
+                }
+
+                let power = true; // starts energized from left rail
+
+                // Energize left rail for this row
+                const leftRail = document.getElementById(`rail-${rowNum}-0`);
+                if (leftRail) leftRail.classList.add('energized');
+
+                // Walk all 5 columns left to right
+                for (let col = 0; col < 5; col++) {
+                    const wireId = `wire-${rowNum}-${col}`;
+                    const wire = document.getElementById(wireId);
+                    const comp = rowComps[col];
+
+                    if (col === 0 || col === 4) {
+                        // Rail stub wire
+                        if (wire) {
+                            if (power) wire.classList.add('energized');
+                            else wire.classList.remove('energized');
+                        }
+                        continue;
+                    }
+
+                    if (comp) {
+                        const compElement = document.getElementById(`comp-${rowNum}-${col}`);
+
+                        if (comp.type === 'NO') {
+                            const isActive = !!(inputStates[comp.name]);
+                            if (compElement) compElement.style.filter = (power && isActive) ? 'brightness(1.3)' : 'none';
+                            power = power && isActive;
+
+                        } else if (comp.type === 'NC') {
+                            const isActive = !(inputStates[comp.name] || false);
+                            if (compElement) compElement.style.filter = (power && isActive) ? 'brightness(1.3)' : 'none';
+                            power = power && isActive;
+
+                        } else if (comp.type === 'TON' || comp.type === 'TOF') {
+                            updateTimer(comp, power);
+                            const timerOutput = timerStates[comp.name]?.output || false;
+                            if (compElement) compElement.style.filter = power ? 'brightness(1.1)' : 'none';
+                            power = power && timerOutput;
+
+                        } else if (comp.type === 'CTU') {
+                            updateCounter(comp, power);
+                            const counterOutput = counterStates[comp.name]?.output || false;
+                            if (compElement) compElement.style.filter = power ? 'brightness(1.1)' : 'none';
+                            power = power && counterOutput;
+
+                        } else if (comp.type === 'COIL') {
+                            outputStates[comp.name] = power;
+                            if (compElement) compElement.style.filter = power ? 'brightness(1.3) saturate(1.5)' : 'none';
+                        }
+                    }
+
+                    // Energize wire segment based on current power
+                    if (wire) {
+                        if (power) wire.classList.add('energized');
+                        else wire.classList.remove('energized');
+                    }
+                }
+
+                // Right rail
+                const rightRail = document.getElementById(`rail-${rowNum}-4`);
+                if (rightRail) {
+                    if (power) rightRail.classList.add('energized');
+                    else rightRail.classList.remove('energized');
+                }
+            }
+        }
+
+        function updateTimer(component, input) {
+            const state = timerStates[component.name];
+            if (!state) return;
+            const now = Date.now();
+            const deltaTime = now - state.lastUpdate;
+            state.lastUpdate = now;
+
+            if (component.type === 'TON') {
+                if (input) {
+                    state.currentValue = Math.min(state.currentValue + deltaTime, state.preset);
+                    // FIX 2: output only goes true when timer completes
+                    state.output = state.currentValue >= state.preset;
+                } else {
+                    state.currentValue = 0;
+                    state.output = false;
+                }
+            } else if (component.type === 'TOF') {
+                if (!input) {
+                    state.currentValue = Math.min(state.currentValue + deltaTime, state.preset);
+                    state.output = state.currentValue < state.preset;
+                } else {
+                    state.currentValue = 0;
+                    state.output = true;
+                }
+            }
+
+            const valueDisplay = document.getElementById(`value-${component.row}-${component.col}`);
+            if (valueDisplay) {
+                valueDisplay.textContent = `${Math.round(state.currentValue)}/${state.preset}ms`;
+            }
+        }
+
+        function updateCounter(component, input) {
+            const state = counterStates[component.name];
+            if (!state) return;
+            // Rising edge detection
+            if (input && !state.lastInput) {
+                state.currentValue = Math.min(state.currentValue + 1, state.preset);
+                // FIX 2: output only true when count reaches preset
+                state.output = state.currentValue >= state.preset;
+            }
+            state.lastInput = input;
+
+            const valueDisplay = document.getElementById(`value-${component.row}-${component.col}`);
+            if (valueDisplay) {
+                valueDisplay.textContent = `${state.currentValue}/${state.preset}`;
+            }
+        }
+
+        function clearWorkspace() {
+            if (confirm('Clear all components?')) {
+                ladderData = {};
+                initializeGrid();
+                updateComponentCount();
+                updateInputControls();
+                stopSimulation();
+            }
+        }
+
+        initializeGrid();
+        updateComponentCount();
+    </script>
+</body>
+</html>

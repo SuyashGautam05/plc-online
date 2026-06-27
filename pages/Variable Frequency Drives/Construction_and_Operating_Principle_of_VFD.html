@@ -1,0 +1,344 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PLC Software</title>
+    <link rel="stylesheet" href="../defination.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+  </head>
+
+  <body>
+    <div class="container">
+      <header style="display: flex">
+        <div class="logo-container">
+          <img src="../../assets/Scientech logo-2.png" alt="Scientech Logo" />
+          <h1>Construction and Operating Principle of VFD</h1>
+        </div>
+      </header>
+
+      <main>
+        <a href="../../index.html" class="back-button">
+          <i class="fas fa-arrow-left"></i> Back to Course
+        </a>
+
+        <div class="content-wrapper">
+          <div class="image-section">
+            <img
+              style="border-radius: 20px; border: 2px solid black"
+              src="../../assets/Construction and Operating Principle of VFD.png"
+              alt="Construction and Operating Principle of VFD"
+            />
+          </div>
+
+          <div class="theory-section">
+            <h2>Construction and Operating Principle of VFD</h2>
+            <p>
+              A Variable Frequency Drive (VFD) controls the speed and torque of
+              an AC motor by converting fixed-frequency AC power into a
+              variable-frequency output. Below are the key internal sections and
+              their functions:
+            </p>
+
+            <p>
+              Although VFD technology continues to advance daily, most VFDs have
+              the same general topology, comprised of three distinct sections.
+            </p>
+
+            <h2>1. Rectifier (AC to DC)/Convertor</h2>
+            <p>
+              <b>The Converter Section of a VFD: </b> This is the section that
+              takes your incoming AC sine wave and converts it to direct current
+              (DC). It does this with diodes. When the voltage is high enough,
+              the diode opens and allows current to flow. It can help to picture
+              this like a plumbing system with check valves where the voltage is
+              your water pressure forcing the valve open.
+            </p>
+            <p>
+              In a standard low voltage VFD, meaning under 1000V, there are six
+              diodes. Each phase has one on the positive side of the bus and one
+              on the negative, and most systems have three phases - to see how
+              this differs on single phase systems, check out our article
+              called: Can a VFD Convert Single-Phase Power to Three-Phase?
+            </p>
+            <p>
+              The picture below gives a demonstration of how this works. When
+              the A-phase voltage is more positive than B- or C-phase voltage,
+              that diode opens. When B-phase becomes more positive than A-phase,
+              that diode will open and the A-phase diode closes. This same thing
+              happens on the negative side. This means that we get six current
+              “pulses” as each diode opens and closes. This called a “six-pulse
+              VFD.”
+            </p>
+
+            <img
+              style="
+                margin-left: 96px;
+                margin-bottom: 30px;
+                border: 2px solid black;
+                align-self: center;
+                height: auto;
+                width: 493px;
+                border-radius: 20px;
+              "
+              src="../../assets/Rectifier AC to DC.png"
+              alt="Rectifier (AC to DC)"
+            />
+
+            <h2>2. DC Bus / DC Link</h2>
+            <p>
+              The DC Bus Section of a VFD :Let's dig into the details a little
+              deeper. This depicts a 480V power system, where the 480V rating is
+              "rms" or root-mean-squared. The peaks on this 480V system are
+              679V. As the diodes open and pull in the peaks, this power goes to
+              the second main component, the DC bus. This bus is seeing the DC
+              voltage with an AC ripple, as shown in the picture above, running
+              between 580V and 680V. We can get rid of the AC ripple by adding a
+              capacitor, as shown in the picture below.
+            </p>
+
+            <img
+              style="
+                margin-left: 96px;
+                margin-bottom: 30px;
+                border: 2px solid black;
+                align-self: center;
+                height: auto;
+                width: 493px;
+                border-radius: 20px;
+              "
+              src="../../assets/DC Bus.png"
+              alt="DC Bus"
+            />
+            <p>
+              A capacitor operates in a similar fashion to a reservoir or
+              accumulator in a plumbing system. It absorbs the AC ripple and
+              delivers a smooth DC voltage. The DC bus now sits roughly in the
+              650V range, and the ripple magnitude is reduced. The actual
+              voltage will depend on the voltage level of the AC line feeding
+              the drive, the level of voltage unbalance on the power system, the
+              motor load, the impedance of the power system, and other devices
+              like reactors or harmonic filters on the drive.
+            </p>
+
+            <h2>3. Inverter (DC to AC)</h2>
+            <p>
+              <b>The Inverter Section of a VFD: </b> The third section of the
+              VFD is the inverter. This is a section that converts DC back to AC
+              and is called an inverter to distinguish it from the front-end
+              diode converter. It’s become common in the industry to refer to
+              any DC-to-AC converter as an inverter. This has become especially
+              common in the solar industry as PV panels produce DC that needs to
+              be converted to AC for use on the grid.
+            </p>
+            <img
+              style="
+                margin-left: 96px;
+                margin-bottom: 30px;
+                border: 2px solid black;
+                align-self: center;
+                height: auto;
+                width: 493px;
+                border-radius: 20px;
+              "
+              src="../../assets/Inverter DC to AC.png"
+              alt="Inverter (DC to AC)"
+            />
+            <p>
+              The inverter functions by switching transistors on and off at
+              different rates to simulate an AC sine wave. These transistors are
+              typically called IGBTs, or insulated-gate bipolor transistors.
+              Just like there are diodes on each phase for both positive and
+              negative on the front end section, there are transistors on both
+              sides of each phase on the inverter. The posistive switches are
+              connected to the positive DC bus, with the other switches
+              connected to the negative DC bus. By changing which switches are
+              closed, the VFD can make any phase on the motor become positive or
+              negative at will, generating any frequency.
+            </p>
+
+            <h2>4. Control Board</h2>
+            <ul>
+              <li>Powered by a microprocessor</li>
+              <li>Executes control algorithms</li>
+              <li>Manages speed, direction, and protection logic</li>
+            </ul>
+
+            <h2>5. Gate Driver Circuit</h2>
+            <ul>
+              <li>Controls switching of IGBTs</li>
+              <li>Provides isolation and precise timing signals</li>
+              <li>Ensures efficient and safe inverter operation</li>
+            </ul>
+
+            <h2>6. Cooling System</h2>
+            <ul>
+              <li>Includes fans and heat sinks</li>
+              <li>Dissipates heat generated by power electronics</li>
+              <li>Maintains safe operating temperatures</li>
+            </ul>
+
+            <h2>7. Protection Circuits</h2>
+            <ul>
+              <li>
+                <b>Protect against: </b>
+                <ul>
+                  <li>Overcurrent</li>
+                  <li>Overvoltage</li>
+                  <li>Short circuits</li>
+                  <li>Overtemperature</li>
+                </ul>
+              </li>
+              <li>Enhances reliability and equipment lifespan</li>
+            </ul>
+
+            <h2>8. Communication Module</h2>
+            <ul>
+              <li>
+                <b>Supports industrial protocols such as: </b>
+                <ul>
+                  <li>Modbus</li>
+                  <li>Profibus</li>
+                  <li>Ethernet</li>
+                </ul>
+              </li>
+              <li>
+                Enables integration with PLCs, SCADA, and automation systems
+              </li>
+            </ul>
+
+            <table class="comparison-table">
+              <tr>
+                <th>Parameter</th>
+                <th>VSI Drives</th>
+                <th>CSI Drives</th>
+                <th>PWM Drives</th>
+                <th>DTC Drives</th>
+                <th>Multi-Level Inverter Drives</th>
+              </tr>
+
+              <tr>
+                <td>DC Link Type</td>
+                <td>Voltage source (Capacitor)</td>
+                <td>Current source (Inductor)</td>
+                <td>Voltage source</td>
+                <td>Voltage source</td>
+                <td>Multiple voltage levels</td>
+              </tr>
+
+              <tr>
+                <td>Control Technique</td>
+                <td>Voltage control</td>
+                <td>Current control</td>
+                <td>PWM switching</td>
+                <td>Torque & Flux control</td>
+                <td>PWM / Space Vector</td>
+              </tr>
+
+              <tr>
+                <td>Harmonic Distortion</td>
+                <td>Medium</td>
+                <td>Low</td>
+                <td>Low</td>
+                <td>Medium</td>
+                <td>Very Low</td>
+              </tr>
+
+              <tr>
+                <td>Dynamic Response</td>
+                <td>Medium</td>
+                <td>Medium</td>
+                <td>Good</td>
+                <td>Very Fast</td>
+                <td>Good</td>
+              </tr>
+
+              <tr>
+                <td>Encoder Requirement</td>
+                <td>No</td>
+                <td>No</td>
+                <td>Optional</td>
+                <td>No</td>
+                <td>Optional</td>
+              </tr>
+
+              <tr>
+                <td>Power Range</td>
+                <td>Low to Medium</td>
+                <td>Medium to High</td>
+                <td>Low to Medium</td>
+                <td>Medium</td>
+                <td>Medium to Very High</td>
+              </tr>
+
+              <tr>
+                <td>Complexity</td>
+                <td>Low</td>
+                <td>Medium</td>
+                <td>Medium</td>
+                <td>High</td>
+                <td>High</td>
+              </tr>
+
+              <tr>
+                <td>Cost</td>
+                <td>Low</td>
+                <td>High</td>
+                <td>Medium</td>
+                <td>High</td>
+                <td>Very High</td>
+              </tr>
+
+              <tr>
+                <td>Typical Applications</td>
+                <td>Fans, Pumps</td>
+                <td>Heavy industry</td>
+                <td>HVAC, Machinery</td>
+                <td>Hoists, Elevators</td>
+                <td>Large industrial drives</td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <script>
+      // Add smooth scroll behavior for anchor links
+      document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+        anchor.addEventListener("click", function (e) {
+          e.preventDefault();
+          const target = document.querySelector(this.getAttribute("href"));
+          if (target) {
+            target.scrollIntoView({ behavior: "smooth" });
+          }
+        });
+      });
+    </script>
+
+    <!-- MCQ Modal -->
+    <div id="mcq-modal" class="mcq-modal">
+      <div class="mcq-modal-content">
+        <div class="mcq-modal-header">
+          <h2>Multiple Choice Questions</h2>
+          <button class="close-btn" onclick="closeMCQModal()">&times;</button>
+        </div>
+        <div class="mcq-modal-body">
+          <div id="mcq-container"></div>
+        </div>
+        <div class="mcq-modal-footer">
+          <button class="reset-btn" onclick="resetMCQs()">Reset Answers</button>
+          <button class="close-modal-btn" onclick="closeMCQModal()">
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MCQ Handler Script -->
+    <script src="../mcq-handler.js"></script>
+  </body>
+</html>

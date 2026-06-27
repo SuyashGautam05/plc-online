@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PLC Software</title>
+    <link rel="stylesheet" href="../defination.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+    <div class="container">
+        <header style="display: flex;">
+            <div class="logo-container">
+                <img src="../../assets/Scientech logo-2.png" alt="Scientech Logo">
+                <h1>Toggle Switch</h1>
+            </div>
+        </header>
+
+        <main>
+            <a href="../../index.html" class="back-button">
+                <i class="fas fa-arrow-left"></i> Back to Course
+            </a>
+
+            <div class="content-wrapper">
+                <div class="image-section">
+                    <img style="border-radius: 20px;" src="../../assets/toggle.png"
+                        alt="toggle switch">
+                </div>
+
+                <div class="theory-section">
+                    <!-- <h2>Basic Switch Wiring and Configuration</h2> -->
+                    <h2>What is Toggle Switch?</h2>
+                    <p>
+                        An electrical switch that activates by a moving lever or a handle forward and backward to open
+                        or close an electrical switch is known as a toggle switch. These switches are also called toggle
+                        power switches or joystick switches. These switches are versatile devices, so they can be
+                        utilized with any electrical application.<br>Generally, switches are operated manually, so in
+                        many electrical circuits, the toggle switch plays a key role like a simple ON/OFF switch. The
+                        toggle switch function is to control the flow of current to a device or within a device from the
+                        power supply by a lever. The toggle switch symbol is shown below.
+                    </p>
+                    <ul>
+                        <li><b>Pin1 (A): </b> This is the first output pin.</li>
+                        <li><b>Pin2 (COM): </b> This is the input pin.</li>
+                        <li><b>Pin3 (B): </b> This is the second output pin.</li>
+                    </ul>
+                    <img style="margin-left: 160px;margin-bottom: 30px; border: 2px solid black; align-self: center;height: 224px; width: 248px;border-radius: 20px;"
+                        src="../../assets/Pages/toggle_pin.png" alt="">
+                    <h2>Pin Configuration</h2>
+                    <ul>
+                        <li>Manually operated using a lever</li>
+                        <li>Maintains position after switching</li>
+                        <li>Used for mode selection (ON/OFF)</li>
+                    </ul>
+                    <h2>Toggle Switch Types</h2>
+                    <ul>
+                        <li><b>On-On Toggle Switches: </b> On-on switches control two devices; each position of the
+                            switch activates one of the two. They are also known as changeover switches. <br> A variant
+                            model - the On-(On) switch - combines a standard click position with a spring-loaded one
+                            which will snap back if not held in position.</li>
+                        <img style="margin-left: 160px;margin-bottom: 30px; border: 2px solid black; align-self: center;height: 224px; width: 248px;border-radius: 20px;"
+                            src="../../assets/Pages/on-on_switch.png" alt="">
+                        <li><b>On-Off Toggle Switches: </b> This is the most basic toggle switch design, providing
+                            simple, binary on-off control for power supplies. On-off toggle switches usually make an
+                            audible clicking noise when moved from one position to the next. They are also known as
+                            positive on-off switches.</li>
+                        <img style="margin-left: 160px;margin-bottom: 30px; border: 2px solid black; align-self: center;height: 224px; width: 248px;border-radius: 20px;"
+                            src="../../assets/Pages/on-off_switch.png" alt="">
+                        <li><b>On-Off-On Toggle Switches: </b> On-off-on toggle switches are variations of the on-on
+                            design. They add a third, neutral off position in the centre. In (on) off (on) switches, the
+                            off position is the default resting position and both on positions will click back to this
+                            once released.</li>
+                        <img style="margin-left: 160px;margin-bottom: 30px; border: 2px solid black; align-self: center;height: 224px; width: 248px;border-radius: 20px;"
+                            src="../../assets/Pages/on-off-on_switch.png" alt="">
+                    </ul>
+                    <h2>Contact Configuration</h2>
+                    <ul>
+                        <li><b>Single Pole Double Throw (SPDT): </b> A single pole double throw switch changes the
+                            direction of voltage, allowing a single current to be switched between two devices,
+                            activating or deactivating them. They are used in car engines and many other settings.
+                            <br><br>These are also known as two-way switches or on on toggle switches. Another variation
+                            is
+                            the three-position or three-way switch, which can be used to control a single device - for
+                            example, a light switch - from two different locations.
+                        </li>
+                        <img style="margin-left: 160px;margin-bottom: 30px; border: 2px solid black; align-self: center;height: 224px; width: 248px;border-radius: 20px;"
+                            src="../../assets/Pages/SPDT.png" alt="">
+                        <li><b>Single Pole Single Throw (SPST): </b> These are basic on-off switches - a single incoming
+                            current is directed towards a single device in an open or closed circuit. This is the common
+                            design seen in light switches.</li>
+                        <img style="margin-left: 160px;margin-bottom: 30px; border: 2px solid black; align-self: center;height: 224px; width: 248px;border-radius: 20px;"
+                            src="../../assets/Pages/SPST.png" alt="">
+                        <li><b>Double Pole Double Throw (DPDT): </b> Double pole double throw switches are in effect two
+                            on-off switches operating in conjunction with one another. They allow the voltage supplied
+                            to a particular device to be varied. Uses include reversing switches in electric motors.
+                            <br>Both on-on or on-off-on switches are DPDT. They are also known as four-position or
+                            four-way switches.
+                        </li>
+                        <img style="margin-left: 160px;margin-bottom: 30px; border: 2px solid black; align-self: center;height: 224px; width: 248px;border-radius: 20px;"
+                            src="../../assets/Pages/DPDT.png" alt="">
+                        <li><b>Double Pole, Single Throw (DPST): </b> Double pole single throw switches allow two
+                            different circuits to be switched on or off simultaneously, enabling easy control of two
+                            devices operating alongside each other.</li>
+                        <img style="margin-left: 160px;margin-bottom: 30px; border: 2px solid black; align-self: center;height: 224px; width: 248px;border-radius: 20px;"
+                            src="../../assets/Pages/DPST.png" alt="">
+                    </ul>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Add smooth scroll behavior for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+    </script>
+
+                <!-- MCQ Modal -->
+    <div id="mcq-modal" class="mcq-modal">
+        <div class="mcq-modal-content">
+            <div class="mcq-modal-header">
+                <h2>Multiple Choice Questions</h2>
+                <button class="close-btn" onclick="closeMCQModal()">&times;</button>
+            </div>
+            <div class="mcq-modal-body">
+                <div id="mcq-container"></div>
+            </div>
+            <div class="mcq-modal-footer">
+                <button class="reset-btn" onclick="resetMCQs()">Reset Answers</button>
+                <button class="close-modal-btn" onclick="closeMCQModal()">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MCQ Handler Script -->
+    <script src="../mcq-handler.js"></script>
+</body>
+
+</html>

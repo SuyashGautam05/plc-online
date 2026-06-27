@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PLC Simtel Software</title>
+
+    <link rel="stylesheet" href="styles.css">
+
+    <!-- Notyf CSS → put notyf.min.css in shared/css/ -->
+    <link rel="stylesheet" href="./shared/css/notyf.min.css">
+
+    <!-- Chart libs -->
+    <script src="./shared/js/chart.umd.js"></script>
+    <script src="./shared/js/chartjs-plugin-annotation.js"></script>
+
+    <!-- Notyf JS → put notyf.min.js in shared/js/ -->
+    <script src="./shared/js/notyf.min.js"></script>
+
+    <style>
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to   { opacity: 1; }
+        }
+
+        body {
+            font-family: Georgia, 'Times New Roman', Times, serif;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+            overflow: hidden;
+            user-select: none;
+            transform: scale(calc(100vw / 1920));
+            transform-origin: top left;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #fff;
+            color: black;
+            border-top: 1px solid #dee2e6;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .left-header {
+            background: #f8f9fa;
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            border-right: 1px solid #000;
+            margin-left: 50px;
+        }
+
+        #header-logo {
+            height: 55px;
+            object-fit: contain;
+            margin-left: -50px;
+        }
+
+        #header-title {
+            flex-grow: 1;
+            text-align: center;
+            margin-left: 20px;
+            font-size: 1.5vw;
+            font-weight: bold;
+        }
+
+        .back-button {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            text-decoration: none;
+            color: #333;
+            font-size: 13px;
+            font-weight: bold;
+        }
+
+        #app {
+            display: flex;
+            flex: 1;
+            overflow: hidden;
+            background: #c9c9c9;
+            justify-content: space-between;
+        }
+
+        #app > div {
+            display: flex;
+            flex-direction: column;
+        }
+        .back-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+
+    padding: 10px 20px;
+    background-color: #e9ecef;
+
+    border-radius: 10px;
+    border: 1px solid #d6d6d6;
+
+    text-decoration: none;
+    color: #333;
+    font-size: 17px;
+    font-weight: 500;
+
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    transition: all 0.2s ease-in-out;
+    height: 40px;
+}
+
+.back-button img {
+    height: 25px;
+    width: 28px;
+}
+
+.back-button:hover {
+    background-color: #dee2e6;
+    box-shadow: 0 6px 14px rgba(0, 0, 0, 0.15);
+    transform: translateY(-1px);
+}
+
+.back-button:active {
+    transform: translateY(1px);
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+}
+    </style>
+</head>
+<body>
+
+    <header style="background: #f8f9fa;">
+        <div class="left-header">
+            <img id="header-logo" src="../../../assets/Scientech logo-2.png" alt="Logo" />
+        </div>
+        <div id="header-title">Controller Area Network (CAN)</div>
+        <div style="display:flex; align-items:center; padding-right:20px;">
+            <a href="../CANopen.html" class="back-button">
+    <img src="../../../assets/left-arrow.png" alt="">
+    <span>Back to Course</span>
+</a>
+        </div>
+    </header>
+
+    <div id="app">
+
+        <!-- Single SVG overlay for all wires -->
+        <svg id="connections"
+             style="position:absolute;top:0;left:0;width:100%;height:100%;
+                    pointer-events:none;z-index:10;"></svg>
+
+        <!-- ── LEFT COLUMN: Main node + User switches ── -->
+        <div class="left-col">
+            <div class="node" id="main-node">
+                <div class="node-end-container">
+                    <div class="node-end">CAN_H</div>
+                    <div class="node-end">CAN_L</div>
+                </div>
+                <img src="img/can-module.png" alt="" class="node-img">
+                <div class="node-heading">MAIN NODE</div>
+            </div>
+
+            <div class="switch-container">
+                <h3 style="margin:0;">User Control Switches</h3>
+                <button class="switch" data-active="false"
+                        onclick="playVideo('hornVideo','node-1',this)">Horn (NODE 1)</button>
+                <button class="switch" data-active="false"
+                        onclick="playVideo('wiperVideo','node-2',this)">Wiper (NODE 2)</button>
+                <button class="switch" data-active="false"
+                        onclick="playVideo('fanVideo','node-3',this)">AC (NODE 3)</button>
+                <button class="switch" data-active="false"
+                        onclick="playVideo('indicatorVideo','node-4',this)">Headlights (NODE 4)</button>
+            </div>
+        </div>
+
+        <!-- ── RIGHT COLUMN: 4 nodes + 4 videos ── -->
+        <div class="right-col">
+            <div class="top-row">
+
+                <div class="node-col">
+                    <!-- Connected by default: no 'disconnected' class, green bg -->
+                    <button style="background:#5dbea3;"
+                            onclick="toggleConnection(event)">Connected</button>
+                    <div class="node" id="node-1">
+                        <div class="node-end-container">
+                            <div class="node-end">CAN_H</div>
+                            <div class="node-end">CAN_L</div>
+                        </div>
+                        <img src="img/can-module.png" alt="" class="node-img">
+                        <div class="node-heading">NODE 1</div>
+                    </div>
+                </div>
+
+                <div class="node-col">
+                    <button style="background:#5dbea3;"
+                            onclick="toggleConnection(event)">Connected</button>
+                    <div class="node" id="node-2">
+                        <div class="node-end-container">
+                            <div class="node-end">CAN_H</div>
+                            <div class="node-end">CAN_L</div>
+                        </div>
+                        <img src="img/can-module.png" alt="" class="node-img">
+                        <div class="node-heading">NODE 2</div>
+                    </div>
+                </div>
+
+                <div class="node-col">
+                    <button style="background:#5dbea3;"
+                            onclick="toggleConnection(event)">Connected</button>
+                    <div class="node" id="node-3">
+                        <div class="node-end-container">
+                            <div class="node-end">CAN_H</div>
+                            <div class="node-end">CAN_L</div>
+                        </div>
+                        <img src="img/can-module.png" alt="" class="node-img">
+                        <div class="node-heading">NODE 3</div>
+                    </div>
+                </div>
+
+                <div class="node-col">
+                    <button style="background:#5dbea3;"
+                            onclick="toggleConnection(event)">Connected</button>
+                    <div class="node" id="node-4">
+                        <div class="node-end-container">
+                            <div class="node-end">CAN_H</div>
+                            <div class="node-end">CAN_L</div>
+                        </div>
+                        <img src="img/can-module.png" alt="" class="node-img">
+                        <div class="node-heading">NODE 4</div>
+                    </div>
+                </div>
+
+            </div><!-- /.top-row -->
+
+            <div class="bottom-row">
+                <div class="components-container">
+                    <video src="img/car-horn.mp4"  id="hornVideo"></video>
+                    <video src="img/wiper.mp4"      id="wiperVideo"></video>
+                    <video src="img/fan.mp4"        id="fanVideo"></video>
+                    <video src="img/indicator.mp4"  id="indicatorVideo"></video>
+                </div>
+            </div>
+        </div><!-- /.right-col -->
+
+    </div><!-- /#app -->
+
+    <script src="renderer.js"></script>
+</body>
+</html>

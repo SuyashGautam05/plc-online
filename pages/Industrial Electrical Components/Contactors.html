@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PLC Software</title>
+    <link rel="stylesheet" href="../defination.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+    <div class="container">
+        <header style="display: flex;">
+            <div class="logo-container">
+                <img src="../../assets/Scientech logo-2.png" alt="Scientech Logo">
+                <h1 style="margin-left: 180px;">Contactors</h1>
+            </div>
+        </header>
+
+        <main>
+           <div class="button-container">
+                <a href="../../index.html" class="back-button">
+                    <i class="fas fa-arrow-left"></i> Back to Course
+                </a>
+                <a href="./contactor_sim.html" class="simulation-button">
+                    <i class="fas fa-flask"></i> Simulation
+                </a>
+            </div>
+
+            <div class="content-wrapper">
+                <div class="image-section">
+                    <img style="border-radius: 20px;height: 22pc; border: 2px solid black;" src="../../assets/Contactors.png"
+                        alt="PLC Definition Illustration">
+                </div>
+
+                <div class="theory-section">
+                    <h2>Contactors</h2>
+                    <p>
+                        A contactor is an electrically-controlled switch used to switch a high-power electrical load (AC
+                        or DC) using a low-power control signal. It is commonly used to control motors, heaters,
+                        lighting, and other industrial equipment.
+                    </p>
+                    <h2>Working Principle</h2>
+                    <ul>
+                        <li>When a control voltage is applied to the coil, it creates a magnetic field.</li>
+                        <li>The magnetic field pulls the contacts together, closing the circuit and allowing current to
+                            flow to the load.</li>
+                        <li>When the coil is de-energized, the contacts return to their default position (open or closed
+                            depending on the design).</li>
+                    </ul>
+                    <h2>How to wire a contactor?</h2>
+                    <ol>
+                        <li><b>Coil terminals: </b>
+                            <ul>
+                                <li>On the front of the contactor, you’ll see two wire terminals of A1 and A2. This is
+                                    where we can connect a 24-volt DC power to the coil to energize it.
+                                    <img style="margin-left: 30px; border: 2px solid black; align-self: center;height: auto; width: 528px;border-radius: 20px;"
+                                        src="../../assets/Coil terminals.png" alt="">
+                                </li>
+                                <li>The 24-volt DC positive signal wire is connected to the A1 wire terminal, and the
+                                    24-volt DC negative signal wire is connected to the A2 wire terminal.</li>
+                                <li>We’re connecting 24-volt DC power to these terminals because the coil works with
+                                    24-volt DC power for this electrical contactor.</li>
+                            </ul>
+                        </li>
+                        <li><b>Contacts terminals: </b>
+                            <ul>
+                                <li>We have six other wire terminals on the contactor's other side. The wire terminals
+                                    on the top are labelled from left to right with L1, L2, and L3, and the wire
+                                    terminals on the bottom are labelled from left to right with T1, T2, and T3.</li>
+                                <li>The L1, L2, and L3 terminals are connected to the line or the power supply wires.
+                                    The T1, T2, and T3 terminals are where the device or load wires are connected.
+                                    <img style="margin-left: 30px; border: 2px solid black; align-self: center;height: auto; width: 528px;border-radius: 20px;"
+                                        src="../../assets/Contacts terminals.png" alt="">
+                                </li>
+                                <li>When the coil is energized, the L1 contact connects to the T1 contact, the L2
+                                    contact connects to the T2 contact, and the L3 contact connects to the T3 contact.
+                                </li>
+                                <li>The contactor contacts are normally open; therefore, the device will be off with the
+                                    coil de-energized. When the coil is energized, the device will power on.
+                                    <img style="margin-left: 30px; border: 2px solid black; align-self: center;height: auto; width: 528px;border-radius: 20px;"
+                                        src="../../assets/Contacts terminals_2.png" alt="">
+                                </li>
+                            </ul>
+                        </li>
+                        <li><b>Auxiliary or feedback contact terminals: </b>
+                            <ul>
+                                <li>As you can see, we have another set of wire terminals on the front end labeled as
+                                    <b>NO or normally open</b>. This is a simple normally open contact referred to as an
+                                    auxiliary contact or a feedback contact.
+                                    <img style="margin-left: 30px; border: 2px solid black; align-self: center;height: auto; width: 528px;border-radius: 20px;"
+                                        src="../../assets/Auxiliary or feedback contact terminals.png" alt="">
+                                </li>
+                            </ul>
+                        </li>
+                    </ol>
+                    <h2>How to wire a contactor to the PLC and motor</h2>
+                    <ul>
+                        <li>To control a motor using a PLC through a contactor, you need to connect the PLC output to
+                            the coil to be able to energize and de-energize it.</li>
+                        <li>You connect a 3-phase power supply to L1, L2, and L3 from one end, and then from the other
+                            end, you connect T1, T2, and T3 to the motor.</li>
+                        <li>To be notified when the contactor is broken, you need to connect this auxiliary or feedback
+                            contact to the PLC input.</li>
+                        <li>You also need a start and stop switch to be connected to the PLC input. This way, when you
+                            press the start switch, the coil will be energized, the contacts will be closed and the
+                            motor will be turned on. When this happens, the feedback contact will be closed as well and
+                            a signal will be sent to the PLC input, telling us that the contactor is working properly.
+                        </li>
+                        <li>When you press the stop switch, the coil will be de-energized, the contact will open and the
+                            motor will turn off.</li>
+                        <img style="margin-left: 30px; border: 2px solid black; align-self: center;height: auto; width: 528px;border-radius: 20px;"
+                            src="../../assets/How to wire a contactor to the PLC and motor.gif" alt="">
+                    </ul>
+                    <!-- <img style="margin-left: 30px; border: 2px solid black; align-self: center;height: auto; width: auto;border-radius: 20px;"
+                        src="../../assets/Emergency Stop (E-Stop) Systems_2.jpg" alt=""> -->
+                    <!-- <ul>
+                        <li><b>Flexibility: </b> Control logic can be changed by modifying the program instead of
+                            rewiring hardware.</li>
+                        <li><b>Compact Size: </b> Replaces large relay panels, saving space.</li>
+                        <li><b>High Reliability: </b> Solid-state components reduce mechanical wear and failure.</li>
+                        <li><b>Easy Troubleshooting: </b> Diagnostic tools and status indicators simplify fault
+                            detection.</li>
+                        <li><b>Reduced Maintenance: </b> Quick response time compared to electromechanical relays.</li>
+                        <li><b>Faster Operation: </b> bottling, filling, and labeling processes.</li>
+                        <li><b>Scalability : </b> Easy expansion of inputs and outputs.</li>
+                    </ul> -->
+                    <!-- <img style="margin-left: 20px; border: 2px solid black; align-self: center;height: auto; width: 528px;border-radius: 20px;" src="../assets/Pages/Applications_of_plc.png" alt=""> -->
+
+                    <!-- <h2>PLC (Programmable Logic Controller)</h2>
+                    <p>A programmable Logic Controller(PLC) is a specialized digital computer employed in industrial
+                        settings for automation and control. Acting as the central brain of machinery and processes,
+                        PLCs receive input from sensors, process the data through programmed logic, and generate output
+                        signals to control devices like motors and valves. They use a programming language, often ladder
+                        logic, resembling electrical relay diagrams. PLCs are ruggedized for harsh industrial
+                        environments and play a crucial role in automating tasks and reducing manufacturing and energy.
+                        Their modular design allows scalability, making them versatile components in modern industrial
+                        control systems.</p>
+
+                    <img style="border: 2px solid black; align-self: center;border-radius: 20px;" src="../assets/Pages/PLC.jpg" alt="">
+
+                    <h2>Where Can PLC Be Used?</h2>
+                    <p>
+                        PLCs play a pivotal role in industrial automation, efficiently managing machinery and processes.
+                        They receive data from sensors, execute programmed logic, and control actuators, enhancing
+                        precision and reducing manual intervention. PLCs find application across diverse industries,
+                        from manufacturing to utilities, ensuring streamlined operations, increased productivity, and
+                        adaptability to evolving production needs. Their robust capabilities make PLCs indispensable in
+                        modern industrial settings, facilities with seamless control and automation for improved
+                        efficiency and reliability.
+                    </p> -->
+                    <!-- <p>
+                        A <strong>Programmable Logic Controller (PLC)</strong> is a digital computing device used to
+                        automate electromechanical processes such as control of machinery on factory assembly lines,
+                        amusement rides, or light fixtures. It is a specialized computer designed to monitor and control
+                        manufacturing processes and other automated systems.
+                    </p>
+
+                    <h3 style="margin-top: 20px; margin-bottom: 15px; color: var(--text-color);">Key Characteristics:
+                    </h3>
+                    <ul>
+                        <li><strong>Programmable:</strong> Can be programmed to perform specific tasks according to user
+                            requirements</li>
+                        <li><strong>Rugged Design:</strong> Built to withstand harsh industrial environments with
+                            temperature, humidity, and vibration</li>
+                        <li><strong>Reliable:</strong> Provides consistent and repeatable performance in critical
+                            applications</li>
+                        <li><strong>User-Friendly:</strong> Utilizes standard programming languages like Ladder Diagram,
+                            which resembles traditional electrical schematics</li>
+                        <li><strong>Fast Response:</strong> Provides real-time monitoring and control of industrial
+                            processes</li>
+                        <li><strong>Cost-Effective:</strong> Reduces wiring and maintenance costs compared to
+                            conventional relay systems</li>
+                    </ul>
+
+                    <h3 style="margin-top: 25px; margin-bottom: 15px; color: var(--text-color);">Main Components:</h3>
+                    <ul>
+                        <li><strong>Power Supply:</strong> Provides electrical power to the PLC</li>
+                        <li><strong>Processor (CPU):</strong> The brain of the PLC that executes the program</li>
+                        <li><strong>Memory:</strong> Stores the program and operational data</li>
+                        <li><strong>Input Modules:</strong> Receive signals from sensors and switches</li>
+                        <li><strong>Output Modules:</strong> Send control signals to actuators and motors</li>
+                        <li><strong>Communication Module:</strong> Enables communication with other devices and systems
+                        </li>
+                    </ul>
+
+                    <h3 style="margin-top: 25px; margin-bottom: 15px; color: var(--text-color);">Basic Operating Cycle:
+                    </h3>
+                    <ul>
+                        <li><strong>Input Scan:</strong> The PLC reads the status of all input devices</li>
+                        <li><strong>Program Execution:</strong> The processor executes the control program based on
+                            current inputs and stored data</li>
+                        <li><strong>Output Update:</strong> The PLC sends the results to output devices (solenoids,
+                            motors, lights, etc.)</li>
+                        <li><strong>Housekeeping:</strong> The PLC performs diagnostics and prepares for the next cycle
+                        </li>
+                    </ul>
+
+                    <p style="margin-top: 25px;">
+                        The entire cycle typically occurs in milliseconds, making PLCs suitable for real-time industrial
+                        automation and control applications. Modern PLCs are integral to industrial IoT and Industry 4.0
+                        initiatives, enabling seamless integration with cloud-based monitoring and data analytics
+                        systems.
+                    </p> -->
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Add smooth scroll behavior for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+    </script>
+
+        <!-- MCQ Modal -->
+    <div id="mcq-modal" class="mcq-modal">
+        <div class="mcq-modal-content">
+            <div class="mcq-modal-header">
+                <h2>Multiple Choice Questions</h2>
+                <button class="close-btn" onclick="closeMCQModal()">&times;</button>
+            </div>
+            <div class="mcq-modal-body">
+                <div id="mcq-container"></div>
+            </div>
+            <div class="mcq-modal-footer">
+                <button class="reset-btn" onclick="resetMCQs()">Reset Answers</button>
+                <button class="close-modal-btn" onclick="closeMCQModal()">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MCQ Handler Script -->
+    <script src="../mcq-handler.js"></script>
+</body>
+
+</html>

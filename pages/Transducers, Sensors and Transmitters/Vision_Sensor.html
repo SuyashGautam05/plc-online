@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PLC Software</title>
+    <link rel="stylesheet" href="../defination.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+    <div class="container">
+        <header style="display: flex;">
+            <div class="logo-container">
+                <img src="../../assets/Scientech logo-2.png" alt="Scientech Logo">
+                <h1>Vision Sensor</h1>
+            </div>
+        </header>
+
+        <main>
+            <a href="../../index.html" class="back-button">
+                <i class="fas fa-arrow-left"></i> Back to Course
+            </a>
+
+            <div class="content-wrapper">
+                <div class="image-section">
+                    <img style="border-radius: 20px;border: 2px solid black;" src="../../assets/Vision Sensor.png"
+                        alt="Vision Sensor">
+                </div>
+
+                <div class="theory-section">
+
+                    <h2>Vision Sensor</h2>
+                    <p>
+                        A <strong>Vision Sensor</strong> is an intelligent optical device used in <strong>industrial
+                            automation</strong> to inspect,
+                        detect, and measure objects.
+                    </p>
+
+                    <ul>
+                        <li>It is essentially a <strong>smart camera</strong> with <strong>built-in image
+                                processing</strong> capabilities.</li>
+                        <li>It can <strong>detect presence/absence, position, orientation, shape, color, size, and
+                                defects</strong> of
+                            objects.</li>
+                        <li>Vision sensors are widely used in <strong>manufacturing, quality control, robotics, and packaging
+                            industries</strong>.</li>
+                    </ul>
+
+                    <img style="margin-left: 141px;margin-bottom: 30px; border: 2px solid black; align-self: center;height: 316px; width: 385px;border-radius: 20px;"
+                        src="../../assets/Vision Sensor_3.png" alt="Vision Sensor_3">
+
+                    <h2>Difference from Regular Cameras:</h2>
+                    <ul>
+                        <li>A regular camera only captures images.</li>
+                        <li>A vision sensor captures and analyzes images and produces an output (e.g., pass/fail)
+                            without needing a separate computer.</li>
+                    </ul>
+
+                    <h2>Components</h2>
+                    <p>A typical vision sensor consists of:</p>
+
+                    <ol>
+                        <li><b>Camera / Imaging Device</b>
+                            <ul>
+                                <li>Captures images of the target object.</li>
+                                <li>Can be monochrome or color, depending on application.</li>
+                            </ul>
+                        </li>
+
+                        <li><b>Lighting System</b>
+                            <ul>
+                                <li>Ensures proper illumination for clear image capture.</li>
+                                <li>Can be LED, ring light, backlight, or dome light.</li>
+                            </ul>
+                        </li>
+
+                        <li><b>Optics / Lens</b>
+                            <ul>
+                                <li>Focuses the light reflected from the object onto the sensor.</li>
+                                <li>Determines field of view, resolution, and depth of focus.</li>
+                            </ul>
+                        </li>
+
+                        <li><b>Image Processing Unit</b>
+                            <ul>
+                                <li>Built-in processor that analyzes the captured image using algorithms.</li>
+                                <li>Can detect shape, color, size, position, or defects.</li>
+                            </ul>
+                        </li>
+
+                        <li><b>Communication/Output Interface</b>
+                            <ul>
+                                <li>Sends signals to PLC, robots, or alarms based on the inspection.</li>
+                                <li>Common outputs: digital (ON/OFF), analog, or network protocols (Ethernet/IP, Modbus,
+                                    etc.).</li>
+                            </ul>
+                        </li>
+                    </ol>
+                    <h2>Working</h2>
+                    <p>The working of a vision sensor can be summarized in three main steps:</p>
+
+                    <ol>
+                        <li><b>Image Acquisition</b>
+                            <ul>
+                                <li>The camera captures an image of the object under proper illumination.</li>
+                            </ul>
+                        </li>
+
+                        <li><b>Image Processing & Analysis</b>
+                            <ul>
+                                <li>The built-in processor applies algorithms to detect features:</li>
+                                <ul>
+                                    <li>Presence/absence</li>
+                                    <li>Color inspection</li>
+                                    <li>Dimensional measurement</li>
+                                    <li>Pattern or shape recognition</li>
+                                    <li>Defect detection</li>
+                                </ul>
+                            </ul>
+                        </li>
+
+                        <li><b>Output/Decision</b>
+                            <ul>
+                                <li>Based on analysis, the vision sensor sends a signal to the control system:</li>
+                                <ul>
+                                    <li>Example: Conveyor stops if a defective product is detected.</li>
+                                </ul>
+                            </ul>
+                        </li>
+                    </ol>
+                    <h2>Applications</h2>
+
+                    <h3>1. Pattern recognition</h3>
+                    <p>
+                        Pattern recognition mainly refers to the identification of objects with known rules, including
+                        simple recognition of shape, color, pattern, number, barcode, etc. <br><br>
+                        There are also recognitions with larger or more abstract information, such as face, fingerprint,
+                        iris recognition, etc.
+                    </p>
+
+                    <img style="margin-left: 103px;margin-bottom: 30px; border: 2px solid black; align-self: center;height: 246px; width: 500px;border-radius: 20px;"
+                            src="../../assets/Pattern recognition.png" alt="Pattern recognition">
+
+                    <h3>2. Visual positioning</h3>
+                    <p>
+                        Mainly refers to the procedure that accurately acquires both the coordination and angle of the
+                        object. <br><br>
+                        Positioning is a very basic but vital function in terms of machine vision applications. The
+                        quality of software/algorithm is directly tied to the final result of this process.
+                    </p>
+
+                    <img style="margin-left: 103px;margin-bottom: 30px; border: 2px solid black; align-self: center;height: 246px; width: 500px;border-radius: 20px;"
+                        src="../../assets/Visual positioning.png" alt="Visual positioning">
+
+                    <h3>3. Measuring</h3>
+                    <p>
+                        Measuring mainly refers to calibrating the acquired image pixel information into commonly used
+                        measurement units, and then accurately calculating the geometric dimensions that need to be
+                        acquired from the image. <br><br>
+                        The advantages of machine vision measuring, compared to traditional methods, are high precision,
+                        high throughput and complex morphology measurement. For example, some high-precision products
+                        only used to be sampled due to the difficulty of human eye measuring, but with machine vision,
+                        full inspection can be achieved.
+                    </p>
+
+                    <img style="margin-left: 103px;margin-bottom: 30px; border: 2px solid black; align-self: center;height: 246px; width: 500px;border-radius: 20px;"
+                        src="../../assets/Measuring.png" alt="Measuring">
+
+                    <h3>4. Appearance inspection</h3>
+                    <p>
+                        Appearance inspection mainly refers to the inspection of product appearance defects, the most
+                        common of which include surface assembly defects (such as missing assembly, mixing, mismatching,
+                        etc.), surface printing defects (such as multiple printing, missing printing, reprinting, etc.)
+                        and surface shape defects (such as broken edges, protrusions, pits, etc.). Since product
+                        appearance defects are usually very diverse, inspection therefore can be difficult in practice.
+                    </p>
+
+                    <img style="margin-left: 103px;margin-bottom: 30px; border: 2px solid black; align-self: center;height: 246px; width: 500px;border-radius: 20px;"
+                        src="../../assets/Appearance inspection.png" alt="Appearance inspection">
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Add smooth scroll behavior for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+    </script>
+
+    <!-- MCQ Modal -->
+    <div id="mcq-modal" class="mcq-modal">
+        <div class="mcq-modal-content">
+            <div class="mcq-modal-header">
+                <h2>Multiple Choice Questions</h2>
+                <button class="close-btn" onclick="closeMCQModal()">&times;</button>
+            </div>
+            <div class="mcq-modal-body">
+                <div id="mcq-container"></div>
+            </div>
+            <div class="mcq-modal-footer">
+                <button class="reset-btn" onclick="resetMCQs()">Reset Answers</button>
+                <button class="close-modal-btn" onclick="closeMCQModal()">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MCQ Handler Script -->
+    <script src="../mcq-handler.js"></script>
+</body>
+
+</html>

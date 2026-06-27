@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PLC Simtel Software - Reed Switch Simulation</title>
+<link rel="stylesheet" href="../defination.css">
+<style>
+  :root {
+    --primary-color: #f8f9fa;
+    --secondary-color: #e9ecef;
+    --text-color: #343a40;
+    --accent-color: #6c757d;
+    --border-color: #dee2e6;
+    --hover-color: #f1f3f5;
+    --shadow: 0 2px 10px rgba(0,0,0,0.1);
+    --red: #c0392b;
+    --blue: #2980b9;
+    --mag-red: #e74c3c;
+    --mag-blue: #3498db;
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    background-color: var(--primary-color);
+    color: var(--text-color);
+    line-height: 1.6;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+
+  header {
+    text-align: center;
+    padding: clamp(8px,1vw,18px) clamp(14px,2vw,32px);
+    border-bottom: 1px solid var(--border-color);
+    margin-bottom: clamp(15px,2vw,26px);
+    background-color: var(--primary-color);
+    box-shadow: var(--shadow);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  header h1 { font-size: clamp(1rem,2.5vw,1.45rem); font-weight:700; color:var(--text-color); }
+  header p  { font-size: clamp(0.72rem,1.4vw,0.9rem); color:var(--accent-color); margin-top:3px; }
+
+  .content-wrapper {
+    display: grid;
+    grid-template-columns: 1fr minmax(280px,36%);
+    gap: clamp(18px,2.5vw,36px);
+    padding: 0 clamp(14px,2vw,36px) clamp(20px,3vw,36px);
+    align-items: flex-start;
+  }
+
+  .sim-panel { display:flex; flex-direction:column; gap:14px; }
+
+  .card {
+    background: white;
+    border-radius: clamp(8px,1.5vw,14px);
+    border: 1px solid var(--border-color);
+    box-shadow: var(--shadow);
+    padding: clamp(13px,2vw,22px);
+  }
+
+  .card-title {
+    font-size: clamp(0.72rem,1.1vw,0.88rem);
+    font-weight:700; color:var(--accent-color);
+    letter-spacing:1px; text-transform:uppercase;
+    border-bottom:1px solid var(--border-color);
+    padding-bottom:7px; margin-bottom:11px;
+  }
+
+  /* Status bar */
+  .status-bar {
+    display:flex; gap:16px; justify-content:center;
+    flex-wrap:wrap; padding:9px 14px;
+    background-color:var(--secondary-color);
+    border-radius:8px; border:1px solid var(--border-color);
+  }
+  .status-item { display:flex; align-items:center; gap:6px; font-size:clamp(0.68rem,1vw,0.8rem); color:var(--text-color); }
+  .dot { width:11px; height:11px; border-radius:50%; background:var(--border-color); border:1px solid var(--accent-color); transition:all .3s; }
+  .dot.power   { background:var(--text-color); }
+  .dot.on      { background:var(--text-color); box-shadow:0 0 6px rgba(52,58,64,.4); }
+  .dot.blink   { background:var(--accent-color); animation:blink .8s infinite; }
+  @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.25} }
+
+  /* ── REED SWITCH VISUAL TRACK ── */
+  .track-wrap { position:relative; }
+  .objects-track {
+    width:100%; height:96px;
+    background:var(--secondary-color);
+    border-radius:8px; border:1px solid var(--border-color);
+    position:relative; cursor:pointer; overflow:visible;
+  }
+
+  /* Reed switch glass body in center of track */
+  .reed-body-wrap {
+    position:absolute; left:50%; top:50%; transform:translate(-50%,-50%);
+    display:flex; align-items:center; justify-content:center;
+    pointer-events:none; z-index:2;
+  }
+  .reed-glass {
+    width:90px; height:26px;
+    background: linear-gradient(180deg, rgba(180,230,220,0.7) 0%, rgba(140,200,190,0.5) 50%, rgba(180,230,220,0.7) 100%);
+    border:1.5px solid rgba(100,180,170,0.8);
+    border-radius:13px;
+    position:relative;
+    display:flex; align-items:center; justify-content:center;
+    box-shadow: 0 1px 4px rgba(0,0,0,0.10), inset 0 1px 2px rgba(255,255,255,0.4);
+  }
+  /* Lead wires from glass */
+  .lead-left, .lead-right {
+    position:absolute; top:50%; height:2px;
+    background: #aaa; transform:translateY(-50%);
+  }
+  .lead-left  { right:100%; width:30px; }
+  .lead-right { left:100%;  width:30px; }
+
+  /* Reed contacts inside glass */
+  .contact-wrap {
+    position:absolute; width:100%; height:100%;
+    display:flex; align-items:center; justify-content:center;
+    pointer-events:none;
+  }
+  .contact-left, .contact-right {
+    position:absolute; height:3px; border-radius:2px;
+    background: linear-gradient(90deg,#888,#bbb);
+    top:50%; transform:translateY(-50%);
+    transition: all 0.25s ease;
+  }
+  .contact-left  { left:8px;  width:36px; transform-origin:left center; }
+  .contact-right { right:8px; width:36px; transform-origin:right center; }
+
+  /* Closed state – tips touch, slight curve up */
+  .contact-left.closed  { transform:translateY(-50%) rotate(-5deg); }
+  .contact-right.closed { transform:translateY(-50%) rotate(5deg); }
+  /* Open state – tips apart */
+  .contact-left.open  { transform:translateY(-50%) rotate(5deg); }
+  .contact-right.open { transform:translateY(-50%) rotate(-5deg); }
+
+  .reed-label {
+    position:absolute; bottom:-22px; left:50%; transform:translateX(-50%);
+    font-size:0.62rem; color:var(--accent-color); white-space:nowrap; font-weight:bold;
+  }
+
+  /* MAGNET object that user drags */
+  .moving-magnet {
+    position:absolute; top:50%; transform:translateY(-50%);
+    width:80px; height:32px;
+    display:flex; cursor:grab;
+    border-radius:4px; overflow:hidden;
+    transition:box-shadow .3s; z-index:5; user-select:none;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.2);
+  }
+  .moving-magnet:active { cursor:grabbing; }
+  .mag-s {
+    flex:1; background: linear-gradient(135deg,#c0392b,#e74c3c);
+    display:flex; align-items:center; justify-content:center;
+    color:white; font-weight:900; font-size:0.85rem; letter-spacing:1px;
+    font-family:Arial,sans-serif;
+  }
+  .mag-n {
+    flex:1; background: linear-gradient(135deg,#2471a3,#3498db);
+    display:flex; align-items:center; justify-content:center;
+    color:white; font-weight:900; font-size:0.85rem; letter-spacing:1px;
+    font-family:Arial,sans-serif;
+  }
+  .moving-magnet.activated { box-shadow:0 0 14px rgba(52,58,64,.4), 0 0 24px rgba(52,152,219,.3); }
+
+  /* Magnetic field arcs */
+  .field-svg {
+    position:absolute; left:50%; top:50%; transform:translate(-50%,-50%);
+    pointer-events:none; z-index:1;
+    transition: opacity 0.4s;
+    opacity:0;
+  }
+  .field-svg.visible { opacity:1; }
+
+  .track-hints { display:flex; justify-content:space-between; font-size:.81rem; color:var(--accent-color); margin-top:4px; font-weight:bold; }
+
+  /* Controls */
+  .sim-controls { display:flex; gap:9px; flex-wrap:wrap; align-items:center; margin-top:11px; }
+  .ctrl-btn {
+    padding:5px 13px; border:1px solid var(--border-color); border-radius:6px;
+    cursor:pointer; font-size:.75rem; font-family:Georgia,serif; font-weight:600;
+    background:var(--secondary-color); color:var(--text-color); transition:all .2s;
+  }
+  .ctrl-btn:hover { background:var(--hover-color); transform:translateY(-1px); box-shadow:var(--shadow); }
+  .ctrl-btn.active-btn { background:var(--text-color); color:var(--primary-color); border-color:var(--text-color); }
+  .speed-row { display:flex; align-items:center; gap:8px; font-size:.72rem; color:var(--accent-color); margin-top:7px; font-weight:bold; }
+  .speed-row input[type=range] { max-width:110px; accent-color:var(--accent-color); }
+
+  /* Distance indicator */
+  .dist-row {
+    margin-top:8px; display:flex; align-items:center; gap:10px;
+    font-size:.72rem; color:var(--accent-color); font-weight:bold;
+  }
+  .dist-bar-track {
+    flex:1; height:8px; background:var(--secondary-color);
+    border-radius:4px; border:1px solid var(--border-color); overflow:hidden;
+  }
+  .dist-bar-fill {
+    height:100%; border-radius:4px;
+    background: var(--accent-color);
+    transition:width .1s, background .3s;
+  }
+  .dist-bar-fill.near { background: var(--text-color); }
+
+  /* ===== RIGHT THEORY PANEL ===== */
+  .image-section { position:sticky; top:18px; height:fit-content; }
+  .theory-section {
+    background:white; border-radius:clamp(8px,1.5vw,18px);
+    box-shadow:var(--shadow); padding:clamp(14px,2vw,26px);
+    max-height:calc(100vh - 110px); overflow-y:auto;
+  }
+  .theory-section::-webkit-scrollbar { width:6px; }
+  .theory-section::-webkit-scrollbar-track { background:var(--secondary-color); border-radius:10px; }
+  .theory-section::-webkit-scrollbar-thumb { background:var(--accent-color); border-radius:10px; }
+  .theory-section h2 { font-size:clamp(1rem,1.8vw,1.25rem); color:var(--text-color); margin-bottom:clamp(9px,1.4vw,16px); border-bottom:2px solid var(--secondary-color); padding-bottom:clamp(7px,1vw,12px); }
+  .theory-section h3 { font-size:clamp(.86rem,1.3vw,.98rem); color:var(--text-color); margin-top:clamp(11px,1.6vw,16px); margin-bottom:clamp(5px,.9vw,8px); }
+  .theory-section p  { font-size:clamp(.72rem,1vw,.85rem); color:var(--text-color); margin-bottom:clamp(9px,1.4vw,13px); text-align:justify; line-height:1.7; }
+
+  .ind-box {
+    background:var(--secondary-color); border:1px solid var(--border-color);
+    border-radius:9px; padding:11px;
+    display:flex; align-items:center; gap:11px;
+    margin-bottom:13px; transition:all .3s;
+  }
+  .ind-box.active { background:var(--hover-color); border-color:var(--accent-color); box-shadow:var(--shadow); }
+  .big-bulb {
+    width:42px; height:42px; border-radius:50%;
+    background:var(--border-color); border:2px solid var(--accent-color);
+    display:flex; align-items:center; justify-content:center;
+    font-size:1.25rem; transition:all .3s; flex-shrink:0; opacity:.32;
+  }
+  .big-bulb.on { background:var(--secondary-color); border-color:var(--text-color); box-shadow:0 0 10px rgba(52,58,64,.2); opacity:1; }
+  .s-title { font-size:.82rem; color:var(--text-color); font-weight:bold; margin-bottom:2px; }
+  .s-desc  { font-size:.7rem; color:var(--accent-color); line-height:1.4; }
+
+  /* ====== DIAGRAM ====== */
+  .diagram-wrap {
+    background:var(--secondary-color); border:2px solid var(--border-color);
+    border-radius:10px; padding:12px; margin-bottom:13px; transition:all .3s;
+    overflow:hidden;
+  }
+  .diagram-wrap.active { background:var(--hover-color); border-color:var(--accent-color); box-shadow:var(--shadow); }
+  .diagram-label { font-size:.65rem; color:var(--accent-color); letter-spacing:1px; text-transform:uppercase; margin-bottom:8px; font-family:Georgia,serif; }
+
+  .diag-svg { width:100%; height:auto; display:block; }
+
+  .dr  { stroke:var(--border-color); fill:none; }
+  .dr.a{ stroke:var(--text-color);   fill:none; }
+  .df  { fill:none; }
+  .df.a{ fill:rgba(52,58,64,.07); }
+  .dt  { fill:var(--accent-color); font-family:Georgia,serif; }
+  .dt.a{ fill:var(--text-color);   font-family:Georgia,serif; font-weight:bold; }
+  .db  { stroke:var(--border-color); fill:var(--primary-color); }
+  .db.a{ stroke:var(--text-color);   fill:var(--hover-color); }
+  .dc  { stroke:var(--border-color); fill:var(--primary-color); }
+  .dc.a{ stroke:var(--text-color);   fill:var(--hover-color); }
+
+  /* Reed switch symbol in SVG diagram */
+  .reed-sym-open  { opacity:1; transition:opacity 0.3s; }
+  .reed-sym-closed{ opacity:0; transition:opacity 0.3s; }
+  .reed-sym-open.hide  { opacity:0; }
+  .reed-sym-closed.show{ opacity:1; }
+
+  /* Fact chips */
+  .fact-chip {
+    display:inline-block; font-size:.68rem; padding:2px 8px;
+    border-radius:20px; border:1px solid var(--border-color);
+    background:var(--secondary-color); color:var(--accent-color);
+    margin:2px 2px 4px 0; font-family:Georgia,serif;
+  }
+
+  @media (max-width:850px) {
+    .content-wrapper { grid-template-columns:1fr; }
+    .image-section { position:relative; top:0; }
+    .theory-section { max-height:none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- <header>
+  <div>
+    <h1>Reed Switch — PLC Simulation</h1>
+    <p>Interactive simulation for learning how a Reed Switch works in a PLC circuit</p>
+  </div>
+</header> -->
+
+  <header style="margin-bottom: 0px;" class="site-header">
+      <div class="logo-container" style="margin-bottom: 0px;gap: clamp(15px, 15vw, 180px);">
+        <img style="margin-left: -2pc" src="../../assets/Scientech logo-2.png" alt="Scientech Logo" />
+        <h1 style="margin-left: 89px;margin-right: -8pc;">
+          Reed Switch Simulation
+        </h1>
+        <div class="button-container" style="margin-bottom: 0px" >
+                  <a href="./Reed_switch.html" class="back-button" style="margin-left: 210px;">
+                      <i class="fas fa-arrow-left"></i><img style="height: 30px;width: 30px;" src="../Transducers, Sensors and Transmitters/left-arrow.png" alt=""> Back to Course
+                  </a>
+        </div>
+      </div>
+    </header>
+
+<div class="content-wrapper">
+
+  <!-- ===== LEFT: SIMULATION ===== -->
+  <div class="sim-panel">
+
+    <!-- Status bar -->
+    <div class="status-bar">
+      <div class="status-item"><div class="dot power"></div><span>Power ON</span></div>
+      <div class="status-item"><div class="dot" id="dDot"></div><span id="dTxt">Switch Open</span></div>
+      <div class="status-item"><div class="dot" id="oDot"></div><span>Output Y0</span></div>
+      <div class="status-item"><span id="switchStateTxt" style="font-size:.69rem;font-style:italic;color:var(--accent-color)">Contacts: OPEN</span></div>
+    </div>
+
+    <!-- Wiring Diagram SVG -->
+    <div class="card">
+      <div class="card-title">Wiring Diagram</div>
+      <svg style="width:100%;height:auto" viewBox="0 0 700 144" xmlns="http://www.w3.org/2000/svg">
+
+        <!-- POWER SUPPLY box -->
+        <rect x="14" y="14" width="76" height="104" rx="7" fill="white" stroke="#dee2e6" stroke-width="2"/>
+        <rect x="20" y="20" width="64" height="92" rx="5" fill="#f8f9fa" stroke="#e9ecef" stroke-width="1"/>
+        <text x="52" y="50" text-anchor="middle" fill="#343a40" font-size="17">⚡</text>
+        <text x="52" y="64" text-anchor="middle" fill="#6c757d" font-size="7" font-family="Georgia,serif" style="font-weight:bold;font-size:0.71rem;">POWER</text>
+        <text x="52" y="74" text-anchor="middle" fill="#6c757d" font-size="7" font-family="Georgia,serif" style="font-weight:bold;font-size:0.71rem;">SUPPLY</text>
+        <text x="52" y="84" text-anchor="middle" fill="#6c757d" font-size="7" font-family="Georgia,serif" style="font-weight:bold;font-size:0.71rem;">24 V DC</text>
+        <circle cx="37" cy="108" r="5" fill="#343a40"/>
+        <text x="37" y="123" text-anchor="middle" fill="#343a40" font-size="7" font-family="Georgia,serif" style="font-weight:bold;font-size:0.61rem;">24V</text>
+        <circle cx="67" cy="108" r="5" fill="#e9ecef" stroke="#6c757d" stroke-width="1.5"/>
+        <text x="67" y="123" text-anchor="middle" fill="#6c757d" font-size="7" font-family="Georgia,serif" style="font-weight:bold;font-size:0.61rem;">GND</text>
+
+        <!-- REED SWITCH symbol (center) -->
+        <!-- Glass capsule outline -->
+        <rect x="285" y="38" width="130" height="56" rx="28" fill="rgba(180,230,220,0.25)" stroke="#dee2e6" stroke-width="1.5" id="reedGlassWire"/>
+        <!-- Lead wires -->
+        <line x1="90" y1="65" x2="286" y2="65" fill="none" stroke="#343a40" stroke-width="2.5" stroke-linecap="round" id="wH"/>
+        <line x1="415" y1="65" x2="535" y2="65" fill="none" stroke="#343a40" stroke-width="2.5" stroke-linecap="round" id="wH2"/>
+        <!-- OPEN state contact symbol (default) -->
+        <g id="reedOpen">
+          <line x1="300" y1="65" x2="340" y2="65" stroke="#dee2e6" stroke-width="2.5" stroke-linecap="round"/>
+          <line x1="340" y1="65" x2="354" y2="51" stroke="#dee2e6" stroke-width="2.5" stroke-linecap="round"/>
+          <line x1="360" y1="65" x2="400" y2="65" stroke="#dee2e6" stroke-width="2.5" stroke-linecap="round"/>
+          <text x="350" y="36" text-anchor="middle" fill="#6c757d" font-size="8" font-family="Georgia,serif" style="font-weight:bold;font-size:0.61rem;">REED SWITCH</text>
+          <text x="350" y="101" text-anchor="middle" fill="#6c757d" font-size="7.5" font-family="Georgia,serif" style="font-weight:bold;font-size:0.55rem;">X0 (OPEN)</text>
+        </g>
+        <!-- CLOSED state contact symbol -->
+        <g id="reedClosed" opacity="0">
+          <line x1="300" y1="65" x2="340" y2="65" stroke="#343a40" stroke-width="2.5" stroke-linecap="round"/>
+          <line x1="340" y1="65" x2="400" y2="65" stroke="#343a40" stroke-width="2.5" stroke-linecap="round"/>
+          <text x="350" y="36" text-anchor="middle" fill="#343a40" font-size="8" font-family="Georgia,serif" style="font-weight:bold;font-size:0.61rem;">REED SWITCH</text>
+          <text x="350" y="101" text-anchor="middle" fill="#343a40" font-size="7.5" font-family="Georgia,serif" style="font-weight:bold;font-size:0.55rem;">X0 (CLOSED)</text>
+        </g>
+
+        <!-- Magnetic field arcs (decorative, visible when active) -->
+        <ellipse cx="350" cy="65" rx="68" ry="28" fill="none" stroke="transparent" stroke-width="1" stroke-dasharray="5,4" id="mf1" style="transition:stroke .4s"/>
+        <ellipse cx="350" cy="65" rx="84" ry="38" fill="none" stroke="transparent" stroke-width=".8" stroke-dasharray="5,4" id="mf2" style="transition:stroke .5s"/>
+
+        <!-- INDICATOR circle -->
+        <circle cx="624" cy="65" r="38" fill="white" stroke="#dee2e6" stroke-width="2" id="iSVG"/>
+        <circle cx="624" cy="65" r="31" fill="#f8f9fa" stroke="#e9ecef" stroke-width="1" id="iInner"/>
+        <text x="624" y="72" text-anchor="middle" font-size="22" id="bulbSVG" opacity=".28">💡</text>
+        <text x="624" y="96" text-anchor="middle" fill="#6c757d" font-size="7" font-family="Georgia,serif" style="font-weight:bold;font-size:0.51rem;">INDICATOR</text>
+        <circle cx="586" cy="52" r="4" fill="#343a40"/>
+        <text x="573" y="48" text-anchor="middle" fill="#343a40" font-size="6" font-family="Georgia,serif" style="font-weight:bold;font-size:0.61rem;">24V</text>
+        <circle cx="586" cy="78" r="4" fill="#e9ecef" stroke="#6c757d" stroke-width="1"/>
+        <text x="573" y="84" text-anchor="middle" fill="#6c757d" font-size="6" font-family="Georgia,serif" style="font-weight:bold;font-size:0.61rem;">GND</text>
+
+        <!-- WIRES -->
+        <!-- 24V from PSU → reed input lead -->
+        <polyline id="wH3" points="37,103 37,28 285,28 285,65" fill="none" stroke="#343a40" stroke-width="2.5" stroke-linecap="round"/>
+        <!-- Signal wire (reed OUT → indicator) — INACTIVE color -->
+        <polyline id="wSig" points="415,65 535,65 535,30 586,30 586,52" fill="none" stroke="#dee2e6" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="7,3"/>
+        <!-- GND wire (indicator GND → PSU GND) -->
+        <polyline id="wGnd" points="586,78 586,105 67,105 67,103" fill="none" stroke="#343a40" stroke-width="2.5" stroke-linecap="round"/>
+
+        <!-- 24V label on top bus -->
+        <text x="170" y="22" text-anchor="middle" fill="#343a40" font-size="7" font-family="Georgia,serif" style="font-weight:bold;font-size:0.61rem;">24V</text>
+        <!-- GND label on bottom bus -->
+        <text x="300" y="120" text-anchor="middle" fill="#6c757d" font-size="7" font-family="Georgia,serif" style="font-weight:bold;font-size:0.61rem;">GND</text>
+      </svg>
+    </div>
+
+    <!-- Reed Switch Track -->
+    <div class="card">
+      <div class="card-title">Reed Switch — Magnet Detection Track</div>
+      <div class="track-wrap">
+        <div class="objects-track" id="trackEl">
+
+          <!-- Magnetic field SVG arcs around center -->
+          <svg class="field-svg" id="fieldSVG" width="200" height="80" viewBox="0 0 200 80">
+            <ellipse cx="100" cy="40" rx="54" ry="22" fill="none" stroke="rgba(52,58,64,0.18)" stroke-width="1.2" stroke-dasharray="5,3"/>
+            <ellipse cx="100" cy="40" rx="76" ry="32" fill="none" stroke="rgba(52,58,64,0.10)" stroke-width="1" stroke-dasharray="5,3"/>
+          </svg>
+
+          <!-- Reed switch fixed in center -->
+          <div class="reed-body-wrap" id="reedBodyWrap">
+            <div style="position:relative; display:flex; align-items:center;">
+              <div class="lead-left"></div>
+              <div class="reed-glass" id="reedGlass">
+                <div class="contact-wrap">
+                  <div class="contact-left open" id="cLeft"></div>
+                  <div class="contact-right open" id="cRight"></div>
+                </div>
+              </div>
+              <div class="lead-right"></div>
+            </div>
+            <div class="reed-label" id="reedLabel">Reed Switch — Contacts OPEN</div>
+          </div>
+
+          <!-- Draggable magnet -->
+          <div class="moving-magnet" id="mMagnet" style="left:78%">
+            <div class="mag-s">S</div>
+            <div class="mag-n">N</div>
+          </div>
+        </div>
+        <div class="track-hints"><span>← NEAR (Switch Closes)</span><span>FAR (Switch Opens) →</span></div>
+      </div>
+
+      <!-- Distance bar -->
+      <div class="dist-row">
+        <span>Proximity:</span>
+        <div class="dist-bar-track">
+          <div class="dist-bar-fill" id="distFill" style="width:20%"></div>
+        </div>
+        <span id="distLabel">Far</span>
+      </div>
+
+      <div class="sim-controls">
+        <button class="ctrl-btn" id="bAuto" onclick="toggleAuto()">▶ Auto Move</button>
+        <button class="ctrl-btn" onclick="resetMagnet()">⟳ Reset</button>
+      </div>
+      <div class="speed-row">
+        <span>Speed:</span>
+        <input type="range" min="1" max="10" value="4" id="spd">
+        <span id="spdV">4</span>
+      </div>
+    </div>
+
+  </div><!-- /sim-panel -->
+
+  <!-- ===== RIGHT: THEORY ===== -->
+  <div class="image-section">
+    <div class="theory-section">
+      <h2>Reed Switch in PLC</h2>
+
+      <!-- Live indicator box -->
+      <div class="ind-box" id="indBox">
+        <div class="big-bulb" id="bigBulb">💡</div>
+        <div>
+          <div class="s-title">Indicator (Y0)</div>
+          <div class="s-desc" id="indDesc">OFF — Reed switch contacts are OPEN · No magnet nearby</div>
+        </div>
+      </div>
+
+      <!-- Combined PLC Ladder + Wiring diagram -->
+      <div class="diagram-wrap" id="diagWrap">
+        <div class="diagram-label">PLC Ladder &amp; Wiring Circuit Diagram</div>
+
+        <svg class="diag-svg" viewBox="0 0 420 200" xmlns="http://www.w3.org/2000/svg">
+
+          <!-- ─── LEFT: PLC LADDER ─── -->
+
+          <!-- Left rail (L+ 24V) -->
+          <line class="dr" id="lRail" x1="28" y1="18" x2="28" y2="182" stroke-width="3"/>
+          <text class="dt" id="lRailTxt" x="14" y="104" font-size="8" transform="rotate(-90,14,104)" text-anchor="middle" style="font-weight:bold;font-size:0.61rem;">24V</text>
+
+          <!-- Right rail (GND) -->
+          <line class="dr" id="rRail" x1="198" y1="18" x2="198" y2="182" stroke-width="3"/>
+          <text class="dt" id="rRailTxt" x="211" y="104" font-size="8" transform="rotate(-90,211,104)" text-anchor="middle" style="font-weight:bold;font-size:0.61rem;">GND</text>
+
+          <!-- Rung wire from L+ to X0 -->
+          <line class="dr" id="r1w1" x1="28" y1="100" x2="68" y2="100" stroke-width="2"/>
+
+          <!-- X0 Reed Switch Contact — OPEN state (diagonal line) -->
+          <rect class="df" id="x0fill" x="68" y="82" width="56" height="36" rx="2"/>
+          <!-- Left stub -->
+          <line class="dr" id="x0a"  x1="68"  y1="100" x2="86"  y2="100" stroke-width="2"/>
+          <!-- Left bar -->
+          <line class="dr" id="x0v1" x1="88"  y1="86"  x2="88"  y2="114" stroke-width="2.2"/>
+          <!-- Reed open = diagonal gap line -->
+          <line class="dr" id="x0diag" x1="88" y1="114" x2="104" y2="86" stroke-width="1.5" stroke-dasharray="2,2"/>
+          <!-- Right bar -->
+          <line class="dr" id="x0v2" x1="104" y1="86"  x2="104" y2="114" stroke-width="2.2"/>
+          <!-- Right stub -->
+          <line class="dr" id="x0b"  x1="106" y1="100" x2="124" y2="100" stroke-width="2"/>
+          <text class="dt" id="x0lbl" x="96" y="78"  font-size="9" text-anchor="middle" style="font-weight:bold;font-size:0.61rem;">X0</text>
+          <text class="dt" id="x0sub" x="96" y="126" font-size="7" text-anchor="middle" style="font-weight:bold;font-size:0.61rem;">Reed Switch</text>
+
+          <!-- Wire between contact and coil -->
+          <line class="dr" id="r1w2" x1="124" y1="100" x2="138" y2="100" stroke-width="2"/>
+
+          <!-- Y0 Coil (circle) -->
+          <circle class="dc" id="y0fill" cx="155" cy="100" r="16" stroke-width="2"/>
+          <line class="dr" id="y0a" x1="138" y1="100" x2="139" y2="100" stroke-width="2"/>
+          <line class="dr" id="y0b" x1="171" y1="100" x2="198" y2="100" stroke-width="2"/>
+          <text class="dt" id="y0lbl" x="155" y="78"  font-size="9" text-anchor="middle" style="font-weight:bold;font-size:0.61rem;">Y0</text>
+          <text class="dt" id="y0sub" x="155" y="126" font-size="7" text-anchor="middle" style="font-weight:bold;font-size:0.61rem;">Indicator</text>
+
+          <!-- Divider -->
+          <line x1="215" y1="10" x2="215" y2="190" stroke="#dee2e6" stroke-width="1" stroke-dasharray="4,3"/>
+
+          <!-- ─── RIGHT: WIRING CIRCUIT ─── -->
+
+          <!-- 24V/GND Power supply box -->
+          <rect class="db" id="psuBox" x="224" y="74" width="44" height="52" rx="4" stroke-width="1.8"/>
+          <text class="dt" id="psuT1" x="246" y="94"  font-size="7.5" text-anchor="middle" style="font-weight:bold;font-size:0.61rem;">24V</text>
+          <text class="dt" id="psuT2" x="246" y="106" font-size="7.5" text-anchor="middle" style="font-weight:bold;font-size:0.61rem;">GND</text>
+          <circle class="dc" id="psuTp" cx="268" cy="84"  r="3.5" stroke-width="1.5"/>
+          <circle class="dc" id="psuTn" cx="268" cy="116" r="3.5" stroke-width="1.5"/>
+
+          <!-- Indicator lamp (circle) -->
+          <circle class="dc" id="indCirc" cx="340" cy="100" r="22" stroke-width="2"/>
+          <text font-size="18" x="340" y="107" text-anchor="middle" id="indEmoji" opacity=".3">💡</text>
+          <text class="dt" id="indLbl" x="340" y="136" font-size="7.5" text-anchor="middle" style="font-weight:bold;font-size:0.61rem;">Ind.</text>
+
+          <!-- PS boxes (sensor power supply blocks) -->
+          <rect class="db" id="ps1" x="372" y="58"  width="36" height="24" rx="3" stroke-width="1.8"/>
+          <text class="dt" id="psT1" x="390" y="74" font-size="7.5" text-anchor="middle" style="font-weight:bold;font-size:0.61rem;">PS</text>
+          <rect class="db" id="ps2" x="372" y="90"  width="36" height="24" rx="3" stroke-width="1.8"/>
+          <text class="dt" id="psT2" x="390" y="106" font-size="7.5" text-anchor="middle" style="font-weight:bold;font-size:0.61rem;">PS</text>
+
+          <!-- Reed switch symbol in wiring (glass + contacts) -->
+          <!-- Glass capsule outline -->
+          <rect class="db" id="reedBox" x="288" y="150" width="64" height="24" rx="12" stroke-width="1.8"/>
+          <!-- Reed contacts OPEN (default) -->
+          <g id="diagReedOpen">
+            <line class="dr" id="rCA" x1="296" y1="162" x2="308" y2="162" stroke-width="2"/>
+            <line class="dr" id="rCdiag" x1="308" y1="162" x2="316" y2="154" stroke-width="1.5" stroke-dasharray="2,2"/>
+            <line class="dr" id="rCB" x1="320" y1="162" x2="344" y2="162" stroke-width="2"/>
+          </g>
+          <!-- Reed contacts CLOSED (activated) — hidden by default -->
+          <g id="diagReedClosed" opacity="0">
+            <line class="dr" id="rCC" x1="296" y1="162" x2="344" y2="162" stroke-width="2.5"/>
+          </g>
+          <text class="dt" id="reedLbl" x="320" y="186" font-size="7.5" text-anchor="middle" style="font-weight:bold;font-size:0.61rem;">Reed Switch</text>
+
+          <!-- Connecting wires -->
+          <!-- PSU 24V → Ind top -->
+          <polyline class="dr" id="wc1" points="268,84 312,84 318,84" stroke-width="2" fill="none" stroke-linecap="round"/>
+          <!-- Ind top to PS top -->
+          <polyline class="dr" id="wc2" points="362,84 372,84 372,70" stroke-width="2" fill="none" stroke-linecap="round"/>
+          <!-- PS top wire up and around -->
+          <polyline class="dr" id="wc3" points="372,58 372,30 340,30 340,78" stroke-width="2" fill="none" stroke-linecap="round"/>
+          <!-- PS bottom to Ind bottom -->
+          <polyline class="dr" id="wc4" points="372,114 372,116 362,116" stroke-width="2" fill="none" stroke-linecap="round"/>
+          <!-- Ind bottom to Reed switch -->
+          <polyline class="dr" id="wc5" points="318,116 310,116 310,150" stroke-width="2" fill="none" stroke-linecap="round"/>
+          <!-- Reed switch right → GND -->
+          <polyline class="dr" id="wc6" points="352,162 395,162 395,172 246,172 246,126 268,126 268,116" stroke-width="2" fill="none" stroke-linecap="round"/>
+
+          <!-- Labels -->
+          <text class="dt" id="wL1" x="290" y="79" font-size="6.5" text-anchor="middle" style="font-weight:bold;font-size:0.61rem;">24V</text>
+          <text class="dt" id="wL2" x="246" y="169" font-size="6.5" text-anchor="middle" style="font-weight:bold;font-size:0.61rem;">GND</text>
+
+        </svg>
+      </div><!-- /diagram-wrap -->
+
+      <h3>What is a Reed Switch?</h3>
+      <p>A Reed Switch is a magnetically-operated electrical switch sealed inside a hermetic glass capsule. It contains two thin ferromagnetic metal reeds (contacts) that are normally separated (open). When a magnet comes close enough, the magnetic field magnetizes the reeds, causing them to attract and close the circuit.</p>
+
+      <h3>Working Principle</h3>
+      <p>The two reed contacts are made of a ferromagnetic alloy (usually iron-nickel). In the absence of a magnet, elastic spring force keeps the contacts apart — the switch is <strong>OPEN</strong>. When a permanent magnet or electromagnet is brought within the activation distance, the induced magnetism causes the reed tips to attract each other and snap <strong>CLOSED</strong>, completing the circuit. Removing the magnet causes the reeds to spring back open.</p>
+
+      <h3>Magnetic Field — Key Insight</h3>
+      <p>Only the area near the center of the glass capsule is sensitive to the magnetic field. The magnet must be aligned axially (poles along the tube axis, like N–S inline) for maximum activation force. Perpendicular orientation reduces the activation distance significantly.</p>
+
+      <span class="fact-chip">No moving parts (except reeds)</span>
+      <span class="fact-chip">Hermetically sealed</span>
+      <span class="fact-chip">Life: 10⁸ cycles</span>
+      <span class="fact-chip">Low voltage contact</span>
+      <span class="fact-chip">Fast switching</span>
+
+      <h3>PLC Ladder Logic (Left Side)</h3>
+      <p><strong>X0</strong> is the Normally Open (NO) contact mapped to the Reed Switch input. When the magnet activates the reed switch, X0 closes, completing the rung and energizing the output coil <strong>Y0</strong>, which drives the indicator lamp output.</p>
+
+      <h3>Wiring Circuit (Right Side)</h3>
+      <p>The <strong>24V DC</strong> supply is connected through the indicator lamp (<strong>Ind.</strong>) and power supply blocks (<strong>PS</strong>). The Reed Switch contact completes the circuit back to <strong>GND</strong> when a magnet brings the contacts together. No external power is needed by the reed switch itself — it simply acts as a mechanical contact.</p>
+
+      <h3>Applications in PLC Systems</h3>
+      <p>Reed switches are widely used in cylinder position sensing (pneumatic/hydraulic actuators), door/window position detection, liquid level float switches, conveyor home-position sensing, and any application where a simple non-contact magnetic trigger is required. They are especially popular in harsh environments since the contacts are sealed inside glass.</p>
+
+      <h3>NO vs NC Reed Switch</h3>
+      <p>A <strong>Normally Open (NO)</strong> reed switch (simulated here) has contacts that are open at rest and close when the magnet approaches. A <strong>Normally Closed (NC)</strong> reed switch has contacts that are permanently closed and open when the magnet approaches, used for failsafe detection circuits.</p>
+    </div>
+  </div>
+
+</div><!-- /content-wrapper -->
+
+<script>
+  let activated = false;
+  let autoOn = false, autoDir = -1, autoTimer = null;
+  let dragging = false, dragX0 = 0, leftPct0 = 0;
+
+  const mMagnet = document.getElementById('mMagnet');
+  const trackEl  = document.getElementById('trackEl');
+
+  // Activation threshold: magnet center must be within 22% of track width from center (50%)
+  const CENTER = 50;
+  const THRESH = 22;
+
+  function getPct() { return parseFloat(mMagnet.style.left) || 78; }
+
+  function setPct(p) {
+    p = Math.max(6, Math.min(90, p));
+    mMagnet.style.left = p + '%';
+
+    // Magnet occupies ~8% of track, its visual center is p + 4%
+    const magnetCenter = p + 4;
+    const dist = Math.abs(magnetCenter - CENTER);
+    const now = dist < THRESH;
+
+    // Update distance bar
+    const proximity = Math.max(0, Math.min(100, Math.round((1 - dist / 48) * 100)));
+    document.getElementById('distFill').style.width = proximity + '%';
+    document.getElementById('distFill').className = 'dist-bar-fill' + (now ? ' near' : '');
+    document.getElementById('distLabel').textContent = now ? 'NEAR — Active' : (proximity > 50 ? 'Approaching' : 'Far');
+
+    if (now !== activated) { activated = now; render(); }
+  }
+
+  const plcIds  = ['lRail','rRail','lRailTxt','rRailTxt','r1w1','r1w2','x0fill','x0a','x0v1','x0v2','x0b','x0lbl','x0sub','y0fill','y0a','y0b','y0lbl','y0sub'];
+  const wireIds = ['psuBox','psuTp','psuTn','indCirc','indLbl','ps1','ps2','psT1','psT2','reedBox','reedLbl','wc1','wc2','wc3','wc4','wc5','wc6','wL1','wL2'];
+
+  function render() {
+    const on = activated;
+
+    // Status bar
+    document.getElementById('dDot').className = 'dot' + (on ? ' blink' : '');
+    document.getElementById('dTxt').textContent = on ? 'ACTIVATED!' : 'Switch Open';
+    document.getElementById('oDot').className   = 'dot' + (on ? ' on'   : '');
+    document.getElementById('switchStateTxt').textContent = on ? 'Contacts: CLOSED ✓' : 'Contacts: OPEN';
+    document.getElementById('switchStateTxt').style.color = on ? 'var(--text-color)' : 'var(--accent-color)';
+
+    // Wiring diagram SVG — signal wire
+    document.getElementById('wSig').setAttribute('stroke', on ? '#343a40' : '#dee2e6');
+    document.getElementById('wSig').setAttribute('stroke-dasharray', on ? '0' : '7,3');
+
+    // Indicator bulb in wiring diagram
+    document.getElementById('iSVG').setAttribute('stroke', on ? '#343a40' : '#dee2e6');
+    document.getElementById('iInner').setAttribute('fill', on ? '#f1f3f5' : '#f8f9fa');
+    document.getElementById('bulbSVG').setAttribute('opacity', on ? '1' : '.28');
+
+    // Reed switch symbol in wiring diagram
+    document.getElementById('reedGlassWire').setAttribute('stroke', on ? '#343a40' : '#dee2e6');
+    document.getElementById('reedOpen').style.opacity   = on ? '0' : '1';
+    document.getElementById('reedClosed').style.opacity = on ? '1' : '0';
+
+    // Magnetic field arcs in wiring diagram
+    document.getElementById('mf1').setAttribute('stroke', on ? 'rgba(52,152,219,0.25)' : 'transparent');
+    document.getElementById('mf2').setAttribute('stroke', on ? 'rgba(52,152,219,0.12)' : 'transparent');
+
+    // Track reed contacts
+    document.getElementById('cLeft').className  = 'contact-left '  + (on ? 'closed' : 'open');
+    document.getElementById('cRight').className = 'contact-right ' + (on ? 'closed' : 'open');
+    document.getElementById('reedLabel').textContent = on ? 'Reed Switch — Contacts CLOSED ✓' : 'Reed Switch — Contacts OPEN';
+    document.getElementById('reedLabel').style.color = on ? 'var(--text-color)' : 'var(--accent-color)';
+
+    // Reed glass highlight
+    document.getElementById('reedGlass').style.borderColor = on ? 'rgba(52,152,219,0.7)' : 'rgba(100,180,170,0.8)';
+    document.getElementById('reedGlass').style.boxShadow   = on ? '0 0 12px rgba(52,152,219,0.35), inset 0 1px 2px rgba(255,255,255,0.4)' : '0 1px 4px rgba(0,0,0,0.10), inset 0 1px 2px rgba(255,255,255,0.4)';
+
+    // Magnet glow
+    mMagnet.classList.toggle('activated', on);
+
+    // Field arcs in track
+    document.getElementById('fieldSVG').classList.toggle('visible', on);
+
+    // Theory panel
+    document.getElementById('bigBulb').className = 'big-bulb' + (on ? ' on' : '');
+    document.getElementById('indBox').className  = 'ind-box'  + (on ? ' active' : '');
+    document.getElementById('indDesc').textContent = on
+      ? 'ON — Reed contacts CLOSED by magnet · X0 energized · Y0 activated'
+      : 'OFF — Reed contacts OPEN · No magnet in range · Circuit open';
+
+    // Combined diagram — toggle class
+    document.getElementById('diagWrap').className = 'diagram-wrap' + (on ? ' active' : '');
+    document.getElementById('indEmoji').setAttribute('opacity', on ? '1' : '.3');
+
+    // Reed contact symbols in diagram
+    document.getElementById('diagReedOpen').style.opacity   = on ? '0' : '1';
+    document.getElementById('diagReedClosed').style.opacity = on ? '1' : '0';
+
+    // x0diag (the open-contact diagonal) visibility
+    document.getElementById('x0diag').style.opacity = on ? '0' : '1';
+
+    // Class toggling for all diagram elements
+    const classMap = {
+      'lRail':'dr','rRail':'dr','r1w1':'dr','r1w2':'dr',
+      'x0a':'dr','x0v1':'dr','x0v2':'dr','x0b':'dr',
+      'y0a':'dr','y0b':'dr',
+      'lRailTxt':'dt','rRailTxt':'dt','x0lbl':'dt','x0sub':'dt','y0lbl':'dt','y0sub':'dt',
+      'x0fill':'df','y0fill':'dc',
+      'psuBox':'db','psuTp':'dc','psuTn':'dc',
+      'indCirc':'dc','indLbl':'dt',
+      'ps1':'db','ps2':'db','psT1':'dt','psT2':'dt',
+      'reedBox':'db','reedLbl':'dt',
+      'wc1':'dr','wc2':'dr','wc3':'dr','wc4':'dr','wc5':'dr','wc6':'dr',
+      'wL1':'dt','wL2':'dt',
+    };
+    [...plcIds, ...wireIds].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.className = (classMap[id] || 'dr') + (on ? ' a' : '');
+    });
+
+    // Also toggle reed contact lines in diagram
+    ['rCA','rCdiag','rCB','rCC'].forEach(id => {
+      const el = document.getElementById(id);
+      if (el) el.className = 'dr' + (on ? ' a' : '');
+    });
+  }
+
+  function toggleAuto() {
+    autoOn = !autoOn;
+    const b = document.getElementById('bAuto');
+    b.textContent = autoOn ? '⏸ Pause' : '▶ Auto Move';
+    b.className   = 'ctrl-btn' + (autoOn ? ' active-btn' : '');
+    if (autoOn) {
+      autoTimer = setInterval(() => {
+        const spd = parseInt(document.getElementById('spd').value);
+        let p = getPct() + autoDir * spd * 0.28;
+        if (p <= 6)  { autoDir=1;  p=6;  }
+        if (p >= 90) { autoDir=-1; p=90; }
+        setPct(p);
+      }, 30);
+    } else {
+      clearInterval(autoTimer);
+    }
+  }
+
+  function resetMagnet() {
+    if (autoOn) toggleAuto();
+    setPct(78);
+  }
+
+  // Drag
+  mMagnet.addEventListener('mousedown', e => { dragging=true; dragX0=e.clientX; leftPct0=getPct(); if(autoOn)toggleAuto(); e.preventDefault(); });
+  mMagnet.addEventListener('touchstart', e => { dragging=true; dragX0=e.touches[0].clientX; leftPct0=getPct(); if(autoOn)toggleAuto(); },{passive:true});
+  document.addEventListener('mousemove', e => { if(!dragging)return; const r=trackEl.getBoundingClientRect(); setPct(leftPct0+((e.clientX-dragX0)/r.width)*100); });
+  document.addEventListener('touchmove', e => { if(!dragging)return; const r=trackEl.getBoundingClientRect(); setPct(leftPct0+((e.touches[0].clientX-dragX0)/r.width)*100); },{passive:true});
+  document.addEventListener('mouseup',  () => dragging=false);
+  document.addEventListener('touchend', () => dragging=false);
+  trackEl.addEventListener('click', e => { if(dragging)return; const r=trackEl.getBoundingClientRect(); setPct(((e.clientX-r.left)/r.width)*100); });
+  document.getElementById('spd').addEventListener('input', function(){ document.getElementById('spdV').textContent=this.value; });
+
+  render();
+</script>
+</body>
+</html>

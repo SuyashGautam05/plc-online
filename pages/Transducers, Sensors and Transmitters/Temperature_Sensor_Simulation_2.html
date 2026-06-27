@@ -1,0 +1,970 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RTD PLC Simulation</title>
+<link rel="stylesheet" href="../defination.css">
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=DM+Sans:wght@400;500;600;700&display=swap');
+:root {
+  --bg:#eef0f4;--panel:#fff;--panel2:#f6f7f9;--border:#dde1e8;--border2:#eaecf0;
+  --text:#1c1f26;--text2:#5a6070;--text3:#9aa0ae;
+  --blue:#2563eb;--blue2:#1d4ed8;--blue-light:#eff6ff;
+  --green:#16a34a;--green-light:#f0fdf4;
+  --red:#dc2626;--red-light:#fef2f2;
+  --orange:#ea580c;--orange-light:#fff7ed;
+  --mono:'Share Tech Mono',monospace;
+  --sans:'DM Sans',sans-serif;
+  --radius:10px;
+  --shadow:0 1px 4px rgba(0,0,0,.08);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);min-height:100vh;font-size:14px}
+
+.topbar{background:var(--text);height:50px;display:flex;align-items:center;padding:0 20px;gap:16px;position:sticky;top:0;z-index:200;box-shadow:0 2px 8px rgba(0,0,0,.2)}
+.logo{font-family:var(--mono);font-size:16px;color:#fff;letter-spacing:2px}.logo span{color:#60a5fa}
+.tb-sep{width:1px;height:24px;background:#374151}
+.tb-info{font-size:12px;color:#9ca3af;font-family:var(--mono)}
+.tb-right{margin-left:auto;display:flex;align-items:center;gap:10px}
+.plc-badge{display:flex;align-items:center;gap:7px;padding:5px 14px;border-radius:20px;font-family:var(--mono);font-size:12px;font-weight:bold;letter-spacing:.5px;border:1.5px solid;transition:all .3s}
+.badge-run{background:rgba(22,163,74,.15);color:#4ade80;border-color:#16a34a}
+.badge-stop{background:rgba(220,38,38,.15);color:#f87171;border-color:#dc2626}
+.badge-dot{width:8px;height:8px;border-radius:50%}
+.badge-run .badge-dot{background:#4ade80;animation:pulse 1.2s ease infinite}
+.badge-stop .badge-dot{background:#f87171}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.8)}}
+.scan-info{font-family:var(--mono);font-size:11px;color:#6b7280}
+.main{display:grid;grid-template-columns:300px 1fr 280px;height:calc(100vh - 50px);overflow:hidden}
+.left-panel,.right-panel{background:var(--panel);overflow-y:auto;display:flex;flex-direction:column}
+.left-panel{border-right:1px solid var(--border)}
+.right-panel{border-left:1px solid var(--border)}
+.sec-head{padding:10px 16px;background:var(--panel2);border-bottom:1px solid var(--border);font-size:11px;font-family:var(--mono);letter-spacing:1.5px;color:var(--text3);text-transform:uppercase;display:flex;align-items:center;gap:8px;flex-shrink:0}
+.sec-head-dot{width:6px;height:6px;border-radius:50%;background:var(--blue)}
+.sec-body{padding:14px}
+.plc-controls{padding:14px;background:var(--panel2);border-bottom:1px solid var(--border)}
+.plc-row{display:flex;gap:8px}
+.plc-btn{flex:1;padding:11px 8px;border:none;border-radius:8px;font-family:var(--sans);font-size:13px;font-weight:700;cursor:pointer;transition:all .15s;display:flex;align-items:center;justify-content:center;gap:6px;letter-spacing:.3px}
+.btn-run{background:var(--green);color:#fff;box-shadow:0 2px 8px rgba(22,163,74,.25)}
+.btn-run:hover:not(:disabled){background:#15803d;transform:translateY(-1px);box-shadow:0 4px 14px rgba(22,163,74,.35)}
+.btn-run:disabled{background:#d1d5db;color:#9ca3af;cursor:not-allowed;box-shadow:none}
+.btn-stop{background:var(--red);color:#fff;box-shadow:0 2px 8px rgba(220,38,38,.25)}
+.btn-stop:hover:not(:disabled){background:#b91c1c;transform:translateY(-1px);box-shadow:0 4px 14px rgba(220,38,38,.35)}
+.btn-stop:disabled{background:#d1d5db;color:#9ca3af;cursor:not-allowed;box-shadow:none}
+.btn-reset{background:var(--panel);color:var(--text2);border:1px solid var(--border);width:100%;margin-top:8px;padding:8px;border-radius:7px;font-family:var(--sans);font-size:12px;font-weight:500;cursor:pointer;transition:all .15s}
+.btn-reset:hover{background:var(--panel2);color:var(--text)}
+.rtd-card{border:1.5px solid var(--border);border-radius:var(--radius);margin-bottom:10px;overflow:hidden;transition:border-color .3s,box-shadow .3s}
+.rtd-card.s-warn{border-color:var(--orange)}
+.rtd-card.s-alarm{border-color:var(--red);box-shadow:0 0 0 3px rgba(220,38,38,.08)}
+.rtd-card.s-fault{border-color:#7c3aed;box-shadow:0 0 0 3px rgba(124,58,237,.08)}
+.rtd-head{padding:8px 12px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border2)}
+.rtd-name{font-family:var(--mono);font-size:11px;color:var(--text2);letter-spacing:.5px}
+.rtd-badge{font-size:10px;font-family:var(--mono);padding:2px 9px;border-radius:10px;font-weight:bold;transition:all .3s}
+.rb-ok{background:rgba(22,163,74,.1);color:var(--green)}
+.rb-warn{background:rgba(234,88,12,.1);color:var(--orange)}
+.rb-alarm{background:rgba(220,38,38,.1);color:var(--red);animation:pulse .8s ease infinite}
+.rb-fault{background:rgba(124,58,237,.1);color:#7c3aed}
+.rtd-body{padding:10px 12px}
+.rtd-temp{font-family:var(--mono);font-size:30px;font-weight:bold;line-height:1;margin-bottom:2px;transition:color .3s}
+.rtd-unit{font-size:14px;color:var(--text3);font-weight:normal}
+.rtd-zone{font-size:11px;color:var(--text3);margin-bottom:8px}
+.rtd-bar-wrap{height:5px;background:var(--border2);border-radius:3px;overflow:hidden}
+.rtd-bar{height:100%;border-radius:3px;transition:width .4s ease,background .4s}
+/* ── SLIDER ROW with live feedback ── */
+.sl-row{padding:8px 12px 10px;border-top:1px solid var(--border2);background:var(--panel2);display:flex;align-items:center;gap:8px;transition:background .3s}
+.sl-row.active{background:#dbeafe}
+.sl-lbl{font-size:10px;color:var(--text3);white-space:nowrap;font-family:var(--mono);min-width:20px}
+input[type=range]{flex:1;accent-color:var(--blue);cursor:pointer}
+input[type=range]:disabled{cursor:not-allowed;accent-color:#9ca3af}
+.sl-val{font-family:var(--mono);font-size:12px;color:var(--blue);min-width:40px;text-align:right;font-weight:bold;transition:color .3s}
+.sl-val.hot{color:var(--red)}
+.sl-val.warn{color:var(--orange)}
+/* ── change indicator badge ── */
+.change-badge{font-size:9px;font-family:var(--mono);padding:1px 5px;border-radius:4px;white-space:nowrap;transition:opacity .3s}
+.cb-up{background:rgba(220,38,38,.12);color:var(--red)}
+.cb-down{background:rgba(37,99,235,.12);color:var(--blue)}
+/* ── setpoints ── */
+.sp-row{display:flex;align-items:center;gap:8px;margin-bottom:10px;padding:7px 9px;border-radius:7px;border:1.5px solid transparent;transition:border-color .3s,background .3s}
+.sp-row.changed{border-color:var(--blue);background:var(--blue-light)}
+.sp-color{width:9px;height:9px;border-radius:50%;flex-shrink:0}
+.sp-label{font-size:12px;color:var(--text2);flex:1}
+.sp-input{font-family:var(--mono);font-size:13px;background:var(--panel2);border:1.5px solid var(--border);border-radius:6px;padding:4px 8px;width:66px;text-align:right;color:var(--text);transition:border-color .2s}
+.sp-input:focus{outline:none;border-color:var(--blue)}
+.sp-unit{font-size:11px;color:var(--text3);min-width:14px}
+.sp-feedback{margin-top:4px;padding:6px 10px;border-radius:6px;font-size:12px;border:1px solid;transition:all .3s;display:none}
+/* ── mode buttons ── */
+.mode-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.mode-btn{padding:9px 6px;border:1.5px solid var(--border);border-radius:8px;background:var(--panel2);font-size:12px;font-weight:600;cursor:pointer;transition:all .15s;color:var(--text2);text-align:center}
+.mode-btn:hover{border-color:#9ca3af;color:var(--text)}
+.mode-btn.active{border-color:var(--blue);background:var(--blue-light);color:var(--blue)}
+.mode-btn.m-fault.active{border-color:var(--red);background:var(--red-light);color:var(--red)}
+.mode-desc{margin-top:8px;padding:7px 10px;border-radius:7px;font-size:12px;line-height:1.5}
+/* ── center ── */
+.center{display:flex;flex-direction:column;overflow:hidden;background:var(--bg)}
+.center-top{flex:1;overflow-y:auto;overflow-x:hidden;padding:14px;display:flex;flex-direction:column;gap:12px;min-height:0}
+.ladder-wrap{flex-shrink:0;border-top:2px solid var(--border);background:var(--panel)}
+.widget{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);overflow:visible;box-shadow:var(--shadow)}
+.widget-head{padding:9px 14px;background:var(--panel2);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between;border-radius:var(--radius) var(--radius) 0 0}
+.widget-title{font-size:11px;font-family:var(--mono);letter-spacing:1.5px;color:var(--text2);text-transform:uppercase}
+.widget-body{padding:12px;border-radius:0 0 var(--radius) var(--radius)}
+.two-col{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+canvas{display:block;width:100%}
+/* ── outputs ── */
+.out-row{display:flex;align-items:center;gap:8px;padding:6px 0;border-bottom:1px solid var(--border2)}
+.out-row:last-child{border-bottom:none}
+.out-led{width:12px;height:12px;border-radius:50%;border:2px solid var(--border);transition:all .2s;flex-shrink:0}
+.out-led.led-green{border-color:var(--green);background:var(--green);box-shadow:0 0 6px rgba(22,163,74,.4)}
+.out-led.led-red{border-color:var(--red);background:var(--red);box-shadow:0 0 6px rgba(220,38,38,.4);animation:pulse .8s ease infinite}
+.out-tag{font-family:var(--mono);font-size:11px;flex:1;color:var(--text2)}
+.out-state{font-family:var(--mono);font-size:11px;font-weight:bold}
+.on-green{color:var(--green)}.on-red{color:var(--red)}.off-c{color:var(--text3)}
+/* ── alarm ── */
+.alm-list{max-height:160px;overflow-y:auto}
+.alm-row{display:flex;align-items:flex-start;gap:8px;padding:5px 0;border-bottom:1px solid var(--border2);font-size:12px}
+.alm-row:last-child{border-bottom:none}
+.alm-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;margin-top:3px}
+.alm-time{font-family:var(--mono);font-size:10px;color:var(--text3);white-space:nowrap;min-width:54px}
+.alm-msg{color:var(--text);flex:1;line-height:1.4}
+.alm-ack{font-size:10px;padding:1px 7px;border-radius:4px;background:var(--panel2);border:1px solid var(--border);cursor:pointer;color:var(--text3)}
+.alm-ack:hover{background:var(--border)}
+/* ── ladder ── */
+.ladder-header{padding:9px 16px;background:var(--panel2);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.ladder-title{font-family:var(--mono);font-size:11px;color:var(--text2);letter-spacing:1px}
+.ladder-scan{font-family:var(--mono);font-size:11px;color:var(--blue)}
+.ladder-body{padding:8px 12px;max-height:250px;overflow-y:auto}
+.rung-block{margin-bottom:5px}
+.rung-cmt{font-size:10px;color:var(--text3);font-family:var(--mono);padding:0 28px;margin-bottom:1px;font-style:italic}
+.rung-row{display:flex;align-items:center}
+.rung-num{font-family:var(--mono);font-size:10px;color:var(--text3);width:24px;text-align:right;padding-right:5px;flex-shrink:0}
+.l-rail{width:3px;height:34px;flex-shrink:0;border-radius:1px;transition:background .2s}
+.l-hw{height:2px;transition:background .2s}
+.rung-elems{display:flex;align-items:center}
+.elem-wrap{display:flex;flex-direction:column;align-items:center}
+.e-lbl{font-family:var(--mono);font-size:8px;color:var(--text3);white-space:pre;text-align:center;margin-bottom:1px;line-height:1.2}
+.e-row{display:flex;align-items:center}
+.e-w{height:2px;width:9px;transition:background .2s}
+.e-contact{width:16px;height:24px;border-left:2px solid;border-right:2px solid;transition:border-color .2s;position:relative}
+.e-coil{width:22px;height:22px;border-radius:50%;border:2px solid;transition:all .2s}
+.e-func{border:2px solid;border-radius:4px;padding:1px 5px;font-family:var(--mono);font-size:8px;line-height:1.4;text-align:center;transition:all .2s;white-space:pre}
+/* energized */
+.en-w{background:var(--green)!important}
+.en-rail{background:var(--green)!important}
+.en-contact{border-color:var(--green)!important}
+.en-coil{border-color:var(--green)!important;background:rgba(22,163,74,.1)!important}
+.en-alarm-coil{border-color:var(--red)!important;background:rgba(220,38,38,.1)!important}
+.en-func{border-color:var(--green)!important;color:var(--green)!important;background:rgba(22,163,74,.05)!important}
+.en-alarm-func{border-color:var(--red)!important;color:var(--red)!important;background:rgba(220,38,38,.05)!important}
+/* default */
+.e-contact{border-color:#b0b7c3}
+.e-coil{border-color:#b0b7c3;background:transparent}
+.e-func{border-color:#b0b7c3;color:var(--text3)}
+/* ── reg tables ── */
+.reg-table{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:11px}
+.reg-table th{background:var(--panel2);padding:5px 8px;text-align:left;color:var(--text3);font-size:10px;border-bottom:1px solid var(--border);text-transform:uppercase}
+.reg-table td{padding:5px 8px;border-bottom:1px solid var(--border2)}
+.reg-table tr:last-child td{border-bottom:none}
+@keyframes regFlash{0%{background:rgba(37,99,235,.13)}100%{background:transparent}}
+.reg-flash{animation:regFlash .5s ease forwards}
+.rv{color:var(--blue)}.rb-true{color:var(--green);font-weight:bold}.rb-false{color:var(--text3)}
+/* ── force toggles ── */
+.tog-row{display:flex;align-items:center;gap:8px;padding:5px 0;border-bottom:1px solid var(--border2)}
+.tog-row:last-child{border-bottom:none}
+.tog-tag{font-family:var(--mono);font-size:10px;color:var(--text2);flex:1}
+.tog{position:relative;width:38px;height:22px;flex-shrink:0}
+.tog input{opacity:0;width:0;height:0;position:absolute}
+.tog-track{position:absolute;inset:0;background:#d1d5db;border-radius:11px;cursor:pointer;transition:background .2s}
+.tog input:checked+.tog-track{background:var(--blue)}
+.tog-track::after{content:'';position:absolute;width:18px;height:18px;background:#fff;border-radius:50%;top:2px;left:2px;transition:left .2s;box-shadow:0 1px 3px rgba(0,0,0,.2)}
+.tog input:checked+.tog-track::after{left:18px}
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
+</style>
+</head>
+<body>
+  <header style="margin-bottom: 0px;" class="site-header">
+      <div class="logo-container" style="margin-bottom: 0px;">
+        <img style="margin-left: -2pc" src="../../assets/Scientech logo-2.png" alt="Scientech Logo" />
+        <h1 style="margin-left: 2px;margin-right: -8pc;">
+          Temperature Sensors and Temperature Transmitter
+        </h1>
+        <div class="button-container" style="margin-bottom: 0px" >
+                  <a href="./Temperature_Sensors_and_Temperature_Transmitter.html" class="back-button" style="margin-left: 105px;">
+                      <i class="fas fa-arrow-left"></i><img style="height: 30px;width: 30px;" src="./left-arrow.png" alt=""> Back to Course
+                  </a>
+        </div>
+      </div>
+    </header>
+
+<!-- <div class="topbar">
+  <div class="logo">PLC<span>RTD</span></div>
+  <div class="tb-sep"></div>
+  <div class="tb-info">RTD Temperature Controller Simulation — IEC 61131-3</div>
+  <div class="tb-right">
+    <span class="scan-info" id="scanInfo">SCAN: — ms</span>
+    <div id="plcBadge" class="plc-badge badge-stop"><div class="badge-dot"></div><span id="plcTxt">STOP</span></div>
+  </div>
+</div> -->
+
+<div class="main">
+
+<!-- ══ LEFT ══ -->
+<div class="left-panel">
+
+  <div class="plc-controls">
+    <div class="plc-row">
+      <button class="plc-btn btn-run" id="btnRun" onclick="plcRun()">▶ &nbsp;RUN</button>
+      <button class="plc-btn btn-stop" id="btnStop" onclick="plcStop()" disabled>■ &nbsp;STOP</button>
+    </div>
+    <button class="btn-reset" onclick="resetAlarms()">↺ &nbsp;Reset Alarms</button>
+  </div>
+
+  <div class="sec-head"><div class="sec-head-dot"></div>SIMULATION MODE</div>
+  <div class="sec-body" style="padding-bottom:6px">
+    <div class="mode-grid">
+      <button class="mode-btn active" id="mManual" onclick="setMode('manual')">🎚 Manual</button>
+      <button class="mode-btn" id="mRamp"   onclick="setMode('ramp')">📈 Ramp</button>
+      <button class="mode-btn" id="mSine"   onclick="setMode('sine')">〜 Sine</button>
+      <button class="mode-btn m-fault" id="mFault"  onclick="setMode('fault')">⚠ Fault</button>
+    </div>
+    <div class="mode-desc" id="modeDesc" style="background:var(--blue-light);color:var(--blue);border:1px solid rgba(37,99,235,.2)">
+      Use the sliders below to manually set each RTD temperature.
+    </div>
+  </div>
+
+  <div class="sec-head"><div class="sec-head-dot"></div>RTD SENSORS</div>
+  <div class="sec-body">
+
+    <div class="rtd-card" id="card1">
+      <div class="rtd-head">
+        <span class="rtd-name">RTD-101 · PT100</span>
+        <div style="display:flex;align-items:center;gap:6px">
+          <span class="change-badge" id="cb1" style="opacity:0"></span>
+          <span class="rtd-badge rb-ok" id="badge1">OK</span>
+        </div>
+      </div>
+      <div class="rtd-body">
+        <div class="rtd-temp" id="temp1">65.0<span class="rtd-unit"> °C</span></div>
+        <div class="rtd-zone">Zone 1 — Reactor Feed</div>
+        <div class="rtd-bar-wrap"><div class="rtd-bar" id="bar1" style="width:32.5%;background:var(--blue)"></div></div>
+      </div>
+      <div class="sl-row" id="slRow1">
+        <span class="sl-lbl">0°</span>
+        <input type="range" id="sl1" min="0" max="200" value="65" oninput="onSlider(0,+this.value)">
+        <span class="sl-val" id="slv1">65°C</span>
+        <span class="sl-lbl">200°</span>
+      </div>
+    </div>
+
+    <div class="rtd-card" id="card2">
+      <div class="rtd-head">
+        <span class="rtd-name">RTD-102 · PT100</span>
+        <div style="display:flex;align-items:center;gap:6px">
+          <span class="change-badge" id="cb2" style="opacity:0"></span>
+          <span class="rtd-badge rb-ok" id="badge2">OK</span>
+        </div>
+      </div>
+      <div class="rtd-body">
+        <div class="rtd-temp" id="temp2">80.0<span class="rtd-unit"> °C</span></div>
+        <div class="rtd-zone">Zone 2 — Reactor Core</div>
+        <div class="rtd-bar-wrap"><div class="rtd-bar" id="bar2" style="width:40%;background:var(--blue)"></div></div>
+      </div>
+      <div class="sl-row" id="slRow2">
+        <span class="sl-lbl">0°</span>
+        <input type="range" id="sl2" min="0" max="200" value="80" oninput="onSlider(1,+this.value)">
+        <span class="sl-val" id="slv2">80°C</span>
+        <span class="sl-lbl">200°</span>
+      </div>
+    </div>
+
+    <div class="rtd-card" id="card3">
+      <div class="rtd-head">
+        <span class="rtd-name">RTD-103 · PT1000</span>
+        <div style="display:flex;align-items:center;gap:6px">
+          <span class="change-badge" id="cb3" style="opacity:0"></span>
+          <span class="rtd-badge rb-ok" id="badge3">OK</span>
+        </div>
+      </div>
+      <div class="rtd-body">
+        <div class="rtd-temp" id="temp3">55.0<span class="rtd-unit"> °C</span></div>
+        <div class="rtd-zone">Zone 3 — Outlet Pipe</div>
+        <div class="rtd-bar-wrap"><div class="rtd-bar" id="bar3" style="width:27.5%;background:var(--blue)"></div></div>
+      </div>
+      <div class="sl-row" id="slRow3">
+        <span class="sl-lbl">0°</span>
+        <input type="range" id="sl3" min="0" max="200" value="55" oninput="onSlider(2,+this.value)">
+        <span class="sl-val" id="slv3">55°C</span>
+        <span class="sl-lbl">200°</span>
+      </div>
+    </div>
+
+  </div><!-- /sec-body -->
+
+  <div class="sec-head"><div class="sec-head-dot"></div>SETPOINTS</div>
+  <div class="sec-body">
+    <div class="sp-row" id="spRow_hi">
+      <div class="sp-color" style="background:var(--red)"></div>
+      <span class="sp-label">High Alarm</span>
+      <input class="sp-input" type="number" id="spHi" value="120" oninput="onSp('hi',this)">
+      <span class="sp-unit">°C</span>
+    </div>
+    <div class="sp-row" id="spRow_warn">
+      <div class="sp-color" style="background:var(--orange)"></div>
+      <span class="sp-label">Warning</span>
+      <input class="sp-input" type="number" id="spWarn" value="100" oninput="onSp('warn',this)">
+      <span class="sp-unit">°C</span>
+    </div>
+    <div class="sp-row" id="spRow_ctrl">
+      <div class="sp-color" style="background:var(--blue)"></div>
+      <span class="sp-label">Control SP</span>
+      <input class="sp-input" type="number" id="spCtrl" value="75" oninput="onSp('ctrl',this)">
+      <span class="sp-unit">°C</span>
+    </div>
+    <div class="sp-feedback" id="spFb"></div>
+  </div>
+
+</div><!-- /left -->
+
+
+<!-- ══ CENTER ══ -->
+<div class="center">
+<div class="center-top">
+
+  <!-- PFD -->
+  <div class="widget">
+    <div class="widget-head">
+      <span class="widget-title">Process Flow Diagram</span>
+      <span id="pfdLive" style="font-family:var(--mono);font-size:10px;color:var(--text3)">● STOPPED</span>
+    </div>
+    <div class="widget-body" style="padding:8px;overflow-x:auto;border-radius:0 0 var(--radius) var(--radius)">
+      <svg style="min-width:620px;width:100%;height:155px" viewBox="0 0 680 155" id="pfdSvg">
+        <rect width="680" height="155" fill="#f9fafb" rx="6"/>
+        <!-- pipe base -->
+        <line x1="75" y1="77" x2="180" y2="77" stroke="#e5e7eb" stroke-width="10" stroke-linecap="round"/>
+        <line x1="240" y1="77" x2="300" y2="77" stroke="#e5e7eb" stroke-width="10" stroke-linecap="round"/>
+        <line x1="360" y1="77" x2="420" y2="77" stroke="#e5e7eb" stroke-width="10" stroke-linecap="round"/>
+        <line x1="480" y1="77" x2="510" y2="77" stroke="#e5e7eb" stroke-width="10" stroke-linecap="round"/>
+        <line x1="560" y1="77" x2="615" y2="77" stroke="#e5e7eb" stroke-width="10" stroke-linecap="round"/>
+        <!-- animated flow -->
+        <line x1="75" y1="77" x2="180" y2="77" stroke="#93c5fd" stroke-width="5" stroke-linecap="round" stroke-dasharray="14 8" id="fl1"><animate attributeName="stroke-dashoffset" from="0" to="-44" dur=".9s" repeatCount="indefinite"/></line>
+        <line x1="240" y1="77" x2="300" y2="77" stroke="#93c5fd" stroke-width="5" stroke-linecap="round" stroke-dasharray="14 8" id="fl2"><animate attributeName="stroke-dashoffset" from="0" to="-44" dur=".9s" repeatCount="indefinite"/></line>
+        <line x1="360" y1="77" x2="420" y2="77" stroke="#93c5fd" stroke-width="5" stroke-linecap="round" stroke-dasharray="14 8" id="fl3"><animate attributeName="stroke-dashoffset" from="0" to="-44" dur=".9s" repeatCount="indefinite"/></line>
+        <line x1="480" y1="77" x2="510" y2="77" stroke="#93c5fd" stroke-width="5" stroke-linecap="round" stroke-dasharray="14 8" id="fl4"><animate attributeName="stroke-dashoffset" from="0" to="-44" dur=".9s" repeatCount="indefinite"/></line>
+        <!-- Feed tank -->
+        <rect x="10" y="47" width="65" height="60" rx="5" fill="#f3f4f6" stroke="#d1d5db" stroke-width="1.5"/>
+        <text x="42" y="79" text-anchor="middle" font-family="Share Tech Mono" font-size="9" fill="#6b7280">FEED</text>
+        <text x="42" y="91" text-anchor="middle" font-family="Share Tech Mono" font-size="9" fill="#6b7280">TANK</text>
+        <!-- RTD-101 -->
+        <rect x="180" y="52" width="60" height="50" rx="5" fill="#eff6ff" stroke="#3b82f6" stroke-width="1.5" id="pb1"/>
+        <text x="210" y="70" text-anchor="middle" font-family="Share Tech Mono" font-size="8" fill="#2563eb" font-weight="bold">RTD-101</text>
+        <text x="210" y="80" text-anchor="middle" font-family="Share Tech Mono" font-size="7.5" fill="#6b7280">PT100</text>
+        <text x="210" y="95" text-anchor="middle" font-family="Share Tech Mono" font-size="11" fill="#1c1f26" font-weight="bold" id="pt1">--°C</text>
+        <line x1="210" y1="102" x2="210" y2="126" stroke="#3b82f6" stroke-width="1.2" stroke-dasharray="3 2" id="pdl1"/>
+        <circle cx="210" cy="130" r="5" fill="#3b82f6" id="pdot1"/>
+        <!-- RTD-102 -->
+        <!-- <rect x="300" y="52" width="60" height="50" rx="5" fill="#eff6ff" stroke="#3b82f6" stroke-width="1.5" id="pb2"/>
+        <text x="330" y="70" text-anchor="middle" font-family="Share Tech Mono" font-size="8" fill="#2563eb" font-weight="bold">RTD-102</text>
+        <text x="330" y="80" text-anchor="middle" font-family="Share Tech Mono" font-size="7.5" fill="#6b7280">PT100</text>
+        <text x="330" y="95" text-anchor="middle" font-family="Share Tech Mono" font-size="11" fill="#1c1f26" font-weight="bold" id="pt2">--°C</text>
+        <line x1="330" y1="102" x2="330" y2="126" stroke="#3b82f6" stroke-width="1.2" stroke-dasharray="3 2" id="pdl2"/>
+        <circle cx="330" cy="130" r="5" fill="#3b82f6" id="pdot2"/> -->
+        <!-- Reactor -->
+        <rect x="360" y="32" width="60" height="90" rx="6" fill="#f9fafb" stroke="#d1d5db" stroke-width="1.5"/>
+        <text x="390" y="68" text-anchor="middle" font-family="Share Tech Mono" font-size="8" fill="#6b7280">REACT.</text>
+        <rect x="368" y="96" width="44" height="18" rx="2" fill="#bfdbfe" id="rLevel"/>
+        <!-- RTD-103 -->
+        <!-- <rect x="420" y="52" width="60" height="50" rx="5" fill="#eff6ff" stroke="#3b82f6" stroke-width="1.5" id="pb3"/>
+        <text x="450" y="70" text-anchor="middle" font-family="Share Tech Mono" font-size="8" fill="#2563eb" font-weight="bold">RTD-103</text>
+        <text x="450" y="80" text-anchor="middle" font-family="Share Tech Mono" font-size="7.5" fill="#6b7280">PT1000</text>
+        <text x="450" y="95" text-anchor="middle" font-family="Share Tech Mono" font-size="11" fill="#1c1f26" font-weight="bold" id="pt3">--°C</text>
+        <line x1="450" y1="102" x2="450" y2="126" stroke="#3b82f6" stroke-width="1.2" stroke-dasharray="3 2" id="pdl3"/>
+        <circle cx="450" cy="130" r="5" fill="#3b82f6" id="pdot3"/> -->
+        <!-- Cooling valve -->
+        <polygon points="510,60 510,94 536,77" fill="#e5e7eb" stroke="#9ca3af" stroke-width="1.5" id="v1"/>
+        <polygon points="610,60 610,94 584,77" fill="#e5e7eb" stroke="#9ca3af" stroke-width="1.5" id="v2"/>
+        <line x1="536" y1="77" x2="584" y2="77" stroke="#e5e7eb" stroke-width="8" id="vMid"/>
+        <text x="560" y="112" text-anchor="middle" font-family="Share Tech Mono" font-size="8" fill="#6b7280">COOL-V1</text>
+        <text x="560" y="124" text-anchor="middle" font-family="Share Tech Mono" font-size="9" fill="#9ca3af" id="vLbl">CLOSED</text>
+        <!-- Alarm light -->
+        <circle cx="648" cy="22" r="12" fill="#f3f4f6" stroke="#d1d5db" stroke-width="1.5" id="almCircle"/>
+        <text x="648" y="26" text-anchor="middle" font-family="Share Tech Mono" font-size="8" fill="#9ca3af" id="almTxt">ALM</text>
+        <!-- Output box -->
+        <rect x="615" y="47" width="65" height="60" rx="5" fill="#f0fdf4" stroke="#16a34a" stroke-width="1.5" id="outBox"/>
+        <text x="648" y="73" text-anchor="middle" font-family="Share Tech Mono" font-size="8" fill="#16a34a">OUTPUT</text>
+        <text x="648" y="86" text-anchor="middle" font-family="Share Tech Mono" font-size="8" fill="#9ca3af" id="htrTxt">HTR: OFF</text>
+      </svg>
+    </div>
+  </div>
+
+  <!-- Trend + Outputs -->
+  <div class="two-col">
+    <div class="widget">
+      <div class="widget-head">
+        <span class="widget-title">Temperature Trend</span>
+        <span style="font-size:10px;font-family:var(--mono);display:flex;gap:8px">
+          <span style="color:#3b82f6">─T1</span>
+          <span style="color:#16a34a">─T2</span>
+          <span style="color:#ea580c">─T3</span>
+        </span>
+      </div>
+      <div class="widget-body" style="padding:8px"><canvas id="trendCanvas" height="110"></canvas></div>
+    </div>
+    <div class="widget">
+      <div class="widget-head"><span class="widget-title">Output Status</span></div>
+      <div class="widget-body">
+        <div class="out-row"><div class="out-led" id="led_q00"></div><span class="out-tag">Q0.0 · COOL-V1</span><span class="out-state off-c" id="os_q00">OFF</span></div>
+        <div class="out-row"><div class="out-led" id="led_q01"></div><span class="out-tag">Q0.1 · ALARM HORN</span><span class="out-state off-c" id="os_q01">OFF</span></div>
+        <div class="out-row"><div class="out-led" id="led_q02"></div><span class="out-tag">Q0.2 · ALARM LIGHT</span><span class="out-state off-c" id="os_q02">OFF</span></div>
+        <div class="out-row"><div class="out-led" id="led_q03"></div><span class="out-tag">Q0.3 · HEATER EN</span><span class="out-state off-c" id="os_q03">OFF</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Alarm log -->
+  <div class="widget">
+    <div class="widget-head">
+      <span class="widget-title">Alarm Log</span>
+      <span id="almCount" style="font-size:10px;color:var(--red);font-family:var(--mono)"></span>
+    </div>
+    <div class="widget-body" style="padding:8px 12px">
+      <div class="alm-list" id="almList">
+        <div class="alm-row"><div class="alm-dot" style="background:var(--text3)"></div><span class="alm-time">--:--:--</span><span class="alm-msg" style="color:var(--text3)">Press ▶ RUN to start the simulation</span></div>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /center-top -->
+
+<!-- LADDER at bottom -->
+<div class="ladder-wrap">
+  <div class="ladder-header">
+    <span class="ladder-title">LADDER LOGIC — RTD_CTRL [OB1]</span>
+    <span class="ladder-scan" id="lScan">SCAN #0000</span>
+  </div>
+  <div class="ladder-body" id="ladderBody">
+    <div style="text-align:center;padding:20px;font-family:var(--mono);font-size:12px;color:var(--text3)">PLC is in STOP mode — press RUN to begin scanning</div>
+  </div>
+</div>
+</div><!-- /center -->
+
+
+<!-- ══ RIGHT ══ -->
+<div class="right-panel">
+
+  <div class="sec-head"><div class="sec-head-dot"></div>DATA REGISTERS</div>
+  <div class="sec-body" style="padding:8px">
+    <table class="reg-table">
+      <thead><tr><th>Addr</th><th>Tag</th><th>Value</th></tr></thead>
+      <tbody id="regBody"><tr><td colspan="3" style="color:var(--text3);text-align:center;padding:12px">— Stopped —</td></tr></tbody>
+    </table>
+  </div>
+
+  <div class="sec-head"><div class="sec-head-dot"></div>BIT REGISTERS</div>
+  <div class="sec-body" style="padding:8px">
+    <table class="reg-table">
+      <thead><tr><th>Bit</th><th>Tag</th><th>State</th></tr></thead>
+      <tbody id="bitBody"><tr><td colspan="3" style="color:var(--text3);text-align:center;padding:12px">— Stopped —</td></tr></tbody>
+    </table>
+  </div>
+
+  <div class="sec-head"><div class="sec-head-dot"></div>FORCE I/O</div>
+  <div class="sec-body">
+    <div style="font-size:11px;color:var(--text3);margin-bottom:8px;line-height:1.5">Toggle to force-set input bits during simulation.</div>
+    <div class="tog-row"><span class="tog-tag">I0.0 · RTD-101 FAULT</span><label class="tog"><input type="checkbox" id="fi00" onchange="forceInput('i00',this.checked)"><div class="tog-track"></div></label></div>
+    <div class="tog-row"><span class="tog-tag">I0.1 · RTD-102 FAULT</span><label class="tog"><input type="checkbox" id="fi01" onchange="forceInput('i01',this.checked)"><div class="tog-track"></div></label></div>
+    <div class="tog-row"><span class="tog-tag">I0.2 · RTD-103 FAULT</span><label class="tog"><input type="checkbox" id="fi02" onchange="forceInput('i02',this.checked)"><div class="tog-track"></div></label></div>
+    <div class="tog-row"><span class="tog-tag">I0.3 · E-STOP</span><label class="tog"><input type="checkbox" id="fi03" onchange="forceInput('i03',this.checked)"><div class="tog-track"></div></label></div>
+    <div class="tog-row"><span class="tog-tag">I0.4 · ACK BUTTON</span><label class="tog"><input type="checkbox" id="fi04" onchange="forceInput('i04',this.checked)"><div class="tog-track"></div></label></div>
+  </div>
+
+  <div class="sec-head"><div class="sec-head-dot"></div>DIAGNOSTICS</div>
+  <div class="sec-body" style="padding:8px">
+    <table class="reg-table">
+      <thead><tr><th>Item</th><th>Value</th></tr></thead>
+      <tbody id="diagBody"></tbody>
+    </table>
+  </div>
+
+</div><!-- /right -->
+
+</div><!-- /main -->
+
+<script>
+// ══════════════════════ STATE ══════════════════════
+const S = {
+  running:false, mode:'manual', interval:null,
+  temps:[65,80,55], prevTemps:[65,80,55],
+  sp:{hi:120,warn:100,ctrl:75},
+  inputs:{i00:false,i01:false,i02:false,i03:false,i04:false},
+  outputs:{q00:false,q01:false,q02:false,q03:false},
+  bits:{sysEn:false,warn:false,hiAlm:false,almSet:false,almLatch:false},
+  scanCount:0, simTime:0,
+  trend:{t1:[],t2:[],t3:[]},
+  alarms:[], rampDir:[1,1,1],
+  prevReg:{},
+};
+const TREND_MAX=90;
+
+// ══════════════════════ PLC RUN/STOP ══════════════════════
+function plcRun(){
+  if(S.running) return;
+  S.running=true;
+  document.getElementById('btnRun').disabled=true;
+  document.getElementById('btnStop').disabled=false;
+  setBadge(true);
+  document.getElementById('pfdLive').textContent='● LIVE';
+  document.getElementById('pfdLive').style.color='var(--green)';
+  addAlarm('green','PLC entered RUN mode — scan cycle started');
+  S.interval=setInterval(mainLoop,300);
+}
+function plcStop(){
+  if(!S.running) return;
+  S.running=false;
+  clearInterval(S.interval); S.interval=null;
+  document.getElementById('btnRun').disabled=false;
+  document.getElementById('btnStop').disabled=true;
+  setBadge(false);
+  document.getElementById('pfdLive').textContent='● STOPPED';
+  document.getElementById('pfdLive').style.color='var(--text3)';
+  document.getElementById('scanInfo').textContent='SCAN: STOPPED';
+  addAlarm('orange','PLC entered STOP mode — all outputs de-energized');
+  Object.keys(S.outputs).forEach(k=>S.outputs[k]=false);
+  renderOutputs();
+}
+function setBadge(run){
+  const b=document.getElementById('plcBadge');
+  b.className='plc-badge '+(run?'badge-run':'badge-stop');
+  document.getElementById('plcTxt').textContent=run?'RUN':'STOP';
+}
+function resetAlarms(){
+  S.bits.almLatch=false; S.bits.almSet=false;
+  addAlarm('green','Alarms reset and acknowledged by operator');
+}
+
+// ══════════════════════ MODE ══════════════════════
+const modeDescs={
+  manual:{t:'Use the sliders to manually set each RTD temperature. Changes show instantly in the process diagram and ladder logic.',bg:'var(--blue-light)',c:'var(--blue)',bc:'rgba(37,99,235,.2)'},
+  ramp:{t:'Temperatures ramp up/down automatically. Watch the ladder rungs energize as temperatures cross setpoints.',bg:'var(--green-light)',c:'var(--green)',bc:'rgba(22,163,74,.2)'},
+  sine:{t:'Temperatures follow sine wave patterns — ideal for testing alarm response and ladder transitions.',bg:'var(--green-light)',c:'var(--green)',bc:'rgba(22,163,74,.2)'},
+  fault:{t:'⚠ Fault injection active — RTD-101 & RTD-102 are forced into fault state. Alarm latch will activate.',bg:'var(--red-light)',c:'var(--red)',bc:'rgba(220,38,38,.2)'},
+};
+function setMode(m){
+  S.mode=m;
+  ['Manual','Ramp','Sine','Fault'].forEach(n=>{
+    const el=document.getElementById('m'+n);
+    el.classList.toggle('active', n.toLowerCase()===m);
+  });
+  const d=modeDescs[m];
+  const desc=document.getElementById('modeDesc');
+  desc.textContent=d.t; desc.style.background=d.bg; desc.style.color=d.c; desc.style.border=`1px solid ${d.bc}`;
+  const manual=m==='manual';
+  [1,2,3].forEach(n=>{
+    const row=document.getElementById('slRow'+n);
+    const sl=document.getElementById('sl'+n);
+    row.style.opacity=manual?'1':'0.5';
+    sl.disabled=!manual;
+  });
+  if(m==='fault'){
+    S.inputs.i00=true; S.inputs.i01=true;
+    document.getElementById('fi00').checked=true;
+    document.getElementById('fi01').checked=true;
+    addAlarm('red','FAULT MODE: RTD-101 & RTD-102 fault injected');
+  } else {
+    S.inputs.i00=false; S.inputs.i01=false;
+    document.getElementById('fi00').checked=false;
+    document.getElementById('fi01').checked=false;
+  }
+}
+
+// ══════════════════════ SLIDER — with visual feedback ══════════════════════
+function onSlider(idx,val){
+  const prev=S.temps[idx];
+  S.temps[idx]=val;
+  const n=idx+1;
+  // update slider display value
+  const svEl=document.getElementById('slv'+n);
+  svEl.textContent=val+'°C';
+  // color the val based on threshold
+  svEl.className='sl-val'+(val>=S.sp.hi?' hot':val>=S.sp.warn?' warn':'');
+  // Flash slider row blue
+  const row=document.getElementById('slRow'+n);
+  row.classList.add('active');
+  clearTimeout(row._t);
+  row._t=setTimeout(()=>row.classList.remove('active'),600);
+  // Show change badge
+  const cb=document.getElementById('cb'+n);
+  const diff=val-prev;
+  if(Math.abs(diff)>0.5){
+    cb.textContent=(diff>0?'▲ +':('▼ '))+Math.abs(diff.toFixed(0))+'°';
+    cb.className='change-badge '+(diff>0?'cb-up':'cb-down');
+    cb.style.opacity='1';
+    clearTimeout(cb._t);
+    cb._t=setTimeout(()=>{ cb.style.opacity='0'; },1500);
+  }
+  // Immediately update card + PFD (no need to wait for scan)
+  updateCard(idx,val);
+  updatePfdBox(n,val);
+  // Flash PFD box
+  const box=document.getElementById('pb'+n);
+  const origSW=box.getAttribute('stroke-width')||'1.5';
+  box.setAttribute('stroke-width','3');
+  setTimeout(()=>box.setAttribute('stroke-width','1.5'),350);
+}
+
+// ══════════════════════ SETPOINT feedback ══════════════════════
+function onSp(key,el){
+  const v=+el.value;
+  if(key==='hi') S.sp.hi=v;
+  else if(key==='warn') S.sp.warn=v;
+  else S.sp.ctrl=v;
+  const row=document.getElementById('spRow_'+key);
+  row.classList.add('changed');
+  clearTimeout(row._t);
+  row._t=setTimeout(()=>row.classList.remove('changed'),900);
+  const names={hi:'High Alarm SP',warn:'Warning SP',ctrl:'Control SP'};
+  const cols={hi:'var(--red)',warn:'var(--orange)',ctrl:'var(--blue)'};
+  const bgs={hi:'var(--red-light)',warn:'var(--orange-light)',ctrl:'var(--blue-light)'};
+  const bc={hi:'rgba(220,38,38,.2)',warn:'rgba(234,88,12,.2)',ctrl:'rgba(37,99,235,.2)'};
+  const fb=document.getElementById('spFb');
+  fb.style.cssText=`display:block;background:${bgs[key]};color:${cols[key]};border-color:${bc[key]}`;
+  fb.textContent=`✓ ${names[key]} updated → ${v} °C — ladder logic will reflect on next scan`;
+  clearTimeout(fb._t);
+  fb._t=setTimeout(()=>fb.style.display='none',2500);
+  // Also update trend dashed lines immediately on next draw
+}
+
+function forceInput(key,val){
+  S.inputs[key]=val;
+  addAlarm(val?'orange':'green',`Force I/O: ${key.toUpperCase()} → ${val?'FORCED ON':'RELEASED'}`);
+}
+
+// ══════════════════════ SIMULATION ══════════════════════
+function simulate(){
+  S.simTime++;
+  if(S.mode==='ramp'){
+    for(let i=0;i<3;i++){
+      S.temps[i]+=S.rampDir[i]*(0.5+Math.random()*.3);
+      if(S.temps[i]>=185) S.rampDir[i]=-1;
+      if(S.temps[i]<=15) S.rampDir[i]=1;
+      S.temps[i]=Math.max(0,Math.min(200,S.temps[i]));
+    }
+    syncSliders();
+  } else if(S.mode==='sine'){
+    S.temps[0]=85+45*Math.sin(S.simTime*.04);
+    S.temps[1]=95+42*Math.sin(S.simTime*.03+1);
+    S.temps[2]=65+35*Math.sin(S.simTime*.05+2);
+    syncSliders();
+  } else if(S.mode==='fault'){
+    S.temps[0]=155+Math.random()*30;
+    S.temps[1]=170+Math.random()*20;
+    S.temps[2]=44+Math.random()*8;
+    syncSliders();
+  }
+}
+function syncSliders(){
+  [0,1,2].forEach(i=>{
+    const v=S.temps[i].toFixed(0);
+    document.getElementById('sl'+(i+1)).value=v;
+    const svEl=document.getElementById('slv'+(i+1));
+    svEl.textContent=v+'°C';
+    svEl.className='sl-val'+(+v>=S.sp.hi?' hot':+v>=S.sp.warn?' warn':'');
+    // show change badge
+    const diff=S.temps[i]-S.prevTemps[i];
+    if(Math.abs(diff)>1){
+      const cb=document.getElementById('cb'+(i+1));
+      cb.textContent=(diff>0?'▲ +':'▼ ')+Math.abs(diff.toFixed(0))+'°';
+      cb.className='change-badge '+(diff>0?'cb-up':'cb-down');
+      cb.style.opacity='1';
+      clearTimeout(cb._t);
+      cb._t=setTimeout(()=>{ cb.style.opacity='0'; },1000);
+    }
+    S.prevTemps[i]=S.temps[i];
+  });
+}
+
+// ══════════════════════ PLC SCAN ══════════════════════
+function scan(){
+  S.scanCount++;
+  const [t1,t2,t3]=S.temps;
+  const {hi,warn,ctrl}=S.sp;
+  const fault=S.inputs.i00||S.inputs.i01||S.inputs.i02;
+  const estop=S.inputs.i03;
+  const ack=S.inputs.i04;
+  const r1=!estop;
+  const r2=r1&&(t1>ctrl||t2>ctrl);
+  const r3=r1&&(t1>=warn||t2>=warn||t3>=warn);
+  const r4=r1&&(t1>=hi||t2>=hi||t3>=hi);
+  const r5=r4||fault;
+  const r6=(S.bits.almLatch||r5)&&!ack;
+  const r7=r6;
+  const r8=r7;
+  if(r5&&!S.bits.almSet){
+    if(r4) addAlarm('red',`HIGH TEMP ALARM — ${t1>=hi?'RTD-101':t2>=hi?'RTD-102':'RTD-103'} ≥ ${hi}°C`);
+    if(fault&&!r4) addAlarm('red','RTD SENSOR FAULT DETECTED');
+  }
+  const wasWarn=S.bits.warn;
+  if(r3&&!wasWarn) addAlarm('orange','TEMP WARNING — approaching high alarm setpoint');
+  if(!r3&&wasWarn) addAlarm('green','Warning cleared — temperatures normalised');
+  S.bits.sysEn=r1; S.bits.warn=r3; S.bits.hiAlm=r4; S.bits.almSet=r5; S.bits.almLatch=r6;
+  S.outputs.q00=r8; S.outputs.q01=r7; S.outputs.q02=r7; S.outputs.q03=r2&&!r7;
+  S.trend.t1.push(t1); S.trend.t2.push(t2); S.trend.t3.push(t3);
+  ['t1','t2','t3'].forEach(k=>{ if(S.trend[k].length>TREND_MAX) S.trend[k].shift(); });
+  return {r1,r2,r3,r4,r5,r6,r7,r8,fault};
+}
+
+// ══════════════════════ MAIN LOOP ══════════════════════
+function mainLoop(){
+  const t0=performance.now();
+  simulate(); const sc=scan(); renderAll(sc);
+  document.getElementById('scanInfo').textContent=`SCAN: ${(performance.now()-t0).toFixed(0)}ms  #${S.scanCount}`;
+  document.getElementById('lScan').textContent=`SCAN #${String(S.scanCount).padStart(4,'0')}`;
+}
+
+// ══════════════════════ RENDER ══════════════════════
+function renderAll(sc){
+  [0,1,2].forEach(i=>updateCard(i,S.temps[i]));
+  renderPFD();
+  renderOutputs();
+  drawTrend();
+  renderLadder(sc);
+  renderRegs();
+}
+
+function updateCard(i,t){
+  const n=i+1;
+  const fault=S.inputs[`i0${i}`];
+  const card=document.getElementById('card'+n);
+  const badge=document.getElementById('badge'+n);
+  const tempEl=document.getElementById('temp'+n);
+  const bar=document.getElementById('bar'+n);
+  bar.style.width=((t/200)*100)+'%';
+  tempEl.innerHTML=`${t.toFixed(1)}<span class="rtd-unit"> °C</span>`;
+  let st='',bc='rb-ok',bt='OK',bc2='var(--blue)',tc='var(--text)';
+  if(fault){st='s-fault';bc='rb-fault';bt='FAULT';bc2='#7c3aed';tc='#7c3aed';}
+  else if(t>=S.sp.hi){st='s-alarm';bc='rb-alarm';bt='ALARM';bc2='var(--red)';tc='var(--red)';}
+  else if(t>=S.sp.warn){st='s-warn';bc='rb-warn';bt='WARN';bc2='var(--orange)';tc='var(--orange)';}
+  card.className='rtd-card'+( st?' '+st:'');
+  badge.className='rtd-badge '+bc; badge.textContent=bt;
+  bar.style.background=bc2; tempEl.style.color=tc;
+}
+
+function updatePfdBox(n,t){
+  const bc=t>=S.sp.hi?'#dc2626':t>=S.sp.warn?'#ea580c':'#3b82f6';
+  const fill=t>=S.sp.hi?'#fef2f2':t>=S.sp.warn?'#fff7ed':'#eff6ff';
+  document.getElementById('pb'+n).setAttribute('stroke',bc);
+  document.getElementById('pb'+n).setAttribute('fill',fill);
+  document.getElementById('pdot'+n).setAttribute('fill',bc);
+  document.getElementById('pdl'+n).setAttribute('stroke',bc);
+  document.getElementById('pt'+n).textContent=t.toFixed(0)+'°C';
+}
+
+function renderPFD(){
+  [1,2,3].forEach(n=>updatePfdBox(n,S.temps[n-1]));
+  // Valve
+  const vo=S.outputs.q00;
+  ['v1','v2'].forEach(id=>{
+    document.getElementById(id).setAttribute('fill',vo?'#bfdbfe':'#e5e7eb');
+    document.getElementById(id).setAttribute('stroke',vo?'#3b82f6':'#9ca3af');
+  });
+  document.getElementById('vMid').setAttribute('stroke',vo?'#bfdbfe':'#e5e7eb');
+  document.getElementById('vLbl').textContent=vo?'OPEN':'CLOSED';
+  document.getElementById('vLbl').setAttribute('fill',vo?'#2563eb':'#9ca3af');
+  // Alarm light
+  const alm=S.bits.almLatch;
+  const alc=document.getElementById('almCircle');
+  alc.setAttribute('fill',alm?(S.scanCount%6<3?'#dc2626':'#fca5a5'):'#f3f4f6');
+  alc.setAttribute('stroke',alm?'#dc2626':'#d1d5db');
+  document.getElementById('almTxt').setAttribute('fill',alm?'#fff':'#9ca3af');
+  // Output box / heater
+  document.getElementById('outBox').setAttribute('fill',S.outputs.q03?'#f0fdf4':'#fafafa');
+  document.getElementById('outBox').setAttribute('stroke',S.outputs.q03?'#16a34a':'#d1d5db');
+  document.getElementById('htrTxt').textContent='HTR: '+(S.outputs.q03?'ON':'OFF');
+  document.getElementById('htrTxt').setAttribute('fill',S.outputs.q03?'#16a34a':'#9ca3af');
+  // Reactor level color
+  const mx=Math.max(...S.temps);
+  document.getElementById('rLevel').setAttribute('fill',mx>=S.sp.hi?'#fca5a5':mx>=S.sp.warn?'#fed7aa':'#bfdbfe');
+  // flow color
+  document.querySelectorAll('[id^=fl]').forEach(el=>el.setAttribute('stroke',S.running?'#93c5fd':'#e5e7eb'));
+}
+
+function renderOutputs(){
+  const cfg={q00:{g:true},q01:{g:false},q02:{g:false},q03:{g:true}};
+  Object.entries(S.outputs).forEach(([k,v])=>{
+    const led=document.getElementById('led_'+k);
+    const os=document.getElementById('os_'+k);
+    if(!led) return;
+    led.className='out-led'+(v?(cfg[k].g?' led-green':' led-red'):'');
+    os.textContent=v?'ON':'OFF';
+    os.className='out-state '+(v?(cfg[k].g?'on-green':'on-red'):'off-c');
+  });
+}
+
+function drawTrend(){
+  const canvas=document.getElementById('trendCanvas');
+  const W=canvas.parentElement.offsetWidth||canvas.offsetWidth||400; canvas.width=W; canvas.height=110;
+  const H=110; const ctx=canvas.getContext('2d');
+  ctx.fillStyle='#f9fafb'; ctx.fillRect(0,0,W,H);
+  ctx.strokeStyle='#e5e7eb'; ctx.lineWidth=1;
+  for(let i=0;i<=4;i++){
+    const y=(i/4)*H;
+    ctx.beginPath(); ctx.moveTo(28,y); ctx.lineTo(W,y); ctx.stroke();
+    ctx.fillStyle='#9ca3af'; ctx.font='9px Share Tech Mono';
+    ctx.fillText((200-i*50)+'°',1,y+9);
+  }
+  // SP_HI
+  const spy=H-(S.sp.hi/200)*H;
+  ctx.strokeStyle='#fca5a5'; ctx.lineWidth=1; ctx.setLineDash([5,4]);
+  ctx.beginPath(); ctx.moveTo(28,spy); ctx.lineTo(W,spy); ctx.stroke();
+  ctx.setLineDash([]); ctx.fillStyle='#f87171'; ctx.font='9px Share Tech Mono'; ctx.fillText('HI',W-16,spy-2);
+  // SP_WARN
+  const swy=H-(S.sp.warn/200)*H;
+  ctx.strokeStyle='#fdba74'; ctx.lineWidth=1; ctx.setLineDash([3,4]);
+  ctx.beginPath(); ctx.moveTo(28,swy); ctx.lineTo(W,swy); ctx.stroke();
+  ctx.setLineDash([]);
+  const cols=['#3b82f6','#16a34a','#ea580c'];
+  ['t1','t2','t3'].forEach((k,ci)=>{
+    const arr=S.trend[k]; if(arr.length<2) return;
+    ctx.strokeStyle=cols[ci]; ctx.lineWidth=1.8;
+    ctx.beginPath();
+    arr.forEach((v,i)=>{ const x=28+(i/(TREND_MAX-1))*(W-34); const y=H-(v/200)*H; i===0?ctx.moveTo(x,y):ctx.lineTo(x,y); });
+    ctx.stroke();
+  });
+}
+
+function renderRegs(){
+  const [t1,t2,t3]=S.temps;
+  const regs=[
+    {a:'MW100',t:'T1_PV',v:`${t1.toFixed(1)} °C`},
+    {a:'MW102',t:'T2_PV',v:`${t2.toFixed(1)} °C`},
+    {a:'MW104',t:'T3_PV',v:`${t3.toFixed(1)} °C`},
+    {a:'MW110',t:'SP_HI',v:`${S.sp.hi} °C`},
+    {a:'MW112',t:'SP_WARN',v:`${S.sp.warn} °C`},
+    {a:'MW114',t:'SP_CTRL',v:`${S.sp.ctrl} °C`},
+    {a:'MW120',t:'T_MAX',v:`${Math.max(t1,t2,t3).toFixed(1)} °C`},
+  ];
+  document.getElementById('regBody').innerHTML=regs.map(r=>{
+    const changed=S.prevReg[r.a]!==r.v;
+    S.prevReg[r.a]=r.v;
+    return `<tr${changed?' class="reg-flash"':''}><td style="color:var(--text3)">${r.a}</td><td style="color:var(--text2)">${r.t}</td><td class="rv">${r.v}</td></tr>`;
+  }).join('');
+  const bits2=[
+    {b:'M0.0',t:'SYS_EN',v:S.bits.sysEn},{b:'M0.2',t:'WARN',v:S.bits.warn},
+    {b:'M0.3',t:'HI_ALM',v:S.bits.hiAlm},{b:'M0.4',t:'ALM_SET',v:S.bits.almSet},
+    {b:'M0.5',t:'ALM_LCH',v:S.bits.almLatch},{b:'Q0.0',t:'COOL_V1',v:S.outputs.q00},
+    {b:'Q0.3',t:'HTR_EN',v:S.outputs.q03},
+  ];
+  document.getElementById('bitBody').innerHTML=bits2.map(b=>`<tr><td style="color:var(--text3)">${b.b}</td><td style="color:var(--text2)">${b.t}</td><td class="${b.v?'rb-true':'rb-false'}">${b.v?'TRUE':'FALSE'}</td></tr>`).join('');
+  const diag=[
+    {i:'Scan #',v:S.scanCount},{i:'Mode',v:S.mode.toUpperCase()},
+    {i:'Active Alarms',v:S.alarms.filter(a=>a.c==='red').length},
+    {i:'RTD Faults',v:[S.inputs.i00,S.inputs.i01,S.inputs.i02].filter(Boolean).length},
+    {i:'E-STOP',v:S.inputs.i03?'⚠ ACTIVE':'OK'},
+    {i:'Cooling Valve',v:S.outputs.q00?'OPEN':'CLOSED'},
+  ];
+  document.getElementById('diagBody').innerHTML=diag.map(d=>`<tr><td style="color:var(--text3)">${d.i}</td><td class="rv">${d.v}</td></tr>`).join('');
+}
+
+// ══════════════════════ LADDER RENDER ══════════════════════
+function renderLadder(sc){
+  if(!sc) return;
+  const {r1,r2,r3,r4,r5,r6,r7,r8}=sc;
+  const [t1,t2,t3]=S.temps;
+  const rungs=[
+    {n:'001',cmt:'// E-STOP Check: NC contact I0.3 — de-energizes system when E-STOP is active',en:r1,
+     els:[{type:'C',lbl:'I0.3\nE-STOP',nc:true,st:!S.inputs.i03},{type:'W',st:r1},{type:'L',lbl:'M0.0\nSYS_EN',alarm:false,st:r1}]},
+    {n:'002',cmt:'// Heater Enable: ON when any temp > SP_CTRL and system enabled, no alarm',en:r2,
+     els:[{type:'C',lbl:'M0.0\nSYS_EN',nc:false,st:r1},{type:'F',lbl:`GRT\n>  ${S.sp.ctrl}°`,st:t1>S.sp.ctrl||t2>S.sp.ctrl,alarm:false},{type:'L',lbl:'Q0.3\nHTR_EN',alarm:false,st:r2}]},
+    {n:'003',cmt:'// Warning detection: any RTD ≥ SP_WARN sets warning bit M0.2',en:r3,
+     els:[{type:'C',lbl:'M0.0\nSYS_EN',nc:false,st:r1},{type:'F',lbl:`GEQ\n≥ ${S.sp.warn}°`,st:r3,alarm:false},{type:'L',lbl:'M0.2\nWARN',alarm:false,st:r3}]},
+    {n:'004',cmt:'// High Alarm: any RTD ≥ SP_HI triggers alarm bit M0.3',en:r4,
+     els:[{type:'C',lbl:'M0.0\nSYS_EN',nc:false,st:r1},{type:'F',lbl:`GEQ\n≥ ${S.sp.hi}°`,st:r4,alarm:true},{type:'L',lbl:'M0.3\nHI_ALM',alarm:true,st:r4}]},
+    {n:'005',cmt:'// Alarm SET: latched by high alarm OR sensor fault (I0.0/I0.1/I0.2)',en:r5,
+     els:[{type:'C',lbl:'M0.3\nHI_ALM',nc:false,st:r4},{type:'W',st:r5},{type:'L',lbl:'M0.4\nALM_SET',alarm:true,st:r5}]},
+    {n:'006',cmt:'// Alarm LATCH HOLD: maintains latch until ACK pressed (I0.4 NC)',en:r6,
+     els:[{type:'C',lbl:'M0.4\nALM_SET',nc:false,st:S.bits.almSet},{type:'C',lbl:'I0.4\nACK',nc:true,st:!S.inputs.i04},{type:'L',lbl:'M0.5\nALM_LCH',alarm:true,st:r6}]},
+    {n:'007',cmt:'// Cooling Valve OPEN: Q0.0 energized when alarm latch active',en:r8,
+     els:[{type:'C',lbl:'M0.5\nALM_LCH',nc:false,st:S.bits.almLatch},{type:'W',st:r8},{type:'L',lbl:'Q0.0\nCOOL_V1',alarm:false,st:r8}]},
+    {n:'008',cmt:'// Alarm Outputs: Horn (Q0.1) & Light (Q0.2) follow alarm latch',en:r7,
+     els:[{type:'C',lbl:'M0.5\nALM_LCH',nc:false,st:S.bits.almLatch},{type:'W',st:r7},{type:'L',lbl:'Q0.1\nALM_HRN',alarm:true,st:r7}]},
+  ];
+  const body=document.getElementById('ladderBody');
+  body.innerHTML='';
+  const wC=s=>s?'var(--green)':'#d1d5db';
+  const rC=e=>e?'var(--green)':'#b0b7c3';
+  rungs.forEach(rung=>{
+    const blk=document.createElement('div'); blk.className='rung-block';
+    const cmt=document.createElement('div'); cmt.className='rung-cmt'; cmt.textContent=rung.cmt;
+    blk.appendChild(cmt);
+    const row=document.createElement('div'); row.className='rung-row';
+    // num
+    const num=document.createElement('div'); num.className='rung-num'; num.textContent=rung.n; row.appendChild(num);
+    // left rail
+    const lr=document.createElement('div'); lr.className='l-rail'; lr.style.background=rC(rung.en); row.appendChild(lr);
+    const lhw=document.createElement('div'); lhw.className='l-hw'; lhw.style.cssText=`width:8px;background:${wC(rung.en)}`; row.appendChild(lhw);
+    // elements
+    const elems=document.createElement('div'); elems.className='rung-elems';
+    rung.els.forEach(el=>{
+      if(el.type==='W'){
+        const w=document.createElement('div');
+        w.style.cssText=`flex:1;height:2px;min-width:14px;background:${wC(el.st)};transition:background .2s`;
+        elems.appendChild(w); return;
+      }
+      const wrap=document.createElement('div'); wrap.className='elem-wrap';
+      const lbl=document.createElement('div'); lbl.className='e-lbl'; lbl.textContent=el.lbl||''; wrap.appendChild(lbl);
+      const er=document.createElement('div'); er.className='e-row';
+      const lw=document.createElement('div'); lw.className='e-w'; lw.style.background=wC(el.st); er.appendChild(lw);
+      if(el.type==='C'){
+        const c=document.createElement('div');
+        c.className='e-contact'+(el.st?' en-contact':'');
+        if(el.nc){
+          const slash=document.createElement('div');
+          slash.style.cssText=`position:absolute;width:20px;height:2px;background:${el.st?'var(--green)':'#b0b7c3'};top:50%;left:-2px;transform:translateY(-50%) rotate(-38deg);`;
+          c.appendChild(slash);
+        }
+        er.appendChild(c);
+      } else if(el.type==='L'){
+        const c=document.createElement('div');
+        c.className='e-coil'+(el.st?(el.alarm?' en-alarm-coil':' en-coil'):'');
+        er.appendChild(c);
+      } else if(el.type==='F'){
+        const f=document.createElement('div');
+        f.className='e-func'+(el.st?(el.alarm?' en-alarm-func':' en-func'):'');
+        f.textContent=el.lbl||'';
+        er.appendChild(f);
+      }
+      const rw=document.createElement('div'); rw.className='e-w'; rw.style.background=wC(el.st); er.appendChild(rw);
+      wrap.appendChild(er); elems.appendChild(wrap);
+    });
+    row.appendChild(elems);
+    const rhw=document.createElement('div'); rhw.className='l-hw'; rhw.style.cssText=`width:8px;background:${wC(rung.en)}`; row.appendChild(rhw);
+    const rr=document.createElement('div'); rr.className='l-rail'; rr.style.background=rC(rung.en); row.appendChild(rr);
+    blk.appendChild(row); body.appendChild(blk);
+  });
+}
+
+function addAlarm(c,msg){
+  const now=new Date();
+  const t=`${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}:${String(now.getSeconds()).padStart(2,'0')}`;
+  S.alarms.unshift({c,msg,t});
+  if(S.alarms.length>30) S.alarms.pop();
+  const list=document.getElementById('almList');
+  list.innerHTML=S.alarms.map((a,i)=>`
+    <div class="alm-row">
+      <div class="alm-dot" style="background:${a.c==='red'?'var(--red)':a.c==='orange'?'var(--orange)':'var(--green)'}"></div>
+      <span class="alm-time">${a.t}</span>
+      <span class="alm-msg">${a.msg}</span>
+      ${a.c==='red'?`<button class="alm-ack" onclick="ackAlarm(${i})">ACK</button>`:''}
+    </div>`).join('');
+  const cnt=S.alarms.filter(a=>a.c==='red').length;
+  document.getElementById('almCount').textContent=cnt>0?`${cnt} ACTIVE`:'';
+}
+function ackAlarm(i){
+  S.alarms[i].c='green'; S.alarms[i].msg='[ACK] '+S.alarms[i].msg;
+  addAlarm('green','Alarm acknowledged by operator');
+}
+
+// ── Init mode ──
+setMode('manual');
+</script>
+</body>
+</html>

@@ -1,0 +1,6 @@
+# Ignore node_modules folder and file
+/node_modules
+npm-debug.log
+# Ignore dist folder and file
+/dist
+fix_error

@@ -1,0 +1,240 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PLC Software</title>
+    <link rel="stylesheet" href="../defination.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+  </head>
+
+  <body>
+    <div class="container">
+      <header style="display: flex">
+        <div class="logo-container">
+          <img src="../../assets/Scientech logo-2.png" alt="Scientech Logo" />
+          <h1>Introduction to Variable Frequency Drives</h1>
+        </div>
+      </header>
+
+      <main>
+        <a href="../../index.html" class="back-button">
+          <i class="fas fa-arrow-left"></i> Back to Course
+        </a>
+
+        <div class="content-wrapper">
+          <div class="image-section">
+            <img
+              style="border-radius: 20px; border: 2px solid black"
+              src="../../assets/Introduction to Variable Frequency Drives.png"
+              alt="Introduction to Variable Frequency Drives"
+            />
+          </div>
+          <div class="theory-section">
+            <h2>Introduction to Variable Frequency Drives</h2>
+            <p>
+              A <b>variable frequency drive</b> (VFD) is a device that controls
+              the speed and torque of an AC motor by adjusting the frequency and
+              voltage of the power supply. A VFD can also regulate the
+              acceleration and deceleration of the motor during start-up and
+              stop, respectively. A VFD consists of three main components: a
+              rectifier, an inverter, and a control system.
+            </p>
+
+            <img
+              style="
+                margin-left: 151px;
+                margin-bottom: 30px;
+                border: 2px solid black;
+                align-self: center;
+                height: auto;
+                width: 377px;
+                border-radius: 20px;
+              "
+              src="../../assets/Introduction to Variable Frequency Drives_3.png"
+              alt="Introduction to Variable Frequency Drives_3"
+            />
+
+            <p><b>A VFD is used for various purposes, such as:</b></p>
+            <ul>
+              <li>Saving energy and improving system efficiency</li>
+              <li>Converting power in hybridization applications</li>
+              <li>
+                Matching the speed or power of the motor to the process
+                requirements
+              </li>
+              <li>
+                Improving the working environment by lowering noise and
+                vibration
+              </li>
+              <li>
+                Reducing mechanical stress on the motor and extending its
+                lifetime
+              </li>
+              <li>
+                Shaving peak consumption and reducing the motor size required
+              </li>
+            </ul>
+
+            <p>
+              VFD is commonly used in applications that involve fans, pumps,
+              compressors, conveyors, crushers, mills, lifts, escalators, etc. A
+              VFD can provide significant benefits over other types of motor
+              controllers, such as soft starters or across-the-line contactors.
+            </p>
+
+            <p style="font-size: 20px; font-weight: bold">
+              N<sub>s</sub> =
+              <span style="display: inline-block; text-align: center">
+                <span style="border-bottom: 1px solid black; display: block"
+                  >120f</span
+                >
+                <span>p</span>
+              </span>
+            </p>
+
+            <img
+              style="
+                margin-left: 73px;
+                border: 2px solid black;
+                align-self: center;
+                height: auto;
+                width: 528px;
+                border-radius: 20px;
+                margin-bottom: 30px;
+              "
+              src="../../assets/Introduction to Variable Frequency Drives_2.png"
+              alt="Introduction to Variable Frequency Drives_2"
+            />
+
+            <h2>Five Main Types of Variable Frequency Drives (VFDs)</h2>
+
+            <h3>1. Voltage Source Inverter (VSI) Drives</h3>
+            <p>
+              VSI drives use a DC voltage source obtained from a rectifier and
+              DC-link capacitors. The inverter converts this fixed DC voltage
+              into variable-frequency and variable-voltage AC output.
+            </p>
+            <p>
+              <b>Applications:</b><br />
+              Fans, pumps, compressors, conveyors
+            </p>
+            <p><b>Advantages:</b></p>
+            <ul>
+              <li>Simple structure</li>
+              <li>High efficiency</li>
+              <li>Widely available and cost-effective</li>
+            </ul>
+
+            <h3>2. Current Source Inverter (CSI) Drives</h3>
+            <p>
+              CSI drives use a DC current source, maintained by large inductors.
+              The inverter regulates output current rather than voltage.
+            </p>
+            <p>
+              <b>Applications:</b><br />
+              Medium- and high-power drives, synchronous motors, regenerative
+              systems
+            </p>
+            <p><b>Advantages:</b></p>
+            <ul>
+              <li>Inherent short-circuit protection</li>
+              <li>High reliability</li>
+              <li>Suitable for regenerative operation</li>
+            </ul>
+
+            <h3>3. Pulse Width Modulation (PWM) Drives</h3>
+            <p>
+              PWM drives control motor voltage and frequency by varying the
+              width of inverter switching pulses. This results in smooth motor
+              operation and low harmonic distortion.
+            </p>
+            <p>
+              <b>Applications:</b><br />
+              General-purpose industrial motors, HVAC systems, machine tools
+            </p>
+            <p><b>Advantages:</b></p>
+            <ul>
+              <li>Good speed control</li>
+              <li>Reduced harmonic distortion</li>
+              <li>High energy efficiency</li>
+            </ul>
+
+            <h3>4. Direct Torque Control (DTC) Drives</h3>
+            <p>
+              DTC drives directly control motor torque and stator flux without
+              using PWM or an encoder. Switching decisions are made based on
+              instantaneous torque and flux values.
+            </p>
+            <p>
+              <b>Applications:</b><br />
+              Cranes, hoists, elevators, extruders
+            </p>
+            <p><b>Advantages:</b></p>
+            <ul>
+              <li>Very fast torque response</li>
+              <li>High torque accuracy</li>
+              <li>No encoder required</li>
+            </ul>
+
+            <h3>5. Multi-Level Inverter Drives</h3>
+            <p>
+              These drives generate output voltage using multiple voltage levels
+              instead of a single high-voltage step, reducing stress on power
+              devices and improving output waveform quality.
+            </p>
+            <p>
+              <b>Applications:</b><br />
+              Medium- and high-voltage drives, large pumps, compressors, power
+              plants
+            </p>
+            <p><b>Advantages:</b></p>
+            <ul>
+              <li>Lower harmonic distortion</li>
+              <li>Reduced dv/dt stress</li>
+              <li>High efficiency at high power levels</li>
+            </ul>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <script>
+      // Add smooth scroll behavior for anchor links
+      document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+        anchor.addEventListener("click", function (e) {
+          e.preventDefault();
+          const target = document.querySelector(this.getAttribute("href"));
+          if (target) {
+            target.scrollIntoView({ behavior: "smooth" });
+          }
+        });
+      });
+    </script>
+
+    <!-- MCQ Modal -->
+    <div id="mcq-modal" class="mcq-modal">
+      <div class="mcq-modal-content">
+        <div class="mcq-modal-header">
+          <h2>Multiple Choice Questions</h2>
+          <button class="close-btn" onclick="closeMCQModal()">&times;</button>
+        </div>
+        <div class="mcq-modal-body">
+          <div id="mcq-container"></div>
+        </div>
+        <div class="mcq-modal-footer">
+          <button class="reset-btn" onclick="resetMCQs()">Reset Answers</button>
+          <button class="close-modal-btn" onclick="closeMCQModal()">
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MCQ Handler Script -->
+    <script src="../mcq-handler.js"></script>
+  </body>
+</html>

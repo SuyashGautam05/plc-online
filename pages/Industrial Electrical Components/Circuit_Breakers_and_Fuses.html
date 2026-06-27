@@ -1,0 +1,315 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PLC Software</title>
+    <link rel="stylesheet" href="../defination.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+
+<body>
+    <div class="container">
+        <header style="display: flex;">
+            <div class="logo-container">
+                <img src="../../assets/Scientech logo-2.png" alt="Scientech Logo">
+                <h1>Circuit Breakers and Fuses</h1>
+            </div>
+        </header>
+
+        <main>
+            <a href="../../index.html" class="back-button">
+                <i class="fas fa-arrow-left"></i> Back to Course
+            </a>
+
+            <div class="content-wrapper">
+                <div class="image-section">
+                    <img style="border-radius: 20px;border: 2px solid black;"
+                        src="../../assets/Circuit Breakers and Fuses.png" alt="PLC Definition Illustration">
+                </div>
+
+                <div class="theory-section">
+                    <h2>Circuit Breakers and Fuses</h2>
+                    <p>
+                        Circuit breakers and fuses are critical protective devices used in industrial electrical and
+                        automation systems. Their primary function is to protect electrical circuits, equipment, and
+                        personnel from damage caused by abnormal conditions such as overloads, short circuits, and
+                        faults. By interrupting the flow of excessive current, these devices prevent overheating, fire
+                        hazards, and equipment failure, thereby ensuring safe and reliable operation of automation
+                        systems.
+                    </p>
+                    <!-- <img style="margin-left: 30px; border: 2px solid black; align-self: center;height: auto; width: auto;border-radius: 20px;"
+                        src="../../assets/Circuit Breakers and Fuses.png" alt=""> -->
+                    <h2>Need for Circuit Protection</h2>
+                    <p>
+                        Electrical circuits are designed to operate within specific current limits. When these limits
+                        are exceeded due to faults or excessive load, serious damage can occur.
+                    </p>
+                    <p><b>Circuit protection is required to:</b></p>
+                    <ul>
+                        <li>Prevent damage to cables and insulation.</li>
+                        <li>Protect motors and control equipment.</li>
+                        <li>Reduce risk of fire and electrical accidents.</li>
+                        <li>Ensure continuity and reliability of operations.</li>
+                    </ul>
+                    <h2>Internal Structure </h2>
+                    <img style="margin-left: 30px;margin-bottom: 30px; border: 2px solid black;align-self: center;height: auto; width: auto;border-radius: 20px;"
+                        src="../../assets/Circuit Breakers and Fuses_2.png" alt="">
+                    <ol>
+                        <li><b>Actuator lever: </b> used to manually trip and reset the circuit breaker. Also indicates
+                            the status of the circuit breaker (On or Off/tripped). Most breakers are designed so they
+                            can still trip even if the lever is held or locked in the “on” position. This is sometimes
+                            referred to as “free trip” or “positive trip” operation.</li>
+                        <li><b>Actuator mechanism: </b> forces the contacts together or apart.</li>
+                        <li><b>Contacts: </b> allow current when touching and break the current when moved apart.</li>
+                        <li><b>Terminals</b> </li>
+                        <li><b>Bimetallic strip: </b> separates contacts in response to smaller, longer-term
+                            overcurrents.</li>
+                        <li><b>Calibration screw: </b> allows the manufacturer to precisely adjust the trip current of
+                            the device after assembly.</li>
+                        <li><b>Solenoid: </b> separates contacts rapidly in response to high overcurrents.</li>
+                        <li><b>Arc divider/extinguisher</b> </li>
+                    </ol>
+                    <h2>Types of MCB based on Tripping Characteristics</h2>
+                    <ul>
+                        <li><b>Type B: </b>
+                            <ul>
+                                <li>In type B, the MCB trips between 3 to 5 times of full load.</li>
+                                <li>Operating current 0.4 to 13 seconds.</li>
+                                <li><b>Type of load: </b> Resistive loads.</li>
+                                <li><b>Response: </b> React quickly to overloads.</li>
+                                <li><b>Uses: </b> Incandescent lighting, bulbs, heaters. Residential applications.</li>
+                            </ul>
+                            <img style="margin-left: 130px;margin-bottom: 30px; border: 2px solid black; align-self: center;height: auto; width: auto;border-radius: 20px;"
+                                src="../../assets/Type B.png" alt="">
+                        </li>
+                        <li><b>Type C: </b>
+                            <ul>
+                                <li>In type C, the MCB trips between 5 to 10 times of full load. Used in residential or
+                                    industrial applications.</li>
+                                <li>Operating current 0.4 to 5 seconds.</li>
+                                <li><b>Type of Load: </b> Slightly inductive loads.</li>
+                                <li><b>Response: </b> React more slowly.</li>
+                                <li><b>Uses: </b> Highly inductive loads such as motors, Air conditioners, fans, and
+                                    household appliances.</li>
+                            </ul>
+                            <img style="margin-left: 130px;margin-bottom: 30px; border: 2px solid black; align-self: center;height: auto; width: auto;border-radius: 20px;"
+                                src="../../assets/Type C.png" alt="">
+                        </li>
+                        <li><b>Type D: </b>
+                            <ul>
+                                <li>In type D, the MCB trips between 10 to 20 times of full load. This is used in
+                                    industrial or commercial applications where there could be chances of the higher
+                                    value of short circuit currents in the circuit.</li>
+                                <li>Operating current 0.4 to 3 seconds.</li>
+                                <li><b>Type of Load: </b> Inductive loads.</li>
+                                <li><b>Response: </b> React more slowly.</li>
+                                <li><b>Uses: </b> Very high inrush inductive currents such as small transformers, UPS,
+                                    small motors, pumps.</li>
+                            </ul>
+                            <img style="margin-left: 130px;margin-bottom: 30px; border: 2px solid black; align-self: center;height: auto; width: auto;border-radius: 20px;"
+                                src="../../assets/Type D.png" alt="">
+                        </li>
+                    </ul>
+                    <h2>Types of MCB based on Poles</h2>
+                    <ul>
+                        <li><b>A single-pole (1P): </b> MCB provides switching and protection only for one single phase
+                            of supply.</li>
+                        <li><b>A two-pole (2P): </b> provides switching and protection for both phase and neutral.</li>
+                        <li><b>A three-pole (3P): </b> MCB provides switching and protection only to three phases and
+                            not neutral.</li>
+                        <li><b>A three-pole with neutral (3P+N): </b> has switching and protection to all three phases
+                            and additionally neutral.</li>
+                        <li><b>A four-pole (4P) MCB: </b> is similar to Three poles neutral.</li>
+                    </ul>
+                    <img style="margin-bottom: 30px; border: 2px solid black; align-self: center;height: auto; width: auto;border-radius: 20px;"
+                        src="../../assets/Types of MCB based on Poles.png" alt="">
+                    <h2>Applications in Industrial Automation</h2>
+                    <p><b>In automation systems, circuit breakers and fuses are used to protect:</b></p>
+                    <ul>
+                        <li>Motors and drives.</li>
+                        <li>PLCs and control panels.</li>
+                        <li>Power supplies and auxiliary circuits.</li>
+                        <li>Wiring and distribution systems.</li>
+                    </ul>
+                    <p>
+                        Proper coordination between fuses and circuit breakers ensures selective protection and
+                        minimizes downtime.
+                    </p>
+                    <img style="margin-bottom: 30px; border: 2px solid black; align-self: center;height: auto; width: auto;border-radius: 20px;"
+                        src="../../assets/Applications in Industrial Automation.png" alt="">
+                    <h2>What is RCCB?</h2>
+                    <p>
+                        RCCB is Residual Current Circuit Breaker. This residual current device is basically an
+                        electrical wiring device that disconnects the circuit whenever there is leakage of current flow
+                        through the Human body or the current is not balanced between the phase-conductor. It is the
+                        safest device to detect and trip against electrical leakage currents, thus ensure protection
+                        against electric shock caused by direct contacts. RCCB is generally used in series with an MCB
+                        which protects them from over current and short circuit current.
+                    </p>
+                    <img style="margin-left: 130px; border: 2px solid black; align-self: center;height: auto; width: auto;border-radius: 20px;"
+                        src="../../assets/RCCB.png" alt="">
+                    <h2>What is ELCB?</h2>
+                    <p>
+                        ELCB stands for Earth Leakage Circuit Breaker. They have the same function as RCCB but are
+                        voltage-sensing devices. However, this is an old technology and is not in common use. RCCB,
+                        being a current-sensitive device, has a better advantage over ELCB as it detects leakage current
+                        directly, operates faster, does not depend on earth resistance, and provides more reliable
+                        protection against electric shock and fire hazards.
+                    </p>
+                    <img style="margin-left: 130px;margin-bottom: 30px; border: 2px solid black; align-self: center;height: auto; width: auto;border-radius: 20px;"
+                        src="../../assets/ELCB.png" alt="">
+                    <h2>Fuses</h2>
+                    <p>
+                        A fuse is a simple protective device that interrupts the circuit when excessive current flows.
+                        It consists of a metal element that melts when the current exceeds a predetermined value,
+                        thereby breaking the circuit.
+                    </p>
+                    <img style="margin-left: 130px;margin-bottom: 30px; border: 2px solid black; align-self: center;height: auto; width: auto;border-radius: 20px;"
+                        src="../../assets/Fuses.jpg" alt="">
+                    <p><b>Key characteristics of fuses:</b></p>
+                    <ul>
+                        <li>Simple construction and operation.</li>
+                        <li>Fast response to short-circuit conditions.</li>
+                        <li>Reliable and cost-effective protection.</li>
+                        <li>Requires replacement after operation.</li>
+                    </ul>
+                    <p><b>Fuses are commonly used in:</b></p>
+                    <ul>
+                        <li>Control circuits.</li>
+                        <li>Electronic equipment protection.</li>
+                        <li>Small motors and auxiliary circuits.</li>
+                    </ul>
+                    <p>
+                        While fuses offer reliable protection, their main limitation is that they must be replaced once
+                        they operate.
+                    </p>
+                    <!-- <ul>
+                        <li><b>Flexibility: </b> Control logic can be changed by modifying the program instead of
+                            rewiring hardware.</li>
+                        <li><b>Compact Size: </b> Replaces large relay panels, saving space.</li>
+                        <li><b>High Reliability: </b> Solid-state components reduce mechanical wear and failure.</li>
+                        <li><b>Easy Troubleshooting: </b> Diagnostic tools and status indicators simplify fault
+                            detection.</li>
+                        <li><b>Reduced Maintenance: </b> Quick response time compared to electromechanical relays.</li>
+                        <li><b>Faster Operation: </b> bottling, filling, and labeling processes.</li>
+                        <li><b>Scalability : </b> Easy expansion of inputs and outputs.</li>
+                    </ul> -->
+                    <!-- <img style="margin-left: 20px; border: 2px solid black; align-self: center;height: auto; width: 528px;border-radius: 20px;" src="../assets/Pages/Applications_of_plc.png" alt=""> -->
+
+                    <!-- <h2>PLC (Programmable Logic Controller)</h2>
+                    <p>A programmable Logic Controller(PLC) is a specialized digital computer employed in industrial
+                        settings for automation and control. Acting as the central brain of machinery and processes,
+                        PLCs receive input from sensors, process the data through programmed logic, and generate output
+                        signals to control devices like motors and valves. They use a programming language, often ladder
+                        logic, resembling electrical relay diagrams. PLCs are ruggedized for harsh industrial
+                        environments and play a crucial role in automating tasks and reducing manufacturing and energy.
+                        Their modular design allows scalability, making them versatile components in modern industrial
+                        control systems.</p>
+
+                    <img style="border: 2px solid black; align-self: center;border-radius: 20px;" src="../assets/Pages/PLC.jpg" alt="">
+
+                    <h2>Where Can PLC Be Used?</h2>
+                    <p>
+                        PLCs play a pivotal role in industrial automation, efficiently managing machinery and processes.
+                        They receive data from sensors, execute programmed logic, and control actuators, enhancing
+                        precision and reducing manual intervention. PLCs find application across diverse industries,
+                        from manufacturing to utilities, ensuring streamlined operations, increased productivity, and
+                        adaptability to evolving production needs. Their robust capabilities make PLCs indispensable in
+                        modern industrial settings, facilities with seamless control and automation for improved
+                        efficiency and reliability.
+                    </p> -->
+                    <!-- <p>
+                        A <strong>Programmable Logic Controller (PLC)</strong> is a digital computing device used to
+                        automate electromechanical processes such as control of machinery on factory assembly lines,
+                        amusement rides, or light fixtures. It is a specialized computer designed to monitor and control
+                        manufacturing processes and other automated systems.
+                    </p>
+
+                    <h3 style="margin-top: 20px; margin-bottom: 15px; color: var(--text-color);">Key Characteristics:
+                    </h3>
+                    <ul>
+                        <li><strong>Programmable:</strong> Can be programmed to perform specific tasks according to user
+                            requirements</li>
+                        <li><strong>Rugged Design:</strong> Built to withstand harsh industrial environments with
+                            temperature, humidity, and vibration</li>
+                        <li><strong>Reliable:</strong> Provides consistent and repeatable performance in critical
+                            applications</li>
+                        <li><strong>User-Friendly:</strong> Utilizes standard programming languages like Ladder Diagram,
+                            which resembles traditional electrical schematics</li>
+                        <li><strong>Fast Response:</strong> Provides real-time monitoring and control of industrial
+                            processes</li>
+                        <li><strong>Cost-Effective:</strong> Reduces wiring and maintenance costs compared to
+                            conventional relay systems</li>
+                    </ul>
+
+                    <h3 style="margin-top: 25px; margin-bottom: 15px; color: var(--text-color);">Main Components:</h3>
+                    <ul>
+                        <li><strong>Power Supply:</strong> Provides electrical power to the PLC</li>
+                        <li><strong>Processor (CPU):</strong> The brain of the PLC that executes the program</li>
+                        <li><strong>Memory:</strong> Stores the program and operational data</li>
+                        <li><strong>Input Modules:</strong> Receive signals from sensors and switches</li>
+                        <li><strong>Output Modules:</strong> Send control signals to actuators and motors</li>
+                        <li><strong>Communication Module:</strong> Enables communication with other devices and systems
+                        </li>
+                    </ul>
+
+                    <h3 style="margin-top: 25px; margin-bottom: 15px; color: var(--text-color);">Basic Operating Cycle:
+                    </h3>
+                    <ul>
+                        <li><strong>Input Scan:</strong> The PLC reads the status of all input devices</li>
+                        <li><strong>Program Execution:</strong> The processor executes the control program based on
+                            current inputs and stored data</li>
+                        <li><strong>Output Update:</strong> The PLC sends the results to output devices (solenoids,
+                            motors, lights, etc.)</li>
+                        <li><strong>Housekeeping:</strong> The PLC performs diagnostics and prepares for the next cycle
+                        </li>
+                    </ul>
+
+                    <p style="margin-top: 25px;">
+                        The entire cycle typically occurs in milliseconds, making PLCs suitable for real-time industrial
+                        automation and control applications. Modern PLCs are integral to industrial IoT and Industry 4.0
+                        initiatives, enabling seamless integration with cloud-based monitoring and data analytics
+                        systems.
+                    </p> -->
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        // Add smooth scroll behavior for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth' });
+                }
+            });
+        });
+    </script>
+
+        <!-- MCQ Modal -->
+    <div id="mcq-modal" class="mcq-modal">
+        <div class="mcq-modal-content">
+            <div class="mcq-modal-header">
+                <h2>Multiple Choice Questions</h2>
+                <button class="close-btn" onclick="closeMCQModal()">&times;</button>
+            </div>
+            <div class="mcq-modal-body">
+                <div id="mcq-container"></div>
+            </div>
+            <div class="mcq-modal-footer">
+                <button class="reset-btn" onclick="resetMCQs()">Reset Answers</button>
+                <button class="close-modal-btn" onclick="closeMCQModal()">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- MCQ Handler Script -->
+    <script src="../mcq-handler.js"></script>
+</body>
+
+</html>

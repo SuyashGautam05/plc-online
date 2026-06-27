@@ -1,0 +1,279 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PLC Software</title>
+    <link rel="stylesheet" href="../defination.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+  </head>
+
+  <body>
+    <div class="container">
+      <header style="display: flex">
+        <div class="logo-container">
+          <img src="../../assets/Scientech logo-2.png" alt="Scientech Logo" />
+          <h1>VFD Parameters and Settings</h1>
+        </div>
+      </header>
+
+      <main>
+        <a href="../../index.html" class="back-button">
+          <i class="fas fa-arrow-left"></i> Back to Course
+        </a>
+
+        <div class="content-wrapper">
+          <div class="image-section">
+            <img
+              style="border-radius: 20px; border: 2px solid black"
+              src="../../assets/VFD Parameters and Settings.png"
+              alt="VFD Parameters and Settings"
+            />
+          </div>
+
+          <div class="theory-section">
+            <h2>VFD Parameters and Settings</h2>
+            <p>
+              VFD parameters and settings define how a Variable Frequency Drive
+              operates, protects the motor, and responds to load conditions.
+              Correct parameter configuration is essential for safe operation,
+              accurate speed control, energy efficiency, and long equipment
+              life.
+            </p>
+
+            <h2>Motor Nameplate Data (Typical)</h2>
+            <table style="margin-left: 100px;" class="comparison-table">
+              <tr>
+                <th>Parameter</th>
+                <th>Value</th>
+              </tr>
+              <tr>
+                <td>Motor Power</td>
+                <td>1 HP (0.75 kW)</td>
+              </tr>
+              <tr>
+                <td>Rated Voltage</td>
+                <td>415 V AC</td>
+              </tr>
+              <tr>
+                <td>Rated Current</td>
+                <td>1.6 A</td>
+              </tr>
+              <tr>
+                <td>Rated Frequency</td>
+                <td>50 Hz</td>
+              </tr>
+              <tr>
+                <td>Rated Speed</td>
+                <td>1440 RPM</td>
+              </tr>
+              <tr>
+                <td>Power Factor</td>
+                <td>0.8</td>
+              </tr>
+              <tr>
+                <td>Number of Poles</td>
+                <td>4</td>
+              </tr>
+              <tr>
+                <td>Connection</td>
+                <td>Delta / Star (as per motor)</td>
+              </tr>
+            </table>
+
+            <h2>1. Motor Nameplate Parameters</h2>
+            <p>
+              These parameters must be set exactly as per the motor nameplate.
+            </p>
+            <ul>
+              <li>
+                <b>Rated Voltage (V): </b> Nominal operating voltage of the motor
+              </li>
+              <li><b>Rated Current (A): </b> Full load current</li>
+              <li><b>Rated Power (kW / HP): </b> Motor output power</li>
+              <li><b>Rated Frequency (Hz): </b> Usually 50 Hz or 60 Hz</li>
+              <li><b>Rated Speed (RPM): </b> Used for slip and torque calculations</li>
+              <li><b>Power Factor (Cos φ): </b> Improves torque estimation</li>
+            </ul>
+
+            <h2>2. Speed and Frequency Settings</h2>
+            <ul>
+              <li><b>Maximum Frequency: </b> Maximum allowable motor speed</li>
+              <li><b>Minimum Frequency: </b> Lowest operating speed</li>
+              <li><b>Base Frequency: </b> Frequency at rated voltage (e.g., 50 Hz)</li>
+              <li><b>Jog Frequency: </b> Low speed for setup and positioning</li>
+            </ul>
+
+            <h2>3. Acceleration and Deceleration Parameters</h2>
+            <ul>
+              <li><b>Acceleration Time: </b> Time taken to reach set speed</li>
+              <li><b>Deceleration Time: </b> Time taken to stop or slow down</li>
+              <li>
+                <b>S-Curve Acceleration: </b> Smooth start/stop to reduce mechanical
+                stress
+              </li>
+            </ul>
+
+            <h2>4. Control Mode Parameters</h2>
+            <ul>
+              <li><b>V/f Control: </b> For simple applications</li>
+              <li>
+                <b>Vector Control (FOC): </b> For accurate torque and speed control
+              </li>
+              <li><b>DTC: </b> For fast dynamic response</li>
+              <li><b>Control Mode Selection: </b> Open loop or closed loop</li>
+              <li><b>Encoder Settings </b> (if used)</li>
+            </ul>
+
+            <h2>5. Torque and Current Control Settings</h2>
+            <ul>
+              <li><b>Current Limit: </b> Prevents overcurrent damage</li>
+              <li><b>Torque Boost: </b> Improves low-speed torque</li>
+              <li><b>Slip Compensation: </b> Maintains speed under load</li>
+              <li><b>Torque Limit: </b> Restricts maximum torque output</li>
+            </ul>
+
+            <h2>6. Protection and Safety Parameters</h2>
+            <ul>
+              <li>Overcurrent Protection</li>
+              <li>Overvoltage / Undervoltage Protection</li>
+              <li>Overtemperature Protection</li>
+              <li>Motor Thermal Protection (I²t)</li>
+              <li>Ground Fault Protection</li>
+            </ul>
+
+            <h2>7. Braking Parameters</h2>
+            <ul>
+              <li><b>DC Injection Braking: </b> Stops motor quickly</li>
+              <li><b>Dynamic Braking: </b> Uses braking resistor</li>
+              <li><b>Regenerative Braking: </b> Feeds energy back to supply</li>
+              <li>Braking Start Frequency</li>
+              <li>Braking Time</li>
+            </ul>
+
+            <h2>8. Input and Output Settings</h2>
+            <p><b>Digital Inputs</b></p>
+            <ul>
+              <li>Start / Stop</li>
+              <li>Forward / Reverse</li>
+              <li>Jog</li>
+              <li>Fault Reset</li>
+            </ul>
+
+            <p><b>Analog Inputs</b></p>
+            <ul>
+              <li>Speed reference (0-10 V, 4-20 mA)</li>
+            </ul>
+
+            <p><b>Output Signals</b></p>
+            <ul>
+              <li>Relay outputs (Run, Fault, Ready)</li>
+              <li>Analog outputs (Speed, Current feedback)</li>
+            </ul>
+
+            <h2>9. Communication Parameters</h2>
+            <ul>
+              <li><b>Communication Protocol: </b> Modbus, Profibus, Ethernet/IP</li>
+              <li>Node Address</li>
+              <li>Baud Rate</li>
+              <li>Parity & Stop Bits</li>
+            </ul>
+
+            <h2>10. Energy and Efficiency Parameters</h2>
+            <ul>
+              <li>Energy Saving Mode</li>
+              <li>Sleep / Wake Function</li>
+              <li>Flux Optimization</li>
+              <li>Load Monitoring</li>
+            </ul>
+
+            <h2>11. Fault and Monitoring Parameters</h2>
+            <ul>
+              <li>Fault History Log</li>
+              <li>Real-Time Monitoring (Voltage, Current, Speed, Torque)</li>
+              <li>Alarm Thresholds</li>
+            </ul>
+
+            <h2>Summary Table of Key VFD Parameters</h2>
+            <table style="margin-left: 100px;" class="comparison-table">
+              <tr>
+                <th>Category</th>
+                <th>Examples</th>
+              </tr>
+              <tr>
+                <td>Motor Data</td>
+                <td>Voltage, Current, Power, Speed</td>
+              </tr>
+              <tr>
+                <td>Speed Control</td>
+                <td>Max/Min Frequency, Accel/Decel</td>
+              </tr>
+              <tr>
+                <td>Control Method</td>
+                <td>V/f, Vector, DTC</td>
+              </tr>
+              <tr>
+                <td>Protection</td>
+                <td>Overcurrent, Overvoltage, Thermal</td>
+              </tr>
+              <tr>
+                <td>Braking</td>
+                <td>DC, Dynamic, Regenerative</td>
+              </tr>
+              <tr>
+                <td>I/O &amp; Comms</td>
+                <td>Digital/Analog, Modbus</td>
+              </tr>
+            </table>
+
+            <p><b>Given:</b></p>
+            <p>3-Phase, 1 HP, 415 V, 50 Hz motor</p>
+            <p><b>If VFD frequency is set to 30 Hz:</b></p>
+
+            <p><b>Speed = 30/50 × 1440 = 864 RPM</b></p>
+
+            <p>Thus, motor speed reduces proportionally with frequency.</p>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <script>
+      // Add smooth scroll behavior for anchor links
+      document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+        anchor.addEventListener("click", function (e) {
+          e.preventDefault();
+          const target = document.querySelector(this.getAttribute("href"));
+          if (target) {
+            target.scrollIntoView({ behavior: "smooth" });
+          }
+        });
+      });
+    </script>
+
+    <!-- MCQ Modal -->
+    <div id="mcq-modal" class="mcq-modal">
+      <div class="mcq-modal-content">
+        <div class="mcq-modal-header">
+          <h2>Multiple Choice Questions</h2>
+          <button class="close-btn" onclick="closeMCQModal()">&times;</button>
+        </div>
+        <div class="mcq-modal-body">
+          <div id="mcq-container"></div>
+        </div>
+        <div class="mcq-modal-footer">
+          <button class="reset-btn" onclick="resetMCQs()">Reset Answers</button>
+          <button class="close-modal-btn" onclick="closeMCQModal()">
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MCQ Handler Script -->
+    <script src="../mcq-handler.js"></script>
+  </body>
+</html>

@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>RTD Temperature Sensor — Theory, Simulation & Quiz</title>
+<link rel="stylesheet" href="../defination.css">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=DM+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:#eef0f4;--panel:#fff;--panel2:#f6f7f9;--border:#dde1e8;--border2:#eaecf0;
+  --text:#1c1f26;--text2:#5a6070;--text3:#9aa0ae;
+  --blue:#2563eb;--blue2:#1d4ed8;--blue-light:#eff6ff;
+  --green:#16a34a;--green-light:#f0fdf4;
+  --red:#dc2626;--red-light:#fef2f2;
+  --orange:#ea580c;--orange-light:#fff7ed;
+  --mono: Georgia, 'Times New Roman', Times, serif;
+  --sans:Georgia, 'Times New Roman', Times, serif;
+  --radius:10px;
+  --shadow:0 1px 4px rgba(0,0,0,.08);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--sans);background:var(--bg);color:var(--text);min-height:100vh;font-size:14px}
+
+/* ── TOP NAV TABS ── */
+.topbar{background:var(--text);height:50px;display:flex;align-items:center;padding:0 20px;gap:16px;position:sticky;top:0;z-index:200;box-shadow:0 2px 8px rgba(0,0,0,.2)}
+.logo{font-family:var(--mono);font-size:16px;color:#fff;letter-spacing:2px}.logo span{color:#60a5fa}
+.tabs{display:flex;gap:4px;margin-left:auto}
+.tab-btn{padding:8px 20px;border-radius:6px;border:none;font-family:var(--sans);font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;color:#9ca3af;background:transparent;letter-spacing:.3px}
+.tab-btn:hover{color:#fff;background:rgba(255,255,255,.1)}
+.tab-btn.active{color:#fff;background:var(--blue);box-shadow:0 2px 8px rgba(37,99,235,.4)}
+
+/* ── SECTIONS ── */
+.section{display:none;padding:24px;max-width:1362px;margin:0 auto}
+.section.active{display:block}
+
+/* ── THEORY ── */
+.theory-grid{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:20px}
+@media(max-width:800px){.theory-grid{grid-template-columns:1fr}}
+.theory-card{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow)}
+.tc-head{padding:12px 16px;font-family:var(--mono);font-size:11px;letter-spacing:1.5px;text-transform:uppercase;color:#fff;display:flex;align-items:center;gap:8px}
+.tc-head.blue{background:var(--blue)}.tc-head.green{background:var(--green)}.tc-head.orange{background:var(--orange)}.tc-head.dark{background:#374151}
+.tc-body{padding:16px;font-size:13.5px;line-height:1.8;color:var(--text2)}
+.tc-body p{margin-bottom:10px}
+.tc-body ul{padding-left:18px;margin-bottom:10px}
+.tc-body li{margin-bottom:6px}
+.tc-body strong{color:var(--text)}
+.formula-box{background:#f8fafc;border:1px solid var(--border);border-left:3px solid var(--blue);border-radius:6px;padding:12px 16px;margin:10px 0;font-family:var(--mono);font-size:13px;color:var(--text)}
+.formula-box .formula-title{font-size:10px;color:var(--text3);margin-bottom:6px;letter-spacing:1px;text-transform:uppercase}
+.formula{font-size:15px;color:var(--blue);font-weight:bold;letter-spacing:.5px}
+.sub-vars{margin-top:8px;font-size:11px;color:var(--text3);line-height:1.8}
+.rtd-table{width:100%;border-collapse:collapse;font-size:12px;margin:10px 0}
+.rtd-table th{background:var(--panel2);padding:7px 10px;text-align:left;font-family:var(--mono);font-size:10px;letter-spacing:1px;color:var(--text3);border-bottom:1px solid var(--border);text-transform:uppercase}
+.rtd-table td{padding:7px 10px;border-bottom:1px solid var(--border2);font-family:var(--mono);font-size:12px}
+.rtd-table tr:last-child td{border-bottom:none}
+.circuit-box{background:#f9fafb;border:1px solid var(--border);border-radius:8px;padding:16px;text-align:center;margin:10px 0}
+.theory-full{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow);margin-bottom:20px}
+.page-title{font-size:22px;font-weight:700;color:var(--text);margin-bottom:4px}
+.page-sub{font-size:13px;color:var(--text3);font-family:var(--mono)}
+
+/* ── SIMULATION ── */
+.sim-layout{display:grid;grid-template-columns:280px 1fr;gap:16px;margin-top:20px}
+@media(max-width:900px){.sim-layout{grid-template-columns:1fr}}
+.sim-left,.sim-right{display:flex;flex-direction:column;gap:12px}
+.widget{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;box-shadow:var(--shadow)}
+.widget-head{padding:9px 14px;background:var(--panel2);border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between}
+.widget-title{font-size:11px;font-family:var(--mono);letter-spacing:1.5px;color:var(--text2);text-transform:uppercase}
+.widget-body{padding:14px}
+.plc-row{display:flex;gap:8px;margin-bottom:8px}
+.plc-btn{flex:1;padding:10px 8px;border:none;border-radius:8px;font-family:var(--sans);font-size:13px;font-weight:700;cursor:pointer;transition:all .15s;display:flex;align-items:center;justify-content:center;gap:6px}
+.btn-run{background:var(--green);color:#fff;box-shadow:0 2px 8px rgba(22,163,74,.25)}
+.btn-run:hover:not(:disabled){background:#15803d;transform:translateY(-1px)}
+.btn-run:disabled{background:#d1d5db;color:#9ca3af;cursor:not-allowed;box-shadow:none}
+.btn-stop{background:var(--red);color:#fff;box-shadow:0 2px 8px rgba(220,38,38,.25)}
+.btn-stop:hover:not(:disabled){background:#b91c1c;transform:translateY(-1px)}
+.btn-stop:disabled{background:#d1d5db;color:#9ca3af;cursor:not-allowed;box-shadow:none}
+.rtd-card{border:1.5px solid var(--border);border-radius:var(--radius);overflow:hidden;transition:border-color .3s,box-shadow .3s}
+.rtd-card.s-warn{border-color:var(--orange)}
+.rtd-card.s-alarm{border-color:var(--red);box-shadow:0 0 0 3px rgba(220,38,38,.08)}
+.rtd-head{padding:8px 12px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--border2)}
+.rtd-name{font-family:var(--mono);font-size:11px;color:var(--text2);letter-spacing:.5px}
+.rtd-badge{font-size:10px;font-family:var(--mono);padding:2px 9px;border-radius:10px;font-weight:bold}
+.rb-ok{background:rgba(22,163,74,.1);color:var(--green)}
+.rb-warn{background:rgba(234,88,12,.1);color:var(--orange)}
+.rb-alarm{background:rgba(220,38,38,.1);color:var(--red);animation:pulse .8s ease infinite}
+.rtd-body{padding:10px 12px}
+.rtd-temp{font-family:var(--mono);font-size:28px;font-weight:bold;line-height:1;margin-bottom:2px}
+.rtd-unit{font-size:13px;color:var(--text3);font-weight:normal}
+.rtd-sub{font-size:11px;color:var(--text3);margin-bottom:8px}
+.rtd-bar-wrap{height:5px;background:var(--border2);border-radius:3px;overflow:hidden;margin-bottom:8px}
+.rtd-bar{height:100%;border-radius:3px;transition:width .4s ease,background .4s}
+.sl-row{padding:8px 12px 10px;border-top:1px solid var(--border2);background:var(--panel2);display:flex;align-items:center;gap:8px}
+.sl-lbl{font-size:10px;color:var(--text3);white-space:nowrap;font-family:var(--mono)}
+input[type=range]{flex:1;accent-color:var(--blue);cursor:pointer}
+input[type=range]:disabled{cursor:not-allowed;accent-color:#9ca3af}
+.sl-val{font-family:var(--mono);font-size:12px;color:var(--blue);min-width:40px;text-align:right;font-weight:bold}
+.vout-panel{background:linear-gradient(135deg,#1e3a5f 0%,#0f2340 100%);border-radius:var(--radius);padding:16px;color:#fff;margin-top:4px}
+.vout-title{font-family:var(--mono);font-size:10px;letter-spacing:2px;color:#93c5fd;text-transform:uppercase;margin-bottom:12px}
+.vout-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;padding-bottom:8px;border-bottom:1px solid rgba(255,255,255,.08)}
+.vout-row:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
+.vout-lbl{font-size:12px;color:#93c5fd;font-family:var(--mono)}
+.vout-val{font-family:var(--mono);font-size:15px;font-weight:bold;color:#fff}
+.vout-main{font-family:var(--mono);font-size:32px;font-weight:bold;color:#60a5fa;text-align:center;margin:12px 0 4px}
+.vout-unit{font-size:13px;color:#93c5fd;text-align:center;font-family:var(--mono)}
+@keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.8)}}
+canvas{display:block;width:100%}
+
+/* Circuit SVG */
+.circuit-container{display:flex;justify-content:center;align-items:center;padding:8px 0}
+
+/* Mode buttons */
+.mode-grid{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:8px}
+.mode-btn{padding:8px 6px;border:1.5px solid var(--border);border-radius:8px;background:var(--panel2);font-size:12px;font-weight:600;cursor:pointer;transition:all .15s;color:var(--text2);text-align:center}
+.mode-btn:hover{border-color:#9ca3af;color:var(--text)}
+.mode-btn.active{border-color:var(--blue);background:var(--blue-light);color:var(--blue)}
+
+/* ── QUIZ ── */
+.quiz-wrap{max-width:720px;margin:24px auto 0}
+.quiz-q{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:20px;margin-bottom:16px;box-shadow:var(--shadow);transition:border-color .3s}
+.quiz-q.correct{border-color:var(--green);background:var(--green-light)}
+.quiz-q.wrong{border-color:var(--red);background:var(--red-light)}
+.q-num{font-family:var(--mono);font-size:10px;color:var(--text3);letter-spacing:1px;margin-bottom:8px;text-transform:uppercase}
+.q-text{font-size:15px;font-weight:600;color:var(--text);margin-bottom:14px;line-height:1.5}
+.q-opts{display:flex;flex-direction:column;gap:8px}
+.q-opt{padding:10px 14px;border:1.5px solid var(--border);border-radius:8px;cursor:pointer;font-size:13.5px;transition:all .15s;display:flex;align-items:center;gap:10px;color:var(--text2)}
+.q-opt:hover:not(.disabled){border-color:var(--blue);background:var(--blue-light);color:var(--blue)}
+.q-opt.selected{border-color:var(--blue);background:var(--blue-light);color:var(--blue)}
+.q-opt.correct-ans{border-color:var(--green)!important;background:var(--green-light)!important;color:var(--green)!important}
+.q-opt.wrong-ans{border-color:var(--red)!important;background:var(--red-light)!important;color:var(--red)!important}
+.q-opt.disabled{cursor:default}
+.opt-icon{width:18px;height:18px;border-radius:50%;border:1.5px solid currentColor;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:11px;font-weight:bold}
+.q-feedback{margin-top:10px;padding:8px 12px;border-radius:7px;font-size:12.5px;display:none;line-height:1.6}
+.fb-correct{background:rgba(22,163,74,.1);color:var(--green);border:1px solid rgba(22,163,74,.2)}
+.fb-wrong{background:rgba(220,38,38,.08);color:var(--red);border:1px solid rgba(220,38,38,.15)}
+.quiz-score-bar{background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:16px 20px;margin-bottom:20px;display:flex;align-items:center;justify-content:space-between;box-shadow:var(--shadow)}
+.score-num{font-family:var(--mono);font-size:28px;font-weight:bold;color:var(--blue)}
+.score-lbl{font-size:12px;color:var(--text3);font-family:var(--mono)}
+.quiz-reset-btn{padding:9px 20px;background:var(--blue);color:#fff;border:none;border-radius:8px;font-family:var(--sans);font-size:13px;font-weight:600;cursor:pointer;transition:all .15s}
+.quiz-reset-btn:hover{background:var(--blue2);transform:translateY(-1px)}
+
+/* sp inputs */
+.sp-row{display:flex;align-items:center;gap:8px;margin-bottom:10px;padding:7px 9px;border-radius:7px;border:1.5px solid transparent}
+.sp-color{width:9px;height:9px;border-radius:50%;flex-shrink:0}
+.sp-label{font-size:12px;color:var(--text2);flex:1}
+.sp-input{font-family:var(--mono);font-size:13px;background:var(--panel2);border:1.5px solid var(--border);border-radius:6px;padding:4px 8px;width:66px;text-align:right;color:var(--text)}
+.sp-input:focus{outline:none;border-color:var(--blue)}
+.sp-unit{font-size:11px;color:var(--text3)}
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:4px}
+.alm-list{max-height:130px;overflow-y:auto}
+.alm-row{display:flex;align-items:flex-start;gap:8px;padding:5px 0;border-bottom:1px solid var(--border2);font-size:12px}
+.alm-row:last-child{border-bottom:none}
+.alm-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;margin-top:3px}
+.alm-time{font-family:var(--mono);font-size:10px;color:var(--text3);white-space:nowrap;min-width:52px}
+.alm-msg{color:var(--text);flex:1;line-height:1.4}
+</style>
+</head>
+<body>
+
+    <header style="margin-bottom: 0px;" class="site-header">
+      <div class="logo-container" style="margin-bottom: 0px;gap: clamp(15px, 8vw, 153px);">
+        <img style="margin-left: -2pc" src="../../assets/Scientech logo-2.png" alt="Scientech Logo" />
+        <h1 style="margin-left: 2px;margin-right: -8pc;">
+          Temperature Sensors and Temperature Transmitter
+        </h1>
+        <div class="button-container" style="margin-bottom: 0px" >
+                  <a href="./Temperature_Sensors_and_Temperature_Transmitter.html" class="back-button" style="margin-left: 105px;">
+                      <i class="fas fa-arrow-left"></i><img style="height: 30px;width: 30px;" src="./left-arrow.png" alt=""> Back to Course
+                  </a>
+        </div>
+      </div>
+    </header>
+
+<div class="topbar">
+  <div class="logo"><span>RTD Temperature Sensor</span></div>
+  <div class="tabs">
+    <button class="tab-btn active" onclick="showTab('theory')">📖 Theory</button>
+    <button class="tab-btn" onclick="showTab('simulation')">⚙️ Simulation</button>
+    <button class="tab-btn" onclick="showTab('quiz')">🧠 Quiz</button>
+  </div>
+</div>
+
+<!-- ══════════════ THEORY SECTION ══════════════ -->
+<div id="sec-theory" class="section active">
+  <!-- <div class="page-title">RTD Temperature Sensor</div> -->
+  <!-- <div class="page-sub">RESISTANCE TEMPERATURE DETECTOR — THEORY & PRINCIPLES</div> -->
+
+  <div style="background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:16px 20px;margin:18px 0;border-left:4px solid var(--blue)">
+    <strong style="font-size:15px;color:var(--blue)">What is an RTD?</strong>
+    <p style="margin-top:8px;line-height:1.8;color:var(--text2)">An <strong>RTD (Resistance Temperature Detector)</strong> is a temperature sensor that measures temperature by correlating the resistance of a metal with temperature. The basic principle is that the <strong>electrical resistance of metals increases with temperature</strong>.</p>
+  </div>
+
+  <div class="theory-grid">
+    <!-- Card 1: Materials -->
+    <div class="theory-card">
+      <div class="tc-head blue">📦 Materials & Types</div>
+      <div class="tc-body">
+        <p>Common materials used in RTD construction:</p>
+        <ul>
+          <li><strong>Platinum</strong> — most common, widest range</li>
+          <li><strong>Nickel</strong> — lower cost, narrow range</li>
+          <li><strong>Copper</strong> — used for motor winding sensing</li>
+        </ul>
+        <p><strong>Platinum RTD</strong> (Pt100, Pt1000) is widely used due to stability, accuracy, and repeatability.</p>
+        <table class="rtd-table">
+          <thead><tr><th>Type</th><th>R at 0°C</th><th>Range</th><th>α</th></tr></thead>
+          <tbody>
+            <tr><td>Pt100</td><td>100 Ω</td><td>-200 to +850°C</td><td>0.00385/°C</td></tr>
+            <tr><td>Pt1000</td><td>1000 Ω</td><td>-200 to +850°C</td><td>0.00385/°C</td></tr>
+            <tr><td>Ni100</td><td>100 Ω</td><td>-60 to +180°C</td><td>0.00617/°C</td></tr>
+          </tbody>
+        </table>
+        <p style="margin-top:8px"><strong>Applications:</strong> Industrial temperature measurement, HVAC systems, laboratory measurements, and precision instruments.</p>
+      </div>
+    </div>
+
+    <!-- Card 2: Working Principle -->
+    <div class="theory-card">
+      <div class="tc-head green">⚡ Working Principle</div>
+      <div class="tc-body">
+        <p>The working principle is based on the <strong>positive temperature coefficient (PTC)</strong> of metals:</p>
+        <ul>
+          <li>When temperature <strong>increases</strong>, the metal's resistance <strong>increases</strong>.</li>
+          <li>This change in resistance is measured using an electrical circuit and converted into temperature.</li>
+        </ul>
+        <div class="formula-box">
+          <div class="formula-title">Basic RTD Formula</div>
+          <div class="formula">R(T) = R₀ × (1 + α × ΔT)</div>
+          <div class="sub-vars">
+            R(T) = Resistance at temperature T<br>
+            R₀ = Resistance at 0°C (100Ω for Pt100)<br>
+            α = Temperature coefficient (~0.00385/°C for Pt)<br>
+            ΔT = Change in temperature from 0°C
+          </div>
+        </div>
+        <p>Measurement circuit configurations:</p>
+        <ul>
+          <li><strong>2-wire RTD:</strong> Simple, affected by lead wire resistance</li>
+          <li><strong>3-wire RTD:</strong> Compensates for lead resistance</li>
+          <li><strong>4-wire RTD:</strong> Most accurate, eliminates lead errors</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Card 3: Characteristics -->
+    <div class="theory-card">
+      <div class="tc-head orange">📊 Characteristics of RTD</div>
+      <div class="tc-body">
+        <table class="rtd-table">
+          <thead><tr><th>Property</th><th>Value</th></tr></thead>
+          <tbody>
+            <tr><td>Response Type</td><td>Positive Temperature Coefficient</td></tr>
+            <tr><td>Accuracy</td><td>±0.1°C to ±1°C</td></tr>
+            <tr><td>Repeatability</td><td>Very High</td></tr>
+            <tr><td>Stability</td><td>Excellent (long term)</td></tr>
+            <tr><td>Range (Pt100)</td><td>-200°C to +850°C</td></tr>
+            <tr><td>Linearity</td><td>Good (near-linear above 0°C)</td></tr>
+            <tr><td>Response Time</td><td>Slow (1–50 seconds)</td></tr>
+            <tr><td>Cost</td><td>Moderate to High</td></tr>
+          </tbody>
+        </table>
+        <p style="margin-top:8px">RTDs offer <strong>higher accuracy and stability</strong> than thermocouples, making them ideal for precision measurement applications.</p>
+      </div>
+    </div>
+
+    <!-- Card 4: Voltage Divider -->
+    <div class="theory-card">
+      <div class="tc-head dark">🔌 Voltage Divider Concept</div>
+      <div class="tc-body">
+        <p>An RTD changes its resistance with temperature. To measure that change as a <strong>voltage</strong> (easier for electronics), we use a voltage divider circuit.</p>
+        <div class="circuit-box">
+          <img style="width: 15pc;margin-left: 8pc;border: 2px solid gray;border-radius: 32px;padding: 20px;" src="../../assets/RTD_Simulation.png" alt="">
+        </div>
+        <div class="formula-box">
+          <div class="formula-title">Voltage Divider Formula</div>
+          <div class="formula">V_out = V_s × R_RTD / (R₁ + R_RTD)</div>
+          <div class="sub-vars">
+            V_s = Supply voltage (5V)<br>
+            R_RTD = RTD resistance at temperature T<br>
+            R₁ = Fixed series resistor
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Card 5: Example Calculation (full width) -->
+    <div class="theory-card" style="grid-column:1/-1">
+      <div class="tc-head blue">🧮 Example Calculation</div>
+      <div class="tc-body" style="display:grid;grid-template-columns:1fr 1fr;gap:24px">
+        <div>
+          <p><strong>Given:</strong></p>
+          <ul>
+            <li>Supply Voltage: V_s = 5V</li>
+            <li>Series Resistor: R₁ = 1000 Ω</li>
+            <li>RTD Type: PT100 at T = 100°C</li>
+          </ul>
+          <br>
+          <p><strong>Step 1 — Calculate RTD Resistance:</strong></p>
+          <div class="formula-box">
+            <div class="formula">R(T) = R₀ × (1 + α × ΔT)</div>
+            <div class="sub-vars">R(100°C) = 100 × (1 + 0.00385 × 100)</div>
+            <div class="formula" style="font-size:13px;margin-top:6px">R(100°C) = 100 × 1.385 = <span style="color:var(--green)">138.5 Ω</span></div>
+          </div>
+        </div>
+        <div>
+          <p><strong>Step 2 — Calculate Voltage Output (V_out):</strong></p>
+          <div class="formula-box">
+            <div class="formula">V_out = V_s × R_RTD / (R₁ + R_RTD)</div>
+            <div class="sub-vars">V_out = 5 × 138.5 / (1000 + 138.5)</div>
+            <div class="sub-vars">V_out = 692.5 / 1138.5</div>
+            <div class="formula" style="font-size:14px;margin-top:6px">V_out = <span style="color:var(--green)">0.608 V</span></div>
+          </div>
+          <p style="margin-top:12px">As temperature increases → R_RTD increases → V_out increases → we can back-calculate temperature from V_out.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ SIMULATION SECTION ══════════════ -->
+<div id="sec-simulation" class="section">
+  <div class="page-title">RTD Simulation</div>
+  <div class="page-sub">PT100 · VOLTAGE DIVIDER · LIVE GRAPH</div>
+
+  <div class="sim-layout">
+    <!-- LEFT: Controls -->
+    <div class="sim-left">
+
+      <div class="widget">
+        <div class="widget-head"><span class="widget-title">PLC Control</span></div>
+        <div class="widget-body">
+          <div class="plc-row">
+            <button class="plc-btn btn-run" id="btnRun" onclick="plcRun()">▶ RUN</button>
+            <button class="plc-btn btn-stop" id="btnStop" onclick="plcStop()" disabled>■ STOP</button>
+          </div>
+          <div class="mode-grid">
+            <button class="mode-btn active" id="mManual" onclick="setMode('manual')">🎚 Manual</button>
+            <button class="mode-btn" id="mRamp"   onclick="setMode('ramp')">📈 Ramp</button>
+            <button class="mode-btn" id="mSine"   onclick="setMode('sine')">〜 Sine</button>
+            <button class="mode-btn" id="mFault"  onclick="setMode('fault')">⚠ Fault</button>
+          </div>
+          <div id="modeDesc" style="background:var(--blue-light);color:var(--blue);border:1px solid rgba(37,99,235,.2);border-radius:7px;padding:7px 10px;font-size:12px">
+            Use the slider below to manually set RTD temperature.
+          </div>
+        </div>
+      </div>
+
+      <!-- Single RTD Card -->
+      <div class="widget">
+        <div class="widget-head"><span class="widget-title">RTD Sensor</span></div>
+        <div class="widget-body" style="padding:0">
+          <div class="rtd-card" id="card1" style="border:none;border-radius:0;margin:0">
+            <div class="rtd-head">
+              <span class="rtd-name">RTD-101 · PT100</span>
+              <span class="rtd-badge rb-ok" id="badge1">OK</span>
+            </div>
+            <div class="rtd-body">
+              <div class="rtd-temp" id="temp1">65.0<span class="rtd-unit"> °C</span></div>
+              <div class="rtd-sub">Zone 1 — Reactor Feed</div>
+              <div class="rtd-bar-wrap"><div class="rtd-bar" id="bar1" style="width:32.5%;background:var(--blue)"></div></div>
+            </div>
+            <div class="sl-row">
+              <span class="sl-lbl">0°</span>
+              <input type="range" id="sl1" min="0" max="200" value="65" oninput="onSlider(+this.value)">
+              <span class="sl-val" id="slv1">65°C</span>
+              <span class="sl-lbl">200°</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Setpoints -->
+      <div class="widget">
+        <div class="widget-head"><span class="widget-title">Setpoints</span></div>
+        <div class="widget-body">
+          <div class="sp-row">
+            <div class="sp-color" style="background:var(--red)"></div>
+            <span class="sp-label">High Alarm</span>
+            <input class="sp-input" type="number" id="spHi" value="120">
+            <span class="sp-unit">°C</span>
+          </div>
+          <div class="sp-row">
+            <div class="sp-color" style="background:var(--orange)"></div>
+            <span class="sp-label">Warning</span>
+            <input class="sp-input" type="number" id="spWarn" value="100">
+            <span class="sp-unit">°C</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- RIGHT: Charts + Circuit + Vout -->
+    <div class="sim-right">
+
+      <!-- Voltage Divider Circuit + Vout -->
+      <div class="widget">
+        <div class="widget-head">
+          <span class="widget-title">Voltage Divider Circuit</span>
+          <span style="font-family:var(--mono);font-size:10px;color:var(--text3)">R₁ = 1000Ω · Vs = 5V</span>
+        </div>
+        <div class="widget-body" style="display:grid;grid-template-columns:160px 1fr;gap:20px;align-items:center">
+          <!-- Circuit diagram -->
+          <div style="text-align:center">
+            <img style="width: 10pc;" src="../../assets/RTD_Simulation.png" alt="">
+            
+          </div>
+
+          <!-- Live calculations -->
+          <div class="vout-panel">
+            <div class="vout-title">Live Calculation</div>
+            <div class="vout-row">
+              <span class="vout-lbl">Temperature</span>
+              <span class="vout-val" id="vc-temp">65.0 °C</span>
+            </div>
+            <div class="vout-row">
+              <span class="vout-lbl">R₀ (at 0°C)</span>
+              <span class="vout-val">100 Ω</span>
+            </div>
+            <div class="vout-row">
+              <span class="vout-lbl">α (Pt100)</span>
+              <span class="vout-val">0.00385/°C</span>
+            </div>
+            <div class="vout-row">
+              <span class="vout-lbl">R_RTD</span>
+              <span class="vout-val" id="vc-rrtd">125.0 Ω</span>
+            </div>
+            <div class="vout-row">
+              <span class="vout-lbl">R₁ (fixed)</span>
+              <span class="vout-val">1000 Ω</span>
+            </div>
+            <div style="border-top:1px solid rgba(255,255,255,.15);padding-top:12px;margin-top:4px">
+              <div class="vout-unit">V_out = 5 × R_RTD / (1000 + R_RTD)</div>
+              <div class="vout-main" id="vc-vout">0.555 V</div>
+              <div class="vout-unit">Output Voltage</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Temperature Trend Graph -->
+      <div class="widget">
+        <div class="widget-head">
+          <span class="widget-title">Temperature Trend (RTD-101)</span>
+          <span id="pfdLive" style="font-family:var(--mono);font-size:10px;color:var(--text3)">● STOPPED</span>
+        </div>
+        <div class="widget-body" style="padding:8px">
+          <canvas id="trendCanvas" height="130"></canvas>
+        </div>
+      </div>
+
+      <!-- RTD Resistance vs Temperature Graph -->
+      <div class="widget">
+        <div class="widget-head">
+          <span class="widget-title">RTD Resistance vs Temperature (Pt100)</span>
+        </div>
+        <div class="widget-body" style="padding:8px">
+          <canvas id="rtdCurveCanvas" height="130"></canvas>
+        </div>
+      </div>
+
+      <!-- Alarm Log -->
+      <div class="widget">
+        <div class="widget-head">
+          <span class="widget-title">Alarm Log</span>
+          <span id="almCount" style="font-size:10px;color:var(--red);font-family:var(--mono)"></span>
+        </div>
+        <div class="widget-body" style="padding:8px 14px">
+          <div class="alm-list" id="almList">
+            <div class="alm-row"><div class="alm-dot" style="background:var(--text3)"></div><span class="alm-time">--:--:--</span><span class="alm-msg" style="color:var(--text3)">Press ▶ RUN to start the simulation</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════ QUIZ SECTION ══════════════ -->
+<div id="sec-quiz" class="section">
+  <!-- <div class="page-title">Knowledge Check</div> -->
+  <!-- <div class="page-sub">RTD TEMPERATURE SENSOR — QUIZ</div> -->
+
+  <div class="quiz-wrap">
+    <div class="quiz-score-bar">
+      <div>
+        <div class="score-num"><span id="scoreVal">0</span>/<span id="scoreTotal">8</span></div>
+        <div class="score-lbl">SCORE</div>
+      </div>
+      <div style="flex:1;margin:0 20px">
+        <div style="background:var(--border2);border-radius:10px;height:10px;overflow:hidden">
+          <div id="scoreBar" style="height:100%;background:var(--blue);border-radius:10px;width:0%;transition:width .4s"></div>
+        </div>
+        <div id="scoreMsg" style="font-size:12px;color:var(--text3);margin-top:4px;font-family:var(--mono)">Answer questions to see your score</div>
+      </div>
+      <button class="quiz-reset-btn" onclick="resetQuiz()">↺ Restart</button>
+    </div>
+
+    <div id="quizContainer"></div>
+  </div>
+</div>
+
+<script>
+// ══════════════ GLOBALS ══════════════
+let running = false;
+let interval = null;
+let temp = 65;
+let mode = 'manual';
+let trendData = [];
+let voutData = [];
+const MAX_POINTS = 60;
+const R1 = 1000;
+const VS = 5;
+const R0 = 100;
+const ALPHA = 0.00385;
+
+// ── Tab switch ──
+function showTab(name) {
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('sec-'+name).classList.add('active');
+  event.target.classList.add('active');
+  if(name==='simulation') drawRTDCurve();
+}
+
+// ── PLC Controls ──
+function plcRun() {
+  running = true;
+  document.getElementById('btnRun').disabled = true;
+  document.getElementById('btnStop').disabled = false;
+  document.getElementById('pfdLive').textContent = '● LIVE';
+  document.getElementById('pfdLive').style.color = 'var(--green)';
+  document.getElementById('sl1').disabled = (mode !== 'manual');
+  interval = setInterval(tick, 300);
+  addAlarm('green', 'PLC started — simulation running');
+}
+function plcStop() {
+  running = false;
+  clearInterval(interval);
+  document.getElementById('btnRun').disabled = false;
+  document.getElementById('btnStop').disabled = true;
+  document.getElementById('pfdLive').textContent = '● STOPPED';
+  document.getElementById('pfdLive').style.color = 'var(--text3)';
+  addAlarm('orange', 'PLC stopped');
+}
+
+let rampDir = 1, sineT = 0;
+function tick() {
+  if(mode==='ramp') {
+    temp += rampDir * 0.8;
+    if(temp>=200){temp=200;rampDir=-1;}
+    if(temp<=0){temp=0;rampDir=1;}
+  } else if(mode==='sine') {
+    sineT += 0.05;
+    temp = 100 + 80 * Math.sin(sineT);
+  } else if(mode==='fault') {
+    temp = Math.random() > 0.15 ? (Math.random()*200) : -999;
+  }
+  updateDisplay();
+}
+
+function onSlider(val) {
+  temp = val;
+  document.getElementById('slv1').textContent = val + '°C';
+  updateDisplay();
+  if(!running) {
+    trendData.push(temp);
+    voutData.push(calcVout(temp));
+    if(trendData.length>MAX_POINTS){trendData.shift();voutData.shift();}
+    drawTrend();
+  }
+}
+
+function calcRrtd(t) { return R0 * (1 + ALPHA * t); }
+function calcVout(t) {
+  const r = calcRrtd(t);
+  return VS * r / (R1 + r);
+}
+
+function updateDisplay() {
+  const T = temp;
+  const Rrtd = calcRrtd(T);
+  const Vout = calcVout(T);
+
+  // RTD card
+  const isFault = T < -200 || T > 850;
+  const isAlarm = T >= +document.getElementById('spHi').value;
+  const isWarn  = T >= +document.getElementById('spWarn').value;
+
+  const tempEl = document.getElementById('temp1');
+  tempEl.innerHTML = isFault ? `FAULT<span class="rtd-unit"> ERR</span>` : `${T.toFixed(1)}<span class="rtd-unit"> °C</span>`;
+  tempEl.style.color = isFault ? 'var(--red)' : isAlarm ? 'var(--red)' : isWarn ? 'var(--orange)' : 'var(--text)';
+
+  const badge = document.getElementById('badge1');
+  const card = document.getElementById('card1');
+  if(isFault){ badge.textContent='FAULT';badge.className='rtd-badge rb-fault';card.className='rtd-card s-fault'; }
+  else if(isAlarm){ badge.textContent='ALARM';badge.className='rtd-badge rb-alarm';card.className='rtd-card s-alarm'; }
+  else if(isWarn){ badge.textContent='WARN';badge.className='rtd-badge rb-warn';card.className='rtd-card s-warn'; }
+  else{ badge.textContent='OK';badge.className='rtd-badge rb-ok';card.className='rtd-card'; }
+
+  const pct = Math.max(0, Math.min(100, T/200*100));
+  const barColor = isAlarm?'var(--red)':isWarn?'var(--orange)':'var(--blue)';
+  document.getElementById('bar1').style.width = pct+'%';
+  document.getElementById('bar1').style.background = barColor;
+  document.getElementById('sl1').value = Math.max(0,Math.min(200,T));
+  document.getElementById('slv1').textContent = T.toFixed(1)+'°C';
+
+  // Vout panel
+  document.getElementById('vc-temp').textContent = isFault ? 'FAULT' : T.toFixed(1)+' °C';
+  document.getElementById('vc-rrtd').textContent = isFault ? '---' : Rrtd.toFixed(1)+' Ω';
+  document.getElementById('vc-vout').textContent = isFault ? '---' : Vout.toFixed(3)+' V';
+
+  // Alarms
+  if(isAlarm && running) addAlarm('red', `RTD-101 HIGH ALARM: ${T.toFixed(1)}°C ≥ ${document.getElementById('spHi').value}°C`);
+  else if(isWarn && running) addAlarm('orange', `RTD-101 WARNING: ${T.toFixed(1)}°C ≥ ${document.getElementById('spWarn').value}°C`);
+
+  // Trend
+  trendData.push(T);
+  voutData.push(Vout);
+  if(trendData.length>MAX_POINTS){trendData.shift();voutData.shift();}
+  drawTrend();
+}
+
+// ── Trend Canvas ──
+function drawTrend() {
+  const canvas = document.getElementById('trendCanvas');
+  const ctx = canvas.getContext('2d');
+  canvas.width = canvas.parentElement.clientWidth;
+  const W = canvas.width, H = canvas.height;
+  ctx.clearRect(0,0,W,H);
+  ctx.fillStyle='#f9fafb';ctx.fillRect(0,0,W,H);
+
+  // Grid
+  ctx.strokeStyle='#e5e7eb';ctx.lineWidth=1;
+  for(let i=0;i<=4;i++){
+    const y=H-20-(H-30)*i/4;
+    ctx.beginPath();ctx.moveTo(40,y);ctx.lineTo(W-8,y);ctx.stroke();
+    ctx.fillStyle='#9ca3af';ctx.font='9px Share Tech Mono';
+    ctx.fillText((i*50)+'°C',2,y+3);
+  }
+
+  if(trendData.length < 2) return;
+
+  // Temperature line
+  ctx.strokeStyle='#3b82f6';ctx.lineWidth=2;ctx.lineJoin='round';
+  ctx.beginPath();
+  trendData.forEach((v,i)=>{
+    const x=40+(W-48)*i/(MAX_POINTS-1);
+    const y=H-20-(H-30)*Math.max(0,Math.min(200,v))/200;
+    i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+  });
+  ctx.stroke();
+
+  // Vout line (scaled)
+  ctx.strokeStyle='#16a34a';ctx.lineWidth=1.5;ctx.setLineDash([4,3]);
+  ctx.beginPath();
+  voutData.forEach((v,i)=>{
+    const x=40+(W-48)*i/(MAX_POINTS-1);
+    const y=H-20-(H-30)*v/VS;
+    i===0?ctx.moveTo(x,y):ctx.lineTo(x,y);
+  });
+  ctx.stroke();
+  ctx.setLineDash([]);
+
+  // Legend
+  ctx.font='9px Share Tech Mono';
+  ctx.fillStyle='#3b82f6';ctx.fillText('─ Temp (°C)',45,12);
+  ctx.fillStyle='#16a34a';ctx.fillText('─ V_out×40 (V)',145,12);
+
+  // Alarm lines
+  const hiSP = +document.getElementById('spHi').value;
+  const warnSP = +document.getElementById('spWarn').value;
+  ctx.lineWidth=1;ctx.setLineDash([5,3]);
+  ctx.strokeStyle='#dc2626';ctx.beginPath();
+  const yHi=H-20-(H-30)*hiSP/200;ctx.moveTo(40,yHi);ctx.lineTo(W-8,yHi);ctx.stroke();
+  ctx.strokeStyle='#ea580c';ctx.beginPath();
+  const yWn=H-20-(H-30)*warnSP/200;ctx.moveTo(40,yWn);ctx.lineTo(W-8,yWn);ctx.stroke();
+  ctx.setLineDash([]);
+}
+
+// ── RTD Curve Canvas ──
+function drawRTDCurve() {
+  const canvas = document.getElementById('rtdCurveCanvas');
+  if(!canvas) return;
+  const ctx = canvas.getContext('2d');
+  canvas.width = canvas.parentElement.clientWidth;
+  const W = canvas.width, H = canvas.height;
+  ctx.clearRect(0,0,W,H);
+  ctx.fillStyle='#f9fafb';ctx.fillRect(0,0,W,H);
+
+  const minT=-50, maxT=200, minR=80, maxR=180;
+  const toX=t=>40+(W-50)*(t-minT)/(maxT-minT);
+  const toY=r=>H-20-(H-30)*(r-minR)/(maxR-minR);
+
+  // Grid
+  ctx.strokeStyle='#e5e7eb';ctx.lineWidth=1;ctx.font='9px Share Tech Mono';ctx.fillStyle='#9ca3af';
+  [-50,-25,0,25,50,75,100,125,150,175,200].forEach(t=>{
+    const x=toX(t);
+    ctx.beginPath();ctx.moveTo(x,10);ctx.lineTo(x,H-20);ctx.stroke();
+    ctx.fillText(t+'°',x-10,H-6);
+  });
+  [80,100,120,140,160,180].forEach(r=>{
+    const y=toY(r);
+    ctx.beginPath();ctx.moveTo(40,y);ctx.lineTo(W-10,y);ctx.stroke();
+    ctx.fillText(r+'Ω',2,y+3);
+  });
+
+  // Curve
+  ctx.strokeStyle='#3b82f6';ctx.lineWidth=2.5;ctx.lineJoin='round';
+  ctx.beginPath();
+  for(let t=minT;t<=maxT;t+=2){
+    const r=calcRrtd(t);
+    const x=toX(t),y=toY(r);
+    t===minT?ctx.moveTo(x,y):ctx.lineTo(x,y);
+  }
+  ctx.stroke();
+
+  // Current temp dot
+  if(temp>=-50 && temp<=200){
+    const cx=toX(temp), cy=toY(calcRrtd(temp));
+    ctx.fillStyle='#ef4444';
+    ctx.beginPath();ctx.arc(cx,cy,5,0,Math.PI*2);ctx.fill();
+    ctx.fillStyle='#1c1f26';ctx.font='bold 10px Share Tech Mono';
+    ctx.fillText(`${temp.toFixed(0)}°C → ${calcRrtd(temp).toFixed(1)}Ω`,cx+8,cy-5);
+  }
+
+  // Axes labels
+  ctx.fillStyle='#6b7280';ctx.font='10px Share Tech Mono';
+  ctx.fillText('Temperature (°C)',W/2-40,H-1);
+  ctx.save();ctx.translate(12,H/2);ctx.rotate(-Math.PI/2);
+  ctx.fillText('Resistance (Ω)',0,0);ctx.restore();
+}
+
+// ── Mode ──
+function setMode(m) {
+  mode = m;
+  ['manual','ramp','sine','fault'].forEach(id=>{
+    const btn=document.getElementById('m'+id.charAt(0).toUpperCase()+id.slice(1));
+    if(btn) btn.classList.toggle('active', id===m);
+  });
+  const descs = {
+    manual:'Use the slider below to manually set RTD temperature.',
+    ramp:'Temperature automatically ramps up and down between 0°C and 200°C.',
+    sine:'Temperature oscillates in a sine wave pattern.',
+    fault:'Random fault injection mode — tests error handling.'
+  };
+  document.getElementById('modeDesc').textContent = descs[m];
+  document.getElementById('sl1').disabled = (m !== 'manual') && running;
+}
+
+// ── Alarm log ──
+const alarms = [];
+function addAlarm(c, msg) {
+  const now=new Date();
+  const t=`${String(now.getHours()).padStart(2,'0')}:${String(now.getMinutes()).padStart(2,'0')}:${String(now.getSeconds()).padStart(2,'0')}`;
+  alarms.unshift({c,msg,t});
+  if(alarms.length>20) alarms.pop();
+  const list=document.getElementById('almList');
+  list.innerHTML=alarms.slice(0,8).map(a=>`
+    <div class="alm-row">
+      <div class="alm-dot" style="background:${a.c==='red'?'var(--red)':a.c==='orange'?'var(--orange)':'var(--green)'}"></div>
+      <span class="alm-time">${a.t}</span>
+      <span class="alm-msg">${a.msg}</span>
+    </div>`).join('');
+  const cnt=alarms.filter(a=>a.c==='red').length;
+  document.getElementById('almCount').textContent=cnt>0?`${cnt} ACTIVE`:'';
+}
+
+// Init: draw RTD curve on load
+setTimeout(drawRTDCurve, 200);
+// Also update vout display on load
+updateDisplayStatic();
+function updateDisplayStatic(){
+  const Rrtd = calcRrtd(65);
+  const Vout = calcVout(65);
+  document.getElementById('vc-temp').textContent = '65.0 °C';
+  document.getElementById('vc-rrtd').textContent = Rrtd.toFixed(1)+' Ω';
+  document.getElementById('vc-vout').textContent = Vout.toFixed(3)+' V';
+}
+
+// ══════════════ QUIZ ══════════════
+const questions = [
+  {
+    q: "What does RTD stand for?",
+    opts: ["Resistance Temperature Detector","Reactive Thermal Device","Regulated Temperature Display","Resistive Thermal Diode"],
+    ans: 0,
+    fb: "RTD stands for Resistance Temperature Detector. It measures temperature by correlating resistance of a metal with temperature."
+  },
+  {
+    q: "What is the resistance of a Pt100 RTD at 0°C?",
+    opts: ["10 Ω","50 Ω","100 Ω","1000 Ω"],
+    ans: 2,
+    fb: "Pt100 has exactly 100 Ω at 0°C. That's what the '100' in its name refers to."
+  },
+  {
+    q: "What happens to RTD resistance as temperature increases?",
+    opts: ["Decreases","Stays constant","Increases","Becomes non-linear only"],
+    ans: 2,
+    fb: "RTDs have a Positive Temperature Coefficient (PTC) — resistance increases as temperature rises."
+  },
+  {
+    q: "What is the temperature coefficient (α) of platinum RTD?",
+    opts: ["0.00617/°C","0.00385/°C","0.00392/°C","0.00100/°C"],
+    ans: 1,
+    fb: "The standard α for platinum RTD is 0.00385/°C (IEC 60751 standard)."
+  },
+  {
+    q: "For a Pt100 at 100°C (α=0.00385), calculate R(T):",
+    opts: ["100 Ω","138.5 Ω","103.85 Ω","385 Ω"],
+    ans: 1,
+    fb: "R(100) = 100 × (1 + 0.00385 × 100) = 100 × 1.385 = 138.5 Ω"
+  },
+  {
+    q: "In the voltage divider, if R_RTD increases (temperature rises), what happens to V_out?",
+    opts: ["V_out decreases","V_out increases","V_out stays the same","V_out becomes zero"],
+    ans: 1,
+    fb: "V_out = Vs × R_RTD / (R₁ + R_RTD). As R_RTD increases, V_out increases."
+  },
+  {
+    q: "Which RTD wiring configuration is most accurate?",
+    opts: ["2-wire","3-wire","4-wire","1-wire"],
+    ans: 2,
+    fb: "4-wire RTD is most accurate — it completely eliminates lead resistance errors using a Kelvin sensing technique."
+  },
+  {
+    q: "Given Vs=5V, R₁=1000Ω, R_RTD=138.5Ω, what is V_out?",
+    opts: ["0.608 V","1.23 V","2.50 V","0.385 V"],
+    ans: 0,
+    fb: "V_out = 5 × 138.5 / (1000 + 138.5) = 692.5 / 1138.5 ≈ 0.608 V"
+  }
+];
+
+let answers = new Array(questions.length).fill(null);
+let score = 0;
+
+function buildQuiz() {
+  const container = document.getElementById('quizContainer');
+  container.innerHTML = questions.map((q,i)=>`
+    <div class="quiz-q" id="qq${i}">
+      <div class="q-num">QUESTION ${i+1} OF ${questions.length}</div>
+      <div class="q-text">${q.q}</div>
+      <div class="q-opts">
+        ${q.opts.map((opt,j)=>`
+          <div class="q-opt" id="opt${i}_${j}" onclick="selectAnswer(${i},${j})">
+            <div class="opt-icon" id="oi${i}_${j}">${String.fromCharCode(65+j)}</div>
+            ${opt}
+          </div>`).join('')}
+      </div>
+      <div class="q-feedback" id="fb${i}"></div>
+    </div>`).join('');
+  updateScore();
+}
+
+function selectAnswer(qi, optIdx) {
+  if(answers[qi] !== null) return; // already answered
+  answers[qi] = optIdx;
+  const correct = questions[qi].ans === optIdx;
+  if(correct) score++;
+
+  // Style options
+  for(let j=0;j<questions[qi].opts.length;j++){
+    const el=document.getElementById(`opt${qi}_${j}`);
+    const oi=document.getElementById(`oi${qi}_${j}`);
+    el.classList.add('disabled');
+    if(j===questions[qi].ans){el.classList.add('correct-ans');oi.textContent='✓';}
+    else if(j===optIdx && !correct){el.classList.add('wrong-ans');oi.textContent='✗';}
+  }
+
+  const qCard = document.getElementById(`qq${qi}`);
+  qCard.classList.add(correct?'correct':'wrong');
+
+  const fb = document.getElementById(`fb${qi}`);
+  fb.style.display='block';
+  fb.className = `q-feedback ${correct?'fb-correct':'fb-wrong'}`;
+  fb.innerHTML = (correct?'✅ Correct! ':'❌ Incorrect. ') + questions[qi].fb;
+
+  updateScore();
+}
+
+function updateScore() {
+  const answered = answers.filter(a=>a!==null).length;
+  document.getElementById('scoreVal').textContent = score;
+  document.getElementById('scoreTotal').textContent = questions.length;
+  const pct = questions.length > 0 ? score/questions.length*100 : 0;
+  document.getElementById('scoreBar').style.width = pct+'%';
+  document.getElementById('scoreBar').style.background = pct>=70?'var(--green)':pct>=40?'var(--orange)':'var(--blue)';
+  if(answered===questions.length){
+    const msg = pct>=80?'Excellent! 🎉':pct>=60?'Good job! 👍':pct>=40?'Keep studying! 📚':'Review the theory section.';
+    document.getElementById('scoreMsg').textContent=`${answered} answered · ${score} correct · ${msg}`;
+  } else {
+    document.getElementById('scoreMsg').textContent=`${answered}/${questions.length} answered`;
+  }
+}
+
+function resetQuiz() {
+  answers = new Array(questions.length).fill(null);
+  score = 0;
+  buildQuiz();
+}
+
+buildQuiz();
+</script>
+</body>
+</html>

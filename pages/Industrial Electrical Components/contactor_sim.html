@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contactor Simulation</title>
+    <link rel="stylesheet" href="../defination.css">
+    <style>
+        :root {
+            --primary-color: #f8f9fa;
+            --secondary-color: #e9ecef;
+            --text-color: #343a40;
+            --accent-color: #6c757d;
+            --border-color: #dee2e6;
+            --shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: Georgia, 'Times New Roman', Times, serif;
+            background-color: var(--primary-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 5px 16px;
+            gap: 9px;
+        }
+
+        .sim-card {
+            background: white;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            width: 100%;
+            /* max-width: 820px; */
+            max-width: 877px;
+            /* margin-top: -13px; */
+        }
+
+        .sim-header {
+            background-color: var(--secondary-color);
+            /* padding: 14px 22px; */
+            padding: 7px 10px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .sim-header h2 {
+            font-size: clamp(1rem, 3vw, 1.3rem);
+            color: var(--text-color);
+        }
+
+        .state-badge {
+            padding: 4px 14px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+            background: #fce8e8;
+            color: #c0392b;
+            border: 1px solid #f5c6c6;
+        }
+
+        .state-badge.on {
+            background: #e8f5e9;
+            color: #2e7d32;
+            border-color: #c8e6c9;
+        }
+
+        /* Step indicator */
+        .steps {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0;
+            /* padding: 10px 22px; */
+            padding: 6px 10px;
+            background: white;
+            border-bottom: 1px solid var(--border-color);
+            overflow-x: auto;
+            font-weight: 700;
+        }
+
+        .step {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.78rem;
+            color: var(--accent-color);
+            border: 1px solid transparent;
+            white-space: nowrap;
+            transition: all 0.3s;
+        }
+
+        .step.active {
+            background: #e8f5e9;
+            color: #2e7d32;
+            border-color: #c8e6c9;
+            font-weight: 600;
+        }
+
+        .step-arrow {
+            color: var(--border-color);
+            font-size: 0.75rem;
+            padding: 0 2px;
+        }
+
+        .image-wrapper {
+            position: relative;
+            width: 100%;
+            background: #fff;
+            padding: 18px;
+        }
+
+        .diagram-img {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+        }
+
+        .diagram-img.overlay {
+            position: absolute;
+            top: 18px;
+            left: 18px;
+            width: calc(100% - 36px);
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.25s ease;
+        }
+
+        .diagram-img.visible { opacity: 1; }
+
+        /* hide base when not step 0 */
+        #imgBase { transition: opacity 0.25s ease; }
+
+        .btn-row {
+            /* padding: 16px 22px; */
+            padding: 5px 22px;
+            border-top: 1px solid var(--border-color);
+            background: var(--secondary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 14px;
+            flex-wrap: wrap;
+        }
+
+        .ctrl-btn {
+            border: none;
+            padding: 10px 30px;
+            border-radius: 5px;
+            font-size: clamp(0.88rem, 2.5vw, 1rem);
+            font-family: Georgia, serif;
+            cursor: pointer;
+            transition: background 0.2s, transform 0.1s;
+            letter-spacing: 0.3px;
+            font-weight: 600;
+        }
+
+        .ctrl-btn:active { transform: scale(0.97); }
+
+        .btn-start {
+            background-color: #2e7d32;
+            color: white;
+        }
+        .btn-start:hover { background-color: #1b5e20; }
+        .btn-start:disabled { background-color: #a5d6a7; cursor: not-allowed; transform: none; }
+
+        .btn-stop {
+            background-color: #c0392b;
+            color: white;
+        }
+        .btn-stop:hover { background-color: #96281b; }
+        .btn-stop:disabled { background-color: #ef9a9a; cursor: not-allowed; transform: none; }
+
+        .hint {
+            font-size: 0.8rem;
+            color: var(--accent-color);
+            text-align: center;
+            padding: 0 22px 14px;
+            background: var(--secondary-color);
+        }
+    </style>
+</head>
+<body>
+
+      <header style="margin-bottom: 0px;padding: 0px;" class="site-header">
+      <div class="logo-container" style="margin-bottom: 0px;gap: clamp(15px, 15vw, 180px);">
+        <img style="margin-left: -2pc" src="../../assets/Scientech logo-2.png" alt="Scientech Logo" />
+        <h1 style="margin-left: 89px;margin-right: -8pc;">
+          Contactor Simulation
+        </h1>
+        <div class="button-container" style="margin-bottom: 0px" >
+                  <a href="./Contactors.html" class="back-button" style="margin-left: 210px;">
+                      <i class="fas fa-arrow-left"></i><img style="height: 30px;width: 30px;" src="../Transducers, Sensors and Transmitters/left-arrow.png" alt=""> Back to Course
+                  </a>
+        </div>
+      </div>
+    </header>
+
+<!-- CONTACTOR CARD -->
+<div class="sim-card">
+    <!-- <div class="sim-header">
+        <h2>Contactor — Wiring Simulation</h2>
+        <span class="state-badge" id="badge">Motor: STOPPED</span>
+    </div> -->
+
+    <!-- Step flow -->
+    <div class="steps">
+        <div class="step active" id="step0">① De-energized</div>
+        <span class="step-arrow">›</span>
+        <div class="step" id="step1">② NO Pressed (Start)</div>
+        <span class="step-arrow">›</span>
+        <div class="step" id="step2">③ Contactor ON (Running)</div>
+        <span class="step-arrow">›</span>
+        <div class="step" id="step3">④ NC Pressed (Stop)</div>
+        <span class="state-badge" id="badge">Motor: STOPPED</span>
+    </div>
+
+    <div class="image-wrapper">
+        <!-- Image 3: base state (de-energized) -->
+        <img class="diagram-img" src="./contractor_1.JPG" alt="Contactor De-energized" id="imgBase">
+        <!-- Image 4: NO button pressed -->
+        <img class="diagram-img overlay" src="./contractor_2.JPG" alt="NO Button Pressed" id="img4">
+        <!-- Image 5: Contactor energized / running -->
+        <img class="diagram-img overlay" src="./contractor_3.JPG" alt="Contactor Running" id="img5">
+    </div>
+
+    <div class="btn-row">
+        <button class="ctrl-btn btn-start" id="startBtn" onclick="startContactor()">▶ START (NO)</button>
+        <button class="ctrl-btn btn-stop"  id="stopBtn"  onclick="stopContactor()" disabled>■ STOP (NC)</button>
+    </div>
+    <!-- <p class="hint">Press START to energize the contactor and run the motor. Press STOP to de-energize.</p> -->
+</div>
+
+<script>
+    // States: 0 = off, 1 = NO pressed (momentary), 2 = running
+    let state = 0;
+
+    const imgs   = { base: 'imgBase', p4: 'img4', p5: 'img5' };
+    const steps  = ['step0','step1','step2','step3'];
+
+    function showOnly(visibleId) {
+        // base image opacity
+        document.getElementById('imgBase').style.opacity = (visibleId === 'imgBase') ? '1' : '0';
+        document.getElementById('img4').classList.toggle('visible', visibleId === 'img4');
+        document.getElementById('img5').classList.toggle('visible', visibleId === 'img5');
+    }
+
+    function setStep(idx) {
+        steps.forEach((id, i) => {
+            document.getElementById(id).classList.toggle('active', i === idx);
+        });
+    }
+
+    function setBadge(text, on) {
+        const b = document.getElementById('badge');
+        b.textContent = text;
+        b.classList.toggle('on', on);
+    }
+
+    function startContactor() {
+        const startBtn = document.getElementById('startBtn');
+        const stopBtn  = document.getElementById('stopBtn');
+
+        // Step 1: Show NO pressed state briefly, then go to running
+        startBtn.disabled = true;
+        setStep(1);
+        showOnly('img4');
+        setBadge('Motor: STARTING...', false);
+
+        setTimeout(() => {
+            // Step 2: Contactor energized / running
+            state = 2;
+            setStep(2);
+            showOnly('img5');
+            setBadge('Motor: RUNNING', true);
+            stopBtn.disabled = false;
+        }, 600);
+    }
+
+    function stopContactor() {
+        const startBtn = document.getElementById('startBtn');
+        const stopBtn  = document.getElementById('stopBtn');
+
+        // Step 3: NC pressed
+        stopBtn.disabled = true;
+        setStep(3);
+        setBadge('Motor: STOPPING...', false);
+
+        setTimeout(() => {
+            // Back to step 0: de-energized
+            state = 0;
+            setStep(0);
+            showOnly('imgBase');
+            setBadge('Motor: STOPPED', false);
+            startBtn.disabled = false;
+        }, 600);
+    }
+</script>
+
+</body>
+</html>

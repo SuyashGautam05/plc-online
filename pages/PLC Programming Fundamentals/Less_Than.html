@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PLC Software</title>
+    <link rel="stylesheet" href="../defination.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+  </head>
+
+  <body>
+    <div class="container">
+      <header style="display: flex">
+        <div class="logo-container">
+          <img src="../../assets/Scientech logo-2.png" alt="Scientech Logo" />
+          <h1>Less Than</h1>
+        </div>
+      </header>
+
+      <main>
+        <a href="../../index.html" class="back-button">
+          <i class="fas fa-arrow-left"></i> Back to Course
+        </a>
+
+        <div class="content-wrapper">
+          <!-- <div class="image-section">
+            <img style="border-radius: 20px;border: 2px solid black;"
+            src="../../assets/Pages/role_of_plc_In_automation.png" alt="PLC
+            Definition Illustration">
+          </div> -->
+
+          <div class="theory-section" style="width: 281%;">
+            <h2>Less Than</h2>
+            <p>
+              A Less Than ( &lt; ) Compare Instruction in PLC programming is
+              used to compare two values and determine whether one value is
+              smaller than the other.
+            </p>
+
+            <ul>
+              <li>
+                <b>Function:</b> Evaluates a condition by comparing two operands
+                to check if the first value is less than the second.
+              </li>
+              <li>
+                <b>Output:</b> Boolean (TRUE or FALSE) depending on whether the
+                comparison condition is satisfied.
+              </li>
+              <li>
+                <b>Type:</b>
+                <ul>
+                  <li><b>Less Than ( &lt; ): </b> Checks whether IN1 &lt; IN2.</li>
+                </ul>
+              </li>
+            </ul>
+
+            <h2>Applications</h2>
+            <ul>
+              <li>
+                Monitoring process parameters to ensure they remain within
+                minimum limits.
+              </li>
+              <li>
+                Activating control actions when a sensor value drops below a
+                setpoint.
+              </li>
+              <li>
+                Checking whether a counter or timer value is below a predefined
+                threshold.
+              </li>
+            </ul>
+
+            <h2>Examples</h2>
+            <ul>
+              <li>Compare a tank level with the minimum required level.</li>
+              <li>
+                Check if room temperature is lower than the desired set
+                temperature.
+              </li>
+              <li>
+                Determine whether a conveyor speed is below the required
+                operating speed.
+              </li>
+            </ul>
+
+            <h2>Syntax / Representation</h2>
+            <p><b>In LAD/FBD: </b></p>
+            <ul>
+              <li>The instruction is represented as a comparison block:</li>
+            </ul>
+
+            <p>|--[ &lt; ]--|</p>
+
+            <ul>
+              <li>
+                <b>Inputs:</b>
+                <ul>
+                  <li><b>IN1: </b> First value (e.g., sensor input)</li>
+                  <li><b>IN2: </b> Second value (e.g., reference or setpoint)</li>
+                </ul>
+              </li>
+              <li>
+                <b>Output:</b>
+                <ul>
+                  <li><b>Q: </b> TRUE if IN1 &lt; IN2, otherwise FALSE</li>
+                </ul>
+              </li>
+            </ul>
+
+            <h2>Move Instructions</h2>
+            <p>
+              The MOV (Move) instruction is used to copy data from one memory
+              location to another. It does not modify the source value but
+              transfers its contents to a destination register.
+            </p>
+
+            <img
+              style="
+                margin-left: 409px;
+                margin-bottom: 30px;
+                border: 2px solid black;
+                align-self: center;
+                height: 150px;
+                width: 377px;
+                border-radius: 20px;
+              "
+              src="../../assets/Move Instructions.png"
+              alt="MOV (Move) Instruction"
+                />
+
+            <ul>
+              <li><b>The MOV instruction is commonly used for: </b></li>
+              <ul>
+                <li>Data transfer between registers.</li>
+                <li>Updating setpoints.</li>
+                <li>Copying sensor values.</li>
+                <li>Preparing data for display or communication.</li>
+              </ul>
+              <li>
+                MOV instructions simplify data handling and improve program
+                readability by clearly defining data flow within the PLC
+                program.
+              </li>
+            </ul>
+
+            <h2>Syntax / Representation</h2>
+            <p>In LAD/FBD:</p>
+            <ul>
+              <li>The instruction is represented as a move block:</li>
+            </ul>
+
+            <p>|--[ MOV ]--|</p>
+
+            <ul>
+              <li>
+                <b>Operands:</b>
+                <ul>
+                  <li>
+                    <b>Source (IN): </b> Value or memory location from which data is
+                    copied
+                  </li>
+                  <li>
+                    <b>Destination (OUT): </b> Memory location where the value is stored
+                  </li>
+                </ul>
+              </li>
+            </ul>
+
+            <h2>Applications</h2>
+            <ul>
+              <li>Transferring sensor data to internal memory registers.</li>
+              <li>Copying setpoint values for processing or comparison.</li>
+              <li>Updating output registers based on calculated results.</li>
+              <li>
+                Moving values between different data types or memory areas.
+              </li>
+            </ul>
+
+            <h2>Examples</h2>
+            <ul>
+              <li>Move the value of an analog input into a data register.</li>
+              <li>Copy a preset value into a timer or counter.</li>
+              <li>Transfer a calculated result to an output word.</li>
+            </ul>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <script>
+      // Add smooth scroll behavior for anchor links
+      document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+        anchor.addEventListener("click", function (e) {
+          e.preventDefault();
+          const target = document.querySelector(this.getAttribute("href"));
+          if (target) {
+            target.scrollIntoView({ behavior: "smooth" });
+          }
+        });
+      });
+    </script>
+  </body>
+</html>

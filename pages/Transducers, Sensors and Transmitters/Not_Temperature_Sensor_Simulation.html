@@ -1,0 +1,4097 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>NTC & PTC Thermistor Learning Lab</title>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Merriweather:wght@300;400;700&family=Source+Sans+3:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    />
+    <style>
+      /* ============================================================
+   defination.css — BASE (as provided by user)
+   ============================================================ */
+      :root {
+        --primary-color: #f8f9fa;
+        --secondary-color: #e9ecef;
+        --text-color: #343a40;
+        --accent-color: #6c757d;
+        --border-color: #dee2e6;
+        --hover-color: #f1f3f5;
+        --shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+      *,
+      *::before,
+      *::after {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+      html {
+        scroll-behavior: smooth;
+        font-size: 16px;
+      }
+      body {
+        font-family: "Georgia", 'Times New Roman', Times, serif;
+        background-color: var(--primary-color);
+        color: var(--text-color);
+        line-height: 1.6;
+        width: 100%;
+        height: 100vh;
+        overflow-x: hidden;
+      }
+      .container {
+        display: flex;
+        flex-direction: column;
+        min-height: 100vh;
+        max-width: 100%;
+        margin: 0 auto;
+        width: 100%;
+      }
+      header {
+        text-align: center;
+        padding: clamp(8px, 1vw, 20px) 0;
+        border-bottom: 1px solid var(--border-color);
+        margin-bottom: clamp(15px, 2vw, 30px);
+        width: 100%;
+      }
+      .logo-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: clamp(15px, 13vw, 153px);
+        margin-bottom: clamp(5px, 1vw, 15px);
+        flex-wrap: wrap;
+      }
+      .logo-container i {
+        font-size: clamp(1.5rem, 3vw, 3.5rem);
+        color: var(--accent-color);
+      }
+      h1 {
+        font-family: "Georgia", 'Times New Roman', Times, serif;
+        font-size: clamp(1rem, 3.5vw, 1.5rem);
+        font-weight: 700;
+        color: var(--text-color);
+        margin: 0;
+        line-height: 1.2;
+      }
+      header p {
+        font-size: clamp(0.8rem, 1.5vw, 1.1rem);
+        color: var(--accent-color);
+        margin-top: clamp(5px, 1vw, 15px);
+      }
+      main {
+        flex: 1;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        height: 100%;
+      }
+      .content-wrapper {
+        display: grid;
+        grid-template-columns: minmax(280px, 35%) 1fr;
+        gap: clamp(20px, 3vw, 60px);
+        align-items: flex-start;
+        width: 100%;
+        flex: 1;
+        height: 100%;
+        padding: 0 clamp(15px, 2vw, 40px) clamp(15px, 2vw, 30px);
+      }
+      .image-section {
+        position: sticky;
+        top: clamp(15px, 2vw, 30px);
+        height: fit-content;
+        width: 100%;
+      }
+      .image-section img {
+        width: 111%;
+        max-width: 116%;
+        height: auto;
+        border-radius: clamp(12px, 2vw, 25px);
+        border: 2px solid black;
+        box-shadow: var(--shadow);
+        background-color: white;
+        padding: clamp(8px, 1.5vw, 20px);
+        object-fit: contain;
+      }
+      .theory-section {
+        background-color: white;
+        border-radius: clamp(8px, 1.5vw, 20px);
+        box-shadow: var(--shadow);
+        padding: clamp(15px, 3vw, 50px);
+        width: 100%;
+        max-height: calc(100vh - 180px);
+        overflow-y: auto;
+        overflow-x: hidden;
+      }
+      .theory-section::-webkit-scrollbar {
+        width: clamp(6px, 0.8vw, 12px);
+      }
+      .theory-section::-webkit-scrollbar-track {
+        background: var(--secondary-color);
+        border-radius: 10px;
+      }
+      .theory-section::-webkit-scrollbar-thumb {
+        background: var(--accent-color);
+        border-radius: 10px;
+      }
+      .theory-section::-webkit-scrollbar-thumb:hover {
+        background: #555;
+      }
+      .theory-section h2 {
+        font-family: "Georgia", 'Times New Roman', Times, serif;
+        font-size: clamp(1rem, 2vw, 1.6rem);
+        color: var(--text-color);
+        margin-bottom: clamp(12px, 2vw, 30px);
+        border-bottom: 2px solid var(--secondary-color);
+        padding-bottom: clamp(10px, 1.5vw, 20px);
+        line-height: 1.3;
+      }
+      .theory-section h3 {
+        font-family: "Georgia", 'Times New Roman', Times, serif;
+        font-size: clamp(0.95rem, 1.8vw, 1.2rem);
+        color: var(--text-color);
+        margin-top: clamp(15px, 2.5vw, 35px);
+        margin-bottom: clamp(10px, 1.5vw, 20px);
+      }
+      .theory-section p {
+        font-size: clamp(0.8rem, 1.3vw, 1rem);
+        color: var(--text-color);
+        margin-bottom: clamp(12px, 2vw, 25px);
+        text-align: justify;
+        line-height: 1.7;
+      }
+      .theory-section ul {
+        list-style-position: inside;
+        margin-left: clamp(10px, 2vw, 30px);
+        margin-bottom: clamp(12px, 2vw, 25px);
+      }
+      .theory-section ul li {
+        margin-bottom: clamp(8px, 1.5vw, 15px);
+        color: var(--text-color);
+        font-size: clamp(0.8rem, 1.3vw, 1rem);
+        line-height: 1.6;
+      }
+      .back-button {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: clamp(15px, 2vw, 30px);
+        padding: clamp(8px, 1.2vw, 12px) clamp(15px, 2vw, 25px);
+        background-color: var(--secondary-color);
+        border: 1px solid var(--border-color);
+        border-radius: clamp(4px, 0.8vw, 10px);
+        color: var(--text-color);
+        text-decoration: none;
+        cursor: pointer;
+        font-size: clamp(0.8rem, 1.2vw, 0.95rem);
+        transition: all 0.3s ease;
+        width: fit-content;
+      }
+      .back-button:hover {
+        background-color: var(--hover-color);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      }
+      footer {
+        text-align: center;
+        padding: clamp(12px, 2vw, 25px) 0;
+        margin-top: clamp(20px, 3vw, 40px);
+        border-top: 1px solid var(--border-color);
+        color: var(--accent-color);
+        font-size: clamp(0.75rem, 1.2vw, 0.9rem);
+      }
+      img {
+        max-width: 100%;
+        height: auto;
+        display: block;
+      }
+
+      /* ============================================================
+   SELECTION SCREEN
+   ============================================================ */
+      #selection-screen {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        min-height: calc(100vh - 100px);
+        padding: 2rem;
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+      }
+      .sel-badge {
+        display: inline-block;
+        font-size: 0.7rem;
+        letter-spacing: 0.15em;
+        text-transform: uppercase;
+        color: var(--accent-color);
+        background: var(--secondary-color);
+        border: 1px solid var(--border-color);
+        padding: 4px 16px;
+        border-radius: 20px;
+        margin-bottom: 1rem;
+        font-family: "Georgia", 'Times New Roman', Times, serif;
+      }
+      .sel-title {
+        font-family: "Georgia", 'Times New Roman', Times, serif;
+        font-size: clamp(1.6rem, 4vw, 2.8rem);
+        font-weight: 700;
+        color: var(--text-color);
+        text-align: center;
+        margin-bottom: 0.5rem;
+        line-height: 1.2;
+      }
+      .sel-sub {
+        color: var(--accent-color);
+        text-align: center;
+        font-size: clamp(0.85rem, 2vw, 1rem);
+        margin-bottom: 2.5rem;
+        max-width: 520px;
+        line-height: 1.6;
+      }
+      .sel-cards {
+        display: flex;
+        gap: 1.5rem;
+        flex-wrap: wrap;
+        justify-content: center;
+      }
+
+      .sel-card {
+        background: white;
+        border: 2px solid var(--border-color);
+        border-radius: 16px;
+        padding: 2rem 1.8rem;
+        width: clamp(260px, 38vw, 320px);
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-align: center;
+        box-shadow: var(--shadow);
+      }
+      .sel-card:hover {
+        transform: translateY(-6px);
+        box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15);
+      }
+      .sel-card.ntc:hover {
+        border-color: #c0392b;
+      }
+      .sel-card.ptc:hover {
+        border-color: #2471a3;
+      }
+
+      .sel-card-icon {
+        width: 72px;
+        height: 72px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 1.2rem;
+        font-size: 1.8rem;
+      }
+      .sel-card.ntc .sel-card-icon {
+        background: #fdecea;
+        border: 2px solid #f1948a;
+      }
+      .sel-card.ptc .sel-card-icon {
+        background: #eaf4fb;
+        border: 2px solid #7fb3d3;
+      }
+      .sel-card h2 {
+        font-family: "Georgia", 'Times New Roman', Times, serif;
+        font-size: 1.5rem;
+        font-weight: 700;
+        margin-bottom: 0.2rem;
+      }
+      .sel-card.ntc h2 {
+        color: #c0392b;
+      }
+      .sel-card.ptc h2 {
+        color: #2471a3;
+      }
+      .sel-card .sel-card-full {
+        font-size: 0.7rem;
+        letter-spacing: 0.08em;
+        color: var(--accent-color);
+        margin-bottom: 0.9rem;
+        text-transform: uppercase;
+      }
+      .sel-card p {
+        color: var(--accent-color);
+        font-size: 0.88rem;
+        line-height: 1.6;
+        margin-bottom: 1.3rem;
+      }
+      .sel-tags {
+        display: flex;
+        gap: 6px;
+        flex-wrap: wrap;
+        justify-content: center;
+        margin-bottom: 1.3rem;
+      }
+      .sel-tag {
+        font-size: 0.68rem;
+        padding: 3px 10px;
+        border-radius: 12px;
+        letter-spacing: 0.04em;
+      }
+      .sel-card.ntc .sel-tag {
+        background: #fdecea;
+        color: #c0392b;
+        border: 1px solid #f1948a;
+      }
+      .sel-card.ptc .sel-tag {
+        background: #eaf4fb;
+        color: #2471a3;
+        border: 1px solid #7fb3d3;
+      }
+      .sel-go-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 10px 26px;
+        border-radius: 8px;
+        border: none;
+        cursor: pointer;
+        font-size: 0.85rem;
+        font-weight: 600;
+        font-family: "Georgia", 'Times New Roman', Times, serif;
+        transition: all 0.25s ease;
+      }
+      .sel-card.ntc .sel-go-btn {
+        background: #c0392b;
+        color: white;
+      }
+      .sel-card.ntc .sel-go-btn:hover {
+        background: #a93226;
+      }
+      .sel-card.ptc .sel-go-btn {
+        background: #2471a3;
+        color: white;
+      }
+      .sel-card.ptc .sel-go-btn:hover {
+        background: #1a5276;
+      }
+
+      /* ============================================================
+   MAIN APP LAYOUT
+   ============================================================ */
+      #app {
+        display: none;
+      }
+
+      /* Top navigation tabs */
+      .app-nav {
+        position: sticky;
+        top: 0;
+        z-index: 200;
+        background: white;
+        border-bottom: 2px solid var(--border-color);
+        padding: 0 clamp(10px, 2vw, 30px);
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.07);
+      }
+      .app-nav-logo {
+        font-family: "Georgia", 'Times New Roman', Times, serif;
+        font-size: 0.85rem;
+        font-weight: 700;
+        color: var(--text-color);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        padding: 12px 0;
+        margin-right: 1rem;
+        white-space: nowrap;
+        border-right: 1px solid var(--border-color);
+        padding-right: 1rem;
+      }
+      .mode-badge {
+        padding: 2px 10px;
+        border-radius: 12px;
+        font-size: 0.7rem;
+        font-weight: 700;
+        letter-spacing: 0.05em;
+      }
+      .ntc-mode .mode-badge {
+        background: #c0392b;
+        color: white;
+      }
+      .ptc-mode .mode-badge {
+        background: #2471a3;
+        color: white;
+      }
+
+      .nav-tab-btn {
+        padding: 14px 16px;
+        border: none;
+        background: transparent;
+        color: var(--accent-color);
+        cursor: pointer;
+        font-size: 0.82rem;
+        font-family: "Georgia", 'Times New Roman', Times, serif;
+        font-weight: 500;
+        border-bottom: 3px solid transparent;
+        margin-bottom: -2px;
+        transition: all 0.2s ease;
+        white-space: nowrap;
+        display: flex;
+        align-items: center;
+        gap: 6px;
+      }
+      .nav-tab-btn:hover {
+        color: var(--text-color);
+      }
+      .nav-tab-btn.active {
+        color: var(--text-color);
+        font-weight: 700;
+      }
+      .ntc-mode .nav-tab-btn.active {
+        border-bottom-color: #c0392b;
+        color: #c0392b;
+      }
+      .ptc-mode .nav-tab-btn.active {
+        border-bottom-color: #2471a3;
+        color: #2471a3;
+      }
+
+      .nav-switch-btn {
+        margin-left: 107px;
+        padding: 7px 14px;
+        border-radius: 6px;
+        border: 1px solid var(--border-color);
+        background: var(--secondary-color);
+        color: var(--text-color);
+        cursor: pointer;
+        /* font-size: 0.78rem; */
+        font-size: 15px;
+        font-weight: 600;
+        font-family: "Georgia", 'Times New Roman', Times, serif;
+        transition: all 0.2s;
+        white-space: nowrap;
+      }
+      .nav-switch-btn:hover {
+        background: var(--hover-color);
+      }
+
+      /* Level badge on sub-sections */
+      .level-badge {
+        display: inline-block;
+        font-size: 0.65rem;
+        font-weight: 700;
+        letter-spacing: 0.08em;
+        padding: 2px 10px;
+        border-radius: 12px;
+        margin-left: 10px;
+        vertical-align: middle;
+        text-transform: uppercase;
+      }
+      .level-beginner {
+        background: #d5f5e3;
+        color: #1e8449;
+        border: 1px solid #82e0aa;
+      }
+      .level-intermediate {
+        background: #fef9e7;
+        color: #9a7d0a;
+        border: 1px solid #f7dc6f;
+      }
+      .level-advanced {
+        background: #fdecea;
+        color: #c0392b;
+        border: 1px solid #f1948a;
+      }
+      .level-expert {
+        background: #e8daef;
+        color: #7d3c98;
+        border: 1px solid #c39bd3;
+      }
+
+      /* ============================================================
+   TAB PAGES
+   ============================================================ */
+      .tab-page {
+        display: none;
+        animation: fadeSlide 0.35s ease;
+      }
+      .tab-page.active {
+        display: block;
+      }
+      @keyframes fadeSlide {
+        from {
+          opacity: 0;
+          transform: translateY(10px);
+        }
+        to {
+          opacity: 1;
+          transform: translateY(0);
+        }
+      }
+
+      /* ============================================================
+   OVERVIEW TAB — uses defination.css content-wrapper
+   ============================================================ */
+      .overview-wrap {
+        padding: clamp(15px, 2vw, 30px) clamp(15px, 2vw, 40px);
+      }
+
+      .overview-stats {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+        gap: 1rem;
+        margin-bottom: 1.5rem;
+      }
+      .stat-card {
+        background: white;
+        border: 1px solid var(--border-color);
+        border-radius: 10px;
+        padding: 1rem 1.2rem;
+        box-shadow: var(--shadow);
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+      }
+      .stat-card-label {
+        font-size: 0.72rem;
+        color: var(--accent-color);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+      }
+      .stat-card-value {
+        font-size: 1.3rem;
+        font-weight: 700;
+        font-family: "Georgia", 'Times New Roman', Times, serif;
+      }
+      .ntc-mode .stat-card-value {
+        color: #c0392b;
+      }
+      .ptc-mode .stat-card-value {
+        color: #2471a3;
+      }
+      .stat-card-desc {
+        font-size: 0.78rem;
+        color: var(--accent-color);
+      }
+
+      .overview-chart-card {
+        background: white;
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        padding: 1.5rem;
+        box-shadow: var(--shadow);
+        margin-bottom: 1.5rem;
+      }
+      .overview-chart-card h3 {
+        font-family: "Georgia", 'Times New Roman', Times, serif;
+        font-size: 0.95rem;
+        margin-bottom: 1rem;
+        color: var(--text-color);
+      }
+
+      /* comparison table from defination.css */
+      .comparison-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin: clamp(15px, 2vw, 30px) 0;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+      }
+      .comparison-table thead {
+        background-color: var(--secondary-color);
+      }
+      .comparison-table th {
+        padding: clamp(8px, 1.5vw, 14px) clamp(10px, 2vw, 18px);
+        text-align: left;
+        font-weight: 700;
+        color: var(--text-color);
+        border: 1px solid var(--border-color);
+        font-size: clamp(0.78rem, 1.3vw, 0.95rem);
+      }
+      .comparison-table td {
+        padding: clamp(8px, 1.5vw, 14px) clamp(10px, 2vw, 18px);
+        border: 1px solid var(--border-color);
+        color: var(--text-color);
+        font-size: clamp(0.75rem, 1.2vw, 0.9rem);
+      }
+      .comparison-table tbody tr:nth-child(odd) {
+        background-color: #fafbfc;
+      }
+      .comparison-table tbody tr:hover {
+        background-color: var(--hover-color);
+        transition: background-color 0.2s ease;
+      }
+
+      /* ============================================================
+   THEORY TAB
+   ============================================================ */
+      .theory-tab-wrap {
+        display: grid;
+        grid-template-columns: 220px 1fr;
+        gap: 0;
+        min-height: calc(100vh - 120px);
+      }
+      .theory-sidebar {
+        background: var(--secondary-color);
+        border-right: 1px solid var(--border-color);
+        padding: 1.2rem 0.8rem;
+        position: sticky;
+        top: 57px;
+        height: calc(100vh - 57px);
+        overflow-y: auto;
+      }
+      .theory-sidebar-title {
+        font-size: 0.68rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--accent-color);
+        padding: 0 0.5rem;
+        margin-bottom: 0.8rem;
+      }
+      .theory-sidebar-item {
+        display: block;
+        width: 100%;
+        text-align: left;
+        padding: 8px 12px;
+        border-radius: 6px;
+        border: none;
+        background: transparent;
+        color: var(--accent-color);
+        font-size: 0.82rem;
+        cursor: pointer;
+        font-family: "Georgia", 'Times New Roman', Times, serif;
+        transition: all 0.2s;
+        margin-bottom: 2px;
+        line-height: 1.4;
+      }
+      .theory-sidebar-item:hover {
+        background: var(--hover-color);
+        color: var(--text-color);
+      }
+      .ntc-mode .theory-sidebar-item.active {
+        background: #fdecea;
+        color: #c0392b;
+        font-weight: 600;
+      }
+      .ptc-mode .theory-sidebar-item.active {
+        background: #eaf4fb;
+        color: #2471a3;
+        font-weight: 600;
+      }
+
+      .theory-main {
+        padding: clamp(20px, 3vw, 40px);
+        overflow-y: auto;
+        max-height: calc(100vh - 57px);
+      }
+      .theory-pane {
+        display: none;
+      }
+      .theory-pane.active {
+        display: block;
+        animation: fadeSlide 0.3s ease;
+      }
+
+      .theory-main .theory-section {
+        max-height: none;
+        box-shadow: none;
+        padding: 0;
+        border-radius: 0;
+        background: transparent;
+      }
+      .callout-box {
+        background: #fff8e1;
+        border-left: 4px solid #f39c12;
+        border-radius: 0 8px 8px 0;
+        padding: 1rem 1.2rem;
+        margin: 1rem 0;
+        font-size: clamp(0.8rem, 1.3vw, 0.92rem);
+        color: var(--text-color);
+        line-height: 1.6;
+      }
+      .callout-box.info {
+        background: #e8f4fd;
+        border-left-color: #2980b9;
+      }
+      .callout-box.success {
+        background: #eafaf1;
+        border-left-color: #27ae60;
+      }
+      .callout-box.danger {
+        background: #fdecea;
+        border-left-color: #e74c3c;
+      }
+      .formula-block {
+        background: #f4f6f7;
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        padding: 1rem 1.5rem;
+        font-family: "Georgia", 'Times New Roman', Times, serif;
+        font-size: 0.88rem;
+        color: var(--text-color);
+        margin: 1rem 0;
+        line-height: 1.9;
+        overflow-x: auto;
+      }
+
+      /* ============================================================
+   SIMULATOR TAB — CIRCUIT BUILDER
+   ============================================================ */
+      .simulator-wrap {
+        padding: clamp(15px, 2vw, 25px) clamp(15px, 2vw, 35px);
+      }
+
+      .sim-toolbar {
+        display: flex;
+        gap: 0.7rem;
+        flex-wrap: wrap;
+        align-items: center;
+        background: white;
+        border: 1px solid var(--border-color);
+        border-radius: 10px;
+        padding: 0.9rem 1.2rem;
+        margin-bottom: 1rem;
+        box-shadow: var(--shadow);
+      }
+      .sim-toolbar-label {
+        font-size: 0.72rem;
+        color: var(--accent-color);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        margin-right: 0.3rem;
+      }
+      .comp-btn {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        padding: 6px 14px;
+        border-radius: 6px;
+        border: 1px solid var(--border-color);
+        background: var(--secondary-color);
+        color: var(--text-color);
+        cursor: pointer;
+        font-size: 0.8rem;
+        font-family: "Georgia", 'Times New Roman', Times, serif;
+        transition: all 0.2s;
+        user-select: none;
+      }
+      .comp-btn:hover {
+        background: var(--hover-color);
+        border-color: var(--accent-color);
+      }
+      .ntc-mode .comp-btn.active-comp {
+        background: #fdecea;
+        border-color: #c0392b;
+        color: #c0392b;
+        font-weight: 600;
+      }
+      .ptc-mode .comp-btn.active-comp {
+        background: #eaf4fb;
+        border-color: #2471a3;
+        color: #2471a3;
+        font-weight: 600;
+      }
+      .clear-btn {
+        padding: 6px 14px;
+        border-radius: 6px;
+        border: 1px solid #e74c3c;
+        background: #fdecea;
+        color: #c0392b;
+        cursor: pointer;
+        font-size: 0.8rem;
+        font-family: "Georgia", 'Times New Roman', Times, serif;
+        transition: all 0.2s;
+      }
+      .clear-btn:hover {
+        background: #e74c3c;
+        color: white;
+      }
+      .run-btn {
+        padding: 6px 18px;
+        border-radius: 6px;
+        border: none;
+        color: white;
+        cursor: pointer;
+        font-size: 0.82rem;
+        font-weight: 600;
+        font-family: "Georgia", 'Times New Roman', Times, serif;
+        transition: all 0.2s;
+        margin-left: auto;
+      }
+      .ntc-mode .run-btn {
+        background: #c0392b;
+      }
+      .ntc-mode .run-btn:hover {
+        background: #a93226;
+      }
+      .ptc-mode .run-btn {
+        background: #2471a3;
+      }
+      .ptc-mode .run-btn:hover {
+        background: #1a5276;
+      }
+
+      .circuit-and-results {
+        display: grid;
+        grid-template-columns: 1fr 300px;
+        gap: 1rem;
+      }
+      @media (max-width: 900px) {
+        .circuit-and-results {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      .circuit-canvas-wrap {
+        background: white;
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        box-shadow: var(--shadow);
+        position: relative;
+        overflow: hidden;
+        min-height: 440px;
+      }
+      .circuit-canvas-wrap canvas {
+        display: block;
+        cursor: crosshair;
+      }
+      .canvas-hint {
+        position: absolute;
+        bottom: 10px;
+        left: 50%;
+        transform: translateX(-50%);
+        font-size: 0.72rem;
+        color: var(--accent-color);
+        background: rgba(255, 255, 255, 0.9);
+        padding: 4px 12px;
+        border-radius: 12px;
+        border: 1px solid var(--border-color);
+        pointer-events: none;
+        white-space: nowrap;
+      }
+
+      .results-panel {
+        display: flex;
+        flex-direction: column;
+        gap: 0.8rem;
+      }
+      .result-card {
+        background: white;
+        border: 1px solid var(--border-color);
+        border-radius: 10px;
+        padding: 1rem 1.1rem;
+        box-shadow: var(--shadow);
+      }
+      .result-card h4 {
+        font-size: 0.7rem;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: var(--accent-color);
+        margin-bottom: 0.7rem;
+      }
+      .result-row {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 5px 0;
+        border-bottom: 1px solid var(--border-color);
+        font-size: 0.85rem;
+      }
+      .result-row:last-child {
+        border-bottom: none;
+      }
+      .result-label {
+        color: var(--accent-color);
+      }
+      .result-value {
+        font-weight: 700;
+        font-family: "Georgia", 'Times New Roman', Times, serif;
+      }
+      .ntc-mode .result-value {
+        color: #c0392b;
+      }
+      .ptc-mode .result-value {
+        color: #2471a3;
+      }
+
+      .component-placed {
+        position: absolute;
+        cursor: move;
+        user-select: none;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 2px;
+      }
+      .comp-symbol {
+        background: white;
+        border: 2px solid var(--text-color);
+        border-radius: 4px;
+        padding: 4px 10px;
+        font-size: 0.72rem;
+        font-weight: 700;
+        font-family: "Georgia", 'Times New Roman', Times, serif;
+        box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+        white-space: nowrap;
+      }
+      .comp-label {
+        font-size: 0.65rem;
+        color: var(--accent-color);
+      }
+
+      /* ============================================================
+   EXPERIMENT TAB
+   ============================================================ */
+      .experiment-wrap {
+        padding: clamp(15px, 2vw, 25px) clamp(15px, 2vw, 35px);
+      }
+
+      .exp-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1.2rem;
+        margin-bottom: 1.2rem;
+      }
+      @media (max-width: 800px) {
+        .exp-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      .exp-card {
+        background: white;
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        padding: 1.4rem;
+        box-shadow: var(--shadow);
+      }
+      .exp-card h3 {
+        font-family: "Georgia", 'Times New Roman', Times, serif;
+        font-size: 0.95rem;
+        margin-bottom: 1rem;
+        color: var(--text-color);
+        display: flex;
+        align-items: center;
+        gap: 8px;
+      }
+
+      /* Temperature knob */
+      .therm-visual-wrap {
+        display: flex;
+        align-items: center;
+        gap: 1.5rem;
+        flex-wrap: wrap;
+      }
+      .thermometer-svg {
+        flex-shrink: 0;
+      }
+      .temp-readout {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        flex: 1;
+        min-width: 120px;
+      }
+      .temp-big {
+        font-family: "Georgia", 'Times New Roman', Times, serif;
+        font-size: 2.5rem;
+        font-weight: 700;
+        line-height: 1;
+      }
+      .ntc-mode .temp-big {
+        color: #c0392b;
+      }
+      .ptc-mode .temp-big {
+        color: #2471a3;
+      }
+      .temp-unit {
+        font-size: 0.8rem;
+        color: var(--accent-color);
+        margin-top: 4px;
+      }
+
+      .temp-slider-wrap {
+        width: 100%;
+      }
+      .slider-label {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.72rem;
+        color: var(--accent-color);
+        margin-bottom: 4px;
+      }
+      input[type="range"] {
+        -webkit-appearance: none;
+        width: 100%;
+        height: 6px;
+        border-radius: 3px;
+        background: var(--border-color);
+        outline: none;
+        cursor: pointer;
+      }
+      .ntc-mode input[type="range"]::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        background: #c0392b;
+        cursor: pointer;
+        box-shadow: 0 0 6px rgba(192, 57, 43, 0.4);
+      }
+      .ptc-mode input[type="range"]::-webkit-slider-thumb {
+        -webkit-appearance: none;
+        width: 18px;
+        height: 18px;
+        border-radius: 50%;
+        background: #2471a3;
+        cursor: pointer;
+        box-shadow: 0 0 6px rgba(36, 113, 163, 0.4);
+      }
+
+      /* Resistance bar */
+      .res-bar-wrap {
+        margin-top: 0.8rem;
+      }
+      .res-bar-label {
+        display: flex;
+        justify-content: space-between;
+        font-size: 0.72rem;
+        color: var(--accent-color);
+        margin-bottom: 4px;
+      }
+      .res-bar-bg {
+        height: 14px;
+        background: var(--border-color);
+        border-radius: 7px;
+        overflow: hidden;
+      }
+      .res-bar-fill {
+        height: 100%;
+        border-radius: 7px;
+        transition:
+          width 0.5s ease,
+          background 0.5s ease;
+      }
+      .res-live {
+        font-size: 1.1rem;
+        font-weight: 700;
+        font-family: "Georgia", 'Times New Roman', Times, serif;
+        margin-top: 6px;
+        text-align: center;
+      }
+
+      /* Oscilloscope-style live chart */
+      .live-chart-wrap {
+        position: relative;
+      }
+      #exp-chart {
+        border-radius: 8px;
+      }
+
+      /* Material badges */
+      .material-table {
+        width: 100%;
+        font-size: 0.82rem;
+        border-collapse: collapse;
+        margin-top: 0.5rem;
+      }
+      .material-table th {
+        background: var(--secondary-color);
+        padding: 6px 10px;
+        text-align: left;
+        border: 1px solid var(--border-color);
+        font-weight: 600;
+      }
+      .material-table td {
+        padding: 6px 10px;
+        border: 1px solid var(--border-color);
+      }
+      .material-table tbody tr:nth-child(odd) {
+        background: #fafbfc;
+      }
+
+      /* Heat/cool animation buttons */
+      .heat-cool-btns {
+        display: flex;
+        gap: 0.7rem;
+        margin-top: 0.8rem;
+        flex-wrap: wrap;
+      }
+      .heat-btn {
+        flex: 1;
+        padding: 9px;
+        border-radius: 7px;
+        border: 2px solid #e74c3c;
+        background: #fdecea;
+        color: #c0392b;
+        cursor: pointer;
+        font-size: 0.82rem;
+        font-weight: 600;
+        transition: all 0.2s;
+      }
+      .heat-btn:hover,
+      .heat-btn.active {
+        background: #e74c3c;
+        color: white;
+      }
+      .cool-btn {
+        flex: 1;
+        padding: 9px;
+        border-radius: 7px;
+        border: 2px solid #2980b9;
+        background: #eaf4fb;
+        color: #2471a3;
+        cursor: pointer;
+        font-size: 0.82rem;
+        font-weight: 600;
+        transition: all 0.2s;
+      }
+      .cool-btn:hover,
+      .cool-btn.active {
+        background: #2980b9;
+        color: white;
+      }
+      .hold-btn {
+        flex: 1;
+        padding: 9px;
+        border-radius: 7px;
+        border: 2px solid var(--border-color);
+        background: var(--secondary-color);
+        color: var(--text-color);
+        cursor: pointer;
+        font-size: 0.82rem;
+        font-weight: 600;
+        transition: all 0.2s;
+      }
+
+      /* ============================================================
+   CALCULATOR TAB
+   ============================================================ */
+      .calculator-wrap {
+        padding: clamp(15px, 2vw, 25px) clamp(15px, 2vw, 35px);
+      }
+
+      .calc-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 1.2rem;
+      }
+      @media (max-width: 750px) {
+        .calc-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      .calc-card {
+        background: white;
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        padding: 1.4rem;
+        box-shadow: var(--shadow);
+      }
+      .calc-card h3 {
+        font-family: "Georgia", 'Times New Roman', Times, serif;
+        font-size: 0.95rem;
+        margin-bottom: 1rem;
+        color: var(--text-color);
+      }
+
+      .input-group {
+        margin-bottom: 1rem;
+      }
+      .input-group label {
+        display: block;
+        font-size: 0.8rem;
+        color: var(--accent-color);
+        margin-bottom: 4px;
+      }
+      .input-group input,
+      .input-group select {
+        width: 100%;
+        padding: 8px 12px;
+        border: 1px solid var(--border-color);
+        border-radius: 6px;
+        font-size: 0.88rem;
+        font-family: "Georgia", 'Times New Roman', Times, serif;
+        color: var(--text-color);
+        background: var(--primary-color);
+        transition: border-color 0.2s;
+      }
+      .input-group input:focus,
+      .input-group select:focus {
+        outline: none;
+        border-color: var(--accent-color);
+      }
+
+      .calc-btn {
+        width: 100%;
+        padding: 10px;
+        border-radius: 7px;
+        border: none;
+        cursor: pointer;
+        font-size: 0.85rem;
+        font-weight: 600;
+        font-family: "Georgia", 'Times New Roman', Times, serif;
+        transition: all 0.2s;
+        color: white;
+        margin-top: 0.3rem;
+      }
+      .ntc-mode .calc-btn {
+        background: #c0392b;
+      }
+      .ntc-mode .calc-btn:hover {
+        background: #a93226;
+      }
+      .ptc-mode .calc-btn {
+        background: #2471a3;
+      }
+      .ptc-mode .calc-btn:hover {
+        background: #1a5276;
+      }
+
+      .calc-result {
+        background: var(--secondary-color);
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        padding: 1rem;
+        margin-top: 0.8rem;
+        display: none;
+      }
+      .calc-result.show {
+        display: block;
+      }
+      .calc-result-label {
+        font-size: 0.72rem;
+        color: var(--accent-color);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+      }
+      .calc-result-value {
+        font-size: 1.4rem;
+        font-weight: 700;
+        font-family: "Georgia", 'Times New Roman', Times, serif;
+        margin-top: 2px;
+      }
+      .ntc-mode .calc-result-value {
+        color: #c0392b;
+      }
+      .ptc-mode .calc-result-value {
+        color: #2471a3;
+      }
+      .calc-result-note {
+        font-size: 0.75rem;
+        color: var(--accent-color);
+        margin-top: 4px;
+        line-height: 1.5;
+      }
+
+      /* ============================================================
+   QUIZ TAB
+   ============================================================ */
+      .quiz-wrap {
+        padding: clamp(15px, 2vw, 25px) clamp(15px, 2vw, 35px);
+        max-width: 855px;
+        margin-left: 16pc;
+      }
+
+      .quiz-header-bar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        background: white;
+        border: 1px solid var(--border-color);
+        border-radius: 10px;
+        padding: 1rem 1.2rem;
+        margin-bottom: 1.2rem;
+        box-shadow: var(--shadow);
+        flex-wrap: wrap;
+        gap: 0.8rem;
+      }
+      .quiz-score-txt {
+        font-size: 0.78rem;
+        color: var(--accent-color);
+      }
+      .quiz-score-num {
+        font-size: 1.3rem;
+        font-weight: 700;
+        font-family: "Georgia", 'Times New Roman', Times, serif;
+      }
+      .ntc-mode .quiz-score-num {
+        color: #c0392b;
+      }
+      .ptc-mode .quiz-score-num {
+        color: #2471a3;
+      }
+      .reset-quiz-btn {
+        padding: 7px 16px;
+        border-radius: 6px;
+        border: 1px solid var(--border-color);
+        background: var(--secondary-color);
+        color: var(--text-color);
+        cursor: pointer;
+        font-size: 0.8rem;
+        font-family: "Georgia", 'Times New Roman', Times, serif;
+        transition: all 0.2s;
+      }
+      .reset-quiz-btn:hover {
+        background: var(--hover-color);
+      }
+
+      .q-card {
+        background: white;
+        border: 1px solid var(--border-color);
+        border-radius: 12px;
+        padding: 1.4rem;
+        margin-bottom: 1rem;
+        box-shadow: var(--shadow);
+      }
+      .q-meta {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        margin-bottom: 0.7rem;
+      }
+      .q-num-txt {
+        font-size: 0.68rem;
+        text-transform: uppercase;
+        letter-spacing: 0.1em;
+        color: var(--accent-color);
+      }
+      .q-text {
+        font-size: 0.95rem;
+        font-weight: 600;
+        color: var(--text-color);
+        margin-bottom: 1rem;
+        line-height: 1.5;
+      }
+      .opts-list {
+        display: flex;
+        flex-direction: column;
+        gap: 7px;
+      }
+      .opt-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 9px 13px;
+        border-radius: 7px;
+        border: 1.5px solid var(--border-color);
+        background: var(--primary-color);
+        cursor: pointer;
+        transition: all 0.2s;
+        font-size: 0.87rem;
+        color: var(--text-color);
+      }
+      .opt-item:hover {
+        border-color: var(--accent-color);
+        background: var(--hover-color);
+      }
+      .opt-item.chosen {
+        border-color: #f39c12;
+        background: #fff8e1;
+      }
+      .opt-item.correct {
+        border-color: #27ae60;
+        background: #eafaf1;
+        color: #1e8449;
+      }
+      .opt-item.wrong {
+        border-color: #e74c3c;
+        background: #fdecea;
+        color: #c0392b;
+      }
+      .opt-dot {
+        width: 14px;
+        height: 14px;
+        border-radius: 50%;
+        border: 2px solid currentColor;
+        flex-shrink: 0;
+        transition: background 0.2s;
+      }
+      .opt-item.chosen .opt-dot,
+      .opt-item.correct .opt-dot {
+        background: currentColor;
+      }
+      .q-actions {
+        display: flex;
+        align-items: center;
+        gap: 0.7rem;
+        margin-top: 0.9rem;
+        flex-wrap: wrap;
+      }
+      .check-q-btn {
+        padding: 8px 20px;
+        border-radius: 6px;
+        border: none;
+        cursor: pointer;
+        font-size: 0.82rem;
+        font-weight: 600;
+        font-family: "Georgia", 'Times New Roman', Times, serif;
+        background: #f39c12;
+        color: white;
+        transition: all 0.2s;
+      }
+      .check-q-btn:hover {
+        background: #d68910;
+      }
+      .check-q-btn:disabled {
+        opacity: 0.4;
+        cursor: default;
+      }
+      .q-feedback {
+        margin-top: 0.8rem;
+        padding: 0.8rem 1rem;
+        border-radius: 6px;
+        font-size: 0.82rem;
+        line-height: 1.55;
+        display: none;
+        background: #eaf4fb;
+        border-left: 3px solid #2980b9;
+        color: var(--text-color);
+      }
+      .q-feedback.show {
+        display: block;
+      }
+
+      /* ============================================================
+   RESPONSIVE
+   ============================================================ */
+      @media (max-width: 900px) {
+        .theory-tab-wrap {
+          grid-template-columns: 1fr;
+        }
+        .theory-sidebar {
+          position: relative;
+          top: 0;
+          height: auto;
+          display: flex;
+          flex-wrap: wrap;
+          gap: 4px;
+        }
+        .theory-sidebar-item {
+          width: auto;
+        }
+        .theory-main {
+          max-height: none;
+        }
+      }
+      @media (max-width: 700px) {
+        .exp-grid,
+        .calc-grid {
+          grid-template-columns: 1fr;
+        }
+        .app-nav {
+          overflow-x: auto;
+        }
+        .nav-tab-btn {
+          padding: 12px 10px;
+          font-size: 0.76rem;
+        }
+        .app-nav-logo {
+          display: none;
+        }
+      }
+      @media (max-width: 599px) {
+        .overview-stats {
+          grid-template-columns: 1fr 1fr;
+        }
+      }
+    </style>
+    <style>
+      /* ── Site header — exact match to theory page (defination.css header rules) ── */
+      .site-header {
+        display: flex;
+        text-align: center;
+        padding: clamp(8px, 1vw, 20px) 0;
+        border-bottom: 1px solid var(--border-color);
+        margin-bottom: 0;
+        width: 100%;
+        background: #fff;
+        position: relative;
+        z-index: 300;
+      }
+      .site-header .logo-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: clamp(15px, 13vw, 153px);
+        margin-bottom: clamp(5px, 1vw, 15px);
+        flex-wrap: wrap;
+        width: 76%;
+      }
+      .site-header .logo-container img {
+        height: clamp(35px, 5vw, 80px);
+        width: auto;
+        object-fit: contain;
+      }
+      .site-header h1 {
+        font-size: clamp(1rem, 3.5vw, 1.5rem);
+        font-weight: 700;
+        color: var(--text-color);
+        margin: 0;
+        line-height: 1.2;
+      }
+
+      /* Back-to-theory button row under header on selection screen */
+      .sel-header-bar {
+        width: 100%;
+        max-width: 720px;
+        display: flex;
+        align-items: center;
+        margin-bottom: 1.4rem;
+      }
+      .back-theory-btn {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 9px 20px;
+        background: var(--secondary-color);
+        border: 1px solid var(--border-color);
+        border-radius: 8px;
+        color: var(--text-color);
+        text-decoration: none;
+        cursor: pointer;
+        font-size: 17px;
+        font-family: "Georgia", 'Times New Roman', Times, serif;
+        font-weight: 700;
+        transition: all 0.25s ease;
+      }
+      .back-theory-btn:hover {
+        background: var(--hover-color);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+      }
+
+      /* Back-to-theory inside app nav */
+      .nav-back-theory {
+        display: inline-flex;
+        align-items: center;
+        gap: 6px;
+        padding: 7px 14px;
+        border-radius: 6px;
+        border: 1px solid var(--border-color);
+        background: var(--secondary-color);
+        color: var(--text-color);
+        cursor: pointer;
+        /* font-size: 0.78rem; */
+        font-size: 15px;
+        font-family: "Georgia", 'Times New Roman', Times, serif;
+        font-weight: bolder;
+        transition: all 0.2s;
+        white-space: nowrap;
+        text-decoration: none;
+        margin-left: 4pc;
+      }
+      .nav-back-theory:hover {
+        background: var(--hover-color);
+      }
+    </style>
+  </head>
+  <body>
+    <!-- ========================================================
+     SITE HEADER  (matches Temperature_Sensors_and_Temperature_Transmitter.html)
+     ======================================================== -->
+    <header class="site-header">
+      <div class="logo-container">
+        <img src="../../assets/Scientech logo-2.png" alt="Scientech Logo" />
+        <h1 style="margin-left: -19px">
+          Temperature Sensors and Temperature Transmitter
+        </h1>
+      </div>
+      <div class="button-container" >
+                <a href="./Temperature_Sensors_and_Temperature_Transmitter.html" class="back-button" style="margin-left: 105px;">
+                    <i class="fas fa-arrow-left"></i> Back to Course
+                </a>
+            </div>
+    </header>
+
+    <!-- ========================================================
+     SELECTION SCREEN
+     ======================================================== -->
+    <div id="selection-screen">
+      <div style="display: none;" class="sel-header-bar">
+        <a
+          href="./Temperature_Sensors_and_Temperature_Transmitter.html"
+          class="back-theory-btn"
+        >
+          <i class="fa fa-arrow-left"></i> Back to Theory
+        </a>
+      </div>
+
+      <div class="sel-badge">
+        <i class="fa fa-microchip"></i> &nbsp;Thermistor Learning Lab
+      </div>
+      <h1 class="sel-title">NTC &amp; PTC<br />Simulation Software</h1>
+      <p class="sel-sub">
+        Select a thermistor type to begin. You'll build circuits, run
+        experiments, calculate values, and learn from basics to expert level.
+      </p>
+
+      <div class="sel-cards">
+        <!-- NTC -->
+        <div class="sel-card ntc" onclick="launchApp('ntc')">
+          <div class="sel-card-icon">🌡️</div>
+          <h2>NTC</h2>
+          <div class="sel-card-full">Negative Temperature Coefficient</div>
+          <p>
+            Resistance <strong>decreases</strong> as temperature rises. High
+            sensitivity semiconductor sensor.
+          </p>
+          <div class="sel-tags">
+            <span class="sel-tag">Temperature Sensing</span>
+            <span class="sel-tag">Medical</span>
+            <span class="sel-tag">Inrush Limit</span>
+          </div>
+          <button class="sel-go-btn">
+            Start NTC Lab &nbsp;<i class="fa fa-arrow-right"></i>
+          </button>
+        </div>
+        <!-- PTC -->
+        <div class="sel-card ptc" onclick="launchApp('ptc')">
+          <div class="sel-card-icon">⚡</div>
+          <h2>PTC</h2>
+          <div class="sel-card-full">Positive Temperature Coefficient</div>
+          <p>
+            Resistance <strong>increases</strong> sharply at Curie temperature.
+            Self-protecting &amp; self-regulating.
+          </p>
+          <div class="sel-tags">
+            <span class="sel-tag">Overcurrent Protection</span>
+            <span class="sel-tag">Self-Heating</span>
+            <span class="sel-tag">Motor Start</span>
+          </div>
+          <button class="sel-go-btn">
+            Start PTC Lab &nbsp;<i class="fa fa-arrow-right"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ========================================================
+     MAIN APP
+     ======================================================== -->
+    <div id="app">
+      <!-- Navigation -->
+      <nav class="app-nav" id="app-nav">
+        <div class="app-nav-logo">
+          <i class="fa fa-microchip"></i>
+          <span id="nav-title">NTC Lab</span>
+          <span class="mode-badge" id="nav-badge">NTC</span>
+        </div>
+        <button class="nav-tab-btn active" onclick="showTab('overview', this)">
+          <i class="fa fa-house"></i> Overview
+        </button>
+        <button class="nav-tab-btn" onclick="showTab('theory', this)">
+          <i class="fa fa-book-open"></i> Theory
+        </button>
+        <button class="nav-tab-btn" onclick="showTab('circuit', this)">
+          <i class="fa fa-diagram-project"></i> Circuit Builder
+        </button>
+        <button class="nav-tab-btn" onclick="showTab('experiment', this)">
+          <i class="fa fa-flask"></i> Experiment
+        </button>
+        <button class="nav-tab-btn" onclick="showTab('calculator', this)">
+          <i class="fa fa-calculator"></i> Calculator
+        </button>
+        <button class="nav-tab-btn" onclick="showTab('quiz', this)">
+          <i class="fa fa-circle-question"></i> Quiz
+        </button>
+
+        <button class="nav-switch-btn" onclick="goBack()">
+          <i class="fa fa-rotate-left"></i> Switch Type
+        </button>
+        <!-- <a
+          href="./Temperature_Sensors_and_Temperature_Transmitter.html"
+          class="nav-back-theory"
+          ><i class="fa fa-arrow-left"></i> Back to Theory</a
+        > -->
+      </nav>
+
+      <!-- ===================== OVERVIEW ===================== -->
+      <div id="tab-overview" class="tab-page active">
+        <div class="overview-wrap">
+          <button style="display: none;" class="back-button" onclick="goBack()">
+            <i class="fa fa-rotate-left"></i> Switch Thermistor Type
+          </button>
+
+          <div class="overview-stats" id="overview-stats"></div>
+
+          <div class="overview-chart-card">
+            <h3 id="overview-chart-title">
+              Resistance vs Temperature — Characteristic Curve
+            </h3>
+            <canvas id="overview-chart" height="200"></canvas>
+          </div>
+
+          <div class="theory-section" style="max-height: none">
+            <h2 id="ov-heading"></h2>
+            <p id="ov-intro"></p>
+            <h3>How It Works</h3>
+            <p id="ov-how"></p>
+            <h3>NTC vs PTC — Quick Comparison</h3>
+            <table class="comparison-table">
+              <thead>
+                <tr>
+                  <th>Property</th>
+                  <th>NTC Thermistor</th>
+                  <th>PTC Thermistor</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>R-T Behaviour</td>
+                  <td>Resistance ↓ as temp ↑</td>
+                  <td>Resistance ↑ as temp ↑</td>
+                </tr>
+                <tr>
+                  <td>Sensitivity</td>
+                  <td>−3% to −6% / °C</td>
+                  <td>Very high near Curie point</td>
+                </tr>
+                <tr>
+                  <td>Material</td>
+                  <td>Metal oxides (Mn, Co, Ni)</td>
+                  <td>BaTiO₃ or conductive polymer</td>
+                </tr>
+                <tr>
+                  <td>Primary Use</td>
+                  <td>Temperature measurement</td>
+                  <td>Overcurrent / overheat protection</td>
+                </tr>
+                <tr>
+                  <td>Self-resetting</td>
+                  <td>No</td>
+                  <td>Yes (polymer type)</td>
+                </tr>
+                <tr>
+                  <td>Accuracy</td>
+                  <td>±0.01°C (Steinhart-Hart)</td>
+                  <td>Not typically for measurement</td>
+                </tr>
+                <tr>
+                  <td>Range</td>
+                  <td>−55°C to +150°C</td>
+                  <td>0°C to +250°C</td>
+                </tr>
+                <tr>
+                  <td>Beta (β)</td>
+                  <td>2000–5000 K</td>
+                  <td>N/A (uses Curie temp Tc)</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===================== THEORY ===================== -->
+      <div id="tab-theory" class="tab-page">
+        <div class="theory-tab-wrap">
+          <div class="theory-sidebar">
+            <div class="theory-sidebar-title">Topics</div>
+            <button
+              class="theory-sidebar-item active"
+              onclick="showTheory('th-intro', this)"
+            >
+              1. Introduction
+            </button>
+            <button
+              class="theory-sidebar-item"
+              onclick="showTheory('th-physics', this)"
+            >
+              2. Semiconductor Physics
+            </button>
+            <button
+              class="theory-sidebar-item"
+              onclick="showTheory('th-beta', this)"
+            >
+              3. Beta (β) Equation
+            </button>
+            <button
+              class="theory-sidebar-item"
+              onclick="showTheory('th-sh', this)"
+            >
+              4. Steinhart-Hart Model
+            </button>
+            <button
+              class="theory-sidebar-item"
+              onclick="showTheory('th-divider', this)"
+            >
+              5. Voltage Divider
+            </button>
+            <button
+              class="theory-sidebar-item"
+              onclick="showTheory('th-selfheat', this)"
+            >
+              6. Self-Heating Effect
+            </button>
+            <button
+              class="theory-sidebar-item"
+              onclick="showTheory('th-linear', this)"
+            >
+              7. Linearisation
+            </button>
+            <button
+              class="theory-sidebar-item"
+              onclick="showTheory('th-apps', this)"
+            >
+              8. Applications
+            </button>
+          </div>
+          <div class="theory-main">
+            <!-- Pane 1 -->
+            <div id="th-intro" class="theory-pane active">
+              <div class="theory-section">
+                <h2>
+                  Introduction to Thermistors
+                  <span class="level-badge level-beginner">Beginner</span>
+                </h2>
+                <p>
+                  A <strong>thermistor</strong> is a type of resistor whose
+                  resistance changes significantly with temperature. The word
+                  comes from combining <em>thermal</em> and <em>resistor</em>.
+                  Unlike a standard resistor that changes only slightly,
+                  thermistors are designed specifically to exploit this
+                  temperature sensitivity.
+                </p>
+                <p>There are two families:</p>
+                <ul>
+                  <li>
+                    <strong>NTC (Negative Temperature Coefficient)</strong> —
+                    resistance decreases as temperature rises. Made from metal
+                    oxide semiconductors. Most common type.
+                  </li>
+                  <li>
+                    <strong>PTC (Positive Temperature Coefficient)</strong> —
+                    resistance increases as temperature rises. Ceramic (BaTiO₃)
+                    or polymer-based. Often used as a protection device.
+                  </li>
+                </ul>
+                <div class="callout-box info">
+                  <strong>Historical fact:</strong> The thermistor was invented
+                  by Samuel Ruben in 1930. Bell Labs commercialised it in the
+                  1940s. Today, billions are produced annually.
+                </div>
+                <h3>Physical Construction</h3>
+                <p>
+                  NTC thermistors are made by sintering metal oxide powders
+                  (manganese, cobalt, nickel, copper) at high temperature into a
+                  ceramic pellet. They are then formed into beads, discs, chips,
+                  or rods and protected with epoxy, glass, or stainless-steel
+                  housing.
+                </p>
+                <h3>Symbol and Marking</h3>
+                <p>
+                  The standard IEC schematic symbol is a rectangle with a
+                  diagonal arrow and the letter "T" or "θ". The thermistor
+                  resistance is usually specified at 25°C (room temperature) —
+                  for example, "10kΩ NTC" means 10,000 Ω at exactly 25°C.
+                </p>
+                <div class="callout-box success">
+                  <strong>Key takeaway:</strong> Thermistors are the most
+                  sensitive and cost-effective electronic temperature sensors
+                  available. They outperform RTDs and thermocouples in the −50°C
+                  to +150°C range for sensitivity.
+                </div>
+              </div>
+            </div>
+
+            <!-- Pane 2 -->
+            <div id="th-physics" class="theory-pane">
+              <div class="theory-section">
+                <h2>
+                  Semiconductor Physics
+                  <span class="level-badge level-intermediate"
+                    >Intermediate</span
+                  >
+                </h2>
+                <p>
+                  Understanding why thermistors behave as they do requires some
+                  semiconductor physics. The key concept is
+                  <strong>charge carrier density</strong>.
+                </p>
+                <h3>For NTC Thermistors</h3>
+                <p>
+                  Metal oxide thermistors behave like intrinsic semiconductors.
+                  At low temperatures, electrons are trapped in the valence
+                  band. As temperature rises, electrons gain thermal energy and
+                  cross the <strong>energy bandgap (Eg)</strong> into the
+                  conduction band — creating free electron-hole pairs that carry
+                  current.
+                </p>
+                <div class="formula-block">
+                  n ∝ exp(−Eg / 2kT) Where: n = charge carrier concentration Eg
+                  = energy bandgap (eV) k = Boltzmann constant (8.617 × 10⁻⁵
+                  eV/K) T = absolute temperature (Kelvin)
+                </div>
+                <p>
+                  Because more carriers are available at higher temperatures,
+                  conductivity increases and resistance
+                  <strong>decreases</strong>. This is opposite to metals, where
+                  resistance increases due to phonon scattering.
+                </p>
+                <h3>For Ceramic PTC Thermistors (BaTiO₃)</h3>
+                <p>
+                  Below the Curie temperature (Tc), BaTiO₃ is in a
+                  <strong>ferroelectric phase</strong> — the crystal lattice is
+                  slightly distorted, and electrons can tunnel through grain
+                  boundaries giving low resistance.
+                </p>
+                <p>
+                  At Tc, the crystal undergoes a phase transition to a
+                  <strong>paraelectric phase</strong>. The grain boundary
+                  potential barriers increase dramatically, blocking electron
+                  flow. Resistance can jump by 6+ orders of magnitude in a
+                  narrow temperature range.
+                </p>
+                <div class="callout-box">
+                  <strong>PTC Polymer type:</strong> Uses carbon black particles
+                  dispersed in a crystalline polymer. Below Tm (melting
+                  temperature), the polymer is crystalline and carbon particles
+                  form a conductive network. Above Tm, the polymer expands,
+                  separating the carbon particles and dramatically increasing
+                  resistance.
+                </div>
+                <h3>Conductivity Equation</h3>
+                <div class="formula-block">
+                  σ = σ₀ × exp(−Ea / kT) Where: σ = electrical conductivity σ₀ =
+                  pre-exponential factor Ea = activation energy k = Boltzmann
+                  constant T = temperature (K) Since R ∝ 1/σ, resistance
+                  follows: R = R∞ × exp(+Ea / kT) [for NTC]
+                </div>
+              </div>
+            </div>
+
+            <!-- Pane 3 -->
+            <div id="th-beta" class="theory-pane">
+              <div class="theory-section">
+                <h2>
+                  The Beta (β) Equation
+                  <span class="level-badge level-intermediate"
+                    >Intermediate</span
+                  >
+                </h2>
+                <p>
+                  The most common simplified model for NTC thermistor resistance
+                  uses the <strong>Beta (β) parameter</strong>, also called the
+                  material constant or B-parameter.
+                </p>
+                <div class="formula-block">
+                  R(T) = R₀ × exp[ β × (1/T − 1/T₀) ] Where: R(T) = Resistance
+                  at temperature T (Kelvin) R₀ = Resistance at reference
+                  temperature T₀ T₀ = Reference temperature (usually 298.15 K =
+                  25°C) β = Beta constant (material-dependent, typically
+                  2000–5000 K) T = Measurement temperature (Kelvin) Convert
+                  Celsius to Kelvin: T(K) = T(°C) + 273.15
+                </div>
+                <h3>Temperature Coefficient (α)</h3>
+                <p>
+                  The
+                  <strong>Temperature Coefficient of Resistance (α)</strong>
+                  describes sensitivity — how much resistance changes per
+                  degree:
+                </p>
+                <div class="formula-block">
+                  α = (1/R) × dR/dT = −β / T² Example: β = 3950 K, T = 298 K
+                  (25°C) α = −3950 / 298² = −0.0445 = −4.45% per °C This means
+                  for every 1°C rise, resistance drops ~4.45%
+                </div>
+                <div class="callout-box">
+                  <strong>Limitation:</strong> The beta equation is accurate to
+                  only ±1–2°C over a wide range because β itself varies with
+                  temperature. It works well over narrow ranges (typically ±30°C
+                  from T₀). For wider ranges, use the Steinhart-Hart equation.
+                </div>
+                <h3>Worked Example</h3>
+                <p>
+                  A 10kΩ NTC thermistor with β = 3950 K. What is its resistance
+                  at 50°C?
+                </p>
+                <div class="formula-block">
+                  T₀ = 25°C = 298.15 K T = 50°C = 323.15 K R₀ = 10,000 Ω β =
+                  3950 K R = 10000 × exp[3950 × (1/323.15 − 1/298.15)] R = 10000
+                  × exp[3950 × (0.003094 − 0.003354)] R = 10000 × exp[3950 ×
+                  (−0.000260)] R = 10000 × exp[−1.027] R = 10000 × 0.3584 R ≈
+                  3,584 Ω (3.584 kΩ)
+                </div>
+              </div>
+            </div>
+
+            <!-- Pane 4 -->
+            <div id="th-sh" class="theory-pane">
+              <div class="theory-section">
+                <h2>
+                  Steinhart-Hart Model
+                  <span class="level-badge level-advanced">Advanced</span>
+                </h2>
+                <p>
+                  For high-accuracy measurements over a wide temperature range,
+                  the <strong>Steinhart-Hart equation</strong> (1968) is the
+                  gold standard. It uses three empirically-determined
+                  coefficients to model the full R-T curve with ±0.01°C
+                  accuracy.
+                </p>
+                <div class="formula-block">
+                  1/T = A + B·ln(R) + C·[ln(R)]³ Rearranged to find temperature
+                  from resistance: T(K) = 1 / { A + B·ln(R) + C·[ln(R)]³ } T(°C)
+                  = T(K) − 273.15 Typical coefficients for 10kΩ NTC at 25°C: A =
+                  1.129148 × 10⁻³ B = 2.341077 × 10⁻⁴ C = 8.775468 × 10⁻⁸
+                </div>
+                <h3>Finding Coefficients</h3>
+                <p>
+                  To determine A, B, C for a specific thermistor, measure
+                  resistance at three known temperatures (T₁, T₂, T₃) and solve
+                  the 3×3 linear system. Use temperatures spanning your
+                  operating range for best accuracy.
+                </p>
+                <div class="formula-block">
+                  Using three calibration points (T₁,R₁), (T₂,R₂), (T₃,R₃): Let
+                  L₁ = ln(R₁), L₂ = ln(R₂), L₃ = ln(R₃) Solve the system: 1/T₁ =
+                  A + B·L₁ + C·L₁³ 1/T₂ = A + B·L₂ + C·L₂³ 1/T₃ = A + B·L₃ +
+                  C·L₃³
+                </div>
+                <div class="callout-box info">
+                  <strong>Accuracy comparison:</strong><br />• Beta equation:
+                  ±0.5°C to ±2°C over wide range<br />• Steinhart-Hart: ±0.01°C
+                  to ±0.1°C over full range<br />• Use in: Medical devices,
+                  precision labs, industrial calibration
+                </div>
+                <h3>Extended Steinhart-Hart (4-coefficient)</h3>
+                <div class="formula-block">
+                  1/T = A + B·ln(R) + C·[ln(R)]² + D·[ln(R)]³ The C·[ln(R)]²
+                  term improves accuracy further. Used in high-end process
+                  control instrumentation.
+                </div>
+              </div>
+            </div>
+
+            <!-- Pane 5 -->
+            <div id="th-divider" class="theory-pane">
+              <div class="theory-section">
+                <h2>
+                  Voltage Divider Interface
+                  <span class="level-badge level-intermediate"
+                    >Intermediate</span
+                  >
+                </h2>
+                <p>
+                  The most common circuit to read a thermistor with a
+                  microcontroller uses a <strong>voltage divider</strong> with a
+                  fixed resistor R₁ and the thermistor R_T. The output voltage
+                  V_out is fed into an ADC pin.
+                </p>
+                <div class="formula-block">
+                  Circuit: V_supply → R₁ → V_out → R_T → GND V_out = V_supply ×
+                  R_T / (R₁ + R_T) [thermistor to GND] or V_out = V_supply × R₁
+                  / (R₁ + R_T) [thermistor to V+] For NTC (R_T ↓ as temp ↑): →
+                  With thermistor to GND: V_out decreases with temp → With
+                  thermistor to V+: V_out increases with temp For PTC (R_T ↑ as
+                  temp ↑): → Opposite of NTC for each configuration
+                </div>
+                <h3>Choosing Optimal R₁</h3>
+                <p>
+                  To maximise sensitivity, R₁ should equal the thermistor
+                  resistance at the midpoint of your operating temperature
+                  range:
+                </p>
+                <div class="formula-block">
+                  R₁_optimal = R_T(T_midpoint) Example: NTC 10kΩ, operating
+                  −10°C to +60°C Midpoint = 25°C → R_T ≈ 10kΩ → R₁ = 10kΩ ADC
+                  considerations: • ADC input impedance must be ≥10× R₁ • Use a
+                  buffer op-amp (unity gain) for low-Z ADC • 12-bit ADC
+                  resolution ≈ V_supply / 4096
+                </div>
+                <div class="callout-box">
+                  <strong>Note on linearisation:</strong> The voltage divider
+                  output is still non-linear. Use a lookup table or
+                  Steinhart-Hart calculation in firmware to convert ADC counts →
+                  temperature accurately.
+                </div>
+              </div>
+            </div>
+
+            <!-- Pane 6 -->
+            <div id="th-selfheat" class="theory-pane">
+              <div class="theory-section">
+                <h2>
+                  Self-Heating Effect
+                  <span class="level-badge level-advanced">Advanced</span>
+                </h2>
+                <p>
+                  When current flows through a thermistor, power is dissipated
+                  as heat (I²R). This raises the thermistor's temperature above
+                  ambient — called <strong>self-heating</strong> — introducing
+                  measurement error.
+                </p>
+                <div class="formula-block">
+                  ΔT_error = P_dissipated / δ Where: ΔT_error = Self-heating
+                  temperature error (°C) P = I² × R_therm (power in watts) δ =
+                  Dissipation constant (mW/°C, from datasheet) Typical: 1–10
+                  mW/°C in still air Example: I = 1mA, R = 10kΩ, δ = 1.5 mW/°C P
+                  = (0.001)² × 10000 = 0.01 W = 10 mW ΔT = 10 / 1.5 = 6.7°C ←
+                  huge error! Better: I = 0.1mA (100µA): P = (0.0001)² × 10000 =
+                  0.0001 W = 0.1 mW ΔT = 0.1 / 1.5 = 0.067°C ← acceptable
+                </div>
+                <h3>Minimisation Strategies</h3>
+                <ul>
+                  <li>
+                    Use excitation current below 100µA for measurement-grade
+                    accuracy
+                  </li>
+                  <li>
+                    Use <strong>pulsed excitation</strong> — power on only
+                    during ADC conversion
+                  </li>
+                  <li>
+                    Select thermistors with high dissipation constant δ (good
+                    thermal contact)
+                  </li>
+                  <li>Use oil bath or paste for immersion sensors</li>
+                  <li>
+                    Allow settling time after powering circuit before reading
+                    ADC
+                  </li>
+                </ul>
+                <div class="callout-box danger">
+                  <strong>Warning:</strong> NTC thermistors used for inrush
+                  current limiting deliberately exploit self-heating. As they
+                  heat up, resistance drops further — this is the intended
+                  behaviour for that application, not an error.
+                </div>
+              </div>
+            </div>
+
+            <!-- Pane 7 -->
+            <div id="th-linear" class="theory-pane">
+              <div class="theory-section">
+                <h2>
+                  Linearisation Techniques
+                  <span class="level-badge level-expert">Expert</span>
+                </h2>
+                <p>
+                  The exponential R-T relationship of thermistors creates
+                  non-linearity that complicates analog signal processing.
+                  Several techniques are used to linearise the output.
+                </p>
+                <h3>Method 1: Parallel Resistor</h3>
+                <div class="formula-block">
+                  Place resistor R_p in parallel with thermistor R_T: R_eff =
+                  (R_T × R_p) / (R_T + R_p) Best value: R_p = R_T at the
+                  inflection point of the curve This reduces sensitivity but
+                  gives more linear V-T response over a limited ±30°C range
+                  around the inflection point.
+                </div>
+                <h3>Method 2: Op-Amp Log Amplifier</h3>
+                <p>
+                  An op-amp with a diode in the feedback path produces an output
+                  proportional to ln(R_T), partially linearising the response in
+                  analog hardware.
+                </p>
+                <h3>Method 3: Firmware Lookup Table (Most Common)</h3>
+                <div class="formula-block">
+                  1. During design: compute R-T table at 1°C steps e.g., {-40°C:
+                  341kΩ, -39°C: 317kΩ, ..., 150°C: 183Ω} 2. Store in
+                  microcontroller flash memory 3. At runtime: a. Read ADC →
+                  compute R_T b. Binary search lookup table c. Linear
+                  interpolation between two nearest points d. Output temperature
+                  in °C Memory: ~200 bytes for −40°C to +120°C at 1°C resolution
+                  Speed: <1µs execution on any modern MCU
+                </div>
+                <h3>Method 4: Steinhart-Hart in Firmware</h3>
+                <div class="formula-block">
+                  float thermistorTemp(float resistance) { float ln_r =
+                  log(resistance); // natural log float inv_T = A + B * ln_r + C
+                  * ln_r * ln_r * ln_r; return (1.0 / inv_T) - 273.15; // Kelvin
+                  to Celsius } // Requires: float A, B, C constants from
+                  datasheet/calibration // Accuracy: ±0.01°C with correct
+                  coefficients
+                </div>
+                <div class="callout-box info">
+                  <strong>Best practice:</strong> For microcontroller systems,
+                  combine a good voltage divider (R₁ = R_T at midpoint), a
+                  12-bit ADC, and Steinhart-Hart firmware calculation. This
+                  gives ±0.1°C over a wide range with no external analog
+                  processing.
+                </div>
+              </div>
+            </div>
+
+            <!-- Pane 8 -->
+            <div id="th-apps" class="theory-pane">
+              <div class="theory-section">
+                <h2>
+                  Applications
+                  <span class="level-badge level-beginner">All Levels</span>
+                </h2>
+                <h3 id="apps-heading-ntc">NTC Thermistor Applications</h3>
+                <ul id="apps-list">
+                  <li>
+                    <strong>Digital Thermometers</strong> — Oral/rectal/forehead
+                    thermometers: ±0.1°C accuracy. Fast response (1–3 s).
+                  </li>
+                  <li>
+                    <strong>Battery Management Systems</strong> — Monitor Li-ion
+                    cell temperature during charging. Prevent thermal runaway in
+                    EVs and phones.
+                  </li>
+                  <li>
+                    <strong>Inrush Current Limiting</strong> — NTC in series
+                    with power supply input. Cold = high R (limits inrush). Warm
+                    = low R (normal operation).
+                  </li>
+                  <li>
+                    <strong>CPU/GPU Thermal Throttling</strong> — Embedded
+                    sensors trigger fan control and clock throttling to protect
+                    processors.
+                  </li>
+                  <li>
+                    <strong>HVAC Systems</strong> — Room and duct temperature
+                    sensing in air conditioning and heating control loops.
+                  </li>
+                  <li>
+                    <strong>Automotive ECU</strong> — Engine coolant, intake
+                    air, and exhaust temperature measurement for fuel injection
+                    optimisation.
+                  </li>
+                  <li>
+                    <strong>Medical Devices</strong> — Catheter sensors,
+                    incubator control, dialysis machine monitoring, wearable
+                    health monitors.
+                  </li>
+                  <li>
+                    <strong>Cold Chain Monitoring</strong> — Food and
+                    pharmaceutical storage temperature logging. HACCP
+                    compliance.
+                  </li>
+                </ul>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===================== CIRCUIT BUILDER ===================== -->
+      <div id="tab-circuit" class="tab-page">
+        <div class="simulator-wrap">
+          <div
+            class="theory-section"
+            style="max-height: none; margin-bottom: 1rem; padding: 1rem 1.5rem"
+          >
+            <h2
+              style="
+                border: none;
+                padding: 0;
+                margin-bottom: 0.3rem;
+                font-size: 1rem;
+              "
+            >
+              Circuit Builder
+              <span class="level-badge level-beginner">Interactive</span>
+            </h2>
+            <p
+              style="margin: 0; font-size: 0.82rem; color: var(--accent-color)"
+            >
+              Drag components onto the canvas to build a voltage divider
+              circuit. Click <strong>Simulate</strong> to calculate real values.
+            </p>
+          </div>
+
+          <div class="sim-toolbar">
+            <span class="sim-toolbar-label">Add Component:</span>
+            <button class="comp-btn" onclick="selectComp('thermistor', this)">
+              🌡️ Thermistor
+            </button>
+            <button class="comp-btn" onclick="selectComp('resistor', this)">
+              ⬛ Resistor
+            </button>
+            <button class="comp-btn" onclick="selectComp('battery', this)">
+              🔋 Battery
+            </button>
+            <button class="comp-btn" onclick="selectComp('led', this)">
+              💡 LED
+            </button>
+            <button class="comp-btn" onclick="selectComp('ammeter', this)">
+              A Ammeter
+            </button>
+            <button class="comp-btn" onclick="selectComp('voltmeter', this)">
+              V Voltmeter
+            </button>
+            <button class="clear-btn" onclick="clearCircuit()">
+              <i class="fa fa-trash"></i> Clear
+            </button>
+            <button class="run-btn" onclick="simulateCircuit()">
+              <i class="fa fa-play"></i> Simulate
+            </button>
+          </div>
+
+          <div class="circuit-and-results">
+            <div class="circuit-canvas-wrap" id="canvas-wrap">
+              <canvas id="circuit-canvas" width="700" height="440"></canvas>
+              <div class="canvas-hint" id="canvas-hint">
+                Select a component above, then click on the canvas to place it
+              </div>
+            </div>
+
+            <div class="results-panel">
+              <div class="result-card">
+                <h4>Circuit Settings</h4>
+                <div class="input-group" style="margin-bottom: 0.6rem">
+                  <label>Supply Voltage (V)</label>
+                  <input
+                    type="number"
+                    id="cir-vsupply"
+                    value="5"
+                    min="1"
+                    max="24"
+                    step="0.5"
+                    oninput="simulateCircuit()"
+                  />
+                </div>
+                <div class="input-group" style="margin-bottom: 0.6rem">
+                  <label>Resistor R₁ (Ω)</label>
+                  <input
+                    type="number"
+                    id="cir-r1"
+                    value="10000"
+                    min="100"
+                    max="1000000"
+                    oninput="simulateCircuit()"
+                  />
+                </div>
+                <div class="input-group" style="margin-bottom: 0.6rem">
+                  <label>Temperature (°C)</label>
+                  <input
+                    type="number"
+                    id="cir-temp"
+                    value="25"
+                    min="-40"
+                    max="150"
+                    oninput="simulateCircuit()"
+                  />
+                </div>
+                <div class="input-group" style="margin-bottom: 0.6rem">
+                  <label>R₀ at 25°C (Ω)</label>
+                  <input
+                    type="number"
+                    id="cir-r0"
+                    value="10000"
+                    min="100"
+                    max="1000000"
+                    step="1000"
+                    oninput="simulateCircuit()"
+                  />
+                </div>
+              </div>
+
+              <div class="result-card">
+                <h4>Simulation Results</h4>
+                <div class="result-row">
+                  <span class="result-label">R_thermistor</span
+                  ><span class="result-value" id="res-rtherm">—</span>
+                </div>
+                <div class="result-row">
+                  <span class="result-label">Total R</span
+                  ><span class="result-value" id="res-rtotal">—</span>
+                </div>
+                <div class="result-row">
+                  <span class="result-label">Current (I)</span
+                  ><span class="result-value" id="res-curr">—</span>
+                </div>
+                <div class="result-row">
+                  <span class="result-label">V_thermistor</span
+                  ><span class="result-value" id="res-vtherm">—</span>
+                </div>
+                <div class="result-row">
+                  <span class="result-label">V_out (at R₁)</span
+                  ><span class="result-value" id="res-vout">—</span>
+                </div>
+                <div class="result-row">
+                  <span class="result-label">Power (thermistor)</span
+                  ><span class="result-value" id="res-power">—</span>
+                </div>
+              </div>
+
+              <div class="result-card">
+                <h4>Hint</h4>
+                <p
+                  style="
+                    font-size: 0.78rem;
+                    color: var(--accent-color);
+                    line-height: 1.5;
+                  "
+                  id="circuit-hint-text"
+                >
+                  Build a voltage divider: place Battery → Thermistor →
+                  Resistor. Then click Simulate.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===================== EXPERIMENT ===================== -->
+      <div id="tab-experiment" class="tab-page">
+        <div class="experiment-wrap">
+          <div
+            class="theory-section"
+            style="max-height: none; margin-bottom: 1rem; padding: 1rem 1.5rem"
+          >
+            <h2
+              style="
+                border: none;
+                padding: 0;
+                margin-bottom: 0.3rem;
+                font-size: 1rem;
+              "
+            >
+              Virtual Experiment Lab
+              <span class="level-badge level-intermediate">Hands-On</span>
+            </h2>
+            <p
+              style="margin: 0; font-size: 0.82rem; color: var(--accent-color)"
+            >
+              Heat or cool the thermistor and observe how resistance, current,
+              and voltage change in real-time. Watch the live graph build up.
+            </p>
+          </div>
+
+          <div class="exp-grid">
+            <!-- Thermometer control -->
+            <div class="exp-card">
+              <h3>
+                <i class="fa fa-temperature-high"></i> Temperature Control
+              </h3>
+              <div class="therm-visual-wrap">
+                <div class="thermometer-svg">
+                  <svg width="60" height="180" viewBox="0 0 60 180">
+                    <defs>
+                      <clipPath id="therm-clip">
+                        <rect x="20" y="20" width="20" height="130" rx="5" />
+                      </clipPath>
+                    </defs>
+                    <rect
+                      x="20"
+                      y="15"
+                      width="20"
+                      height="130"
+                      rx="10"
+                      fill="#e9ecef"
+                      stroke="#adb5bd"
+                      stroke-width="2"
+                    />
+                    <rect
+                      x="20"
+                      y="15"
+                      width="20"
+                      height="130"
+                      rx="10"
+                      fill="none"
+                      stroke="#495057"
+                      stroke-width="1.5"
+                      clip-path="url(#therm-clip)"
+                    />
+                    <rect
+                      id="therm-fill"
+                      x="22"
+                      y="80"
+                      width="16"
+                      height="63"
+                      fill="#c0392b"
+                      clip-path="url(#therm-clip)"
+                    />
+                    <circle
+                      cx="30"
+                      cy="153"
+                      r="14"
+                      fill="#c0392b"
+                      stroke="#a93226"
+                      stroke-width="2"
+                    />
+                    <circle cx="30" cy="153" r="9" fill="#e74c3c" />
+                  </svg>
+                </div>
+                <div class="temp-readout">
+                  <div class="temp-big" id="exp-temp-display">25</div>
+                  <div class="temp-unit">°C</div>
+                </div>
+              </div>
+
+              <div class="temp-slider-wrap" style="margin-top: 1rem">
+                <div class="slider-label">
+                  <span>−40°C</span><span>150°C</span>
+                </div>
+                <input
+                  type="range"
+                  id="exp-temp-slider"
+                  min="-40"
+                  max="150"
+                  value="25"
+                  oninput="updateExperiment()"
+                />
+              </div>
+
+              <div class="heat-cool-btns">
+                <button
+                  class="heat-btn"
+                  id="heat-btn"
+                  onclick="startAutoTemp('heat')"
+                >
+                  🔥 Heat Up
+                </button>
+                <button class="hold-btn" onclick="startAutoTemp('hold')">
+                  ⏸ Hold
+                </button>
+                <button
+                  class="cool-btn"
+                  id="cool-btn"
+                  onclick="startAutoTemp('cool')"
+                >
+                  ❄️ Cool Down
+                </button>
+              </div>
+
+              <div style="margin-top: 1rem">
+                <div
+                  style="
+                    font-size: 0.72rem;
+                    color: var(--accent-color);
+                    margin-bottom: 4px;
+                    text-transform: uppercase;
+                    letter-spacing: 0.08em;
+                  "
+                >
+                  Supply Voltage
+                </div>
+                <input
+                  type="range"
+                  id="exp-voltage-slider"
+                  min="1"
+                  max="24"
+                  value="5"
+                  step="0.5"
+                  oninput="updateExperiment()"
+                />
+                <div
+                  style="
+                    font-size: 0.82rem;
+                    font-weight: 700;
+                    text-align: center;
+                    margin-top: 4px;
+                  "
+                  id="exp-volt-label"
+                >
+                  5.0 V
+                </div>
+              </div>
+            </div>
+
+            <!-- Live resistance display -->
+            <div class="exp-card">
+              <h3><i class="fa fa-gauge-high"></i> Live Readings</h3>
+
+              <div class="res-bar-wrap">
+                <div class="res-bar-label">
+                  <span>Low R</span
+                  ><span id="exp-res-val" style="font-weight: 700">—</span
+                  ><span>High R</span>
+                </div>
+                <div class="res-bar-bg">
+                  <div class="res-bar-fill" id="exp-res-bar"></div>
+                </div>
+              </div>
+
+              <div
+                style="
+                  display: grid;
+                  grid-template-columns: 1fr 1fr;
+                  gap: 0.7rem;
+                  margin-top: 1rem;
+                "
+              >
+                <div class="stat-card">
+                  <div class="stat-card-label">Resistance</div>
+                  <div class="stat-card-value" id="exp-r">—</div>
+                  <div class="stat-card-desc">Ω</div>
+                </div>
+                <div class="stat-card">
+                  <div class="stat-card-label">Current</div>
+                  <div class="stat-card-value" id="exp-i">—</div>
+                  <div class="stat-card-desc">mA</div>
+                </div>
+                <div class="stat-card">
+                  <div class="stat-card-label">V_out</div>
+                  <div class="stat-card-value" id="exp-v">—</div>
+                  <div class="stat-card-desc">V</div>
+                </div>
+                <div class="stat-card">
+                  <div class="stat-card-label">Power</div>
+                  <div class="stat-card-value" id="exp-p">—</div>
+                  <div class="stat-card-desc">mW</div>
+                </div>
+              </div>
+
+              <div
+                class="callout-box info"
+                style="margin-top: 1rem; font-size: 0.78rem"
+                id="exp-observation"
+              >
+                <strong>Observation:</strong> Set temperature using the slider
+                or heat/cool buttons and watch how all values change.
+              </div>
+            </div>
+
+            <!-- Live chart -->
+            <div class="exp-card" style="grid-column: 1 / -1">
+              <h3>
+                <i class="fa fa-chart-line"></i> Live R-T Plot — Build Your Own
+                Curve
+              </h3>
+              <div class="live-chart-wrap">
+                <canvas id="exp-chart" height="180"></canvas>
+              </div>
+              <div
+                style="
+                  display: flex;
+                  gap: 0.8rem;
+                  margin-top: 0.8rem;
+                  flex-wrap: wrap;
+                "
+              >
+                <button
+                  class="back-button"
+                  style="margin-bottom: 0"
+                  onclick="clearExpChart()"
+                >
+                  <i class="fa fa-eraser"></i> Clear Plot
+                </button>
+                <button
+                  class="back-button"
+                  style="margin-bottom: 0"
+                  onclick="autoPlotFull()"
+                >
+                  <i class="fa fa-chart-area"></i> Plot Full Curve
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===================== CALCULATOR ===================== -->
+      <div id="tab-calculator" class="tab-page">
+        <div class="calculator-wrap">
+          <div
+            class="theory-section"
+            style="
+              max-height: none;
+              margin-bottom: 1.2rem;
+              padding: 1rem 1.5rem;
+            "
+          >
+            <h2
+              style="
+                border: none;
+                padding: 0;
+                margin-bottom: 0.3rem;
+                font-size: 1rem;
+              "
+            >
+              Formula Calculator
+              <span class="level-badge level-advanced">Calculate</span>
+            </h2>
+            <p
+              style="margin: 0; font-size: 0.82rem; color: var(--accent-color)"
+            >
+              Enter values and calculate thermistor parameters using real
+              engineering formulas.
+            </p>
+          </div>
+
+          <div class="calc-grid">
+            <!-- Calculator 1: R from T -->
+            <div class="calc-card">
+              <h3>📐 Find Resistance from Temperature</h3>
+              <p
+                style="
+                  font-size: 0.8rem;
+                  color: var(--accent-color);
+                  margin-bottom: 1rem;
+                "
+              >
+                Using the Beta (β) equation: R(T) = R₀ × e^[β(1/T − 1/T₀)]
+              </p>
+              <div class="input-group">
+                <label>R₀ — Resistance at 25°C (Ω)</label
+                ><input
+                  type="number"
+                  id="c1-r0"
+                  value="10000"
+                  placeholder="e.g. 10000"
+                />
+              </div>
+              <div class="input-group">
+                <label>β — Beta constant (K)</label
+                ><input
+                  type="number"
+                  id="c1-beta"
+                  value="3950"
+                  placeholder="e.g. 3950"
+                />
+              </div>
+              <div class="input-group">
+                <label>Target Temperature (°C)</label
+                ><input
+                  type="number"
+                  id="c1-temp"
+                  value="50"
+                  placeholder="e.g. 50"
+                />
+              </div>
+              <button class="calc-btn" onclick="calc1()">Calculate R(T)</button>
+              <div class="calc-result" id="c1-result">
+                <div class="calc-result-label">
+                  Resistance at target temperature
+                </div>
+                <div class="calc-result-value" id="c1-val">—</div>
+                <div class="calc-result-note" id="c1-note"></div>
+              </div>
+            </div>
+
+            <!-- Calculator 2: T from R -->
+            <div class="calc-card">
+              <h3>🌡️ Find Temperature from Resistance</h3>
+              <p
+                style="
+                  font-size: 0.8rem;
+                  color: var(--accent-color);
+                  margin-bottom: 1rem;
+                "
+              >
+                Inverse beta equation: T = 1 / (1/T₀ + ln(R/R₀)/β)
+              </p>
+              <div class="input-group">
+                <label>Measured Resistance (Ω)</label
+                ><input
+                  type="number"
+                  id="c2-r"
+                  value="3584"
+                  placeholder="e.g. 3584"
+                />
+              </div>
+              <div class="input-group">
+                <label>R₀ at 25°C (Ω)</label
+                ><input
+                  type="number"
+                  id="c2-r0"
+                  value="10000"
+                  placeholder="e.g. 10000"
+                />
+              </div>
+              <div class="input-group">
+                <label>β — Beta constant (K)</label
+                ><input
+                  type="number"
+                  id="c2-beta"
+                  value="3950"
+                  placeholder="e.g. 3950"
+                />
+              </div>
+              <button class="calc-btn" onclick="calc2()">
+                Calculate Temperature
+              </button>
+              <div class="calc-result" id="c2-result">
+                <div class="calc-result-label">
+                  Temperature from measured resistance
+                </div>
+                <div class="calc-result-value" id="c2-val">—</div>
+                <div class="calc-result-note" id="c2-note"></div>
+              </div>
+            </div>
+
+            <!-- Calculator 3: Voltage Divider -->
+            <div class="calc-card">
+              <h3>⚡ Voltage Divider V_out</h3>
+              <p
+                style="
+                  font-size: 0.8rem;
+                  color: var(--accent-color);
+                  margin-bottom: 1rem;
+                "
+              >
+                V_out = V_s × R₁ / (R_T + R₁)
+              </p>
+              <div class="input-group">
+                <label>Supply Voltage V_s (V)</label
+                ><input type="number" id="c3-vs" value="5" step="0.1" />
+              </div>
+              <div class="input-group">
+                <label>Fixed Resistor R₁ (Ω)</label
+                ><input type="number" id="c3-r1" value="10000" />
+              </div>
+              <div class="input-group">
+                <label>Thermistor R_T (Ω)</label
+                ><input type="number" id="c3-rt" value="3584" />
+              </div>
+              <button class="calc-btn" onclick="calc3()">
+                Calculate V_out
+              </button>
+              <div class="calc-result" id="c3-result">
+                <div class="calc-result-label">Output Voltage at R₁</div>
+                <div class="calc-result-value" id="c3-val">—</div>
+                <div class="calc-result-note" id="c3-note"></div>
+              </div>
+            </div>
+
+            <!-- Calculator 4: Self-heating -->
+            <div class="calc-card">
+              <h3>🔥 Self-Heating Error</h3>
+              <p
+                style="
+                  font-size: 0.8rem;
+                  color: var(--accent-color);
+                  margin-bottom: 1rem;
+                "
+              >
+                ΔT = I² × R / δ &nbsp; (δ = dissipation constant)
+              </p>
+              <div class="input-group">
+                <label>Excitation Current I (mA)</label
+                ><input type="number" id="c4-i" value="0.1" step="0.01" />
+              </div>
+              <div class="input-group">
+                <label>Thermistor Resistance (Ω)</label
+                ><input type="number" id="c4-r" value="10000" />
+              </div>
+              <div class="input-group">
+                <label>Dissipation Constant δ (mW/°C)</label
+                ><input type="number" id="c4-delta" value="1.5" step="0.1" />
+              </div>
+              <button class="calc-btn" onclick="calc4()">
+                Calculate Error
+              </button>
+              <div class="calc-result" id="c4-result">
+                <div class="calc-result-label">
+                  Self-Heating Temperature Error
+                </div>
+                <div class="calc-result-value" id="c4-val">—</div>
+                <div class="calc-result-note" id="c4-note"></div>
+              </div>
+            </div>
+
+            <!-- Calculator 5: Alpha (sensitivity) -->
+            <div class="calc-card">
+              <h3>📊 Temperature Coefficient α</h3>
+              <p
+                style="
+                  font-size: 0.8rem;
+                  color: var(--accent-color);
+                  margin-bottom: 1rem;
+                "
+              >
+                α = −β / T² &nbsp; (sensitivity in %/°C)
+              </p>
+              <div class="input-group">
+                <label>β — Beta constant (K)</label
+                ><input type="number" id="c5-beta" value="3950" />
+              </div>
+              <div class="input-group">
+                <label>Temperature T (°C)</label
+                ><input type="number" id="c5-temp" value="25" />
+              </div>
+              <button class="calc-btn" onclick="calc5()">Calculate α</button>
+              <div class="calc-result" id="c5-result">
+                <div class="calc-result-label">
+                  Temperature Coefficient at T
+                </div>
+                <div class="calc-result-value" id="c5-val">—</div>
+                <div class="calc-result-note" id="c5-note"></div>
+              </div>
+            </div>
+
+            <!-- Calculator 6: Steinhart-Hart -->
+            <div class="calc-card">
+              <h3>🔬 Steinhart-Hart Temperature</h3>
+              <p
+                style="
+                  font-size: 0.8rem;
+                  color: var(--accent-color);
+                  margin-bottom: 1rem;
+                "
+              >
+                1/T = A + B·ln(R) + C·[ln(R)]³
+              </p>
+              <div class="input-group">
+                <label>Measured Resistance R (Ω)</label
+                ><input type="number" id="c6-r" value="10000" />
+              </div>
+              <div class="input-group">
+                <label>Coefficient A (×10⁻³)</label
+                ><input type="number" id="c6-a" value="1.129" step="0.001" />
+              </div>
+              <div class="input-group">
+                <label>Coefficient B (×10⁻⁴)</label
+                ><input type="number" id="c6-b" value="2.341" step="0.001" />
+              </div>
+              <div class="input-group">
+                <label>Coefficient C (×10⁻⁸)</label
+                ><input type="number" id="c6-c" value="8.775" step="0.001" />
+              </div>
+              <button class="calc-btn" onclick="calc6()">
+                Calculate (Steinhart-Hart)
+              </button>
+              <div class="calc-result" id="c6-result">
+                <div class="calc-result-label">
+                  Temperature (Steinhart-Hart)
+                </div>
+                <div class="calc-result-value" id="c6-val">—</div>
+                <div class="calc-result-note" id="c6-note"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ===================== QUIZ ===================== -->
+      <div id="tab-quiz" class="tab-page">
+        <div class="quiz-wrap">
+          <div class="quiz-header-bar">
+            <div>
+              <div class="quiz-score-txt">YOUR SCORE</div>
+              <div class="quiz-score-num" id="quiz-score-display">0 / 0</div>
+            </div>
+            <div
+              style="font-size: 0.8rem; color: var(--accent-color)"
+              id="quiz-progress-txt"
+            >
+              Answer all questions
+            </div>
+            <button class="reset-quiz-btn" onclick="resetQuiz()">
+              <i class="fa fa-rotate-left"></i> Reset
+            </button>
+          </div>
+          <div id="quiz-container"></div>
+        </div>
+      </div>
+
+      <footer>
+        NTC &amp; PTC Thermistor Learning Lab &nbsp;|&nbsp; Interactive
+        Simulation Software &nbsp;|&nbsp; Educational Use
+      </footer>
+    </div>
+
+    <!-- Load Chart.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+    <script>
+      // ================================================================
+      //  STATE
+      // ================================================================
+      let mode = "ntc";
+      let charts = {};
+      let autoTempTimer = null;
+      let expChartData = { labels: [], datasets: [] };
+      let selectedComp = null;
+      let placedComponents = [];
+      let dragState = null;
+      let quizSelected = {};
+      let quizAnswered = 0;
+      let quizCorrect = 0;
+
+      // ================================================================
+      //  DATA DEFINITIONS
+      // ================================================================
+      const DATA = {
+        ntc: {
+          name: "NTC",
+          fullName: "Negative Temperature Coefficient",
+          accentColor: "#c0392b",
+          lightColor: "#fdecea",
+          borderColor: "#f1948a",
+          beta: 3950,
+          r0: 10000,
+          t0: 298.15,
+          ovHeading: "NTC (Negative Temperature Coefficient) Thermistor",
+          ovIntro:
+            "The NTC thermistor is the workhorse of electronic temperature sensing. Made from sintered metal oxides (manganese, cobalt, nickel), its resistance decreases exponentially as temperature rises — from hundreds of kilohms at −40°C down to tens of ohms at 150°C. This enormous change makes it far more sensitive than RTDs or thermocouples in the −55°C to +150°C range.",
+          ovHow:
+            "As temperature rises, electrons in the metal-oxide semiconductor gain enough thermal energy to jump across the energy bandgap into the conduction band. More free charge carriers = higher conductivity = lower resistance. The relationship follows an Arrhenius exponential law, modelled by the beta (β) equation for simple cases and the Steinhart-Hart equation for precision work.",
+          stats: [
+            { label: "R at 25°C", value: "10 kΩ", desc: "Nominal reference" },
+            { label: "β Constant", value: "3950 K", desc: "Material constant" },
+            { label: "Sensitivity α", value: "−4.4%/°C", desc: "At 25°C" },
+            {
+              label: "Typical Range",
+              value: "−55 to 150°C",
+              desc: "Operating range",
+            },
+          ],
+          apps: [
+            "Digital Thermometers — Medical-grade oral/rectal temperature sensors",
+            "Battery Management — Li-ion thermal monitoring in EVs and smartphones",
+            "Inrush Current Limiting — Series element in SMPS power supplies",
+            "CPU Thermal Throttling — Processor temperature management",
+            "Automotive ECU — Coolant and intake air temperature sensing",
+            "HVAC Control — Room and duct temperature measurement",
+            "Medical Wearables — Continuous body temperature monitoring",
+            "Cold Chain Monitoring — Food and pharmaceutical storage logging",
+          ],
+          quiz: [
+            {
+              q: "What happens to NTC resistance when temperature rises?",
+              opts: ["Increases", "Decreases", "Stays the same", "Oscillates"],
+              ans: 1,
+              lvl: "Beginner",
+              exp: "NTC = Negative Temperature Coefficient. Resistance DECREASES as temperature increases — more thermal energy creates more charge carriers.",
+            },
+            {
+              q: "What is the typical β (beta) value range for NTC thermistors?",
+              opts: ["100–500 K", "500–1000 K", "2000–5000 K", "10000–50000 K"],
+              ans: 2,
+              lvl: "Beginner",
+              exp: "β typically ranges 2000–5000 K for common NTC thermistors made from metal oxides.",
+            },
+            {
+              q: "Which equation gives ±0.01°C accuracy over a wide temperature range?",
+              opts: [
+                "Beta equation",
+                "Steinhart-Hart",
+                "Ohm's Law",
+                "Wheatstone bridge",
+              ],
+              ans: 1,
+              lvl: "Intermediate",
+              exp: "The Steinhart-Hart equation uses three calibration coefficients and provides ±0.01–0.1°C accuracy across the full operating range.",
+            },
+            {
+              q: "What causes self-heating error in a thermistor measurement?",
+              opts: [
+                "Ambient temperature",
+                "I²R power dissipation",
+                "Supply voltage noise",
+                "ADC quantisation",
+              ],
+              ans: 1,
+              lvl: "Intermediate",
+              exp: "Current flowing through the thermistor dissipates power (P = I²R) as heat, raising its temperature above ambient — causing a measurement error.",
+            },
+            {
+              q: "For maximum voltage divider sensitivity, R₁ should equal:",
+              opts: [
+                "Always 10 kΩ",
+                "R_T at the minimum temperature",
+                "R_T at the midpoint temperature",
+                "Supply voltage / 2",
+              ],
+              ans: 2,
+              lvl: "Intermediate",
+              exp: "Impedance matching: R₁ = R_T at the midpoint of the operating range maximises the slope of the V_out vs T curve.",
+            },
+            {
+              q: "An NTC thermistor with β=3950 at T=25°C has α of approximately:",
+              opts: ["+4.4%/°C", "−4.4%/°C", "−0.04%/°C", "+0.4%/°C"],
+              ans: 1,
+              lvl: "Advanced",
+              exp: "α = −β/T² = −3950/298² = −0.0445 = −4.45%/°C. Negative sign confirms resistance decreases with rising temperature.",
+            },
+            {
+              q: "To minimise self-heating error, excitation current should be:",
+              opts: [
+                "As high as possible",
+                "Below 100 µA",
+                "Exactly 1 mA",
+                "Matched to supply voltage",
+              ],
+              ans: 1,
+              lvl: "Advanced",
+              exp: "Keeping current below 100 µA limits power dissipation to <0.1 mW in a 10 kΩ thermistor, giving self-heating error of only ~0.07°C.",
+            },
+            {
+              q: "In the Steinhart-Hart equation, how many calibration points are needed to find A, B, C?",
+              opts: ["1", "2", "3", "4"],
+              ans: 2,
+              lvl: "Expert",
+              exp: "Three calibration measurements (T₁,R₁), (T₂,R₂), (T₃,R₃) are needed to solve the 3-equation linear system and find coefficients A, B, C.",
+            },
+          ],
+        },
+        ptc: {
+          name: "PTC",
+          fullName: "Positive Temperature Coefficient",
+          accentColor: "#2471a3",
+          lightColor: "#eaf4fb",
+          borderColor: "#7fb3d3",
+          beta: 3950,
+          r0: 10,
+          t0: 298.15,
+          ovHeading: "PTC (Positive Temperature Coefficient) Thermistor",
+          ovIntro:
+            "PTC thermistors exhibit increasing resistance with rising temperature. There are two main types: ceramic BaTiO₃-based PTC thermistors which show a dramatic resistance jump at the Curie temperature, and polymer PTC (polyswitch/polyfuse) devices. The ceramic type can jump 6+ orders of magnitude in resistance over a 10–20°C range near the Curie point — making them ideal as solid-state protection elements.",
+          ovHow:
+            "In ceramic PTC (BaTiO₃): below the Curie temperature Tc, the crystal is in the ferroelectric phase with low grain-boundary barriers and low resistance. At Tc, a phase transition to the paraelectric phase dramatically increases grain-boundary potential barriers. In polymer PTC: carbon black particles in a crystalline polymer form a conductive network. At the transition temperature, the polymer melts and expands, separating the carbon particles and causing a sharp resistance rise.",
+          stats: [
+            {
+              label: "Type",
+              value: "BaTiO₃ / Polymer",
+              desc: "Two main materials",
+            },
+            {
+              label: "Curie Temp",
+              value: "60–200°C",
+              desc: "Adjustable by doping",
+            },
+            {
+              label: "R change",
+              value: ">10⁶ × at Tc",
+              desc: "At phase transition",
+            },
+            {
+              label: "Self-resetting",
+              value: "Yes",
+              desc: "Resets on cooling",
+            },
+          ],
+          apps: [
+            "Resettable Fuses (PolyFuse) — USB port protection, battery pack safety",
+            "Self-Regulating Heaters — Diesel glow plugs, seat heaters, defoggers",
+            "Motor Start Relays — Refrigerator compressor start winding disconnection",
+            "Telecom Line Protection — Telephone line interface overcurrent protection",
+            "Degaussing Circuits — CRT monitor demagnetisation auto-decay",
+            "Laptop Overcurrent — USB and power port short circuit protection",
+            "Underfloor Heating — Self-limiting heating strips for floor warmth",
+            "Automotive Diesel — Cold start preheating with auto temperature limit",
+          ],
+          quiz: [
+            {
+              q: "What happens to PTC resistance when temperature rises above Curie point?",
+              opts: [
+                "Decreases",
+                "Increases dramatically",
+                "Stays constant",
+                "Becomes negative",
+              ],
+              ans: 1,
+              lvl: "Beginner",
+              exp: "PTC = Positive Temperature Coefficient. Above the Curie temperature, resistance increases dramatically due to a crystal phase transition.",
+            },
+            {
+              q: "What material is used in ceramic PTC thermistors?",
+              opts: [
+                "Silicon dioxide",
+                "Barium titanate (BaTiO₃)",
+                "Manganese oxide",
+                "Copper sulfide",
+              ],
+              ans: 1,
+              lvl: "Beginner",
+              exp: "Barium titanate (BaTiO₃) doped with rare earth elements is the primary ceramic PTC material. Doping sets the Curie temperature.",
+            },
+            {
+              q: "In a polymer PTC device, what causes the resistance increase?",
+              opts: [
+                "Semiconductor bandgap crossing",
+                "Polymer melting separates carbon particles",
+                "Metallic oxidation",
+                "Ionic charge buildup",
+              ],
+              ans: 1,
+              lvl: "Intermediate",
+              exp: "In polymer PTC, the crystalline polymer melts at the trip temperature. The resulting expansion separates the conductive carbon black particles, sharply increasing resistance.",
+            },
+            {
+              q: "A key advantage of PTC resettable fuses over conventional fuses is:",
+              opts: [
+                "Lower cost",
+                "Higher current rating",
+                "Self-resetting after fault clears",
+                "Faster response time",
+              ],
+              ans: 2,
+              lvl: "Intermediate",
+              exp: "PTC polyfuses automatically reset after the fault is removed and the device cools down — unlike conventional fuses that must be replaced.",
+            },
+            {
+              q: "In a self-regulating PTC heater, what happens at the Curie temperature?",
+              opts: [
+                "Heater burns out",
+                "Current increases further",
+                "Power decreases automatically",
+                "Heater switches off completely",
+              ],
+              ans: 2,
+              lvl: "Intermediate",
+              exp: "At Curie temperature, resistance jumps dramatically, reducing current and power (P=V²/R). The heater self-limits, preventing overheating.",
+            },
+            {
+              q: "The Curie temperature of a ceramic PTC can be adjusted by:",
+              opts: [
+                "Changing supply voltage",
+                "Modifying the doping composition",
+                "Adding a parallel resistor",
+                "Increasing device size",
+              ],
+              ans: 1,
+              lvl: "Advanced",
+              exp: "The Curie temperature of BaTiO₃-based PTC devices is set during manufacture by controlling the type and concentration of dopant elements.",
+            },
+            {
+              q: "In a refrigerator compressor, a PTC starts cold with low resistance. What happens next?",
+              opts: [
+                "R stays low, motor runs on start winding",
+                "R stays low, motor runs normally",
+                "R increases, disconnecting start winding",
+                "R increases, motor stops",
+              ],
+              ans: 2,
+              lvl: "Advanced",
+              exp: "Initially cold (low R), current flows through the start winding. As the PTC heats up, R rises dramatically, disconnecting the start winding — leaving only the run winding active.",
+            },
+            {
+              q: "Which phenomenon makes PTC thermistors useful for inrush current protection?",
+              opts: [
+                "Low resistance at high temperature",
+                "High resistance at high temperature",
+                "Constant resistance",
+                "Negative resistance",
+              ],
+              ans: 1,
+              lvl: "Expert",
+              exp: "When overloaded, the PTC heats up and its resistance jumps to a very high value, limiting current to a safe trickle. It acts as a solid-state, self-resetting fuse.",
+            },
+          ],
+        },
+      };
+
+      // ================================================================
+      //  LAUNCH / NAVIGATION
+      // ================================================================
+      function launchApp(type) {
+        mode = type;
+        const d = DATA[type];
+        document.getElementById("selection-screen").style.display = "none";
+        const app = document.getElementById("app");
+        app.style.display = "block";
+        app.className = `${type}-mode`;
+
+        // Nav badge
+        document.getElementById("nav-title").textContent = `${d.name} Lab`;
+        document.getElementById("nav-badge").textContent = d.name;
+
+        // Color style variable
+        document.documentElement.style.setProperty(
+          "--mode-color",
+          d.accentColor,
+        );
+        document.documentElement.style.setProperty(
+          "--mode-light",
+          d.lightColor,
+        );
+
+        // Overview
+        document.getElementById("ov-heading").textContent = d.ovHeading;
+        document.getElementById("ov-intro").textContent = d.ovIntro;
+        document.getElementById("ov-how").textContent = d.ovHow;
+
+        const statsEl = document.getElementById("overview-stats");
+        statsEl.innerHTML = d.stats
+          .map(
+            (s) => `
+    <div class="stat-card">
+      <div class="stat-card-label">${s.label}</div>
+      <div class="stat-card-value">${s.value}</div>
+      <div class="stat-card-desc">${s.desc}</div>
+    </div>
+  `,
+          )
+          .join("");
+
+        // Theory apps list
+        const appsList = document.getElementById("apps-list");
+        if (appsList) {
+          appsList.innerHTML = d.apps.map((a) => `<li>${a}</li>`).join("");
+          document.getElementById("apps-heading-ntc").textContent =
+            `${d.name} Thermistor Applications`;
+        }
+
+        // Reset everything
+        showTab("overview", document.querySelector(".nav-tab-btn"));
+        resetQuiz();
+        clearExpChart();
+        clearCircuit();
+        simulateCircuit();
+        drawOverviewChart();
+        updateExperiment();
+
+        // Thermometer color
+        const fill = document.getElementById("therm-fill");
+        if (fill) fill.setAttribute("fill", d.accentColor);
+      }
+
+      function goBack() {
+        if (autoTempTimer) clearInterval(autoTempTimer);
+        Object.values(charts).forEach((c) => {
+          try {
+            c.destroy();
+          } catch (e) {}
+        });
+        charts = {};
+        document.getElementById("app").style.display = "none";
+        document.getElementById("selection-screen").style.display = "flex";
+      }
+
+      function showTab(id, btn) {
+        document
+          .querySelectorAll(".tab-page")
+          .forEach((p) => p.classList.remove("active"));
+        document
+          .querySelectorAll(".nav-tab-btn")
+          .forEach((b) => b.classList.remove("active"));
+        document.getElementById(`tab-${id}`).classList.add("active");
+        if (btn) btn.classList.add("active");
+      }
+
+      function showTheory(id, btn) {
+        document
+          .querySelectorAll(".theory-pane")
+          .forEach((p) => p.classList.remove("active"));
+        document
+          .querySelectorAll(".theory-sidebar-item")
+          .forEach((b) => b.classList.remove("active"));
+        document.getElementById(id).classList.add("active");
+        if (btn) btn.classList.add("active");
+      }
+
+      // ================================================================
+      //  RESISTANCE CALCULATION
+      // ================================================================
+      function calcR(tempC) {
+        const d = DATA[mode];
+        const T = tempC + 273.15;
+        if (mode === "ntc") {
+          return d.r0 * Math.exp(d.beta * (1 / T - 1 / d.t0));
+        } else {
+          // PTC: gradual rise then sharp jump near Curie (80°C)
+          const Tc = 80,
+            R0 = d.r0;
+          if (tempC < Tc - 25) return R0 * (0.95 + 0.002 * (tempC - 25));
+          else if (tempC < Tc) {
+            const p = (tempC - (Tc - 25)) / 25;
+            return (
+              R0 * (0.95 + 0.002 * (Tc - 25 - 25)) * (1 + Math.pow(p, 2) * 15)
+            );
+          } else {
+            return R0 * 4 * Math.pow(10, (tempC - Tc) / 8);
+          }
+        }
+      }
+
+      function formatR(r) {
+        if (r >= 1e6) return (r / 1e6).toFixed(2) + " MΩ";
+        if (r >= 1000) return (r / 1000).toFixed(2) + " kΩ";
+        return r.toFixed(1) + " Ω";
+      }
+
+      // ================================================================
+      //  OVERVIEW CHART
+      // ================================================================
+      function drawOverviewChart() {
+        const temps = [],
+          res = [];
+        for (let t = -40; t <= 150; t += 2) {
+          temps.push(t);
+          res.push(calcR(t));
+        }
+
+        const ctx = document.getElementById("overview-chart").getContext("2d");
+        if (charts.overview) charts.overview.destroy();
+        const c = DATA[mode].accentColor;
+        charts.overview = new Chart(ctx, {
+          type: "line",
+          data: {
+            labels: temps,
+            datasets: [
+              {
+                label: "Resistance (Ω)",
+                data: res,
+                borderColor: c,
+                backgroundColor: c + "18",
+                borderWidth: 2.5,
+                pointRadius: 0,
+                tension: 0.4,
+                fill: true,
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            plugins: {
+              legend: {
+                labels: {
+                  color: "#6c757d",
+                  font: { family: "Source Sans 3", size: 11 },
+                },
+              },
+            },
+            scales: {
+              x: {
+                title: {
+                  display: true,
+                  text: "Temperature (°C)",
+                  color: "#6c757d",
+                },
+                ticks: { color: "#6c757d" },
+                grid: { color: "#dee2e6" },
+              },
+              y: {
+                title: {
+                  display: true,
+                  text: "Resistance (Ω)",
+                  color: "#6c757d",
+                },
+                ticks: { color: "#6c757d" },
+                grid: { color: "#dee2e6" },
+                type: mode === "ptc" ? "logarithmic" : "linear",
+              },
+            },
+          },
+        });
+      }
+
+      // ================================================================
+      //  CIRCUIT BUILDER
+      // ================================================================
+      const COMP_COLORS = {
+        thermistor: "#c0392b",
+        resistor: "#2471a3",
+        battery: "#27ae60",
+        led: "#e67e22",
+        ammeter: "#8e44ad",
+        voltmeter: "#16a085",
+      };
+      const COMP_SYMBOLS = {
+        thermistor: { sym: "R_T (NTC)", label: "Thermistor" },
+        resistor: { sym: "R₁", label: "Fixed Resistor" },
+        battery: { sym: "⊕ V_s ⊖", label: "Battery" },
+        led: { sym: "LED", label: "LED" },
+        ammeter: { sym: "A", label: "Ammeter" },
+        voltmeter: { sym: "V", label: "Voltmeter" },
+      };
+
+      function selectComp(type, btn) {
+        selectedComp = type;
+        document
+          .querySelectorAll(".comp-btn")
+          .forEach((b) => b.classList.remove("active-comp"));
+        if (btn) btn.classList.add("active-comp");
+        document.getElementById("canvas-hint").textContent =
+          `Click on the canvas to place: ${COMP_SYMBOLS[type].label}`;
+      }
+
+      function clearCircuit() {
+        placedComponents = [];
+        selectedComp = null;
+        document
+          .querySelectorAll(".comp-btn")
+          .forEach((b) => b.classList.remove("active-comp"));
+        document.getElementById("canvas-hint").textContent =
+          "Select a component above, then click on the canvas to place it";
+        drawCircuitCanvas();
+        [
+          "res-rtherm",
+          "res-rtotal",
+          "res-curr",
+          "res-vtherm",
+          "res-vout",
+          "res-power",
+        ].forEach((id) => {
+          document.getElementById(id).textContent = "—";
+        });
+      }
+
+      const circuitCanvas = document.getElementById("circuit-canvas");
+      const circuitCtx = circuitCanvas.getContext("2d");
+
+      // Make canvas responsive
+      function resizeCircuitCanvas() {
+        const wrap = document.getElementById("canvas-wrap");
+        if (!wrap) return;
+        const w = wrap.clientWidth;
+        circuitCanvas.width = w;
+        circuitCanvas.height = Math.min(440, Math.max(300, w * 0.55));
+        drawCircuitCanvas();
+      }
+
+      circuitCanvas.addEventListener("click", function (e) {
+        if (!selectedComp) return;
+        const rect = circuitCanvas.getBoundingClientRect();
+        const x = e.clientX - rect.left;
+        const y = e.clientY - rect.top;
+        placedComponents.push({ type: selectedComp, x, y, id: Date.now() });
+        drawCircuitCanvas();
+      });
+
+      // Drag to move placed components
+      let dragging = null,
+        dragOffX = 0,
+        dragOffY = 0;
+      circuitCanvas.addEventListener("mousedown", function (e) {
+        const rect = circuitCanvas.getBoundingClientRect();
+        const mx = e.clientX - rect.left,
+          my = e.clientY - rect.top;
+        for (let i = placedComponents.length - 1; i >= 0; i--) {
+          const c = placedComponents[i];
+          if (Math.abs(mx - c.x) < 50 && Math.abs(my - c.y) < 25) {
+            dragging = i;
+            dragOffX = mx - c.x;
+            dragOffY = my - c.y;
+            circuitCanvas.style.cursor = "grabbing";
+            return;
+          }
+        }
+      });
+      circuitCanvas.addEventListener("mousemove", function (e) {
+        if (dragging === null) return;
+        const rect = circuitCanvas.getBoundingClientRect();
+        placedComponents[dragging].x = e.clientX - rect.left - dragOffX;
+        placedComponents[dragging].y = e.clientY - rect.top - dragOffY;
+        drawCircuitCanvas();
+      });
+      circuitCanvas.addEventListener("mouseup", function () {
+        dragging = null;
+        circuitCanvas.style.cursor = selectedComp ? "crosshair" : "default";
+      });
+
+      function drawCircuitCanvas() {
+        const W = circuitCanvas.width,
+          H = circuitCanvas.height;
+        circuitCtx.clearRect(0, 0, W, H);
+
+        // Grid
+        circuitCtx.strokeStyle = "#f1f3f5";
+        circuitCtx.lineWidth = 1;
+        for (let x = 0; x < W; x += 30) {
+          circuitCtx.beginPath();
+          circuitCtx.moveTo(x, 0);
+          circuitCtx.lineTo(x, H);
+          circuitCtx.stroke();
+        }
+        for (let y = 0; y < H; y += 30) {
+          circuitCtx.beginPath();
+          circuitCtx.moveTo(0, y);
+          circuitCtx.lineTo(W, y);
+          circuitCtx.stroke();
+        }
+
+        // Border
+        circuitCtx.strokeStyle = "#dee2e6";
+        circuitCtx.lineWidth = 2;
+        circuitCtx.strokeRect(2, 2, W - 4, H - 4);
+
+        // Draw wires between consecutive components if 2+
+        if (placedComponents.length >= 2) {
+          circuitCtx.strokeStyle = "#6c757d";
+          circuitCtx.lineWidth = 2.5;
+          circuitCtx.setLineDash([]);
+          for (let i = 0; i < placedComponents.length - 1; i++) {
+            const a = placedComponents[i],
+              b = placedComponents[i + 1];
+            circuitCtx.beginPath();
+            circuitCtx.moveTo(a.x, a.y);
+            circuitCtx.lineTo(b.x, b.y);
+            circuitCtx.stroke();
+          }
+          // Close loop if 3+
+          if (placedComponents.length >= 3) {
+            const first = placedComponents[0],
+              last = placedComponents[placedComponents.length - 1];
+            circuitCtx.setLineDash([6, 4]);
+            circuitCtx.beginPath();
+            circuitCtx.moveTo(last.x, last.y);
+            circuitCtx.lineTo(first.x, first.y);
+            circuitCtx.stroke();
+            circuitCtx.setLineDash([]);
+          }
+        }
+
+        // Draw components
+        placedComponents.forEach((comp, idx) => {
+          const col = COMP_COLORS[comp.type] || "#343a40";
+          const sym = COMP_SYMBOLS[comp.type];
+          const W2 = 54,
+            H2 = 26;
+
+          // Box
+          circuitCtx.fillStyle = "#ffffff";
+          circuitCtx.shadowColor = "rgba(0,0,0,0.12)";
+          circuitCtx.shadowBlur = 6;
+          roundRect(circuitCtx, comp.x - W2 / 2, comp.y - H2 / 2, W2, H2, 5);
+          circuitCtx.fillStyle = "#ffffff";
+          circuitCtx.fill();
+          circuitCtx.shadowBlur = 0;
+
+          circuitCtx.strokeStyle = col;
+          circuitCtx.lineWidth = 2;
+          roundRect(circuitCtx, comp.x - W2 / 2, comp.y - H2 / 2, W2, H2, 5);
+          circuitCtx.stroke();
+
+          // Symbol text
+          circuitCtx.fillStyle = col;
+          circuitCtx.font = "bold 8px Courier New";
+          circuitCtx.textAlign = "center";
+          circuitCtx.textBaseline = "middle";
+          circuitCtx.fillText(sym.sym, comp.x, comp.y);
+
+          // Label below
+          circuitCtx.fillStyle = "#6c757d";
+          circuitCtx.font = "8px Source Sans 3, sans-serif";
+          circuitCtx.fillText(sym.label, comp.x, comp.y + H2 / 2 + 9);
+
+          // Index dot
+          circuitCtx.fillStyle = col;
+          circuitCtx.beginPath();
+          circuitCtx.arc(
+            comp.x + W2 / 2 - 5,
+            comp.y - H2 / 2 + 5,
+            5,
+            0,
+            Math.PI * 2,
+          );
+          circuitCtx.fill();
+          circuitCtx.fillStyle = "#fff";
+          circuitCtx.font = "bold 6px sans-serif";
+          circuitCtx.fillText(
+            idx + 1,
+            comp.x + W2 / 2 - 5,
+            comp.y - H2 / 2 + 5,
+          );
+        });
+
+        // Empty hint
+        if (placedComponents.length === 0) {
+          circuitCtx.fillStyle = "#adb5bd";
+          circuitCtx.font = "13px Source Sans 3, sans-serif";
+          circuitCtx.textAlign = "center";
+          circuitCtx.textBaseline = "middle";
+          circuitCtx.fillText(
+            "Select a component and click here to place it",
+            W / 2,
+            H / 2 - 15,
+          );
+          circuitCtx.fillStyle = "#dee2e6";
+          circuitCtx.font = "11px Source Sans 3, sans-serif";
+          circuitCtx.fillText(
+            "Drag placed components to rearrange",
+            W / 2,
+            H / 2 + 10,
+          );
+        }
+      }
+
+      function roundRect(ctx, x, y, w, h, r) {
+        ctx.beginPath();
+        ctx.moveTo(x + r, y);
+        ctx.lineTo(x + w - r, y);
+        ctx.arcTo(x + w, y, x + w, y + r, r);
+        ctx.lineTo(x + w, y + h - r);
+        ctx.arcTo(x + w, y + h, x + w - r, y + h, r);
+        ctx.lineTo(x + r, y + h);
+        ctx.arcTo(x, y + h, x, y + h - r, r);
+        ctx.lineTo(x, y + r);
+        ctx.arcTo(x, y, x + r, y, r);
+        ctx.closePath();
+      }
+
+      function simulateCircuit() {
+        const Vs =
+          parseFloat(document.getElementById("cir-vsupply").value) || 5;
+        const R1 = parseFloat(document.getElementById("cir-r1").value) || 10000;
+        const T = parseFloat(document.getElementById("cir-temp").value) || 25;
+        const R0 = parseFloat(document.getElementById("cir-r0").value) || 10000;
+
+        // Temporarily use cir-r0 for calculation
+        const origR0 = DATA[mode].r0;
+        DATA[mode].r0 = R0;
+        const RT = calcR(T);
+        DATA[mode].r0 = origR0;
+
+        const Rtotal = RT + R1;
+        const I = Vs / Rtotal;
+        const Vtherm = I * RT;
+        const Vout = (Vs * R1) / Rtotal;
+        const P = I * I * RT * 1000;
+
+        document.getElementById("res-rtherm").textContent = formatR(RT);
+        document.getElementById("res-rtotal").textContent = formatR(Rtotal);
+        document.getElementById("res-curr").textContent =
+          (I * 1000).toFixed(4) + " mA";
+        document.getElementById("res-vtherm").textContent =
+          Vtherm.toFixed(3) + " V";
+        document.getElementById("res-vout").textContent =
+          Vout.toFixed(3) + " V";
+        document.getElementById("res-power").textContent = P.toFixed(4) + " mW";
+
+        const d = DATA[mode];
+        document.getElementById("circuit-hint-text").textContent =
+          `At ${T}°C with ${Vs}V supply: Thermistor R = ${formatR(RT)}, I = ${(I * 1000).toFixed(3)} mA, V_out = ${Vout.toFixed(3)} V. Power in thermistor = ${P.toFixed(3)} mW.`;
+      }
+
+      // ================================================================
+      //  EXPERIMENT
+      // ================================================================
+      function updateExperiment() {
+        const tempC = parseFloat(
+          document.getElementById("exp-temp-slider").value,
+        );
+        const Vs = parseFloat(
+          document.getElementById("exp-voltage-slider").value,
+        );
+        const R1 = 10000;
+
+        document.getElementById("exp-temp-display").textContent = tempC;
+        document.getElementById("exp-volt-label").textContent =
+          Vs.toFixed(1) + " V";
+
+        const RT = calcR(tempC);
+        const I = Vs / (RT + R1);
+        const Vout = (Vs * R1) / (RT + R1);
+        const P = I * I * RT * 1000;
+
+        document.getElementById("exp-r").textContent = formatR(RT);
+        document.getElementById("exp-i").textContent = (I * 1000).toFixed(4);
+        document.getElementById("exp-v").textContent = Vout.toFixed(3);
+        document.getElementById("exp-p").textContent = P.toFixed(4);
+        document.getElementById("exp-res-val").textContent = formatR(RT);
+
+        // Bar fill
+        const bar = document.getElementById("exp-res-bar");
+        if (mode === "ntc") {
+          const pct = Math.max(2, Math.min(98, ((tempC - -40) / 190) * 100));
+          bar.style.width = 100 - pct + "%";
+          bar.style.background = `hsl(${Math.round(230 - pct * 2)}, 70%, 50%)`;
+        } else {
+          const logRT = Math.log10(Math.max(RT, 1));
+          const logMin = 0,
+            logMax = 8;
+          const pct = Math.max(
+            2,
+            Math.min(98, ((logRT - logMin) / (logMax - logMin)) * 100),
+          );
+          bar.style.width = pct + "%";
+          bar.style.background = `hsl(${(Math.round(210 - pct), 70, 50)}%)`;
+          bar.style.background = "#2471a3";
+        }
+
+        // Thermometer SVG fill
+        const fillEl = document.getElementById("therm-fill");
+        if (fillEl) {
+          const pct = (tempC + 40) / 190;
+          const fillH = Math.round(pct * 120);
+          fillEl.setAttribute("y", 143 - fillH);
+          fillEl.setAttribute("height", fillH + 10);
+        }
+
+        // Observation
+        const obs = document.getElementById("exp-observation");
+        if (mode === "ntc") {
+          obs.innerHTML = `<strong>Observation at ${tempC}°C:</strong> Resistance = <strong>${formatR(RT)}</strong>. ${tempC > 25 ? "Temperature rose → resistance fell → more current flows." : tempC < 25 ? "Temperature dropped → resistance rose → less current flows." : "At reference temperature 25°C."}`;
+        } else {
+          obs.innerHTML = `<strong>Observation at ${tempC}°C:</strong> Resistance = <strong>${formatR(RT)}</strong>. ${tempC > 80 ? "⚡ Above Curie temperature! Resistance jumped dramatically — self-protecting behaviour activated." : tempC > 60 ? "Approaching Curie temperature — resistance rising rapidly." : "Below Curie point — normal operating region, low resistance."}`;
+        }
+
+        // Add data point to live chart
+        addExpPoint(tempC, RT);
+      }
+
+      let expChartPoints = [];
+
+      function addExpPoint(T, R) {
+        // Only add if new temperature
+        if (expChartPoints.find((p) => p.x === T)) return;
+        expChartPoints.push({ x: T, y: R });
+        expChartPoints.sort((a, b) => a.x - b.x);
+        drawExpChart();
+      }
+
+      function clearExpChart() {
+        expChartPoints = [];
+        drawExpChart();
+      }
+
+      function autoPlotFull() {
+        expChartPoints = [];
+        for (let t = -40; t <= 150; t += 3)
+          expChartPoints.push({ x: t, y: calcR(t) });
+        drawExpChart();
+      }
+
+      function drawExpChart() {
+        const ctx = document.getElementById("exp-chart").getContext("2d");
+        if (charts.exp) charts.exp.destroy();
+        const c = DATA[mode].accentColor;
+        charts.exp = new Chart(ctx, {
+          type: "scatter",
+          data: {
+            datasets: [
+              {
+                label: "R vs T (measured points)",
+                data: expChartPoints,
+                borderColor: c,
+                backgroundColor: c,
+                pointRadius: 5,
+                pointHoverRadius: 7,
+                showLine: true,
+                tension: 0.3,
+                fill: false,
+                borderWidth: 2,
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            plugins: {
+              legend: {
+                labels: {
+                  color: "#6c757d",
+                  font: { family: "Source Sans 3", size: 11 },
+                },
+              },
+            },
+            scales: {
+              x: {
+                title: {
+                  display: true,
+                  text: "Temperature (°C)",
+                  color: "#6c757d",
+                },
+                ticks: { color: "#6c757d" },
+                grid: { color: "#dee2e6" },
+                min: -40,
+                max: 150,
+              },
+              y: {
+                title: {
+                  display: true,
+                  text: "Resistance (Ω)",
+                  color: "#6c757d",
+                },
+                ticks: { color: "#6c757d" },
+                grid: { color: "#dee2e6" },
+                type: mode === "ptc" ? "logarithmic" : "linear",
+              },
+            },
+          },
+        });
+      }
+
+      function startAutoTemp(dir) {
+        if (autoTempTimer) clearInterval(autoTempTimer);
+        document
+          .querySelectorAll(".heat-btn,.cool-btn,.hold-btn")
+          .forEach((b) => b.classList.remove("active"));
+
+        if (dir === "hold") return;
+
+        const btn =
+          dir === "heat"
+            ? document.getElementById("heat-btn")
+            : document.getElementById("cool-btn");
+        if (btn) btn.classList.add("active");
+
+        autoTempTimer = setInterval(() => {
+          const sl = document.getElementById("exp-temp-slider");
+          let v = parseFloat(sl.value);
+          if (dir === "heat") {
+            v = Math.min(150, v + 1);
+          } else {
+            v = Math.max(-40, v - 1);
+          }
+          sl.value = v;
+          updateExperiment();
+          if ((dir === "heat" && v >= 150) || (dir === "cool" && v <= -40)) {
+            clearInterval(autoTempTimer);
+            if (btn) btn.classList.remove("active");
+          }
+        }, 150);
+      }
+
+      // ================================================================
+      //  CALCULATORS
+      // ================================================================
+      function calc1() {
+        const R0 = parseFloat(document.getElementById("c1-r0").value);
+        const beta = parseFloat(document.getElementById("c1-beta").value);
+        const T = parseFloat(document.getElementById("c1-temp").value);
+        const T0K = 298.15,
+          TK = T + 273.15;
+        const R = R0 * Math.exp(beta * (1 / TK - 1 / T0K));
+        document.getElementById("c1-val").textContent = formatR(R);
+        document.getElementById("c1-note").textContent =
+          `R(${T}°C) = ${R0} × exp[${beta} × (1/${TK.toFixed(2)} − 1/${T0K})] = ${R.toFixed(1)} Ω`;
+        document.getElementById("c1-result").classList.add("show");
+      }
+
+      function calc2() {
+        const R = parseFloat(document.getElementById("c2-r").value);
+        const R0 = parseFloat(document.getElementById("c2-r0").value);
+        const beta = parseFloat(document.getElementById("c2-beta").value);
+        const T0K = 298.15;
+        const TK = 1 / (1 / T0K + Math.log(R / R0) / beta);
+        const TC = TK - 273.15;
+        document.getElementById("c2-val").textContent = TC.toFixed(2) + " °C";
+        document.getElementById("c2-note").textContent =
+          `T = 1/(1/298.15 + ln(${R}/${R0})/${beta}) = ${TK.toFixed(2)} K = ${TC.toFixed(2)} °C`;
+        document.getElementById("c2-result").classList.add("show");
+      }
+
+      function calc3() {
+        const Vs = parseFloat(document.getElementById("c3-vs").value);
+        const R1 = parseFloat(document.getElementById("c3-r1").value);
+        const RT = parseFloat(document.getElementById("c3-rt").value);
+        const Vout = (Vs * R1) / (RT + R1);
+        const I = Vs / (RT + R1);
+        document.getElementById("c3-val").textContent = Vout.toFixed(4) + " V";
+        document.getElementById("c3-note").textContent =
+          `V_out = ${Vs} × ${R1}/(${RT}+${R1}) = ${Vout.toFixed(4)} V | I = ${(I * 1000).toFixed(4)} mA`;
+        document.getElementById("c3-result").classList.add("show");
+      }
+
+      function calc4() {
+        const I_mA = parseFloat(document.getElementById("c4-i").value);
+        const R = parseFloat(document.getElementById("c4-r").value);
+        const delta = parseFloat(document.getElementById("c4-delta").value);
+        const P_mW = Math.pow(I_mA / 1000, 2) * R * 1000;
+        const dT = P_mW / delta;
+        document.getElementById("c4-val").textContent =
+          dT.toFixed(4) + " °C error";
+        document.getElementById("c4-note").textContent =
+          `P = (${I_mA}mA)² × ${R}Ω = ${P_mW.toFixed(4)} mW | ΔT = ${P_mW.toFixed(4)}/${delta} = ${dT.toFixed(4)} °C`;
+        document.getElementById("c4-result").classList.add("show");
+      }
+
+      function calc5() {
+        const beta = parseFloat(document.getElementById("c5-beta").value);
+        const T = parseFloat(document.getElementById("c5-temp").value);
+        const TK = T + 273.15;
+        const alpha = -beta / (TK * TK);
+        const alphaPct = alpha * 100;
+        document.getElementById("c5-val").textContent =
+          alphaPct.toFixed(3) + " %/°C";
+        document.getElementById("c5-note").textContent =
+          `α = −${beta} / (${TK.toFixed(2)})² = ${alpha.toFixed(6)} /°C = ${alphaPct.toFixed(3)}%/°C`;
+        document.getElementById("c5-result").classList.add("show");
+      }
+
+      function calc6() {
+        const R = parseFloat(document.getElementById("c6-r").value);
+        const A = parseFloat(document.getElementById("c6-a").value) * 1e-3;
+        const B = parseFloat(document.getElementById("c6-b").value) * 1e-4;
+        const C = parseFloat(document.getElementById("c6-c").value) * 1e-8;
+        const lnR = Math.log(R);
+        const invT = A + B * lnR + C * Math.pow(lnR, 3);
+        const TK = 1 / invT;
+        const TC = TK - 273.15;
+        document.getElementById("c6-val").textContent = TC.toFixed(4) + " °C";
+        document.getElementById("c6-note").textContent =
+          `1/T = ${A.toExponential(4)} + ${B.toExponential(4)}×ln(${R}) + ${C.toExponential(4)}×[ln(${R})]³ → T = ${TC.toFixed(4)} °C`;
+        document.getElementById("c6-result").classList.add("show");
+      }
+
+      // ================================================================
+      //  QUIZ
+      // ================================================================
+      function buildQuiz() {
+        quizSelected = {};
+        quizAnswered = 0;
+        quizCorrect = 0;
+        updateQuizScore();
+        const qs = DATA[mode].quiz;
+        const container = document.getElementById("quiz-container");
+        container.innerHTML = qs
+          .map(
+            (q, qi) => `
+    <div class="q-card" id="qcard-${qi}">
+      <div class="q-meta">
+        <span class="q-num-txt">Question ${qi + 1} of ${qs.length}</span>
+        <span class="level-badge level-${q.lvl.toLowerCase()}">${q.lvl}</span>
+      </div>
+      <div class="q-text">${q.q}</div>
+      <div class="opts-list">
+        ${q.opts
+          .map(
+            (opt, oi) => `
+          <div class="opt-item" id="opt-${qi}-${oi}" onclick="selectOpt(${qi},${oi})">
+            <div class="opt-dot"></div><span>${opt}</span>
+          </div>
+        `,
+          )
+          .join("")}
+      </div>
+      <div class="q-actions">
+        <button class="check-q-btn" id="chk-${qi}" onclick="checkQ(${qi})" disabled>Check Answer</button>
+      </div>
+      <div class="q-feedback" id="fb-${qi}"></div>
+    </div>
+  `,
+          )
+          .join("");
+      }
+
+      function selectOpt(qi, oi) {
+        if (document.getElementById(`fb-${qi}`).classList.contains("show"))
+          return;
+        quizSelected[qi] = oi;
+        const qs = DATA[mode].quiz;
+        qs[qi].opts.forEach((_, i) => {
+          document.getElementById(`opt-${qi}-${i}`).className =
+            "opt-item" + (i === oi ? " chosen" : "");
+        });
+        document.getElementById(`chk-${qi}`).disabled = false;
+      }
+
+      function checkQ(qi) {
+        const qs = DATA[mode].quiz;
+        const correct = qs[qi].ans;
+        const chosen = quizSelected[qi];
+        qs[qi].opts.forEach((_, i) => {
+          const el = document.getElementById(`opt-${qi}-${i}`);
+          if (i === correct) el.className = "opt-item correct";
+          else if (i === chosen) el.className = "opt-item wrong";
+          else el.className = "opt-item";
+        });
+        const isRight = chosen === correct;
+        quizAnswered++;
+        if (isRight) quizCorrect++;
+        updateQuizScore();
+        const fb = document.getElementById(`fb-${qi}`);
+        fb.innerHTML = `<strong>${isRight ? "✅ Correct!" : "❌ Incorrect."}</strong> ${qs[qi].exp}`;
+        fb.classList.add("show");
+        document.getElementById(`chk-${qi}`).disabled = true;
+        document.getElementById(`chk-${qi}`).textContent = isRight
+          ? "✅ Correct"
+          : "❌ Incorrect";
+      }
+
+      function updateQuizScore() {
+        document.getElementById("quiz-score-display").textContent =
+          `${quizCorrect} / ${quizAnswered}`;
+        const total = DATA[mode].quiz.length;
+        document.getElementById("quiz-progress-txt").textContent =
+          `${quizAnswered} of ${total} answered`;
+      }
+
+      function resetQuiz() {
+        buildQuiz();
+      }
+
+      // ================================================================
+      //  INIT
+      // ================================================================
+      window.addEventListener("resize", resizeCircuitCanvas);
+      drawCircuitCanvas();
+      drawExpChart();
+    </script>
+  </body>
+</html>

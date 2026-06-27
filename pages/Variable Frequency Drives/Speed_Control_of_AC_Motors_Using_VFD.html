@@ -1,0 +1,296 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PLC Software</title>
+    <link rel="stylesheet" href="../defination.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+  </head>
+
+  <body>
+    <div class="container">
+      <header style="display: flex">
+        <div class="logo-container">
+          <img src="../../assets/Scientech logo-2.png" alt="Scientech Logo" />
+          <h1>Speed Control of AC Motors Using VFD</h1>
+        </div>
+      </header>
+
+      <main>
+        <div class="button-container">
+                <a href="../../index.html" class="back-button">
+                <i class="fas fa-arrow-left"></i> Back to Course
+            </a>
+            <a href="./VFD_simulations/index.html" class="simulation-button">
+                    <i class="fas fa-flask"></i> Simulation
+            </a>
+            </div>
+
+        <div class="content-wrapper">
+          <div class="image-section">
+            <img
+              style="border-radius: 20px"
+              src="../../assets/Speed Control of AC Motors Using VFD.png"
+              alt="Speed Control of AC Motors Using VFD"
+            />
+          </div>
+
+          <div class="theory-section">
+            <h2>Speed Control of Three Phase Induction Motor</h2>
+
+            <p>
+              The speed of a three-phase induction motor mainly depends on the
+              supply frequency and the number of poles of the motor and is given
+              by the equation:
+            </p>
+
+            <p><b>Speed = 120 × Frequency / Number of Poles Speed</b></p>
+
+            <p>
+              As the number of poles is constant for a given motor design,
+              change of supply frequency or changing the slip (difference
+              between synchronous speed and actual rotor speed) becomes the two
+              methods for speed control and are thus broadly classified into
+              the...
+            </p>
+
+            <ul>
+              <li>Stator Voltage Control</li>
+              <li>Frequency Control</li>
+              <li>Rotor Resistance Control</li>
+              <li>Pole Changing</li>
+              <li>Slip Power Recovery</li>
+            </ul>
+
+            <p><b>Methods of Speed Control of Three Phase Induction Motor</b></p>
+
+            <h2>Stator Voltage Control</h2>
+            <p>
+              The supply voltage variation method is one way of going about it,
+              where the supply voltage to the stator is varied. Since the torque
+              of an induction motor is proportional to the square of the applied
+              voltage, reduction in voltage will reduce the torque and thereby
+              produce a lower speed. Although very simple, this method is quite
+              inefficient because the reduction of the voltage also increases
+              slip, which in turn leads to higher losses and thus lowered
+              efficiency.
+            </p>
+
+            <img
+              style="
+                margin-left: 96px;
+                margin-bottom: 30px;
+                border: 2px solid black;
+                align-self: center;
+                height: auto;
+                width: 493px;
+                border-radius: 20px;
+              "
+              src="../../assets/Stator Voltage Control.png"
+              alt="Stator Voltage Control"
+            />
+
+            <p>Stator Control</p>
+            <p>Speed Equation</p>
+            <p><b>Slip S is given by: </b></p>
+            <p><b>S = Ns-N / Ns</b></p>
+            <p>Where Ns is the synchronous speed.</p>
+
+            <h2>Frequency Control</h2>
+            <p>
+              Frequency control is one of the most effective ways of controlling
+              the speed of an induction motor. The variation of the frequency of
+              the supply voltage directly controls the synchronous speed of the
+              motor. This way of control is more traditionally realized through
+              the method of the Variable Frequency Drives (VFD), which have a
+              very flexible application to the control of motor speed and
+              torque, the VFD changes both the frequency of the motor driving
+              signal and the applied voltage, maintaining a V/f ratio to keep
+              the current from rising too high.
+            </p>
+
+            <img
+              style="
+                margin-left: 96px;
+                margin-bottom: 30px;
+                border: 2px solid black;
+                align-self: center;
+                height: auto;
+                width: 493px;
+                border-radius: 20px;
+              "
+              src="../../assets/Frequency Control.png"
+              alt="Frequency Control"
+            />
+
+            <p>Frequency Control</p>
+            <p><b>Synchronous Speed Ns is given by:</b></p>
+            <p><b>Ns = 120 × f / P</b></p>
+
+            <p><b>V/f Ratio</b></p>
+            <ul>
+              <li>
+                To avoid magnetic saturation and maintain motor performance, the
+                voltage-to-frequency ratio (V / f) is kept constant:
+              </li>
+            </ul>
+            <p>V / f = constant</p>
+
+            <h2>Rotor Resistance Control</h2>
+            <p>
+              More resistors are placed in series with the rotor windings in
+              wound rotor induction motors. The resistance in the rotor circuit
+              may be varied, thus varying the slip and, hence, the speed of the
+              motor.
+            </p>
+
+            <p>
+              Additional resistance can be added to the rotor circuit of a wound
+              rotor induction motor. With this method, increasing the rotor
+              resistance increases slip and thereby reduces the speed of the
+              motor. This allows fine-tuning of the speed, although it is highly
+              inefficient because of power losses in the resistors. It is
+              typically applied only in applications that require tight speed
+              control at very low speeds.
+            </p>
+
+            <img
+              style="
+                margin-left: 96px;
+                margin-bottom: 30px;
+                border: 2px solid black;
+                align-self: center;
+                height: auto;
+                width: 493px;
+                border-radius: 20px;
+              "
+              src="../../assets/Rotor Resistance Control.png"
+              alt="Rotor Resistance Control"
+            />
+
+            <p><b>Rotor Resistance Control</b></p>
+            <p><b>Speed Equation</b></p>
+            <ul>
+              <li>Slip ss with external resistance R2′ added:</li>
+            </ul>
+            <p><b>S = (R2 + R2′ ) / ( R2+R2′ ) 2 + (X2)2</b></p>
+
+            <h2>Pole Changing</h2>
+            <p>
+              The synchronous motor's speed may be altered by simply changing
+              the number of stator poles. To do this, the connections of the
+              stator winding should then be reorganized.
+            </p>
+
+            <p>
+              The method achieves the same objective through the variation of
+              the number of poles in the stator winding. These connections can
+              be rearranged so that the stator windings are in a configuration
+              that enables the motor to operate with a different number of
+              poles, which corresponds to a different motor speed. This type
+              works well for applications that require only discrete levels of
+              speeds.
+            </p>
+
+            <img
+              style="
+                margin-left: 96px;
+                margin-bottom: 30px;
+                border: 2px solid black;
+                align-self: center;
+                height: auto;
+                width: 493px;
+                border-radius: 20px;
+              "
+              src="../../assets/Pole Changing.png"
+              alt="Pole Changing"
+            />
+
+            <p><b>Connection for different Poles</b></p>
+            <p><b>Key Equation</b></p>
+            <ul>
+              <li>Synchronous Speed Ns for different poles:</li>
+            </ul>
+            <p><b>Ns = 120 × f / P</b></p>
+
+            <h2>Slip Power Recovery</h2>
+            <p>
+              It works for slip ring induction motors. The slip power is
+              recovered from the rotor circuit and fed either back to the power
+              source or employed to control speed through driving auxiliary
+              machinery. This is used in slip ring motors, where the slip power
+              is regained from the rotor and fed back to the supply, or can be
+              utilized to drive other machines. This type of method, although
+              efficient and providing a good range of speed control, is complex
+              and expensive
+            </p>
+
+            <img
+              style="
+                margin-left: 96px;
+                margin-bottom: 30px;
+                border: 2px solid black;
+                align-self: center;
+                height: auto;
+                width: 493px;
+                border-radius: 20px;
+              "
+              src="../../assets/Slip Power Recovery.png"
+              alt="Slip Power Recovery"
+            />
+
+            <p><b>Slip Power Recovery</b></p>
+            <p><b>Key Equation</b></p>
+            <ul>
+              <li>The power recovered is proportional to slip:</li>
+            </ul>
+            <p><b>Pslip = S × Pinput</b></p>
+
+            <p><b>Speed Equation</b></p>
+            <p>Speed NN with slip power recovery</p>
+            <p><b>N = Ns ( 1−s )</b></p>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <script>
+      // Add smooth scroll behavior for anchor links
+      document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+        anchor.addEventListener("click", function (e) {
+          e.preventDefault();
+          const target = document.querySelector(this.getAttribute("href"));
+          if (target) {
+            target.scrollIntoView({ behavior: "smooth" });
+          }
+        });
+      });
+    </script>
+
+    <!-- MCQ Modal -->
+    <div id="mcq-modal" class="mcq-modal">
+      <div class="mcq-modal-content">
+        <div class="mcq-modal-header">
+          <h2>Multiple Choice Questions</h2>
+          <button class="close-btn" onclick="closeMCQModal()">&times;</button>
+        </div>
+        <div class="mcq-modal-body">
+          <div id="mcq-container"></div>
+        </div>
+        <div class="mcq-modal-footer">
+          <button class="reset-btn" onclick="resetMCQs()">Reset Answers</button>
+          <button class="close-modal-btn" onclick="closeMCQModal()">
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MCQ Handler Script -->
+    <script src="../mcq-handler.js"></script>
+  </body>
+</html>

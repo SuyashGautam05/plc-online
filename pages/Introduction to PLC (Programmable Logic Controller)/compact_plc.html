@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PLC Definition</title>
+    <link rel="stylesheet" href="../defination.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+  </head>
+
+  <body>
+    <div class="container">
+      <header style="display: flex">
+        <div class="logo-container">
+          <img src="../../assets/Scientech logo-2.png" alt="Scientech Logo" />
+          <h1>Compact PLC</h1>
+        </div>
+      </header>
+
+      <main>
+        <a href="../../index.html" class="back-button">
+          <i class="fas fa-arrow-left"></i> Back to Course
+        </a>
+
+        <div class="content-wrapper">
+          <div class="image-section">
+            <img
+              style="border-radius: 20px"
+              src="../../assets/Compact PLC_2.png"
+              alt="Compact PLC"
+            />
+          </div>
+
+          <div class="theory-section">
+            <h2>What is Compact PLC?</h2>
+            <p>
+              Compact PLCs are programmable logic controllers that are designed
+              for smaller-scale industrial automation applications with
+              restricted input/output needs. Its small size and simple design
+              make it ideal for jobs where room is limited. Some of the benefits
+              of Compact PLCs are:
+            </p>
+
+            <img style="margin-left: 131px;margin-bottom: 30px; border: 2px solid black; align-self: center;height: 272px; width: 410px;border-radius: 20px;"
+                    src="../../assets/What is Compact PLC.png" alt="What is Compact PLC">
+
+            <ul>
+              <li>
+                The small size of compact PLCs saves significant space in
+                control cabinets and makes them appropriate for installations
+                with limited space.
+              </li>
+
+              <li>
+                These PLCs are less expensive than bigger versions. This
+                cost-effectiveness makes them an inexpensive solution for
+                projects with limited automation requirements.
+              </li>
+
+              <li>
+                Compact PLCs are user-friendly and simple to connect to current
+                systems. Such ease in connectivity allows for a smooth
+                transition to automated operations with few changes.
+              </li>
+            </ul>
+
+            <h2>Key features</h2>
+            <ul>
+              <li>Comes as a single fixed unit</li>
+              <li>I/O points are <b>not expandable</b></li>
+              <li>Best for <b>small, simple applications</b></li>
+            </ul>
+
+            <h2>Pros</h2>
+            <ul>
+              <li>Lower cost</li>
+              <li>Easy to install and setup</li>
+              <li>Space-saving</li>
+            </ul>
+
+            <h2>Cons</h2>
+            <ul>
+              <li>Limited I/O capacity</li>
+              <li>Not suited for complex systems</li>
+            </ul>
+
+            <img style="margin-left: 123px;margin-bottom: 30px; border: 2px solid black; align-self: center;height: 368px; width: 435px;border-radius: 20px;"
+                src="../../assets/Compact PLCs in Industry.png" alt="Compact PLCs in Industry">
+
+            <p>
+              Regardless of the different terminology that PLC manufacturers use
+              to identify the type, size and performance level of their PLCs, a
+              Compact PLC is universally characterized by:
+            </p>
+
+            <ol>
+              <li>
+                PLC naming convention – Fixed, integrated, nano, micro, compact,
+                small, mini, basic, unitary, standard and brick.
+              </li>
+              <li>CPU processor – Low powered.</li>
+              <li>Program and data memory size – Small.</li>
+              <li>Power supply – Embedded.</li>
+              <li>Input Interface – Embedded.</li>
+              <li>Output Interface – Embedded.</li>
+              <li>Communication interface – Embedded.</li>
+              <li>Mounting system – Single unit.</li>
+              <li>Physical size – Small.</li>
+              <li>
+                Flexibility – Input, output and communication interfaces are
+                fixed.
+              </li>
+              <li>Expandable – No</li>
+              <li>Customizable – No</li>
+              <li>
+                Applications – Basic applications with small number of inputs
+                and outputs.
+              </li>
+            </ol>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <script>
+      // Add smooth scroll behavior for anchor links
+      document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+        anchor.addEventListener("click", function (e) {
+          e.preventDefault();
+          const target = document.querySelector(this.getAttribute("href"));
+          if (target) {
+            target.scrollIntoView({ behavior: "smooth" });
+          }
+        });
+      });
+    </script>
+
+    <!-- MCQ Modal -->
+    <div id="mcq-modal" class="mcq-modal">
+      <div class="mcq-modal-content">
+        <div class="mcq-modal-header">
+          <h2>Multiple Choice Questions</h2>
+          <button class="close-btn" onclick="closeMCQModal()">&times;</button>
+        </div>
+        <div class="mcq-modal-body">
+          <div id="mcq-container"></div>
+        </div>
+        <div class="mcq-modal-footer">
+          <button class="reset-btn" onclick="resetMCQs()">Reset Answers</button>
+          <button class="close-modal-btn" onclick="closeMCQModal()">
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MCQ Handler Script -->
+    <script src="../mcq-handler.js"></script>
+  </body>
+</html>

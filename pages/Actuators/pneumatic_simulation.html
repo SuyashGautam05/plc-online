@@ -1,0 +1,1604 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PLC Simtel Software</title>
+<link rel="stylesheet" href="../defination.css">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Barlow:wght@300;400;600;700;900&family=Barlow+Condensed:wght@700;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --primary: #f8f9fa;
+  --secondary: #e9ecef;
+  --text: #343a40;
+  --accent: #6c757d;
+  --border: #dee2e6;
+  --hover: #f1f3f5;
+  --shadow: 0 2px 10px rgba(0,0,0,0.1);
+  --steel: #2c3e50;
+  --steel-light: #34495e;
+  --steel-bright: #4a6278;
+  --chrome: #95a5a6;
+  --brass: #d4a017;
+  --brass-dark: #b8860b;
+  --pipe-blue: #2980b9;
+  --pipe-blue-dark: #1f618d;
+  --green-on: #27ae60;
+  --green-glow: rgba(39,174,96,0.4);
+  --red-off: #e74c3c;
+  --red-glow: rgba(231,76,60,0.35);
+  --amber: #f39c12;
+  --amber-glow: rgba(243,156,18,0.4);
+  --panel: #ecf0f1;
+  --panel-dark: #dfe6e9;
+  --hose-color: #e67e22;
+  --piston-color: #7f8c8d;
+  --cylinder-body: #bdc3c7;
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family: Georgia, 'Times New Roman', Times, serif; background: #f8f9fa; color: var(--text); min-height: 100vh; overflow-x: hidden; }
+
+/* ─── HEADER ─── */
+.app-header {
+  background: linear-gradient(135deg, var(--steel) 0%, #1a252f 100%);
+  border-bottom: 3px solid var(--brass);
+  padding: 10px 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+  position: sticky; top: 0; z-index: 100;
+}
+.app-header .brand { display: flex; align-items: center; gap: 12px; }
+.app-header .brand-icon {
+  width: 40px; height: 40px;
+  background: linear-gradient(135deg, var(--brass) 0%, var(--brass-dark) 100%);
+  border-radius: 8px; display: flex; align-items: center; justify-content: center;
+  font-size: 20px; box-shadow: 0 2px 10px rgba(212,160,23,0.4);
+}
+.app-header .brand-text h1 { font-family: Georgia, serif; font-size: 1.3rem; font-weight: 900; color: #fff; letter-spacing: 1px; text-transform: uppercase; }
+.app-header .brand-text p { font-size: 0.7rem; color: var(--chrome); letter-spacing: 2px; text-transform: uppercase; }
+
+/* ─── NAV ─── */
+.nav-bar {
+  background: #f8f9fa;
+  border-bottom: 1px solid rgba(0,0,0,0.12);
+  padding: 8px 24px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.nav-tab {
+  padding: 7px 22px;
+  border: 1px solid rgba(0,0,0,0.15);
+  border-radius: 6px;
+  background: transparent;
+  color: #343a40;
+  cursor: pointer;
+  font-family: Georgia, serif;
+  font-size: 0.82rem;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  transition: all 0.2s ease;
+  text-transform: uppercase;
+}
+.nav-tab:hover { background: rgba(44,62,80,0.07); border-color: var(--brass); }
+.nav-tab.active { background: var(--brass); color: var(--steel); border-color: var(--brass); box-shadow: 0 0 12px var(--amber-glow); }
+.status-bar {
+  margin-left: auto; display: flex; align-items: center; gap: 8px;
+  background: rgba(44,62,80,0.08); padding: 5px 14px; border-radius: 20px;
+  border: 1px solid rgba(0,0,0,0.1);
+}
+.status-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--green-on); box-shadow: 0 0 8px var(--green-glow); animation: pulse-dot 2s infinite; }
+@keyframes pulse-dot { 0%,100%{opacity:1;} 50%{opacity:0.5;} }
+.status-bar span { font-family: Georgia, serif; font-size: 0.72rem; color: #343a40; }
+
+/* ─── LAYOUT ─── */
+.app-body { display: flex; height: calc(100vh - 110px); overflow: hidden; }
+
+/* ─── SIDEBAR — only for simulation ─── */
+.sidebar {
+  width: 260px; min-width: 260px;
+  background: linear-gradient(180deg, var(--steel) 0%, #1e2a35 100%);
+  border-right: 1px solid rgba(255,255,255,0.07);
+  overflow-y: auto; padding: 20px 0;
+  display: none; /* hidden by default */
+}
+.sidebar.visible { display: block; }
+.sidebar::-webkit-scrollbar { width: 5px; }
+.sidebar::-webkit-scrollbar-track { background: transparent; }
+.sidebar::-webkit-scrollbar-thumb { background: var(--steel-bright); border-radius: 5px; }
+.sidebar-section { padding: 0 16px 16px; border-bottom: 1px solid rgba(255,255,255,0.06); margin-bottom: 6px; }
+.sidebar-section-title { font-size: 0.65rem; font-weight: 700; letter-spacing: 2px; color: var(--chrome); text-transform: uppercase; padding: 10px 0 8px; }
+.actuator-card { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.07); border-radius: 8px; padding: 12px; margin-bottom: 8px; cursor: pointer; transition: all 0.2s ease; }
+.actuator-card:hover, .actuator-card.active { background: rgba(212,160,23,0.12); border-color: var(--brass); }
+.actuator-card.active { box-shadow: 0 0 0 1px var(--brass); }
+.actuator-card-name { font-size: 0.82rem; font-weight: 700; color: #fff; margin-bottom: 3px; }
+.actuator-card-type { font-size: 0.7rem; color: var(--chrome); }
+.actuator-card-status { display: inline-block; margin-top: 6px; padding: 2px 8px; border-radius: 10px; font-size: 0.65rem; font-weight: 700; letter-spacing: 0.5px; text-transform: uppercase; }
+.status-ready { background: rgba(39,174,96,0.2); color: var(--green-on); }
+.status-running { background: rgba(243,156,18,0.2); color: var(--amber); animation: blink 1s infinite; }
+.status-idle { background: rgba(149,165,166,0.2); color: var(--chrome); }
+@keyframes blink { 0%,100%{opacity:1;} 50%{opacity:0.6;} }
+
+/* ─── MAIN PANEL ─── */
+.main-panel { flex: 1; overflow-y: auto; display: flex; flex-direction: column; background: #f8f9fa; }
+.main-panel::-webkit-scrollbar { width: 6px; }
+.main-panel::-webkit-scrollbar-track { background: #e9ecef; }
+.main-panel::-webkit-scrollbar-thumb { background: var(--steel-bright); border-radius: 6px; }
+
+/* ─── PAGE SECTIONS ─── */
+.page { display: none; flex-direction: column; flex: 1; }
+.page.active { display: flex; }
+
+/* ── SIMULATION MAIN ── */
+.page#page-simulation.active { background: #1a1e24; }
+
+/* ─── THEORY PAGE ─── */
+.theory-layout { display: grid; grid-template-columns: 1fr 340px; gap: 0; flex: 1; overflow: hidden; }
+.theory-content { padding: 28px 32px; overflow-y: auto; background: var(--primary); }
+.theory-content::-webkit-scrollbar { width: 7px; }
+.theory-content::-webkit-scrollbar-track { background: var(--secondary); }
+.theory-content::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 10px; }
+.theory-content h2 { font-family: Georgia, serif; font-size: 1.9rem; font-weight: 900; color: var(--steel); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; border-bottom: 3px solid var(--brass); padding-bottom: 10px; }
+.theory-content h3 { font-size: 1.05rem; font-weight: 700; color: var(--steel); margin: 22px 0 8px; display: flex; align-items: center; gap: 8px; }
+.theory-content h3::before { content: ''; display: inline-block; width: 4px; height: 18px; background: var(--brass); border-radius: 2px; }
+.theory-content p { font-size: 0.9rem; line-height: 1.75; color: var(--text); margin-bottom: 14px; text-align: justify; }
+.info-box { background: #eaf4ff; border-left: 4px solid var(--pipe-blue); border-radius: 0 8px 8px 0; padding: 14px 16px; margin: 16px 0; font-size: 0.85rem; line-height: 1.65; color: #1f618d; }
+.info-box strong { color: var(--pipe-blue-dark); }
+.warn-box { background: #fff8e1; border-left: 4px solid var(--brass); border-radius: 0 8px 8px 0; padding: 14px 16px; margin: 16px 0; font-size: 0.85rem; line-height: 1.65; color: #7d6608; }
+.component-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 14px; margin: 16px 0; }
+.component-item { background: white; border: 1px solid var(--border); border-radius: 10px; padding: 14px; box-shadow: var(--shadow); transition: transform 0.2s, box-shadow 0.2s; }
+.component-item:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(0,0,0,0.12); }
+.component-item .ci-icon { font-size: 1.8rem; margin-bottom: 8px; display: none; }
+.component-item .ci-name { font-size: 0.82rem; font-weight: 700; color: var(--steel); margin-bottom: 4px; }
+.component-item .ci-desc { font-size: 0.75rem; color: var(--accent); line-height: 1.5; }
+
+/* Theory sidebar — only visible in Theory page */
+.theory-sidebar { background: var(--steel); padding: 24px 20px; overflow-y: auto; border-left: 1px solid rgba(255,255,255,0.08); }
+.theory-sidebar::-webkit-scrollbar { width: 5px; }
+.theory-sidebar::-webkit-scrollbar-track { background: transparent; }
+.theory-sidebar::-webkit-scrollbar-thumb { background: var(--steel-bright); border-radius: 5px; }
+.theory-sidebar h4 { font-family: Georgia, serif; font-size: 0.7rem; font-weight: 700; letter-spacing: 2px; color: var(--chrome); text-transform: uppercase; margin-bottom: 12px; }
+.key-fact { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.08); border-radius: 8px; padding: 14px; margin-bottom: 10px; }
+.key-fact .kf-label { font-size: 0.65rem; color: var(--brass); font-weight: 700; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 6px; }
+.key-fact .kf-value { font-family: Georgia, serif; font-size: 1.2rem; color: #fff; font-weight: 700; }
+.key-fact .kf-unit { font-size: 0.7rem; color: var(--chrome); margin-top: 2px; }
+.formula-box { background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; padding: 14px; margin-bottom: 10px; font-family: Georgia, serif; }
+.formula-box .fb-title { font-size: 0.65rem; color: var(--chrome); margin-bottom: 8px; letter-spacing: 1px; text-transform: uppercase; }
+.formula-box .fb-formula { font-size: 0.95rem; color: var(--amber); }
+.formula-box .fb-desc { font-size: 0.7rem; color: var(--chrome); margin-top: 6px; line-height: 1.5; }
+
+/* ─── SIMULATION PAGE ─── */
+.sim-layout { display: grid; grid-template-columns: 1fr 280px; gap: 0; flex: 1; overflow: hidden; background: #1a1e24; }
+.sim-workspace { padding: 20px; overflow-y: auto; display: flex; flex-direction: column; gap: 18px; }
+.sim-workspace::-webkit-scrollbar { width: 6px; }
+.sim-workspace::-webkit-scrollbar-track { background: #12151a; }
+.sim-workspace::-webkit-scrollbar-thumb { background: var(--steel-bright); border-radius: 6px; }
+
+.sim-panel { background: linear-gradient(180deg, var(--steel) 0%, #1e2a35 100%); border: 1px solid rgba(255,255,255,0.07); border-radius: 12px; overflow: hidden; box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
+.sim-panel-header { background: rgba(0,0,0,0.2); padding: 10px 18px; border-bottom: 1px solid rgba(255,255,255,0.07); display: flex; align-items: center; gap: 10px; }
+.sim-panel-header h3 { font-family: Georgia, serif; font-size: 0.85rem; font-weight: 700; color: var(--chrome); letter-spacing: 2px; text-transform: uppercase; }
+.sim-panel-header .panel-badge { margin-left: auto; font-family: 'Share Tech Mono', monospace; font-size: 0.68rem; color: var(--brass); background: rgba(212,160,23,0.12); padding: 3px 10px; border-radius: 10px; border: 1px solid rgba(212,160,23,0.3); }
+.sim-panel-body { padding: 18px; }
+
+/* Gauge Row */
+.gauge-row { display: flex; gap: 12px; flex-wrap: wrap; }
+.gauge-card { background: linear-gradient(135deg, #0f1318 0%, #1a1e24 100%); border: 1px solid rgba(255,255,255,0.07); border-radius: 10px; padding: 12px 16px; min-width: 120px; flex: 1; }
+.gauge-card .gc-label { font-size: 0.63rem; font-weight: 700; letter-spacing: 1.5px; color: var(--chrome); text-transform: uppercase; margin-bottom: 5px; }
+.gauge-card .gc-value { font-family: 'Share Tech Mono', monospace; font-size: 1.6rem; font-weight: 700; color: var(--amber); line-height: 1; }
+.gauge-card .gc-unit { font-size: 0.65rem; color: var(--chrome); margin-top: 2px; }
+.gauge-card .gc-bar { margin-top: 8px; height: 4px; background: rgba(255,255,255,0.08); border-radius: 4px; overflow: hidden; }
+.gauge-card .gc-bar-fill { height: 100%; background: linear-gradient(90deg, var(--pipe-blue), var(--amber)); border-radius: 4px; transition: width 0.4s ease; }
+
+/* Actuator Canvas */
+.actuator-canvas { width: 100%; background: #0a0d12; border-radius: 8px; overflow: hidden; }
+
+/* Controls */
+.controls-panel { background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.07); border-radius: 10px; padding: 16px; display: flex; flex-wrap: wrap; gap: 14px; align-items: center; margin-top: 14px; }
+.control-group { display: flex; flex-direction: column; gap: 6px; }
+.control-group label { font-size: 0.68rem; font-weight: 700; color: var(--chrome); letter-spacing: 1px; text-transform: uppercase; }
+
+.btn { padding: 9px 18px; border: none; border-radius: 7px; cursor: pointer; font-family: Georgia, serif; font-size: 0.8rem; font-weight: 700; letter-spacing: 0.5px; transition: all 0.2s ease; display: inline-flex; align-items: center; gap: 7px; text-transform: uppercase; }
+.btn-extend { background: linear-gradient(135deg, #27ae60, #1e8449); color: white; box-shadow: 0 3px 12px rgba(39,174,96,0.3); }
+.btn-extend:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 5px 18px rgba(39,174,96,0.5); }
+.btn-retract { background: linear-gradient(135deg, #e74c3c, #c0392b); color: white; box-shadow: 0 3px 12px rgba(231,76,60,0.3); }
+.btn-retract:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 5px 18px rgba(231,76,60,0.5); }
+.btn-auto { background: linear-gradient(135deg, var(--brass), var(--brass-dark)); color: white; box-shadow: 0 3px 12px var(--amber-glow); }
+.btn-auto:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 5px 18px var(--amber-glow); }
+.btn-secondary { background: rgba(255,255,255,0.08); color: #ccc; border: 1px solid rgba(255,255,255,0.12); }
+.btn-secondary:hover:not(:disabled) { background: rgba(255,255,255,0.14); transform: translateY(-1px); }
+.btn:active { transform: translateY(0) scale(0.98); }
+.btn:disabled { opacity: 0.4; cursor: not-allowed; transform: none !important; }
+.btn-plc { background: linear-gradient(135deg, #27ae60, #1e8449); color: white; font-size: 0.75rem; padding: 7px 14px; }
+.btn-plc-stop { background: linear-gradient(135deg, #e74c3c, #c0392b); color: white; font-size: 0.75rem; padding: 7px 14px; }
+.btn-sm { font-size: 0.72rem; padding: 6px 12px; }
+
+/* ── LADDER DIAGRAM ── */
+.ladder-canvas {
+  background: #080c10;
+  border-radius: 8px;
+  padding: 16px 20px;
+  font-family: 'Share Tech Mono', monospace;
+  overflow-x: auto;
+}
+.ladder-program-header {
+  font-size: 0.62rem;
+  color: #3a4a5c;
+  letter-spacing: 1px;
+  margin-bottom: 12px;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+.plc-mode-badge {
+  color: var(--amber);
+  font-weight: bold;
+}
+
+/* Each rung as a full-width flex row */
+.rung-wrapper { margin-bottom: 20px; }
+.rung-label-text { font-size: 0.58rem; color: #3d5166; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 5px; padding-left: 36px; }
+
+.rung-row {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  height: 52px;
+}
+.rung-num {
+  font-size: 0.6rem;
+  color: rgba(149,165,166,0.35);
+  width: 26px;
+  text-align: right;
+  padding-right: 8px;
+  flex-shrink: 0;
+}
+/* Left power rail */
+.power-rail-left {
+  width: 10px; height: 52px;
+  background: linear-gradient(90deg, #3a4a5c, #4a6278);
+  border-radius: 3px;
+  flex-shrink: 0;
+  box-shadow: 0 0 5px rgba(74,98,120,0.3);
+}
+.power-rail-left.powered { background: linear-gradient(90deg, #27ae60, #1e8449); box-shadow: 0 0 10px var(--green-glow); }
+
+/* Right power rail */
+.power-rail-right {
+  width: 10px; height: 52px;
+  background: linear-gradient(90deg, #4a6278, #3a4a5c);
+  border-radius: 3px;
+  flex-shrink: 0;
+  box-shadow: 0 0 5px rgba(74,98,120,0.3);
+}
+.power-rail-right.powered { background: linear-gradient(90deg, #1e8449, #27ae60); box-shadow: 0 0 10px var(--green-glow); }
+
+/* Wire segment — stretches to fill space */
+.wire {
+  flex: 1;
+  height: 3px;
+  background: #2a3a4a;
+  position: relative;
+  min-width: 16px;
+  align-self: center;
+  transition: background 0.2s, box-shadow 0.2s;
+}
+.wire.powered { background: var(--green-on); box-shadow: 0 0 8px var(--green-glow); }
+
+/* Contact element */
+.contact-elem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0;
+  cursor: pointer;
+  user-select: none;
+  position: relative;
+}
+.contact-elem svg { width: 42px; height: 44px; display: block; }
+.contact-elem .c-label {
+  font-size: 0.56rem;
+  color: var(--chrome);
+  text-align: center;
+  line-height: 1.3;
+  position: absolute;
+  bottom: -22px;
+  white-space: nowrap;
+}
+
+/* Coil element */
+.coil-elem {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0;
+  position: relative;
+}
+.coil-elem svg { width: 42px; height: 44px; display: block; }
+.coil-elem .c-label {
+  font-size: 0.56rem;
+  color: var(--chrome);
+  text-align: center;
+  line-height: 1.3;
+  position: absolute;
+  bottom: -22px;
+  white-space: nowrap;
+}
+
+.rung-spacer { height: 26px; } /* space for labels below rungs */
+
+/* ── RIGHT SIDEBAR ── */
+.sim-sidebar { background: #0f1318; border-left: 1px solid rgba(255,255,255,0.06); overflow-y: auto; padding: 16px 14px; display: flex; flex-direction: column; gap: 14px; }
+.sim-sidebar::-webkit-scrollbar { width: 4px; }
+.sim-sidebar::-webkit-scrollbar-thumb { background: var(--steel-bright); border-radius: 4px; }
+.sim-sidebar h4 { font-size: 0.6rem; letter-spacing: 2px; color: var(--chrome); text-transform: uppercase; margin-bottom: 10px; font-family: 'Share Tech Mono', monospace; }
+.log-panel { background: #070b10; border: 1px solid rgba(255,255,255,0.06); border-radius: 8px; padding: 12px; flex: 1; min-height: 0; }
+.log-entries { height: 160px; overflow-y: auto; font-family: 'Share Tech Mono', monospace; font-size: 0.66rem; }
+.log-entries::-webkit-scrollbar { width: 4px; }
+.log-entries::-webkit-scrollbar-thumb { background: #2c3e50; border-radius: 4px; }
+.log-entry { padding: 3px 0; border-bottom: 1px solid rgba(255,255,255,0.03); display: flex; gap: 8px; }
+.log-entry .le-time { color: rgba(149,165,166,0.5); flex-shrink: 0; }
+.log-entry .le-msg { color: #95a5a6; }
+.log-entry.info .le-msg { color: var(--pipe-blue); }
+.log-entry.success .le-msg { color: var(--green-on); }
+.log-entry.warn .le-msg { color: var(--amber); }
+.log-entry.error .le-msg { color: var(--red-off); }
+
+.io-table { width: 100%; border-collapse: collapse; font-size: 0.7rem; font-family: 'Share Tech Mono', monospace; }
+.io-table th { font-size: 0.58rem; letter-spacing: 1.5px; color: var(--chrome); text-transform: uppercase; padding: 5px 6px; text-align: left; border-bottom: 1px solid rgba(255,255,255,0.06); }
+.io-table td { padding: 5px 6px; color: var(--chrome); border-bottom: 1px solid rgba(255,255,255,0.04); }
+.io-table td:last-child { text-align: right; }
+.io-led { display: inline-block; width: 9px; height: 9px; border-radius: 50%; background: #2c3e50; transition: all 0.2s; }
+.io-led.on { background: var(--green-on); box-shadow: 0 0 8px var(--green-glow); }
+.io-led.amber { background: var(--amber); box-shadow: 0 0 8px var(--amber-glow); }
+.io-led.red { background: var(--red-off); box-shadow: 0 0 8px var(--red-glow); }
+
+/* ─── QUIZ PAGE ─── */
+.quiz-page { background: var(--primary); padding: 32px; overflow-y: auto; flex: 1; }
+.quiz-page::-webkit-scrollbar { width: 7px; }
+.quiz-page::-webkit-scrollbar-track { background: var(--secondary); }
+.quiz-page::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 10px; }
+.quiz-header { margin-bottom: 24px; padding-bottom: 16px; border-bottom: 2px solid var(--border); }
+.quiz-header h2 { font-family: Georgia, serif; font-size: 1.8rem; font-weight: 900; color: var(--steel); text-transform: uppercase; letter-spacing: 1px; }
+.quiz-header p { font-size: 0.85rem; color: var(--accent); margin-top: 6px; }
+.quiz-score-bar { display: flex; gap: 12px; margin-bottom: 28px; flex-wrap: wrap; }
+.qsb-item { background: white; border: 1px solid var(--border); border-radius: 8px; padding: 12px 20px; box-shadow: var(--shadow); text-align: center; min-width: 100px; }
+.qsb-item .qsb-val { font-family: 'Share Tech Mono', monospace; font-size: 1.6rem; font-weight: 700; color: var(--steel); }
+.qsb-item .qsb-label { font-size: 0.68rem; color: var(--accent); letter-spacing: 1px; text-transform: uppercase; }
+.quiz-question { background: white; border: 1px solid var(--border); border-radius: 10px; padding: 20px 24px; margin-bottom: 20px; box-shadow: var(--shadow); transition: transform 0.2s; }
+.quiz-question:hover { transform: translateY(-1px); }
+.quiz-question .qq-num { font-size: 0.65rem; color: var(--pipe-blue); font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 8px; }
+.quiz-question .qq-text { font-size: 0.92rem; font-weight: 600; color: var(--text); margin-bottom: 14px; line-height: 1.55; }
+.quiz-options { display: flex; flex-direction: column; gap: 8px; }
+.quiz-option { display: flex; align-items: center; gap: 10px; padding: 10px 14px; border: 2px solid var(--border); border-radius: 6px; cursor: pointer; transition: all 0.2s; background: #fdfdfd; }
+.quiz-option:hover { border-color: var(--pipe-blue); background: #eaf4ff; }
+.quiz-option input { width: 16px; height: 16px; cursor: pointer; }
+.quiz-option label { font-size: 0.85rem; color: var(--text); cursor: pointer; flex: 1; }
+.quiz-option.correct { background: #d4edda; border-color: var(--green-on); }
+.quiz-option.wrong { background: #f8d7da; border-color: var(--red-off); }
+.quiz-feedback { margin-top: 10px; padding: 10px 14px; border-radius: 6px; font-size: 0.82rem; display: none; line-height: 1.55; }
+.quiz-feedback.show { display: block; }
+.quiz-feedback.correct-fb { background: #d4edda; color: #1e6d3a; border-left: 4px solid var(--green-on); }
+.quiz-feedback.wrong-fb { background: #f8d7da; color: #7b1d24; border-left: 4px solid var(--red-off); }
+.btn-check { background: var(--pipe-blue); color: white; margin-top: 12px; box-shadow: 0 2px 10px rgba(41,128,185,0.3); }
+.btn-check:hover { background: var(--pipe-blue-dark); }
+.quiz-actions { display: flex; gap: 12px; margin-top: 28px; flex-wrap: wrap; }
+/* Override btn colors for quiz actions to be visible on light bg */
+.quiz-actions .btn-auto { color: #fff; }
+.quiz-actions .btn-extend { color: #fff; }
+.quiz-actions .btn-secondary { background: var(--secondary); color: var(--text); border: 1px solid var(--border); }
+
+@media (max-width: 900px) {
+  .theory-layout { grid-template-columns: 1fr; }
+  .theory-sidebar { display: none; }
+  .sim-layout { grid-template-columns: 1fr; }
+  .sim-sidebar { display: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══ HEADER ═══ -->
+<header style="display: flex; margin-bottom: 0px;  background-color: #f8f9fa;">
+            <div class="logo-container" style="margin-bottom: 0px;">
+                <img src="../../assets/Scientech logo-2.png" alt="Scientech Logo">
+                <h1 style="margin-left: 108px;">Pneumatic Actuator</h1>
+            </div>
+            <div class="button-container" style="margin-left: 25pc;margin-bottom: 0px;">
+                <a href="./Pneumatic_Actuators.html" class="back-button" style="margin-left: -41px;">
+                    <i class="fas fa-arrow-left"></i> <img style="width: 27px;" src="../Transducers, Sensors and Transmitters/left-arrow.png" alt="">Back to Course
+                </a>
+            </div>
+        </header>
+
+<!-- ═══ NAV BAR ═══ -->
+<nav class="nav-bar">
+  <button class="nav-tab active" onclick="showPage('theory')">Theory</button>
+  <button class="nav-tab" onclick="showPage('simulation')">Simulation</button>
+  <button class="nav-tab" onclick="showPage('quiz')">Quiz</button>
+  <div class="status-bar">
+    <div class="status-dot"></div>
+    <span id="sys-status">SYSTEM ONLINE</span>
+  </div>
+</nav>
+
+<!-- ═══ BODY ═══ -->
+<div class="app-body">
+
+  <!-- ── SIDEBAR — shown only in simulation ── -->
+  <aside class="sidebar" id="main-sidebar">
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">Actuator Modules</div>
+      <div class="actuator-card active" id="mod-single" onclick="selectModule('single',this)">
+        <div class="actuator-card-name">Single-Acting Cylinder</div>
+        <div class="actuator-card-type">Spring Return • SAC</div>
+        <span class="actuator-card-status status-ready">Ready</span>
+      </div>
+      <div class="actuator-card" id="mod-double" onclick="selectModule('double',this)">
+        <div class="actuator-card-name">Double-Acting Cylinder</div>
+        <div class="actuator-card-type">Dual Port • DAC</div>
+        <span class="actuator-card-status status-idle">Idle</span>
+      </div>
+      <div style="display: none;" class="actuator-card" id="mod-rotary" onclick="selectModule('rotary',this)">
+        <div class="actuator-card-name">Rotary Actuator</div>
+        <div class="actuator-card-type">Rack & Pinion • 90°/180°</div>
+        <span class="actuator-card-status status-idle">Idle</span>
+      </div>
+      <div class="actuator-card" id="mod-rodless" onclick="selectModule('rodless',this)">
+        <div class="actuator-card-name">Rodless Cylinder</div>
+        <div class="actuator-card-type">Band / Mag. Coupled</div>
+        <span class="actuator-card-status status-idle">Idle</span>
+      </div>
+    </div>
+    <div class="sidebar-section" style="display: none;">
+      <div class="sidebar-section-title">Valve Modules</div>
+      <div class="actuator-card" id="mod-valve32" onclick="selectModule('valve32',this)">
+        <div class="actuator-card-name">3/2 Way Solenoid Valve</div>
+        <div class="actuator-card-type">N.C. Spring Return</div>
+        <span class="actuator-card-status status-idle">Idle</span>
+      </div>
+      <div class="actuator-card" id="mod-valve52" onclick="selectModule('valve52',this)">
+        <div class="actuator-card-name">5/2 Way Solenoid Valve</div>
+        <div class="actuator-card-type">Double Solenoid</div>
+        <span class="actuator-card-status status-idle">Idle</span>
+      </div>
+    </div>
+    <div class="sidebar-section">
+      <div class="sidebar-section-title">PLC Programs</div>
+      <div class="actuator-card" id="mod-ladder" onclick="selectModule('ladder',this)">
+        <div class="actuator-card-name">Ladder Logic Editor</div>
+        <div class="actuator-card-type">IEC 61131-3 LD</div>
+        <span class="actuator-card-status status-idle">Idle</span>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ═══ MAIN PANEL ═══ -->
+  <main class="main-panel">
+
+    <!-- ── THEORY PAGE ── -->
+    <div class="page active" id="page-theory">
+      <div class="theory-layout">
+        <div class="theory-content">
+          <h2>Pneumatic Actuators</h2>
+          <p>A <strong>pneumatic actuator</strong> converts compressed air energy into mechanical motion — either linear (back-and-forth) or rotary. In automated industrial systems, they are controlled by a <strong>PLC (Programmable Logic Controller)</strong> via solenoid valves and ladder logic programs.</p>
+          <div class="info-box"><strong>Industrial Context:</strong> Pneumatic actuators are found in assembly lines, packaging machines, robotic arms, conveyor systems, and material handling equipment. They are preferred for their speed, safety in explosive environments, and low maintenance.</div>
+          <h3>How Compressed Air Creates Motion</h3>
+          <p>When compressed air (typically 4–8 bar) enters a cylinder, it pushes against a piston. The piston is connected to a rod that extends outward. When air is vented, a spring or opposing air pressure returns the piston. This simple principle drives thousands of industrial applications.</p>
+          <p>The force generated depends on the air pressure and piston bore area: <strong>F = P × A</strong>, where F is force (N), P is pressure (Pa), and A is area (m²).</p>
+          <h3>Core Components</h3>
+          <div class="component-grid">
+            <div class="component-item"><div class="ci-icon">🔵</div><div class="ci-name">Pneumatic Cylinder</div><div class="ci-desc">The linear actuator body containing piston, seals, end caps and rod.</div></div>
+            <div class="component-item"><div class="ci-icon">🔶</div><div class="ci-name">Solenoid Valve</div><div class="ci-desc">Electrically controlled valve directing airflow to cylinder ports.</div></div>
+            <div class="component-item"><div class="ci-icon">🟩</div><div class="ci-name">PLC Controller</div><div class="ci-desc">Programmable Logic Controller running ladder logic to automate motion.</div></div>
+            <div class="component-item"><div class="ci-icon">🔴</div><div class="ci-name">Proximity Sensors</div><div class="ci-desc">Magnetic/reed sensors on cylinder detect piston end positions.</div></div>
+            <div class="component-item"><div class="ci-icon">🔧</div><div class="ci-name">Flow Control Valve</div><div class="ci-desc">Needle valve adjusts air flow rate to control cylinder speed.</div></div>
+            <div class="component-item"><div class="ci-icon">💧</div><div class="ci-name">FRL Unit</div><div class="ci-desc">Filter-Regulator-Lubricator conditions compressed air supply.</div></div>
+          </div>
+          <h3>Types of Pneumatic Cylinders</h3>
+          <p><strong>1. Single-Acting Cylinder (SAC):</strong> Air pressure acts on one side only. A return spring moves the piston back when air is exhausted. Simpler, uses one air port. Used where force is only needed in one direction (clamping, lifting).</p>
+          <p><strong>2. Double-Acting Cylinder (DAC):</strong> Air pressure acts alternately on both sides. Requires a 5/2 or 4/2 way valve. Provides controlled force in both extend and retract directions — most common in industrial automation.</p>
+          <p><strong>3. Rodless Cylinder:</strong> The piston moves inside a sealed tube, carrying a carriage on the outside via a magnetic coupling or band seal. Used for long strokes where a conventional rod would be too long.</p>
+          <p><strong>4. Rotary Actuator:</strong> Converts linear piston motion to rotation via rack-and-pinion or vane mechanism. Provides 90°, 180°, or 270° of rotation for indexing and turning applications.</p>
+          <div class="warn-box"> <strong>Safety Note:</strong> Pneumatic systems store significant energy. Always depressurize before maintenance. Install exhaust silencers to reduce noise. Use lockout/tagout procedures.</div>
+          <h3>PLC Control & Solenoid Valves</h3>
+          <p>A PLC outputs a 24VDC signal to a solenoid coil. This coil generates a magnetic field that shifts a spool inside the valve, re-routing compressed air to the appropriate cylinder port. The PLC program (ladder logic) defines when and how long to energize the solenoid.</p>
+          <p>The <strong>3/2 way valve</strong> has 3 ports (pressure, cylinder, exhaust) and 2 positions. It controls single-acting cylinders. The <strong>5/2 way valve</strong> has 5 ports and 2 positions, controlling both ports of a double-acting cylinder.</p>
+          <h3>Ladder Logic Programming</h3>
+          <p>Ladder Logic (LD) is the most common PLC programming language. It graphically resembles relay logic diagrams. Each <strong>rung</strong> represents a control logic equation. Contacts (inputs) and coils (outputs) are connected by horizontal power rails.</p>
+          <p>A simple extend sequence: <em>Start button (I0.0) closes → Solenoid Y1 (Q0.0) energizes → Cylinder extends → Limit switch LS1 (I0.1) closes → Timer T1 runs → Retract solenoid Y2 (Q0.1) energizes.</em></p>
+        </div>
+        <aside class="theory-sidebar">
+          <h4>Key Parameters</h4>
+          <div class="key-fact"><div class="kf-label">Typical Supply Pressure</div><div class="kf-value">4 – 8</div><div class="kf-unit">bar (60–120 PSI)</div></div>
+          <div class="key-fact"><div class="kf-label">Cylinder Bore Range</div><div class="kf-value">10 – 320</div><div class="kf-unit">mm diameter</div></div>
+          <div class="key-fact"><div class="kf-label">Piston Speed</div><div class="kf-value">0.1 – 2.0</div><div class="kf-unit">m/s (controlled by flow valve)</div></div>
+          <div class="key-fact"><div class="kf-label">Stroke Length</div><div class="kf-value">1 – 2000</div><div class="kf-unit">mm (standard series)</div></div>
+          <h4 style="margin-top:18px;">Formulas</h4>
+          <div class="formula-box"><div class="fb-title">Extend Force</div><div class="fb-formula">F = P × (π × d²/4)</div><div class="fb-desc">P = pressure (Pa), d = bore dia (m)</div></div>
+          <div class="formula-box"><div class="fb-title">Retract Force (DAC)</div><div class="fb-formula">F = P × (π/4)(d²− dr²)</div><div class="fb-desc">dr = rod diameter (m)</div></div>
+          <div class="formula-box"><div class="fb-title">Air Consumption</div><div class="fb-formula">Q = A × S × N × R</div><div class="fb-desc">A=area, S=stroke, N=cycles/min, R=compression ratio</div></div>
+          <h4 style="margin-top:18px;">ISO Standards</h4>
+          <div class="key-fact"><div class="kf-label">Cylinder Standard</div><div class="kf-value" style="font-size:0.9rem;">ISO 15552</div><div class="kf-unit">Pneumatic fluid power cylinders</div></div>
+          <div class="key-fact"><div class="kf-label">Valve Standard</div><div class="kf-value" style="font-size:0.9rem;">ISO 5599</div><div class="kf-unit">Interface dimensions for valves</div></div>
+          <div class="key-fact"><div class="kf-label">PLC Standard</div><div class="kf-value" style="font-size:0.9rem;">IEC 61131-3</div><div class="kf-unit">PLC programming languages</div></div>
+          <h4 style="margin-top:18px;">Quick Reference</h4>
+          <div class="key-fact"><div class="kf-label">SAC Valve</div><div class="kf-value" style="font-size:0.9rem;">3/2 Way</div><div class="kf-unit">Single-acting cylinder control</div></div>
+          <div class="key-fact"><div class="kf-label">DAC Valve</div><div class="kf-value" style="font-size:0.9rem;">5/2 Way</div><div class="kf-unit">Double-acting cylinder control</div></div>
+        </aside>
+      </div>
+    </div>
+
+    <!-- ── SIMULATION PAGE ── -->
+    <div class="page" id="page-simulation">
+      <div class="sim-layout">
+        <div class="sim-workspace">
+
+          <!-- Gauge Row -->
+          <div class="gauge-row">
+            <div class="gauge-card">
+              <div class="gc-label">Supply Pressure</div>
+              <div class="gc-value" id="g-pressure">6.0</div>
+              <div class="gc-unit">bar</div>
+              <div class="gc-bar"><div class="gc-bar-fill" id="gb-pressure" style="width:60%"></div></div>
+            </div>
+            <div class="gauge-card">
+              <div class="gc-label">Piston Position</div>
+              <div class="gc-value" id="g-position">0</div>
+              <div class="gc-unit">mm / 200mm stroke</div>
+              <div class="gc-bar"><div class="gc-bar-fill" id="gb-position" style="width:0%"></div></div>
+            </div>
+            <div class="gauge-card">
+              <div class="gc-label">Actuator Force</div>
+              <div class="gc-value" id="g-force">1696</div>
+              <div class="gc-unit">N  (bore: 60mm)</div>
+              <div class="gc-bar"><div class="gc-bar-fill" id="gb-force" style="width:60%"></div></div>
+            </div>
+            <div class="gauge-card">
+              <div class="gc-label">Cycle Count</div>
+              <div class="gc-value" id="g-cycles">0</div>
+              <div class="gc-unit">complete cycles</div>
+              <div class="gc-bar"><div class="gc-bar-fill" id="gb-cycles" style="width:0%"></div></div>
+            </div>
+          </div>
+
+          <!-- Cylinder Visualisation -->
+          <div class="sim-panel">
+            <div class="sim-panel-header">
+              <h3 id="module-title">⚙️ Single-Acting Cylinder (SAC) — Spring Return</h3>
+              <span class="panel-badge" id="module-badge">3/2-WAY VALVE</span>
+            </div>
+            <div class="sim-panel-body">
+              <div class="actuator-canvas" id="actuator-canvas">
+                <!-- SVG rendered by JS -->
+              </div>
+              <!-- Controls -->
+              <div class="controls-panel">
+                <div class="control-group">
+                  <label>Actions</label>
+                  <div style="display:flex;gap:8px;flex-wrap:wrap;">
+                    <button class="btn btn-extend" id="btn-extend" onclick="extendCylinder()">▶ Extend</button>
+                    <button class="btn btn-retract" id="btn-retract" onclick="retractCylinder()" disabled>◀ Retract</button>
+                    <button class="btn btn-auto" id="btn-auto" onclick="toggleAuto()">⟳ Auto Cycle</button>
+                    <button class="btn btn-secondary" onclick="resetSim()">↺ Reset</button>
+                  </div>
+                </div>
+                <div class="control-group" style="margin-left:auto;">
+                  <label>Pressure (bar)</label>
+                  <div style="display:flex;align-items:center;gap:10px;">
+                    <input type="range" min="2" max="10" value="6" step="0.5" id="pressure-slider" oninput="updatePressure(this.value)" style="width:110px;accent-color:var(--brass);">
+                    <span id="pressure-val" style="font-family:'Share Tech Mono',monospace;color:var(--amber);font-size:0.88rem;">6.0 bar</span>
+                  </div>
+                </div>
+                <div class="control-group">
+                  <label>Speed</label>
+                  <input type="range" min="1" max="5" value="3" id="speed-slider" style="width:90px;accent-color:var(--pipe-blue);">
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Ladder Diagram -->
+          <div class="sim-panel">
+            <div class="sim-panel-header">
+              <h3>🪜 PLC Ladder Logic Program</h3>
+              <span class="panel-badge">IEC 61131-3 LD</span>
+            </div>
+            <div class="sim-panel-body">
+              <div class="ladder-canvas">
+                <div class="ladder-program-header">
+                  PROGRAM: PNEUMATIC_CTRL &nbsp;|&nbsp; PLC: Demo PLC &nbsp;|&nbsp; Mode: <span class="plc-mode-badge" id="plc-mode">PROGRAM</span>
+                </div>
+
+                <!-- RUNG 1 -->
+                <div class="rung-wrapper">
+                  <div class="rung-label-text">RUNG 001 — Cylinder Extend Control</div>
+                  <div class="rung-row" id="rung1">
+                    <div class="rung-num">1</div>
+                    <div class="power-rail-left" id="r1-rail-l"></div>
+                    <div class="wire" id="r1-w1"></div>
+                    <!-- NO Contact I0.0 START -->
+                    <div class="contact-elem" onclick="toggleInput('i0_0')" title="Click to toggle START">
+                      <svg viewBox="0 0 42 44">
+                        <line x1="0" y1="22" x2="12" y2="22" stroke="#3a4a5c" stroke-width="2.5" id="lc1-wl"/>
+                        <line x1="12" y1="10" x2="12" y2="34" stroke="#3a4a5c" stroke-width="2.5" id="lc1-l"/>
+                        <line x1="30" y1="10" x2="30" y2="34" stroke="#3a4a5c" stroke-width="2.5" id="lc1-r"/>
+                        <line x1="30" y1="22" x2="42" y2="22" stroke="#3a4a5c" stroke-width="2.5" id="lc1-wr"/>
+                      </svg>
+                      <span class="c-label">I0.0<br>START</span>
+                    </div>
+                    <div class="wire" id="r1-w2"></div>
+                    <!-- NC Contact I0.2 E-STOP -->
+                    <div class="contact-elem" onclick="toggleInput('i0_2')" title="E-Stop (NC) — click to toggle">
+                      <svg viewBox="0 0 42 44">
+                        <line x1="0" y1="22" x2="12" y2="22" stroke="#3a4a5c" stroke-width="2.5" id="lc2-wl"/>
+                        <line x1="12" y1="10" x2="12" y2="34" stroke="#3a4a5c" stroke-width="2.5" id="lc2-l"/>
+                        <line x1="30" y1="10" x2="30" y2="34" stroke="#3a4a5c" stroke-width="2.5" id="lc2-r"/>
+                        <line x1="30" y1="22" x2="42" y2="22" stroke="#3a4a5c" stroke-width="2.5" id="lc2-wr"/>
+                        <line x1="12" y1="10" x2="30" y2="34" stroke="#3a4a5c" stroke-width="1.8" id="lc2-nc"/>
+                      </svg>
+                      <span class="c-label">I0.2<br>E-STOP (NC)</span>
+                    </div>
+                    <div class="wire" id="r1-w3"></div>
+                    <!-- Coil Q0.0 SOL Y1 -->
+                    <div class="coil-elem">
+                      <svg viewBox="0 0 42 44">
+                        <line x1="0" y1="22" x2="10" y2="22" stroke="#3a4a5c" stroke-width="2.5" id="co1-wl"/>
+                        <circle cx="21" cy="22" r="10" fill="none" stroke="#3a4a5c" stroke-width="2.5" id="co1-c"/>
+                        <line x1="32" y1="22" x2="42" y2="22" stroke="#3a4a5c" stroke-width="2.5" id="co1-wr"/>
+                      </svg>
+                      <span class="c-label">Q0.0<br>SOL Y1</span>
+                    </div>
+                    <div class="power-rail-right" id="r1-rail-r"></div>
+                  </div>
+                  <div class="rung-spacer"></div>
+                </div>
+
+                <!-- RUNG 2 -->
+                <div class="rung-wrapper">
+                  <div class="rung-label-text">RUNG 002 — Limit Switch Feedback & Extend Confirm</div>
+                  <div class="rung-row" id="rung2">
+                    <div class="rung-num">2</div>
+                    <div class="power-rail-left" id="r2-rail-l"></div>
+                    <div class="wire" id="r2-w1"></div>
+                    <!-- NO Contact I0.1 LS1 -->
+                    <div class="contact-elem" title="LS1 — Extended position sensor">
+                      <svg viewBox="0 0 42 44">
+                        <line x1="0" y1="22" x2="12" y2="22" stroke="#3a4a5c" stroke-width="2.5" id="lc3-wl"/>
+                        <line x1="12" y1="10" x2="12" y2="34" stroke="#3a4a5c" stroke-width="2.5" id="lc3-l"/>
+                        <line x1="30" y1="10" x2="30" y2="34" stroke="#3a4a5c" stroke-width="2.5" id="lc3-r"/>
+                        <line x1="30" y1="22" x2="42" y2="22" stroke="#3a4a5c" stroke-width="2.5" id="lc3-wr"/>
+                      </svg>
+                      <span class="c-label">I0.1<br>LS1 (EXT)</span>
+                    </div>
+                    <div class="wire" id="r2-w2"></div>
+                    <!-- Timer Coil T1 -->
+                    <div class="coil-elem">
+                      <svg viewBox="0 0 42 44">
+                        <line x1="0" y1="22" x2="10" y2="22" stroke="#3a4a5c" stroke-width="2.5" id="co2-wl"/>
+                        <circle cx="21" cy="22" r="10" fill="none" stroke="#3a4a5c" stroke-width="2.5" id="co2-c"/>
+                        <text x="21" y="27" font-size="9" fill="#3a4a5c" text-anchor="middle" font-family="Share Tech Mono" id="co2-t">T</text>
+                        <line x1="32" y1="22" x2="42" y2="22" stroke="#3a4a5c" stroke-width="2.5" id="co2-wr"/>
+                      </svg>
+                      <span class="c-label">T1 (TON)<br>1.0s</span>
+                    </div>
+                    <div class="power-rail-right" id="r2-rail-r"></div>
+                  </div>
+                  <div class="rung-spacer"></div>
+                </div>
+
+                <!-- RUNG 3 -->
+                <div class="rung-wrapper">
+                  <div class="rung-label-text">RUNG 003 — Auto Retract on Timer Done</div>
+                  <div class="rung-row" id="rung3">
+                    <div class="rung-num">3</div>
+                    <div class="power-rail-left" id="r3-rail-l"></div>
+                    <div class="wire" id="r3-w1"></div>
+                    <!-- NO Contact T1.DN -->
+                    <div class="contact-elem" title="T1.DN — Timer done bit">
+                      <svg viewBox="0 0 42 44">
+                        <line x1="0" y1="22" x2="12" y2="22" stroke="#3a4a5c" stroke-width="2.5" id="lc4-wl"/>
+                        <line x1="12" y1="10" x2="12" y2="34" stroke="#3a4a5c" stroke-width="2.5" id="lc4-l"/>
+                        <line x1="30" y1="10" x2="30" y2="34" stroke="#3a4a5c" stroke-width="2.5" id="lc4-r"/>
+                        <line x1="30" y1="22" x2="42" y2="22" stroke="#3a4a5c" stroke-width="2.5" id="lc4-wr"/>
+                      </svg>
+                      <span class="c-label">T1.DN<br>DONE</span>
+                    </div>
+                    <div class="wire" id="r3-w2"></div>
+                    <!-- Coil Q0.1 RETRACT -->
+                    <div class="coil-elem">
+                      <svg viewBox="0 0 42 44">
+                        <line x1="0" y1="22" x2="10" y2="22" stroke="#3a4a5c" stroke-width="2.5" id="co3-wl"/>
+                        <circle cx="21" cy="22" r="10" fill="none" stroke="#3a4a5c" stroke-width="2.5" id="co3-c"/>
+                        <line x1="32" y1="22" x2="42" y2="22" stroke="#3a4a5c" stroke-width="2.5" id="co3-wr"/>
+                      </svg>
+                      <span class="c-label">Q0.1<br>RETRACT</span>
+                    </div>
+                    <div class="power-rail-right" id="r3-rail-r"></div>
+                  </div>
+                  <div class="rung-spacer"></div>
+                </div>
+              </div>
+
+              <div style="margin-top:12px;display:flex;gap:8px;flex-wrap:wrap;">
+                <button class="btn btn-plc" onclick="plcRun()" id="plc-run-btn">▶ RUN PLC</button>
+                <button class="btn btn-plc-stop" onclick="plcStop()" id="plc-stop-btn">⏹ STOP</button>
+                <button class="btn btn-extend btn-sm" onclick="forceInput('i0_0')">Force I0.0 ON</button>
+                <button class="btn btn-secondary btn-sm" onclick="resetLadder()">↺ Clear</button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Right Sidebar -->
+        <aside class="sim-sidebar">
+          <div>
+            <h4>I/O Status Monitor</h4>
+            <table class="io-table">
+              <thead><tr><th>Addr</th><th>Tag</th><th>State</th></tr></thead>
+              <tbody>
+                <tr><td>I0.0</td><td>START</td><td><span class="io-led" id="io-i00"></span></td></tr>
+                <tr><td>I0.1</td><td>LS1-EXT</td><td><span class="io-led" id="io-i01"></span></td></tr>
+                <tr><td>I0.2</td><td>E-STOP</td><td><span class="io-led on" id="io-i02"></span></td></tr>
+                <tr><td>I0.3</td><td>LS0-RET</td><td><span class="io-led on" id="io-i03"></span></td></tr>
+                <tr><td>Q0.0</td><td>SOL Y1</td><td><span class="io-led" id="io-q00"></span></td></tr>
+                <tr><td>Q0.1</td><td>RETRACT</td><td><span class="io-led" id="io-q01"></span></td></tr>
+                <tr><td>T1</td><td>TIMER</td><td><span class="io-led" id="io-t1"></span></td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div class="log-panel">
+            <h4>Event Log</h4>
+            <div class="log-entries" id="log-entries"></div>
+          </div>
+          <div style="display: none;">
+            <h4>Valve Symbol</h4>
+            <svg viewBox="0 0 200 90" width="100%" style="background:#070b10;border-radius:6px;border:1px solid rgba(255,255,255,0.06);padding:6px;">
+              <rect x="20" y="20" width="45" height="45" rx="3" fill="none" stroke="#4a6278" stroke-width="1.5"/>
+              <rect x="65" y="20" width="45" height="45" rx="3" fill="none" stroke="#2c3e50" stroke-width="1" stroke-dasharray="4,2"/>
+              <line x1="30" y1="65" x2="30" y2="55" stroke="#27ae60" stroke-width="1.5"/>
+              <polygon points="30,55 27,60 33,60" fill="#27ae60"/>
+              <line x1="50" y1="20" x2="50" y2="30" stroke="#27ae60" stroke-width="1.5"/>
+              <polygon points="50,30 47,25 53,25" fill="#27ae60"/>
+              <line x1="35" y1="20" x2="35" y2="30" stroke="#e74c3c" stroke-width="1.5"/>
+              <line x1="35" y1="28" x2="28" y2="22" stroke="#e74c3c" stroke-width="1.5"/>
+              <line x1="35" y1="28" x2="42" y2="22" stroke="#e74c3c" stroke-width="1.5"/>
+              <rect x="110" y="30" width="30" height="24" rx="2" fill="#2c3e50" stroke="#4a6278" stroke-width="1.5"/>
+              <line x1="116" y1="36" x2="116" y2="48" stroke="#4a6278" stroke-width="1"/>
+              <line x1="122" y1="36" x2="122" y2="48" stroke="#4a6278" stroke-width="1"/>
+              <line x1="128" y1="36" x2="128" y2="48" stroke="#4a6278" stroke-width="1"/>
+              <line x1="134" y1="36" x2="134" y2="48" stroke="#4a6278" stroke-width="1"/>
+              <circle id="val-led" cx="150" cy="42" r="6" fill="#e74c3c"/>
+              <path d="M 65 42 Q 68 38 71 42 Q 74 46 77 42 Q 80 38 83 42 Q 86 46 89 42 Q 92 38 95 42 Q 98 46 101 42 Q 104 38 107 42" stroke="#7f8c8d" stroke-width="1.5" fill="none"/>
+              <text x="42" y="80" font-size="8" fill="#7f8c8d" font-family="Share Tech Mono" text-anchor="middle">3/2 N.C. SOL</text>
+              <text x="140" y="75" font-size="7" fill="#7f8c8d" font-family="Share Tech Mono" text-anchor="middle">SOLENOID</text>
+              <text x="20" y="18" font-size="7" fill="#3498db" font-family="Share Tech Mono">P(1)</text>
+              <text x="50" y="18" font-size="7" fill="#27ae60" font-family="Share Tech Mono">A(2)</text>
+              <text x="28" y="15" font-size="7" fill="#95a5a6" font-family="Share Tech Mono">R(3)</text>
+            </svg>
+          </div>
+        </aside>
+      </div>
+    </div>
+
+    <!-- ── QUIZ PAGE ── -->
+    <div class="page" id="page-quiz">
+      <div class="quiz-page">
+        <div class="quiz-header">
+          <h2>Knowledge Assessment — Pneumatic Actuators</h2>
+          <p>Test your understanding of pneumatic actuators, PLC control, and industrial automation concepts.</p>
+        </div>
+        <div class="quiz-score-bar">
+          <div class="qsb-item"><div class="qsb-val" id="q-answered">0</div><div class="qsb-label">Answered</div></div>
+          <div class="qsb-item"><div class="qsb-val" id="q-correct">0</div><div class="qsb-label">Correct</div></div>
+          <div class="qsb-item"><div class="qsb-val" id="q-score">0%</div><div class="qsb-label">Score</div></div>
+          <div class="qsb-item"><div class="qsb-val">10</div><div class="qsb-label">Total Qs</div></div>
+        </div>
+        <div id="quiz-container"></div>
+        <div class="quiz-actions">
+          <button class="btn btn-auto" onclick="resetQuiz()">↺ Reset Quiz</button>
+          <button class="btn btn-secondary" onclick="showPage('theory')">📚 Back to Theory</button>
+          <button class="btn btn-extend" onclick="showPage('simulation')">🔧 Go to Simulation</button>
+        </div>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════════════
+//  STATE
+// ═══════════════════════════════════════════════════════
+const state = {
+  position: 0, maxStroke: 200,
+  pressure: 6.0, bore: 60,
+  isExtending: false, isRetracting: false,
+  autoMode: false, autoTimer: null, animFrame: null,
+  cycleCount: 0, plcRunning: false,
+  inputs: { i0_0: false, i0_1: false, i0_2: true, i0_3: true },
+  outputs: { q0_0: false, q0_1: false },
+  timerActive: false, timerDone: false, timerStart: 0,
+  module: 'single',
+};
+
+// ═══════════════════════════════════════════════════════
+//  SVG DEFINITIONS PER MODULE
+// ═══════════════════════════════════════════════════════
+function buildSingleActingSVG() {
+  return `<svg id="main-svg" viewBox="0 0 700 170" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:180px;">
+    <defs>
+      <linearGradient id="bodyGrad" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#bdc3c7"/><stop offset="50%" stop-color="#ecf0f1"/><stop offset="100%" stop-color="#95a5a6"/>
+      </linearGradient>
+      <linearGradient id="pistonGrad" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#7f8c8d"/><stop offset="100%" stop-color="#4a6278"/>
+      </linearGradient>
+      <linearGradient id="rodGrad" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#bdc3c7"/><stop offset="50%" stop-color="#ecf0f1"/><stop offset="100%" stop-color="#95a5a6"/>
+      </linearGradient>
+    </defs>
+    <!-- Port labels -->
+    <text x="155" y="18" font-size="10" fill="#95a5a6" font-family="Share Tech Mono" text-anchor="middle">PORT A (P)</text>
+    <text x="575" y="18" font-size="10" fill="#95a5a6" font-family="Share Tech Mono" text-anchor="middle">PORT B (EXH)</text>
+    <!-- Air hoses -->
+    <path id="hose-left" d="M155,25 L155,50" stroke="#e67e22" stroke-width="6" fill="none" stroke-linecap="round"/>
+    <path id="hose-right" d="M575,25 L575,50" stroke="#e67e22" stroke-width="6" fill="none" stroke-linecap="round" opacity="0.3"/>
+    <!-- Cylinder body -->
+    <rect x="100" y="50" width="500" height="58" rx="4" fill="url(#bodyGrad)" stroke="#7f8c8d" stroke-width="1.5"/>
+    <!-- Air chamber left -->
+    <rect id="air-chamber-left" x="121" y="51" width="30" height="56" rx="2" fill="#2980b9" opacity="0.0"/>
+    <!-- Spring -->
+    <g id="spring-group"><path id="spring-path" d="M430,79 Q440,67 450,79 Q460,91 470,79 Q480,67 490,79 Q500,91 510,79 Q520,67 530,79 Q540,91 550,79 Q560,67 570,79" stroke="#7f8c8d" stroke-width="2.5" fill="none"/></g>
+    <!-- Piston group (moved by JS) -->
+    <g id="piston-group" transform="translate(0,0)">
+      <rect id="piston-rect" x="120" y="53" width="22" height="54" rx="2" fill="url(#pistonGrad)" stroke="#4a6278" stroke-width="1"/>
+      <line x1="120" y1="65" x2="142" y2="65" stroke="#2c3e50" stroke-width="2.5"/>
+      <line x1="120" y1="75" x2="142" y2="75" stroke="#2c3e50" stroke-width="2.5"/>
+      <line x1="120" y1="85" x2="142" y2="85" stroke="#2c3e50" stroke-width="2.5"/>
+      <rect id="rod-rect" x="142" y="71" width="270" height="16" rx="3" fill="url(#rodGrad)" stroke="#95a5a6" stroke-width="1"/>
+    </g>
+    <!-- End caps -->
+    <rect x="100" y="48" width="22" height="62" rx="4" fill="#7f8c8d" stroke="#4a6278" stroke-width="1.5"/>
+    <rect x="578" y="48" width="22" height="62" rx="4" fill="#7f8c8d" stroke="#4a6278" stroke-width="1.5"/>
+    <!-- Rod clevis (moved by JS) -->
+    <g id="clevis-group" transform="translate(0,0)">
+      <rect x="412" y="67" width="20" height="24" rx="3" fill="#7f8c8d" stroke="#4a6278" stroke-width="1"/>
+      <circle cx="422" cy="79" r="6" fill="#4a6278" stroke="#2c3e50" stroke-width="1.5"/>
+    </g>
+    <!-- Limit switches -->
+    <rect x="102" y="118" width="28" height="14" rx="3" fill="#1a2530" stroke="#2c3e50" stroke-width="1"/>
+    <circle id="led-ls0" cx="116" cy="125" r="4" fill="#2c3e50"/>
+    <text x="116" y="142" font-size="8" fill="#7f8c8d" font-family="Share Tech Mono" text-anchor="middle">LS0</text>
+    <rect x="570" y="118" width="28" height="14" rx="3" fill="#1a2530" stroke="#2c3e50" stroke-width="1"/>
+    <circle id="led-ls1" cx="584" cy="125" r="4" fill="#2c3e50"/>
+    <text x="584" y="142" font-size="8" fill="#7f8c8d" font-family="Share Tech Mono" text-anchor="middle">LS1</text>
+    <!-- Valve label -->
+    <rect x="270" y="118" width="70" height="20" rx="3" fill="#1a2530" stroke="#2c3e50" stroke-width="1"/>
+    <circle id="solenoid-led" cx="280" cy="128" r="5" fill="#e74c3c"/>
+    <text x="318" y="132" font-size="9" fill="#95a5a6" font-family="Share Tech Mono" text-anchor="middle">3/2 N.C.</text>
+    <text x="305" y="150" font-size="8" fill="#7f8c8d" font-family="Share Tech Mono" text-anchor="middle">SOL Y1</text>
+  </svg>`;
+}
+
+function buildDoubleActingSVG() {
+  return `<svg id="main-svg" viewBox="0 0 700 170" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:180px;">
+    <defs>
+      <linearGradient id="bodyGrad2" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#bdc3c7"/><stop offset="50%" stop-color="#ecf0f1"/><stop offset="100%" stop-color="#95a5a6"/>
+      </linearGradient>
+      <linearGradient id="pistonGrad2" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#7f8c8d"/><stop offset="100%" stop-color="#4a6278"/>
+      </linearGradient>
+      <linearGradient id="rodGrad2" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#bdc3c7"/><stop offset="50%" stop-color="#ecf0f1"/><stop offset="100%" stop-color="#95a5a6"/>
+      </linearGradient>
+    </defs>
+    <text x="155" y="18" font-size="10" fill="#3498db" font-family="Share Tech Mono" text-anchor="middle">PORT A (P1)</text>
+    <text x="555" y="18" font-size="10" fill="#e67e22" font-family="Share Tech Mono" text-anchor="middle">PORT B (P2)</text>
+    <!-- Both hoses visible for DAC -->
+    <path id="hose-left" d="M155,25 L155,50" stroke="#3498db" stroke-width="6" fill="none" stroke-linecap="round"/>
+    <path id="hose-right" d="M555,25 L555,50" stroke="#e67e22" stroke-width="6" fill="none" stroke-linecap="round"/>
+    <!-- Cylinder body -->
+    <rect x="100" y="50" width="500" height="58" rx="4" fill="url(#bodyGrad2)" stroke="#7f8c8d" stroke-width="1.5"/>
+    <!-- Air chambers -->
+    <rect id="air-chamber-left" x="121" y="51" width="30" height="56" rx="2" fill="#2980b9" opacity="0.0"/>
+    <rect id="air-chamber-right" x="540" y="51" width="36" height="56" rx="2" fill="#e67e22" opacity="0.0"/>
+    <!-- Piston group -->
+    <g id="piston-group" transform="translate(0,0)">
+      <rect x="120" y="53" width="22" height="54" rx="2" fill="url(#pistonGrad2)" stroke="#4a6278" stroke-width="1"/>
+      <line x1="120" y1="65" x2="142" y2="65" stroke="#2c3e50" stroke-width="2.5"/>
+      <line x1="120" y1="75" x2="142" y2="75" stroke="#2c3e50" stroke-width="2.5"/>
+      <line x1="120" y1="85" x2="142" y2="85" stroke="#2c3e50" stroke-width="2.5"/>
+      <rect id="rod-rect" x="142" y="71" width="270" height="16" rx="3" fill="url(#rodGrad2)" stroke="#95a5a6" stroke-width="1"/>
+    </g>
+    <!-- End caps -->
+    <rect x="100" y="48" width="22" height="62" rx="4" fill="#7f8c8d" stroke="#4a6278" stroke-width="1.5"/>
+    <rect x="578" y="48" width="22" height="62" rx="4" fill="#7f8c8d" stroke="#4a6278" stroke-width="1.5"/>
+    <!-- Clevis -->
+    <g id="clevis-group" transform="translate(0,0)">
+      <rect x="412" y="67" width="20" height="24" rx="3" fill="#7f8c8d" stroke="#4a6278" stroke-width="1"/>
+      <circle cx="422" cy="79" r="6" fill="#4a6278" stroke="#2c3e50" stroke-width="1.5"/>
+    </g>
+    <!-- Limit switches -->
+    <rect x="102" y="118" width="28" height="14" rx="3" fill="#1a2530" stroke="#2c3e50" stroke-width="1"/>
+    <circle id="led-ls0" cx="116" cy="125" r="4" fill="#2c3e50"/>
+    <text x="116" y="142" font-size="8" fill="#7f8c8d" font-family="Share Tech Mono" text-anchor="middle">LS0</text>
+    <rect x="570" y="118" width="28" height="14" rx="3" fill="#1a2530" stroke="#2c3e50" stroke-width="1"/>
+    <circle id="led-ls1" cx="584" cy="125" r="4" fill="#2c3e50"/>
+    <text x="584" y="142" font-size="8" fill="#7f8c8d" font-family="Share Tech Mono" text-anchor="middle">LS1</text>
+    <!-- Valve label -->
+    <rect x="260" y="118" width="90" height="20" rx="3" fill="#1a2530" stroke="#2c3e50" stroke-width="1"/>
+    <circle id="solenoid-led" cx="273" cy="128" r="5" fill="#e74c3c"/>
+    <text x="318" y="132" font-size="9" fill="#95a5a6" font-family="Share Tech Mono" text-anchor="middle">5/2 DBL SOL</text>
+    <text x="305" y="150" font-size="8" fill="#7f8c8d" font-family="Share Tech Mono" text-anchor="middle">SOL Y1 / Y2</text>
+  </svg>`;
+}
+
+function buildRotarySVG() {
+  return `<svg id="main-svg" viewBox="0 0 700 170" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:180px;">
+    <text x="350" y="20" font-size="12" fill="#95a5a6" font-family="Share Tech Mono" text-anchor="middle">ROTARY ACTUATOR — Rack &amp; Pinion</text>
+    <!-- Housing -->
+    <rect x="240" y="40" width="220" height="80" rx="8" fill="#2c3e50" stroke="#4a6278" stroke-width="2"/>
+    <rect x="250" y="50" width="200" height="60" rx="4" fill="#1a2530" stroke="#3a4a5c" stroke-width="1"/>
+    <!-- Rack (moves horizontally) -->
+    <g id="piston-group" transform="translate(0,0)">
+      <rect x="255" y="70" width="140" height="18" rx="3" fill="#7f8c8d" stroke="#4a6278" stroke-width="1"/>
+      <!-- Rack teeth -->
+      <rect x="265" y="68" width="6" height="5" rx="1" fill="#4a6278"/>
+      <rect x="277" y="68" width="6" height="5" rx="1" fill="#4a6278"/>
+      <rect x="289" y="68" width="6" height="5" rx="1" fill="#4a6278"/>
+      <rect x="301" y="68" width="6" height="5" rx="1" fill="#4a6278"/>
+      <rect x="313" y="68" width="6" height="5" rx="1" fill="#4a6278"/>
+      <rect x="325" y="68" width="6" height="5" rx="1" fill="#4a6278"/>
+      <rect x="337" y="68" width="6" height="5" rx="1" fill="#4a6278"/>
+      <rect x="349" y="68" width="6" height="5" rx="1" fill="#4a6278"/>
+      <rect x="361" y="68" width="6" height="5" rx="1" fill="#4a6278"/>
+      <rect x="373" y="68" width="6" height="5" rx="1" fill="#4a6278"/>
+    </g>
+    <!-- Pinion gear -->
+    <circle cx="350" cy="79" r="18" fill="#3a4a5c" stroke="#4a6278" stroke-width="2"/>
+    <circle cx="350" cy="79" r="10" fill="#1a2530" stroke="#3a4a5c" stroke-width="1.5"/>
+    <!-- Output shaft -->
+    <g id="clevis-group" transform="translate(0,0)">
+      <circle cx="350" cy="79" r="6" fill="#brass" stroke="#d4a017" stroke-width="2.5" id="output-shaft"/>
+      <!-- Rotation indicator needle -->
+      <line id="shaft-needle" x1="350" y1="79" x2="350" y2="62" stroke="#d4a017" stroke-width="3" stroke-linecap="round" transform="rotate(0,350,79)"/>
+    </g>
+    <!-- Air ports -->
+    <rect x="200" y="70" width="42" height="18" rx="3" fill="#1a2530" stroke="#3498db" stroke-width="1.5"/>
+    <text x="221" y="83" font-size="8" fill="#3498db" font-family="Share Tech Mono" text-anchor="middle">PORT A</text>
+    <rect x="458" y="70" width="42" height="18" rx="3" fill="#1a2530" stroke="#e67e22" stroke-width="1.5"/>
+    <text x="479" y="83" font-size="8" fill="#e67e22" font-family="Share Tech Mono" text-anchor="middle">PORT B</text>
+    <!-- Angle display -->
+    <rect x="580" y="50" width="80" height="36" rx="5" fill="#0f1318" stroke="#d4a017" stroke-width="1.5"/>
+    <text x="620" y="63" font-size="9" fill="#d4a017" font-family="Share Tech Mono" text-anchor="middle">ANGLE</text>
+    <text id="angle-display" x="620" y="80" font-size="16" fill="#f39c12" font-family="Share Tech Mono" text-anchor="middle">0°</text>
+    <!-- Limit switches -->
+    <rect x="102" y="118" width="28" height="14" rx="3" fill="#1a2530" stroke="#2c3e50" stroke-width="1"/>
+    <circle id="led-ls0" cx="116" cy="125" r="4" fill="#27ae60"/>
+    <text x="116" y="142" font-size="8" fill="#7f8c8d" font-family="Share Tech Mono" text-anchor="middle">0°</text>
+    <rect x="570" y="118" width="28" height="14" rx="3" fill="#1a2530" stroke="#2c3e50" stroke-width="1"/>
+    <circle id="led-ls1" cx="584" cy="125" r="4" fill="#2c3e50"/>
+    <text x="584" y="142" font-size="8" fill="#7f8c8d" font-family="Share Tech Mono" text-anchor="middle">90°</text>
+    <circle id="solenoid-led" cx="350" cy="150" r="5" fill="#e74c3c" opacity="0"/>
+  </svg>`;
+}
+
+function buildRodlessSVG() {
+  return `<svg id="main-svg" viewBox="0 0 700 170" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:180px;">
+    <text x="350" y="18" font-size="11" fill="#95a5a6" font-family="Share Tech Mono" text-anchor="middle">RODLESS CYLINDER — Magnetic Coupling</text>
+    <!-- Cylinder tube -->
+    <rect x="80" y="65" width="540" height="30" rx="6" fill="#2c3e50" stroke="#4a6278" stroke-width="2"/>
+    <rect x="85" y="70" width="530" height="20" rx="3" fill="#1a2530"/>
+    <!-- End caps -->
+    <rect x="70" y="60" width="18" height="40" rx="4" fill="#7f8c8d" stroke="#4a6278" stroke-width="1.5"/>
+    <rect x="612" y="60" width="18" height="40" rx="4" fill="#7f8c8d" stroke="#4a6278" stroke-width="1.5"/>
+    <!-- Internal piston (shown faintly inside tube) -->
+    <g id="piston-group" transform="translate(0,0)">
+      <rect x="86" y="71" width="18" height="18" rx="2" fill="#4a6278" stroke="#3498db" stroke-width="1" opacity="0.7"/>
+    </g>
+    <!-- External carriage (moves with piston via magnet) -->
+    <g id="clevis-group" transform="translate(0,0)">
+      <rect x="78" y="45" width="40" height="20" rx="4" fill="#d4a017" stroke="#b8860b" stroke-width="2"/>
+      <text x="98" y="59" font-size="9" fill="#1a2530" font-family="Share Tech Mono" text-anchor="middle" font-weight="bold">LOAD</text>
+      <!-- Magnetic coupling indicator -->
+      <line x1="98" y1="65" x2="98" y2="71" stroke="#3498db" stroke-width="2" stroke-dasharray="3,2"/>
+    </g>
+    <!-- Track rail -->
+    <rect x="80" y="92" width="540" height="6" rx="2" fill="#3a4a5c" stroke="#4a6278" stroke-width="1"/>
+    <!-- Port labels -->
+    <text x="88" y="115" font-size="9" fill="#3498db" font-family="Share Tech Mono">PORT A</text>
+    <text x="570" y="115" font-size="9" fill="#e67e22" font-family="Share Tech Mono">PORT B</text>
+    <!-- Position display -->
+    <rect x="580" y="40" width="90" height="36" rx="5" fill="#0f1318" stroke="#d4a017" stroke-width="1.5"/>
+    <text x="625" y="53" font-size="9" fill="#d4a017" font-family="Share Tech Mono" text-anchor="middle">POSITION</text>
+    <text id="pos-display" x="625" y="70" font-size="13" fill="#f39c12" font-family="Share Tech Mono" text-anchor="middle">0mm</text>
+    <!-- Limit switches -->
+    <rect x="102" y="130" width="28" height="14" rx="3" fill="#1a2530" stroke="#2c3e50" stroke-width="1"/>
+    <circle id="led-ls0" cx="116" cy="137" r="4" fill="#27ae60"/>
+    <text x="116" y="154" font-size="8" fill="#7f8c8d" font-family="Share Tech Mono" text-anchor="middle">LS0</text>
+    <rect x="570" y="130" width="28" height="14" rx="3" fill="#1a2530" stroke="#2c3e50" stroke-width="1"/>
+    <circle id="led-ls1" cx="584" cy="137" r="4" fill="#2c3e50"/>
+    <text x="584" y="154" font-size="8" fill="#7f8c8d" font-family="Share Tech Mono" text-anchor="middle">LS1</text>
+    <circle id="solenoid-led" cx="350" cy="160" r="5" fill="#e74c3c" opacity="0"/>
+  </svg>`;
+}
+
+function buildValveSVG(type) {
+  const is52 = type === 'valve52';
+  return `<svg id="main-svg" viewBox="0 0 700 170" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:180px;">
+    <text x="350" y="18" font-size="12" fill="#95a5a6" font-family="Share Tech Mono" text-anchor="middle">${is52 ? '5/2 WAY DOUBLE SOLENOID VALVE' : '3/2 WAY SINGLE SOLENOID VALVE (N.C.)'}</text>
+    <!-- Valve body -->
+    <rect x="150" y="40" width="180" height="70" rx="5" fill="#2c3e50" stroke="#4a6278" stroke-width="2"/>
+    ${is52 ? `<rect x="330" y="40" width="180" height="70" rx="5" fill="#1e2a35" stroke="#3a4a5c" stroke-width="1.5" stroke-dasharray="6,3"/>` : ''}
+    <!-- Position 1 arrows -->
+    <line x1="180" y1="110" x2="180" y2="90" stroke="#27ae60" stroke-width="2"/>
+    <polygon points="180,90 176,98 184,98" fill="#27ae60"/>
+    <line x1="250" y1="40" x2="250" y2="60" stroke="#27ae60" stroke-width="2"/>
+    <polygon points="250,60 246,52 254,52" fill="#27ae60"/>
+    <line x1="215" y1="40" x2="215" y2="55" stroke="#e74c3c" stroke-width="2"/>
+    <line x1="215" y1="53" x2="207" y2="45" stroke="#e74c3c" stroke-width="2"/>
+    <line x1="215" y1="53" x2="223" y2="45" stroke="#e74c3c" stroke-width="2"/>
+    <!-- Solenoid box -->
+    <rect x="370" y="55" width="50" height="40" rx="3" fill="#1a2530" stroke="#4a6278" stroke-width="1.5"/>
+    <line x1="381" y1="63" x2="381" y2="87" stroke="#4a6278" stroke-width="1.2"/>
+    <line x1="390" y1="63" x2="390" y2="87" stroke="#4a6278" stroke-width="1.2"/>
+    <line x1="399" y1="63" x2="399" y2="87" stroke="#4a6278" stroke-width="1.2"/>
+    <line x1="408" y1="63" x2="408" y2="87" stroke="#4a6278" stroke-width="1.2"/>
+    <circle id="solenoid-led" cx="438" cy="75" r="8" fill="#e74c3c"/>
+    <!-- Spring (for 3/2 and 5/2 return) -->
+    <path d="M 330 75 Q 335 68 340 75 Q 345 82 350 75 Q 355 68 360 75 Q 365 82 370 75" stroke="#7f8c8d" stroke-width="2" fill="none"/>
+    <!-- Port labels -->
+    <text x="180" y="125" font-size="9" fill="#3498db" font-family="Share Tech Mono" text-anchor="middle">P(1)</text>
+    <text x="250" y="35" font-size="9" fill="#27ae60" font-family="Share Tech Mono" text-anchor="middle">A(2)</text>
+    <text x="215" y="35" font-size="9" fill="#e74c3c" font-family="Share Tech Mono" text-anchor="middle">R(3)</text>
+    ${is52 ? `<text x="480" y="35" font-size="9" fill="#e67e22" font-family="Share Tech Mono" text-anchor="middle">B(4)</text>
+    <text x="540" y="35" font-size="9" fill="#95a5a6" font-family="Share Tech Mono" text-anchor="middle">S(5)</text>` : ''}
+    <!-- LEDs -->
+    <rect x="102" y="118" width="28" height="14" rx="3" fill="#1a2530" stroke="#2c3e50" stroke-width="1"/>
+    <circle id="led-ls0" cx="116" cy="125" r="4" fill="#2c3e50"/>
+    <rect x="570" y="118" width="28" height="14" rx="3" fill="#1a2530" stroke="#2c3e50" stroke-width="1"/>
+    <circle id="led-ls1" cx="584" cy="125" r="4" fill="#2c3e50"/>
+    <text x="440" y="130" font-size="9" fill="#95a5a6" font-family="Share Tech Mono" text-anchor="middle">Click EXTEND to energize</text>
+  </svg>`;
+}
+
+function buildLadderOnlySVG() {
+  return `<svg id="main-svg" viewBox="0 0 700 170" xmlns="http://www.w3.org/2000/svg" style="width:100%;height:180px;">
+    <text x="350" y="25" font-size="13" fill="#d4a017" font-family="Share Tech Mono" text-anchor="middle">IEC 61131-3 LADDER LOGIC EDITOR</text>
+    <rect x="50" y="45" width="600" height="100" rx="6" fill="#0a0d12" stroke="#3a4a5c" stroke-width="1.5"/>
+    <text x="350" y="80" font-size="11" fill="#4a6278" font-family="Share Tech Mono" text-anchor="middle">Use the Ladder Diagram panel below</text>
+    <text x="350" y="100" font-size="11" fill="#4a6278" font-family="Share Tech Mono" text-anchor="middle">to interact with the PLC program.</text>
+    <text x="350" y="125" font-size="10" fill="#2c3e50" font-family="Share Tech Mono" text-anchor="middle">Press RUN PLC → Force I0.0 ON → Watch rungs power up</text>
+    <circle id="solenoid-led" cx="350" cy="160" r="5" fill="#e74c3c" opacity="0"/>
+    <circle id="led-ls0" cx="100" cy="160" r="4" fill="#2c3e50" opacity="0"/>
+    <circle id="led-ls1" cx="600" cy="160" r="4" fill="#2c3e50" opacity="0"/>
+  </svg>`;
+}
+
+// ═══════════════════════════════════════════════════════
+//  MODULE RENDER
+// ═══════════════════════════════════════════════════════
+const moduleMeta = {
+  single:  { title: '⚙️ Single-Acting Cylinder (SAC) — Spring Return', badge: '3/2-WAY VALVE' },
+  double:  { title: '⚙️ Double-Acting Cylinder (DAC) — Dual Port',     badge: '5/2-WAY VALVE' },
+  rotary:  { title: '🔄 Rotary Actuator — Rack & Pinion 90°',          badge: 'ROTARY ACT.' },
+  rodless: { title: '↔️ Rodless Cylinder — Magnetic Coupling',         badge: 'RODLESS CYL.' },
+  valve32: { title: '🔶 3/2 Way Solenoid Valve — N.C. Spring Return',  badge: 'VALVE 3/2' },
+  valve52: { title: '🔶 5/2 Way Solenoid Valve — Double Solenoid',     badge: 'VALVE 5/2' },
+  ladder:  { title: '🪜 Ladder Logic Editor — PLC Program',            badge: 'LADDER LD' },
+};
+
+function renderModuleSVG(mod) {
+  const canvas = document.getElementById('actuator-canvas');
+  if (!canvas) return;
+  switch (mod) {
+    case 'single':  canvas.innerHTML = buildSingleActingSVG(); break;
+    case 'double':  canvas.innerHTML = buildDoubleActingSVG(); break;
+    case 'rotary':  canvas.innerHTML = buildRotarySVG(); break;
+    case 'rodless': canvas.innerHTML = buildRodlessSVG(); break;
+    case 'valve32': canvas.innerHTML = buildValveSVG('valve32'); break;
+    case 'valve52': canvas.innerHTML = buildValveSVG('valve52'); break;
+    case 'ladder':  canvas.innerHTML = buildLadderOnlySVG(); break;
+  }
+}
+
+function selectModule(mod, cardEl) {
+  // Stop any running simulation
+  if (state.isExtending || state.isRetracting || state.autoMode) resetSim();
+
+  state.module = mod;
+  state.position = 0;
+
+  // Update sidebar active state
+  document.querySelectorAll('.actuator-card').forEach(c => c.classList.remove('active'));
+  if (cardEl) cardEl.classList.add('active');
+
+  // Update header
+  const meta = moduleMeta[mod];
+  document.getElementById('module-title').textContent = meta.title;
+  document.getElementById('module-badge').textContent = meta.badge;
+
+  // Re-render SVG
+  renderModuleSVG(mod);
+
+  // Reset controls
+  document.getElementById('btn-extend').disabled = false;
+  document.getElementById('btn-retract').disabled = true;
+
+  addLog(`Module loaded: ${meta.title}`, 'info');
+}
+
+// ═══════════════════════════════════════════════════════
+//  NAVIGATION — controls sidebar visibility
+// ═══════════════════════════════════════════════════════
+function showPage(id) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('page-' + id).classList.add('active');
+  const tabs = document.querySelectorAll('.nav-tab');
+  const map = { theory: 0, simulation: 1, quiz: 2 };
+  tabs[map[id]].classList.add('active');
+
+  // Show sidebar ONLY on simulation page
+  const sidebar = document.getElementById('main-sidebar');
+  if (id === 'simulation') {
+    sidebar.classList.add('visible');
+  } else {
+    sidebar.classList.remove('visible');
+  }
+}
+
+// ═══════════════════════════════════════════════════════
+//  CYLINDER VISUAL UPDATE
+// ═══════════════════════════════════════════════════════
+function updateCylinderVisual(pos) {
+  const pct = pos / state.maxStroke;
+  const travel = pct * 200; // max pixel travel
+
+  // Piston group
+  const pg = document.getElementById('piston-group');
+  if (pg) pg.setAttribute('transform', `translate(${travel},0)`);
+
+  // Clevis group
+  const cg = document.getElementById('clevis-group');
+  if (cg) cg.setAttribute('transform', `translate(${travel},0)`);
+
+  // Air chamber
+  const al = document.getElementById('air-chamber-left');
+  if (al) al.setAttribute('opacity', (pct * 0.55 + 0.05).toString());
+
+  const ar = document.getElementById('air-chamber-right');
+  if (ar && state.module === 'double') {
+    ar.setAttribute('opacity', ((1 - pct) * 0.45 + 0.05).toString());
+  }
+
+  // Spring (SAC only)
+  if (state.module === 'single') {
+    const sp = document.getElementById('spring-path');
+    if (sp) {
+      const sx = 430 + travel;
+      sp.setAttribute('d', generateSpring(sx, 570, 79, 8));
+    }
+  }
+
+  // Rotary — rotate needle
+  if (state.module === 'rotary') {
+    const needle = document.getElementById('shaft-needle');
+    if (needle) needle.setAttribute('transform', `rotate(${pct * 90}, 350, 79)`);
+    const ad = document.getElementById('angle-display');
+    if (ad) ad.textContent = Math.round(pct * 90) + '°';
+  }
+
+  // Rodless — update position display
+  if (state.module === 'rodless') {
+    const pd = document.getElementById('pos-display');
+    if (pd) pd.textContent = Math.round(pos) + 'mm';
+  }
+
+  // Limit switch LEDs
+  const ls0 = document.getElementById('led-ls0');
+  const ls1 = document.getElementById('led-ls1');
+  if (ls0) ls0.setAttribute('fill', pos <= 2 ? '#27ae60' : '#2c3e50');
+  if (ls1) ls1.setAttribute('fill', pos >= state.maxStroke - 2 ? '#27ae60' : '#2c3e50');
+
+  // Solenoid LED
+  const sl = document.getElementById('solenoid-led');
+  if (sl) sl.setAttribute('fill', state.outputs.q0_0 ? '#27ae60' : '#e74c3c');
+  const vl = document.getElementById('val-led');
+  if (vl) vl.setAttribute('fill', state.outputs.q0_0 ? '#27ae60' : '#e74c3c');
+
+  // Gauges
+  document.getElementById('g-position').textContent = Math.round(pos);
+  document.getElementById('gb-position').style.width = pct * 100 + '%';
+
+  // I/O
+  state.inputs.i0_3 = pos <= 2;
+  state.inputs.i0_1 = pos >= state.maxStroke - 2;
+  updateIOMonitor();
+}
+
+function generateSpring(x1, x2, y, amp) {
+  const segs = 10;
+  const dx = (x2 - x1) / segs;
+  let d = `M${x1},${y}`;
+  for (let i = 0; i < segs; i++) {
+    const cx = x1 + dx * i + dx * 0.5;
+    const cy = y + (i % 2 === 0 ? -amp : amp);
+    d += ` Q${cx},${cy} ${x1 + dx * (i + 1)},${y}`;
+  }
+  return d;
+}
+
+function getSpeed() { return parseInt(document.getElementById('speed-slider').value) * 14; }
+
+function animateTo(target, onDone) {
+  if (state.animFrame) cancelAnimationFrame(state.animFrame);
+  function step() {
+    const diff = target - state.position;
+    if (Math.abs(diff) < 1.5) {
+      state.position = target;
+      updateCylinderVisual(state.position);
+      if (onDone) onDone();
+      return;
+    }
+    state.position += Math.sign(diff) * Math.min(Math.abs(diff), getSpeed() * 0.016);
+    updateCylinderVisual(state.position);
+    state.animFrame = requestAnimationFrame(step);
+  }
+  state.animFrame = requestAnimationFrame(step);
+}
+
+// ═══════════════════════════════════════════════════════
+//  CYLINDER ACTIONS
+// ═══════════════════════════════════════════════════════
+function extendCylinder() {
+  if (state.isExtending) return;
+  state.isExtending = true; state.isRetracting = false;
+  state.outputs.q0_0 = true; state.outputs.q0_1 = false;
+  document.getElementById('btn-extend').disabled = true;
+  document.getElementById('btn-retract').disabled = false;
+  updateLadderPower();
+  addLog('SOL Y1 energized — cylinder extending', 'success');
+  animateTo(state.maxStroke, () => {
+    state.isExtending = false;
+    addLog('LS1 triggered — fully extended', 'info');
+    if (state.plcRunning) {
+      state.timerActive = true;
+      state.timerStart = Date.now();
+      document.getElementById('io-t1').classList.add('amber');
+      setTimeout(() => {
+        state.timerActive = false;
+        state.timerDone = true;
+        document.getElementById('io-t1').classList.remove('amber');
+        document.getElementById('io-t1').classList.add('on');
+        updateLadderPower();
+        addLog('T1.DN — timer done, triggering retract', 'warn');
+        if (state.autoMode) setTimeout(() => retractCylinder(), 200);
+      }, 1000);
+    }
+  });
+}
+
+function retractCylinder() {
+  if (state.isRetracting) return;
+  state.isRetracting = true; state.isExtending = false;
+  state.outputs.q0_0 = false; state.outputs.q0_1 = true;
+  document.getElementById('btn-retract').disabled = true;
+  document.getElementById('btn-extend').disabled = false;
+  updateLadderPower();
+  addLog('SOL Y1 de-energized — spring/air retracting', 'warn');
+  animateTo(0, () => {
+    state.isRetracting = false;
+    state.outputs.q0_1 = false;
+    state.timerDone = false;
+    state.cycleCount++;
+    document.getElementById('g-cycles').textContent = state.cycleCount;
+    document.getElementById('gb-cycles').style.width = Math.min(state.cycleCount * 10, 100) + '%';
+    document.getElementById('io-t1').classList.remove('on','amber');
+    updateLadderPower();
+    addLog(`LS0 triggered — retracted. Cycle #${state.cycleCount} complete`, 'success');
+    if (state.autoMode) state.autoTimer = setTimeout(() => extendCylinder(), 800);
+  });
+}
+
+function toggleAuto() {
+  state.autoMode = !state.autoMode;
+  const btn = document.getElementById('btn-auto');
+  if (state.autoMode) {
+    btn.textContent = '⏸ Stop Auto';
+    btn.style.background = 'linear-gradient(135deg,#e74c3c,#c0392b)';
+    addLog('Auto cycle mode started', 'info');
+    if (!state.isExtending && !state.isRetracting) extendCylinder();
+  } else {
+    btn.textContent = '⟳ Auto Cycle';
+    btn.style.background = '';
+    if (state.autoTimer) clearTimeout(state.autoTimer);
+    addLog('Auto cycle mode stopped', 'warn');
+  }
+}
+
+function resetSim() {
+  state.isExtending = state.isRetracting = state.autoMode = false;
+  state.outputs.q0_0 = state.outputs.q0_1 = false;
+  state.timerActive = state.timerDone = false;
+  if (state.animFrame) cancelAnimationFrame(state.animFrame);
+  if (state.autoTimer) clearTimeout(state.autoTimer);
+  state.position = 0;
+  renderModuleSVG(state.module);
+  updateCylinderVisual(0);
+  document.getElementById('btn-extend').disabled = false;
+  document.getElementById('btn-retract').disabled = true;
+  document.getElementById('btn-auto').textContent = '⟳ Auto Cycle';
+  document.getElementById('btn-auto').style.background = '';
+  resetLadder();
+  addLog('Simulation reset', 'warn');
+}
+
+// ═══════════════════════════════════════════════════════
+//  PRESSURE
+// ═══════════════════════════════════════════════════════
+function updatePressure(val) {
+  state.pressure = parseFloat(val);
+  document.getElementById('pressure-val').textContent = parseFloat(val).toFixed(1) + ' bar';
+  document.getElementById('g-pressure').textContent = parseFloat(val).toFixed(1);
+  document.getElementById('gb-pressure').style.width = (val / 10 * 100) + '%';
+  const area = Math.PI * Math.pow(state.bore / 1000 / 2, 2);
+  const force = Math.round(state.pressure * 1e5 * area);
+  document.getElementById('g-force').textContent = force;
+  document.getElementById('gb-force').style.width = Math.min(force / 3000 * 100, 100) + '%';
+}
+
+// ═══════════════════════════════════════════════════════
+//  I/O MONITOR
+// ═══════════════════════════════════════════════════════
+function updateIOMonitor() {
+  [
+    ['io-i00', state.inputs.i0_0],
+    ['io-i01', state.inputs.i0_1],
+    ['io-i02', state.inputs.i0_2],
+    ['io-i03', state.inputs.i0_3],
+    ['io-q00', state.outputs.q0_0],
+    ['io-q01', state.outputs.q0_1],
+  ].forEach(([id, val]) => {
+    const el = document.getElementById(id);
+    if (el) el.classList.toggle('on', !!val);
+  });
+}
+
+// ═══════════════════════════════════════════════════════
+//  LADDER LOGIC
+// ═══════════════════════════════════════════════════════
+function setContactColor(ids, powered) {
+  const c = powered ? '#27ae60' : '#3a4a5c';
+  ids.forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.setAttribute('stroke', c);
+  });
+}
+
+function setCoilColor(wlId, cId, wrId, tId, powered) {
+  const c = powered ? '#27ae60' : '#3a4a5c';
+  [wlId, wrId].forEach(id => {
+    const el = document.getElementById(id);
+    if (el) el.setAttribute('stroke', c);
+  });
+  const cEl = document.getElementById(cId);
+  if (cEl) {
+    cEl.setAttribute('stroke', c);
+    cEl.setAttribute('fill', powered ? 'rgba(39,174,96,0.15)' : 'none');
+  }
+  if (tId) {
+    const tEl = document.getElementById(tId);
+    if (tEl) tEl.setAttribute('fill', powered ? '#27ae60' : '#3a4a5c');
+  }
+}
+
+function setWire(id, powered) {
+  const el = document.getElementById(id);
+  if (el) el.classList.toggle('powered', !!powered);
+}
+
+function setRail(id, powered) {
+  const el = document.getElementById(id);
+  if (el) el.classList.toggle('powered', !!powered);
+}
+
+function updateLadderPower() {
+  // Rung 1: I0.0(NO) AND I0.2(NC — passes when TRUE) → Q0.0
+  const r1 = state.inputs.i0_0 && state.inputs.i0_2;
+  setRail('r1-rail-l', true); // left rail always hot
+  setWire('r1-w1', state.inputs.i0_0);
+  setContactColor(['lc1-wl','lc1-l','lc1-r','lc1-wr'], state.inputs.i0_0);
+  setWire('r1-w2', r1);
+  setContactColor(['lc2-wl','lc2-l','lc2-r','lc2-wr','lc2-nc'], r1 ? true : state.inputs.i0_0);
+  setWire('r1-w3', r1);
+  setCoilColor('co1-wl','co1-c','co1-wr', null, r1);
+  setRail('r1-rail-r', r1);
+  if (r1) state.outputs.q0_0 = true;
+
+  // Rung 2: I0.1(NO) → T1
+  const r2 = state.inputs.i0_1;
+  setRail('r2-rail-l', true);
+  setWire('r2-w1', r2);
+  setContactColor(['lc3-wl','lc3-l','lc3-r','lc3-wr'], r2);
+  setWire('r2-w2', r2);
+  setCoilColor('co2-wl','co2-c','co2-wr','co2-t', r2);
+  setRail('r2-rail-r', r2);
+
+  // Rung 3: T1.DN → Q0.1
+  const r3 = state.timerDone;
+  setRail('r3-rail-l', true);
+  setWire('r3-w1', r3);
+  setContactColor(['lc4-wl','lc4-l','lc4-r','lc4-wr'], r3);
+  setWire('r3-w2', r3);
+  setCoilColor('co3-wl','co3-c','co3-wr', null, r3);
+  setRail('r3-rail-r', r3);
+  if (r3) state.outputs.q0_1 = true;
+
+  updateIOMonitor();
+}
+
+function toggleInput(addr) {
+  state.inputs[addr] = !state.inputs[addr];
+  updateLadderPower();
+  addLog(`Input ${addr} toggled → ${state.inputs[addr] ? 'ON' : 'OFF'}`, 'info');
+}
+
+function forceInput(addr) {
+  state.inputs[addr] = true;
+  updateLadderPower();
+  addLog(`Force: ${addr} = ON`, 'warn');
+  if (state.plcRunning && state.inputs.i0_0 && state.inputs.i0_2) {
+    extendCylinder();
+  }
+}
+
+function plcRun() {
+  state.plcRunning = true;
+  document.getElementById('plc-mode').textContent = 'RUN';
+  document.getElementById('plc-mode').style.color = '#27ae60';
+  addLog('PLC set to RUN mode', 'success');
+}
+
+function plcStop() {
+  state.plcRunning = false;
+  document.getElementById('plc-mode').textContent = 'STOP';
+  document.getElementById('plc-mode').style.color = '#e74c3c';
+  addLog('PLC set to STOP mode', 'error');
+}
+
+function resetLadder() {
+  Object.keys(state.inputs).forEach(k => { if (k !== 'i0_2' && k !== 'i0_3') state.inputs[k] = false; });
+  state.outputs.q0_0 = state.outputs.q0_1 = false;
+  state.timerDone = state.timerActive = false;
+  // Reset all visual elements
+  ['r1-w1','r1-w2','r1-w3','r2-w1','r2-w2','r3-w1','r3-w2'].forEach(id => setWire(id, false));
+  ['r1-rail-l','r1-rail-r','r2-rail-l','r2-rail-r','r3-rail-l','r3-rail-r'].forEach(id => setRail(id, false));
+  setContactColor(['lc1-wl','lc1-l','lc1-r','lc1-wr'], false);
+  setContactColor(['lc2-wl','lc2-l','lc2-r','lc2-wr','lc2-nc'], false);
+  setContactColor(['lc3-wl','lc3-l','lc3-r','lc3-wr'], false);
+  setContactColor(['lc4-wl','lc4-l','lc4-r','lc4-wr'], false);
+  setCoilColor('co1-wl','co1-c','co1-wr', null, false);
+  setCoilColor('co2-wl','co2-c','co2-wr','co2-t', false);
+  setCoilColor('co3-wl','co3-c','co3-wr', null, false);
+  updateIOMonitor();
+  // Left rails always have power
+  setRail('r1-rail-l', true);
+  setRail('r2-rail-l', true);
+  setRail('r3-rail-l', true);
+}
+
+// ═══════════════════════════════════════════════════════
+//  EVENT LOG
+// ═══════════════════════════════════════════════════════
+function addLog(msg, type = '') {
+  const container = document.getElementById('log-entries');
+  if (!container) return;
+  const now = new Date();
+  const time = now.toTimeString().substr(0, 8);
+  const entry = document.createElement('div');
+  entry.className = `log-entry ${type}`;
+  entry.innerHTML = `<span class="le-time">${time}</span><span class="le-msg">${msg}</span>`;
+  container.insertBefore(entry, container.firstChild);
+  if (container.children.length > 50) container.removeChild(container.lastChild);
+}
+
+// ═══════════════════════════════════════════════════════
+//  QUIZ
+// ═══════════════════════════════════════════════════════
+const questions = [
+  { q:"What type of valve is used to control a Single-Acting Cylinder (SAC)?", opts:["5/2 way solenoid valve","3/2 way solenoid valve","4/3 way solenoid valve","2/2 way solenoid valve"], ans:1, exp:"A 3/2 way valve has 3 ports (P, A, R) and 2 positions. It directs compressed air to the cylinder and exhausts it through one port — perfect for a SAC which only needs airflow on one side." },
+  { q:"What does 'double-acting' mean in a pneumatic cylinder?", opts:["The cylinder has twice the stroke length","Air pressure acts on both sides of the piston alternately","The cylinder uses two springs for return","It cycles twice per second automatically"], ans:1, exp:"A double-acting cylinder (DAC) has two ports. Compressed air enters one side to extend and the other side to retract, providing controlled force in both directions." },
+  { q:"In the formula F = P × A, what does 'A' represent?", opts:["Air flow rate in liters/min","Piston bore area in m²","Actuator acceleration in m/s²","Atmospheric pressure constant"], ans:1, exp:"A is the effective piston area (π × d²/4 where d is the bore diameter). The larger the bore, the greater the force produced at the same pressure." },
+  { q:"What is the purpose of a Flow Control Valve in a pneumatic circuit?", opts:["Increase the air pressure","Control the speed of cylinder movement","Switch between extend and retract","Filter moisture from the air supply"], ans:1, exp:"A flow control valve restricts air flow rate in one direction, controlling how fast the piston moves without changing system pressure." },
+  { q:"Which IEC standard defines PLC programming languages including Ladder Logic?", opts:["IEC 61511","ISO 15552","IEC 61131-3","ISO 5599"], ans:2, exp:"IEC 61131-3 is the international standard for PLC programming. It defines five languages: Ladder Diagram (LD), Structured Text (ST), Function Block Diagram (FBD), Instruction List (IL), and Sequential Function Chart (SFC)." },
+  { q:"A 'NO' (Normally Open) contact in ladder logic will...", opts:["Pass power when its bit is FALSE (0)","Pass power when its bit is TRUE (1)","Always block power flow","Invert the output coil state"], ans:1, exp:"A Normally Open (NO) contact closes (passes power) when its associated bit is 1 (TRUE/ON). When the bit is 0, it is open and blocks power flow in the rung." },
+  { q:"What does LS1 (Limit Switch 1) typically detect on a pneumatic cylinder?", opts:["Mid-stroke position","Fully retracted (home) position","Fully extended position","Maximum pressure reached"], ans:2, exp:"LS1 is mounted at the rod end and detects when the piston reaches the fully extended position. LS0 detects the fully retracted position." },
+  { q:"What is the typical operating pressure range for industrial pneumatic systems?", opts:["0.5 – 2 bar","4 – 8 bar","10 – 20 bar","50 – 100 bar"], ans:1, exp:"Industrial pneumatic systems typically operate at 4–8 bar (60–120 PSI). Below 4 bar, force output is insufficient. Above 8 bar, energy consumption increases while components wear faster." },
+  { q:"In a rodless cylinder, how is motion transferred from piston to the external carriage?", opts:["Through a conventional rod sealed through the end cap","Via a magnetic coupling or band seal through the cylinder wall","Using a rack and pinion gear arrangement","Through a flexible cable and pulley system"], ans:1, exp:"A rodless cylinder uses either a magnetic coupling or a sealed band slot. This eliminates the rod, allowing long strokes in compact spaces." },
+  { q:"What is an FRL unit in a pneumatic system?", opts:["Fast Release Locking mechanism","Filter, Regulator, and Lubricator","Flow Rate Limiter","Force Resistance Load unit"], ans:1, exp:"An FRL unit conditions compressed air. The Filter removes moisture and particles, the Regulator sets working pressure, and the Lubricator adds fine oil mist to lubricate valve and cylinder seals." },
+];
+
+let quizState = { answered: 0, correct: 0 };
+
+function buildQuiz() {
+  const container = document.getElementById('quiz-container');
+  container.innerHTML = '';
+  questions.forEach((q, i) => {
+    const div = document.createElement('div');
+    div.className = 'quiz-question';
+    div.id = `qq-${i}`;
+    div.innerHTML = `
+      <div class="qq-num">Question ${i + 1} of ${questions.length}</div>
+      <div class="qq-text">${q.q}</div>
+      <div class="quiz-options">
+        ${q.opts.map((opt, j) => `
+          <div class="quiz-option" id="qopt-${i}-${j}" onclick="selectOption(${i},${j})">
+            <input type="radio" name="q${i}" id="qr-${i}-${j}" value="${j}">
+            <label for="qr-${i}-${j}">${opt}</label>
+          </div>`).join('')}
+      </div>
+      <button class="btn btn-check" onclick="checkAnswer(${i})">✓ Check Answer</button>
+      <div class="quiz-feedback" id="qfb-${i}"></div>`;
+    container.appendChild(div);
+  });
+}
+
+function selectOption(qi, oi) {
+  document.querySelectorAll(`[id^="qopt-${qi}-"]`).forEach(el => el.style.borderColor = '');
+  document.getElementById(`qopt-${qi}-${oi}`).style.borderColor = '#2980b9';
+  document.getElementById(`qr-${qi}-${oi}`).checked = true;
+}
+
+function checkAnswer(qi) {
+  const q = questions[qi];
+  const selected = document.querySelector(`input[name="q${qi}"]:checked`);
+  const fb = document.getElementById(`qfb-${qi}`);
+  if (!selected) { fb.textContent = '⚠️ Please select an answer first.'; fb.className = 'quiz-feedback show wrong-fb'; return; }
+  if (fb.classList.contains('show')) return;
+  const userAns = parseInt(selected.value);
+  const isCorrect = userAns === q.ans;
+  quizState.answered++;
+  if (isCorrect) quizState.correct++;
+  document.querySelectorAll(`[id^="qopt-${qi}-"]`).forEach((el, j) => {
+    if (j === q.ans) el.classList.add('correct');
+    else if (j === userAns && !isCorrect) el.classList.add('wrong');
+  });
+  fb.innerHTML = `<strong>${isCorrect ? '✅ Correct!' : '❌ Incorrect.'}</strong> ${q.exp}`;
+  fb.className = `quiz-feedback show ${isCorrect ? 'correct-fb' : 'wrong-fb'}`;
+  document.getElementById('q-answered').textContent = quizState.answered;
+  document.getElementById('q-correct').textContent = quizState.correct;
+  document.getElementById('q-score').textContent = Math.round(quizState.correct / quizState.answered * 100) + '%';
+}
+
+function resetQuiz() {
+  quizState = { answered: 0, correct: 0 };
+  document.getElementById('q-answered').textContent = 0;
+  document.getElementById('q-correct').textContent = 0;
+  document.getElementById('q-score').textContent = '0%';
+  buildQuiz();
+}
+
+// ═══════════════════════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════════════════════
+renderModuleSVG('single');
+updateCylinderVisual(0);
+updatePressure(6);
+buildQuiz();
+// Initialize left rails as powered
+setTimeout(() => {
+  setRail('r1-rail-l', true);
+  setRail('r2-rail-l', true);
+  setRail('r3-rail-l', true);
+}, 50);
+addLog('System initialized — PLC Pneumatic Simulator v2.0', 'success');
+addLog('Loaded module: Single-Acting Cylinder (SAC)', 'info');
+addLog('Press EXTEND to begin simulation', '');
+</script>
+</body>
+</html>

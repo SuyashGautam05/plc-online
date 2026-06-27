@@ -1,0 +1,1869 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PLC Simtel Software</title>
+<link rel="stylesheet" href="../defination.css">
+<style>
+:root {
+  --primary-color: #f8f9fa;
+  --secondary-color: #e9ecef;
+  --text-color: #343a40;
+  --accent-color: #6c757d;
+  --border-color: #dee2e6;
+  --hover-color: #f1f3f5;
+  --shadow: 0 2px 10px rgba(0,0,0,0.1);
+  --green: #28a745;
+  --red: #dc3545;
+  --blue: #007bff;
+  --yellow: #ffc107;
+  --orange: #fd7e14;
+  --cyan: #17a2b8;
+  --water-top: rgba(30,144,255,0.85);
+  --water-mid: rgba(0,105,217,0.75);
+  --water-bot: rgba(0,70,160,0.9);
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+  color: var(--text-color);
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+header {
+  background: linear-gradient(135deg, #1a3a5c 0%, #2c5f8a 100%);
+  color: white;
+  padding: 18px 30px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+header h1 { font-size: 1.4rem; font-weight: 700; color: white; letter-spacing: 1px; }
+header .subtitle { font-size: 0.8rem; color: #aecde6; margin-top: 2px; }
+
+.status-badge {
+  display: flex; align-items: center; gap: 8px;
+  background: rgb(195 189 189 / 30%);
+  padding: 6px 14px; border-radius: 20px; font-size: 0.85rem; color: rgb(0, 0, 0);    height: 36px;
+    margin-top: 8px;
+    margin-left: 430px;
+}
+
+.status-dot {
+  width: 10px; height: 10px; border-radius: 50%;
+  background: var(--green);
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0%,100% { box-shadow: 0 0 0 0 rgba(40,167,69,0.5); }
+  50% { box-shadow: 0 0 0 6px rgba(40,167,69,0); }
+}
+
+.tabs {
+  display: flex; background: white;
+  border-bottom: 2px solid var(--border-color);
+  padding: 0 20px;  gap: 0;
+  box-shadow: var(--shadow);
+  width: 96%;
+  gap: 32px;
+  margin-left: 30px;
+  margin-top: 26px;
+}
+
+.tab-btn {
+  padding: 14px 22px; border: none; background: none;
+  font-family: Georgia, serif; font-size: 0.9rem;
+  color: var(--accent-color); cursor: pointer;
+  border-bottom: 3px solid transparent;
+  margin-bottom: -2px; transition: all 0.3s;
+  white-space: nowrap; font-weight: 600;
+}
+.tab-btn.active { color: var(--blue); border-bottom-color: var(--blue); }
+.tab-btn:hover:not(.active) { color: var(--text-color); background: var(--hover-color); }
+
+.tab-content { display: none; padding: 24px; }
+.tab-content.active { display: block; }
+
+.card {
+  background: white; border-radius: 12px;
+  box-shadow: var(--shadow); padding: 24px; margin-bottom: 20px;
+}
+.card h2 {
+  font-size: 1.2rem; margin-bottom: 16px; color: var(--text-color);
+  border-left: 4px solid var(--cyan); padding-left: 12px;
+}
+.card h3 { font-size: 1rem; margin-bottom: 10px; color: var(--text-color); }
+.card p, .card li { font-size: 0.92rem; line-height: 1.7; color: var(--accent-color); margin-bottom: 8px; }
+.card ul { padding-left: 20px; }
+
+/* === SIMULATION GRID === */
+.sim-grid {
+  display: grid;
+  grid-template-columns: 300px 1fr 290px;
+  gap: 20px; align-items: start;
+}
+@media (max-width: 1100px) { .sim-grid { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 700px) { .sim-grid { grid-template-columns: 1fr; } }
+
+/* === LEVEL GAUGE (vertical bar gauge) === */
+.level-gauge-wrap {
+  display: flex; flex-direction: column;
+  align-items: center; gap: 14px;
+}
+
+.level-gauge-outer {
+  position: relative;
+  width: 80px; height: 260px;
+  background: #1a1a1a;
+  border-radius: 10px;
+  border: 3px solid #444;
+  box-shadow: inset 0 0 20px rgba(0,0,0,0.6), 0 0 15px rgba(30,144,255,0.15);
+  overflow: hidden;
+}
+
+.level-gauge-fill {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  background: linear-gradient(to top, var(--water-bot) 0%, var(--water-mid) 50%, var(--water-top) 100%);
+  transition: height 0.6s cubic-bezier(0.4,0,0.2,1);
+  height: 0%;
+}
+
+.level-gauge-glow {
+  position: absolute; top: 0; left: 0; right: 0; bottom: 0;
+  background: linear-gradient(to right, rgba(255,255,255,0.08) 0%, transparent 40%, rgba(255,255,255,0.05) 100%);
+  pointer-events: none;
+}
+
+.gauge-ticks {
+  position: absolute; top: 0; right: 0; bottom: 0;
+  width: 100%; pointer-events: none;
+}
+
+.gauge-label-strip {
+  position: absolute; right: -40px; top: 0; height: 100%;
+  display: flex; flex-direction: column; justify-content: space-between;
+  pointer-events: none;
+}
+.gauge-tick-lbl {
+  font-size: 0.6rem; color: #888; font-family: monospace;
+  text-align: left; line-height: 1;
+}
+
+.water-surface {
+  position: absolute; top: -4px; left: 0; right: 0; height: 8px;
+  overflow: hidden; pointer-events: none;
+}
+.water-surface::before {
+  content: '';
+  position: absolute; top: 0; left: -100%;
+  width: 300%; height: 100%;
+  background: radial-gradient(ellipse at 50% 50%, rgba(100,200,255,0.9) 0%, transparent 70%);
+  animation: waveMove 2s linear infinite;
+}
+@keyframes waveMove {
+  0% { transform: translateX(0); }
+  100% { transform: translateX(33.3%); }
+}
+
+/* === DIGITAL DISPLAY === */
+.digital-display {
+  background: #0d1117;
+  border-radius: 10px; padding: 16px;
+  border: 2px solid #30363d;
+  box-shadow: inset 0 0 20px rgba(0,0,0,0.5), 0 0 10px rgba(0,200,255,0.08);
+}
+.display-row {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 8px 0; border-bottom: 1px solid #21262d;
+}
+.display-row:last-child { border-bottom: none; }
+.display-label { font-size: 0.72rem; color: #8b949e; text-transform: uppercase; letter-spacing: 1px; font-family: monospace; }
+.display-value { font-size: 1.05rem; font-family: 'Courier New', monospace; font-weight: bold; color: #00d4ff; text-shadow: 0 0 10px rgba(0,212,255,0.5); }
+.display-value.warning { color: #ffc107; text-shadow: 0 0 10px rgba(255,193,7,0.5); }
+.display-value.danger { color: #ff4444; text-shadow: 0 0 10px rgba(255,68,68,0.5); }
+.display-value.normal { color: #00ff88; text-shadow: 0 0 10px rgba(0,255,136,0.4); }
+
+/* === TANK VISUAL === */
+.tank-section { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+
+.tank-assembly {
+  position: relative;
+  width: 200px;
+}
+
+.probe {
+  position: absolute;
+  top: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 10;
+  display: flex; flex-direction: column; align-items: center;
+}
+.probe-head {
+  width: 30px; height: 22px;
+  background: linear-gradient(to bottom, #aaa, #888);
+  border-radius: 4px 4px 0 0;
+  border: 2px solid #666;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 0.55rem; color: #fff; font-weight: 700; font-family: monospace;
+}
+.probe-rod {
+  width: 6px;
+  background: linear-gradient(to right, #aaa, #ccc, #aaa);
+  border-left: 1px solid #999;
+  border-right: 1px solid #999;
+  transition: height 0s;
+}
+.probe-tip {
+  width: 8px; height: 8px; border-radius: 50%;
+  background: radial-gradient(circle, #ffd700, #ff8c00);
+  box-shadow: 0 0 6px rgba(255,165,0,0.8);
+}
+
+.tank-body-wrap {
+  position: relative;
+  width: 180px; height: 300px;
+  margin: 0 auto;
+}
+.tank-outer {
+  position: absolute; inset: 0;
+  border: 4px solid #4a7fa5;
+  border-radius: 8px;
+  background: linear-gradient(to right, rgba(200,230,255,0.08), rgba(255,255,255,0.04), rgba(200,230,255,0.08));
+  overflow: hidden;
+  box-shadow: inset 0 0 30px rgba(0,0,0,0.15), 0 6px 24px rgba(0,100,200,0.2);
+}
+
+.water-fill {
+  position: absolute; bottom: 0; left: 0; right: 0;
+  background: linear-gradient(to top,
+    rgba(0,60,140,0.95) 0%,
+    rgba(0,105,217,0.85) 40%,
+    rgba(30,144,255,0.75) 75%,
+    rgba(100,180,255,0.5) 100%
+  );
+  transition: height 0.6s cubic-bezier(0.4,0,0.2,1);
+  height: 0%;
+  border-radius: 0 0 4px 4px;
+}
+
+.particles-layer {
+  position: absolute; inset: 0; pointer-events: none; overflow: hidden;
+}
+.particle {
+  position: absolute;
+  border-radius: 50%;
+  background: rgba(255,255,255,0.25);
+  animation: floatParticle linear infinite;
+}
+@keyframes floatParticle {
+  0% { transform: translateY(0) translateX(0); opacity: 0.6; }
+  50% { opacity: 0.2; }
+  100% { transform: translateY(-20px) translateX(5px); opacity: 0; }
+}
+
+.glass-sheen {
+  position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(105deg,
+    rgba(255,255,255,0.12) 0%,
+    transparent 30%,
+    rgba(255,255,255,0.04) 60%,
+    transparent 100%
+  );
+  border-radius: 4px;
+}
+
+.inlet-pipe {
+  position: absolute; top: -20px; left: 50%;
+  transform: translateX(-50%);
+  width: 22px; height: 24px;
+  background: linear-gradient(to bottom, #7aabcc, #5590b5);
+  border: 2px solid #4a7fa5; border-bottom: none;
+  border-radius: 3px 3px 0 0; z-index: 5;
+}
+.outlet-pipe {
+  position: absolute; bottom: 30px; right: -22px;
+  width: 28px; height: 14px;
+  background: linear-gradient(to right, #5590b5, #7aabcc);
+  border: 2px solid #4a7fa5; border-left: none;
+  border-radius: 0 3px 3px 0; z-index: 5;
+}
+
+.capacitor-vis {
+  position: absolute; right: -55px; top: 50%;
+  transform: translateY(-50%);
+  display: flex; flex-direction: column; align-items: center; gap: 3px;
+}
+.cap-plate {
+  width: 12px; height: 28px; background: linear-gradient(to right, #aaa, #ccc);
+  border-radius: 2px; border: 1px solid #888;
+}
+.cap-gap { width: 8px; }
+.cap-line { width: 1px; height: 30px; background: #888; }
+.cap-label { font-size: 0.55rem; color: #888; font-family: monospace; white-space: nowrap; }
+
+.scale-strip {
+  position: absolute; left: -46px; top: 0; height: 100%;
+  display: flex; flex-direction: column; justify-content: space-between;
+  pointer-events: none;
+}
+.scale-mark {
+  display: flex; align-items: center; gap: 4px;
+}
+.scale-line { width: 10px; height: 1px; background: #7aabcc; }
+.scale-val { font-size: 0.6rem; color: #7aabcc; font-family: monospace; }
+
+.hydro-arrow {
+  position: absolute; left: -18px; bottom: 0;
+  display: flex; flex-direction: column; align-items: center;
+  pointer-events: none;
+}
+.hydro-bar {
+  width: 3px;
+  background: linear-gradient(to top, #ff6b35, #ffc107);
+  border-radius: 2px;
+  transition: height 0.6s;
+}
+.hydro-tip { font-size: 0.7rem; color: #ff6b35; }
+
+/* === CONTROLS === */
+.controls-panel { display: flex; flex-direction: column; gap: 14px; }
+.slider-group { background: var(--secondary-color); border-radius: 10px; padding: 16px; }
+.slider-group label { display: block; font-size: 0.85rem; font-weight: 700; color: var(--text-color); margin-bottom: 8px; }
+
+input[type="range"] {
+  width: 100%; height: 8px; -webkit-appearance: none;
+  background: linear-gradient(to right, #0066cc 0%, #00aaff 50%, #17a2b8 100%);
+  border-radius: 4px; outline: none; cursor: pointer;
+}
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  width: 22px; height: 22px; border-radius: 50%;
+  background: white; border: 3px solid var(--cyan);
+  cursor: pointer; box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+  transition: transform 0.2s;
+}
+input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.2); }
+.slider-val { text-align: center; font-size: 1rem; font-weight: 700; color: var(--cyan); margin-top: 6px; }
+
+/* === BUTTONS === */
+.btn { padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; font-size: 0.9rem; font-family: Georgia, serif; font-weight: 700; transition: all 0.3s; }
+.btn-primary { background: var(--blue); color: white; }
+.btn-primary:hover { background: #0056b3; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,123,255,0.4); }
+.btn-success { background: var(--green); color: white; }
+.btn-success:hover { background: #218838; transform: translateY(-1px); }
+.btn-danger { background: var(--red); color: white; }
+.btn-danger:hover { background: #c82333; transform: translateY(-1px); }
+.btn-warning { background: var(--yellow); color: #333; }
+.btn-warning:hover { background: #e0a800; transform: translateY(-1px); }
+.btn-cyan { background: var(--cyan); color: white; }
+.btn-cyan:hover { background: #138496; transform: translateY(-1px); }
+.btn-group { display: flex; gap: 10px; flex-wrap: wrap; }
+
+/* === FORMULA BOX === */
+.formula-box {
+  background: #eef4ff; border: 1px solid #b8d0ff;
+  border-radius: 10px; padding: 16px; margin-bottom: 12px;
+}
+.formula-title { font-size: 0.78rem; font-weight: 700; color: var(--cyan); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+.formula-math {
+  font-family: 'Courier New', monospace; font-size: 0.92rem; color: #1a2a4a;
+  background: white; padding: 10px; border-radius: 6px; border: 1px solid #dde; margin-bottom: 6px; word-break: break-word;
+}
+.formula-result { font-size: 0.9rem; color: var(--cyan); font-weight: 700; font-family: monospace; }
+
+/* === ALARM PANEL === */
+.alarm-panel {
+  background: #fff3cd; border: 2px solid var(--yellow);
+  border-radius: 10px; padding: 14px 18px;
+  margin-bottom: 16px; display: none;
+  align-items: center; gap: 12px;
+  animation: flashBg 1s infinite;
+}
+.alarm-panel.show { display: flex; }
+.alarm-panel.critical { background: #f8d7da; border-color: var(--red); animation: flashBg2 0.5s infinite; }
+.alarm-panel.low { background: #d1ecf1; border-color: var(--cyan); animation: flashBg3 1.2s infinite; }
+.alarm-panel.low.show { display: flex; }
+
+@keyframes flashBg { 0%,100% { background: #fff3cd; } 50% { background: #ffeaa7; } }
+@keyframes flashBg2 { 0%,100% { background: #f8d7da; } 50% { background: #f5c6cb; } }
+@keyframes flashBg3 { 0%,100% { background: #d1ecf1; } 50% { background: #bee5eb; } }
+
+.alarm-icon { font-size: 1.5rem; }
+.alarm-text { font-size: 0.9rem; font-weight: 700; }
+
+/* === BADGES === */
+.badge { display: inline-block; padding: 2px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; }
+.badge-green { background: #d4edda; color: #155724; }
+.badge-yellow { background: #fff3cd; color: #856404; }
+.badge-red { background: #f8d7da; color: #721c24; }
+.badge-cyan { background: #d1ecf1; color: #0c5460; }
+
+/* === THEORY GRID === */
+.theory-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+@media (max-width: 700px) { .theory-grid { grid-template-columns: 1fr; } }
+
+.info-card {
+  background: white; border-radius: 12px;
+  box-shadow: var(--shadow); padding: 20px;
+  border-top: 4px solid var(--cyan);
+}
+.info-card h3 { font-size: 1rem; margin-bottom: 12px; color: var(--text-color); }
+.info-card p, .info-card li { font-size: 0.88rem; line-height: 1.7; color: var(--accent-color); }
+.info-card ul { padding-left: 18px; }
+
+/* === CALC SECTION === */
+.calc-section { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+@media (max-width: 700px) { .calc-section { grid-template-columns: 1fr; } }
+
+.input-group { display: flex; flex-direction: column; gap: 8px; }
+.input-group label { font-size: 0.85rem; font-weight: 700; color: var(--text-color); }
+.input-group input {
+  padding: 10px 14px; border: 2px solid var(--border-color);
+  border-radius: 8px; font-size: 0.95rem; font-family: monospace;
+  color: var(--text-color); outline: none; transition: border-color 0.3s;
+}
+.input-group input:focus { border-color: var(--cyan); }
+
+/* === MCQ === */
+.mcq-container { max-width: 1000px; margin: 0 auto; }
+.mcq-question {
+  background: white; border-radius: 12px; padding: 20px;
+  margin-bottom: 20px; box-shadow: var(--shadow);
+  border-left: 4px solid var(--cyan);
+}
+.question-num { font-size: 0.75rem; color: var(--cyan); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+.question-text { font-size: 1rem; font-weight: 700; margin-bottom: 14px; color: var(--text-color); line-height: 1.5; }
+.options { display: flex; flex-direction: column; gap: 10px; }
+.option {
+  display: flex; align-items: center; gap: 12px;
+  padding: 12px 16px; border: 2px solid var(--border-color);
+  border-radius: 8px; cursor: pointer; transition: all 0.3s; background: white;
+}
+.option:hover { background: var(--hover-color); border-color: var(--cyan); }
+.option.correct { background: #d4edda; border-color: var(--green); }
+.option.wrong { background: #f8d7da; border-color: var(--red); }
+.option input { cursor: pointer; }
+.option-label { font-size: 0.92rem; color: var(--text-color); cursor: pointer; }
+.check-btn {
+  margin-top: 12px; padding: 8px 20px;
+  background: var(--cyan); color: white;
+  border: none; border-radius: 6px; cursor: pointer;
+  font-size: 0.85rem; font-family: Georgia, serif; font-weight: 700; transition: all 0.3s;
+}
+.check-btn:hover { background: #138496; }
+.feedback {
+  margin-top: 10px; padding: 10px 14px; border-radius: 6px;
+  font-size: 0.88rem; display: none; line-height: 1.5;
+}
+.feedback.correct { background: #d4edda; color: #155724; display: block; }
+.feedback.wrong { background: #f8d7da; color: #721c24; display: block; }
+
+.score-board {
+  background: linear-gradient(135deg, #17a2b8 0%, #0f6e7e 100%);
+  color: white; border-radius: 12px; padding: 20px;
+  text-align: center; margin-bottom: 24px;
+}
+.score-board h3 { font-size: 1rem; opacity: 0.9; }
+.score-val { font-size: 2.5rem; font-weight: 900; margin: 8px 0; }
+
+/* === SCENARIO === */
+.scenario-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px,1fr)); gap: 12px; margin-bottom: 20px; }
+.scenario-btn {
+  padding: 12px 10px; background: var(--secondary-color);
+  border: 2px solid var(--border-color); border-radius: 10px;
+  cursor: pointer; font-size: 0.82rem; font-family: Georgia, serif;
+  text-align: center; transition: all 0.3s; font-weight: 600;
+  color: var(--text-color); line-height: 1.4;
+}
+.scenario-btn:hover {
+  background: var(--cyan); color: white; border-color: var(--cyan);
+  transform: translateY(-2px); box-shadow: 0 4px 12px rgba(23,162,184,0.35);
+}
+
+/* === LOG TABLE === */
+.log-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
+.log-table th {
+  background: var(--secondary-color); padding: 10px 12px;
+  text-align: left; color: var(--text-color); font-weight: 700; border: 1px solid var(--border-color);
+}
+.log-table td { padding: 8px 12px; border: 1px solid var(--border-color); color: var(--accent-color); font-family: monospace; }
+.log-table tr:nth-child(even) td { background: #fafbfc; }
+
+.hydro-section {
+  background: linear-gradient(135deg, #fff8e7, #ffecd2);
+  border: 1px solid #ffcba4; border-radius: 10px;
+  padding: 14px; margin-top: 12px;
+}
+.hydro-title { font-size: 0.78rem; font-weight: 700; color: var(--orange); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+
+.cap-diagram {
+  display: flex; align-items: center; justify-content: center; gap: 8px;
+  margin: 12px 0;
+}
+.plate { width: 8px; height: 60px; background: linear-gradient(to right, #888, #ccc); border-radius: 2px; }
+.dielectric {
+  width: 40px; height: 60px; display: flex; align-items: center; justify-content: center;
+  border-radius: 4px; font-size: 0.7rem; font-family: monospace; font-weight: 700;
+  transition: background 0.5s; text-align: center; line-height: 1.2;
+}
+
+.scen-display {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(252px,1fr));
+  gap: 14px; margin-top: 16px;
+}
+.scen-box {
+  background: #0d1117; border-radius: 10px; padding: 16px; text-align: center;
+}
+.scen-lbl { font-size: 0.65rem; color: #8b949e; font-family: monospace; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+.scen-val { font-size: 1.6rem; font-family: monospace; font-weight: 900; }
+</style>
+</head>
+<body>
+
+<header style="background: #f8f9fa;">
+  <div style="display:flex;align-items:center;gap:16px;">
+    <img style="height: 70px;margin-right: 184px;" src="../../assets/Scientech logo-2.png" alt="">
+    <h1 style="color: black;">Level Sensor Simulation</h1>
+  </div>
+  <div>
+     <a href="./Level_Transmitter.html" class="back-button">
+                    <i class="fas fa-arrow-left"></i><img style="height: 29px;" src="./left-arrow.png" alt=""> Back to Course
+                </a>
+  </div>
+</header>
+
+<!-- TABS -->
+<div class="tabs">
+  <button class="tab-btn active" onclick="showTab('simulation',this)">Simulation</button>
+  <button class="tab-btn" onclick="showTab('theory',this)">Theory</button>
+  <button class="tab-btn" onclick="showTab('calculator',this)">Formula Calculator</button>
+  <button class="tab-btn" onclick="showTab('scenarios',this)">Scenarios</button>
+  <button class="tab-btn" onclick="showTab('mcq',this)">Quiz</button>
+  <button class="tab-btn" onclick="showTab('datalog',this)">Data Log</button>
+</div>
+
+<!-- ============================================================
+     TAB 1: SIMULATION
+============================================================ -->
+<div class="tab-content active" id="tab-simulation">
+
+  <!-- Alarms -->
+  <div class="alarm-panel low" id="alarmLow">
+    <span class="alarm-icon">🔵</span>
+    <div>
+      <div class="alarm-text">LOW LEVEL ALARM</div>
+      <div style="font-size:0.8rem;color:#0c5460">Level below 40 mm — Risk of pump cavitation</div>
+    </div>
+  </div>
+  <div class="alarm-panel" id="alarmHigh">
+    <span class="alarm-icon">⚠️</span>
+    <div>
+      <div class="alarm-text">HIGH LEVEL ALARM</div>
+      <div style="font-size:0.8rem;color:#856404">Level exceeded 200 mm — Check inlet valve</div>
+    </div>
+  </div>
+  <div class="alarm-panel critical" id="alarmCritical">
+    <span class="alarm-icon">🚨</span>
+    <div>
+      <div class="alarm-text">OVERFLOW — EMERGENCY SHUTDOWN</div>
+      <div style="font-size:0.8rem;color:#721c24">Level exceeded 235 mm — Close inlet immediately</div>
+    </div>
+  </div>
+
+  <div class="sim-grid">
+
+    <!-- LEFT: VERTICAL GAUGE + DISPLAY -->
+    <div class="card">
+      <h2>Level Gauge Display</h2>
+      <div class="level-gauge-wrap">
+
+        <div style="position:relative;display:flex;align-items:center;gap:10px;">
+          <div style="position:relative;height:260px;display:flex;flex-direction:column;justify-content:space-between;margin-right:6px;">
+            <div class="gauge-tick-lbl">250</div>
+            <div class="gauge-tick-lbl">200</div>
+            <div class="gauge-tick-lbl">150</div>
+            <div class="gauge-tick-lbl">100</div>
+            <div class="gauge-tick-lbl">50</div>
+            <div class="gauge-tick-lbl">0</div>
+          </div>
+
+          <div class="level-gauge-outer">
+            <div class="level-gauge-fill" id="gaugeBar">
+              <div class="water-surface" id="gaugeSurface"></div>
+            </div>
+            <div class="level-gauge-glow"></div>
+            <div style="position:absolute;inset:0;pointer-events:none;">
+              <div style="position:absolute;bottom:0%;left:0;right:0;border-top:1px solid rgba(255,255,255,0.1);"></div>
+              <div style="position:absolute;bottom:20%;left:0;right:0;border-top:1px solid rgba(255,255,255,0.1);"></div>
+              <div style="position:absolute;bottom:40%;left:0;right:0;border-top:1px solid rgba(255,255,255,0.1);"></div>
+              <div style="position:absolute;bottom:60%;left:0;right:0;border-top:1px solid rgba(255,255,255,0.12);"></div>
+              <div style="position:absolute;bottom:80%;left:0;right:0;border-top:1px solid rgba(255,255,255,0.12);"></div>
+            </div>
+          </div>
+
+          <div style="font-size:0.65rem;color:#888;font-family:monospace;writing-mode:vertical-rl;text-orientation:mixed;margin-left:6px;">mm (0–250)</div>
+        </div>
+
+        <div style="text-align:center;font-size:0.78rem;color:#888;">Capacitive Level Transmitter<br><small style="color:#aaa">Range: 0–250 mm | Output: 4–20 mA</small></div>
+
+        <!-- mA meter arc display -->
+        <!-- <canvas id="maCanvas" width="180" height="130"></canvas> -->
+        <!-- <div style="font-size:0.78rem;color:#888;text-align:center;">4–20 mA Signal</div> -->
+      </div>
+
+      <!-- Digital PLC display -->
+      <div style="margin-top:16px;">
+        <div class="digital-display">
+          <div class="display-row">
+            <span class="display-label">Level (mm)</span>
+            <span class="display-value" id="disp-mm">0.00</span>
+          </div>
+          <div class="display-row">
+            <span class="display-label">Current (mA)</span>
+            <span class="display-value" id="disp-ma">4.00</span>
+          </div>
+          <div class="display-row">
+            <span class="display-label">Level (m)</span>
+            <span class="display-value" id="disp-m">0.0000</span>
+          </div>
+          <div class="display-row">
+            <span class="display-label">Hydro. Press. (Pa)</span>
+            <span class="display-value" id="disp-pa">0.00</span>
+          </div>
+          <div class="display-row">
+            <span class="display-label">% Full</span>
+            <span class="display-value" id="disp-pct">0.00%</span>
+          </div>
+          <div class="display-row">
+            <span class="display-label">PLC Status</span>
+            <span class="display-value normal" id="disp-status">NORMAL</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MIDDLE: TANK + CONTROLS -->
+    <div>
+      <div class="card">
+        <h2>Capacitive Level Sensor Assembly</h2>
+        <div style="display:flex;gap:28px;align-items:flex-start;flex-wrap:wrap;">
+
+          <!-- Tank visual -->
+          <div style="flex-shrink:0;">
+            <div class="tank-assembly">
+
+              <div style="text-align:center;margin-bottom:6px;">
+                <div style="display:inline-block;background:#2c5f8a;color:white;padding:4px 12px;border-radius:4px;font-size:0.7rem;font-family:monospace;font-weight:700;">CAPACITIVE TRANSMITTER</div>
+              </div>
+
+              <!-- Probe -->
+              <div class="probe" style="position:relative;top:auto;left:auto;transform:none;display:flex;flex-direction:column;align-items:center;margin-bottom:0;">
+                <div class="probe-head">TX</div>
+                <div class="probe-rod" id="probeRod" style="height:300px;"></div>
+                <div class="probe-tip"></div>
+              </div>
+
+              <!-- Tank -->
+              <div class="tank-body-wrap" style="margin-top:-308px;">
+                <div class="tank-outer">
+                  <div class="water-fill" id="waterFill">
+                    <div class="particles-layer" id="particlesLayer"></div>
+                    <div style="position:absolute;top:0;left:0;right:0;height:5px;background:linear-gradient(to bottom,rgba(255,255,255,0.4),transparent);border-radius:2px;"></div>
+                  </div>
+                  <div class="glass-sheen"></div>
+
+                  <div id="levelLine" style="position:absolute;left:0;right:0;height:2px;background:rgba(255,255,255,0.6);transition:bottom 0.6s;bottom:0;box-shadow:0 0 6px rgba(255,255,255,0.8);"></div>
+
+                  <div style="position:absolute;top:10px;left:10px;font-size:0.55rem;color:rgba(255,255,255,0.5);font-family:monospace;line-height:1.6;">
+                    C = ε·A/d<br>
+                    ε<sub>water</sub> ≈ 80<br>
+                    ε<sub>air</sub> ≈ 1
+                  </div>
+                </div>
+
+                <!-- Scale marks left side -->
+                <div class="scale-strip">
+                  <div class="scale-mark"><div class="scale-line"></div><div class="scale-val">250mm</div></div>
+                  <div class="scale-mark"><div class="scale-line"></div><div class="scale-val">200mm</div></div>
+                  <div class="scale-mark"><div class="scale-line"></div><div class="scale-val">150mm</div></div>
+                  <div class="scale-mark"><div class="scale-line"></div><div class="scale-val">100mm</div></div>
+                  <div class="scale-mark"><div class="scale-line"></div><div class="scale-val"> 50mm</div></div>
+                  <div class="scale-mark"><div class="scale-line"></div><div class="scale-val">  0mm</div></div>
+                </div>
+
+                <!-- Hydrostatic pressure indicator -->
+                <div class="hydro-arrow">
+                  <div class="hydro-tip">▼</div>
+                  <div class="hydro-bar" id="hydroBar" style="height:0px;"></div>
+                  <div style="font-size:0.55rem;color:#ff6b35;font-family:monospace;white-space:nowrap;margin-top:2px;" id="hydroLabel">P=0 Pa</div>
+                </div>
+
+                <div class="inlet-pipe"></div>
+                <div class="outlet-pipe"></div>
+              </div>
+
+            </div>
+
+            <!-- Legend -->
+            <div style="margin-top:14px;display:flex;gap:12px;justify-content:center;flex-wrap:wrap;">
+              <div style="font-size:0.72rem;color:#888;display:flex;align-items:center;gap:4px;">
+                <div style="width:12px;height:12px;background:rgba(0,105,217,0.8);border-radius:2px;"></div>Water
+              </div>
+              <div style="font-size:0.72rem;color:#888;display:flex;align-items:center;gap:4px;">
+                <div style="width:12px;height:12px;background:#ffd700;border-radius:50%;"></div>Probe tip
+              </div>
+              <div style="font-size:0.72rem;color:#888;display:flex;align-items:center;gap:4px;">
+                <div style="width:12px;height:12px;background:rgba(255,255,255,0.4);border-radius:2px;"></div>Particles
+              </div>
+            </div>
+          </div>
+
+          <!-- Info panel -->
+          <div style="flex:1;min-width:180px;">
+            <div style="margin-bottom:14px;">
+              <div style="font-size:0.78rem;color:#888;margin-bottom:4px;">Fill Level</div>
+              <div style="background:#e9ecef;border-radius:10px;overflow:hidden;height:18px;position:relative;">
+                <div id="fillBar" style="height:100%;background:linear-gradient(to right,#0066cc,#17a2b8);border-radius:10px;transition:width 0.5s;width:0%;"></div>
+                <div id="fillBarPct" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:0.72rem;font-weight:700;color:white;mix-blend-mode:difference;">0%</div>
+              </div>
+            </div>
+
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;">
+              <div style="background:#eef4ff;border-radius:8px;padding:10px;text-align:center;">
+                <div style="font-size:0.68rem;color:#888;margin-bottom:3px;">Signal Span</div>
+                <div style="font-size:0.95rem;font-weight:700;color:var(--cyan);">4 – 20 mA</div>
+              </div>
+              <div style="background:#e8f8f5;border-radius:8px;padding:10px;text-align:center;">
+                <div style="font-size:0.68rem;color:#888;margin-bottom:3px;">Level Range</div>
+                <div style="font-size:0.95rem;font-weight:700;color:var(--green);">0 – 250 mm</div>
+              </div>
+              <div style="background:#fff8e7;border-radius:8px;padding:10px;text-align:center;">
+                <div style="font-size:0.68rem;color:#888;margin-bottom:3px;">Scale Factor</div>
+                <div style="font-size:0.95rem;font-weight:700;color:var(--orange);">15.625 mm/mA</div>
+              </div>
+              <div style="background:#fde8e8;border-radius:8px;padding:10px;text-align:center;">
+                <div style="font-size:0.68rem;color:#888;margin-bottom:3px;">Density (ρ)</div>
+                <div style="font-size:0.95rem;font-weight:700;color:var(--red);">1000 kg/m³</div>
+              </div>
+            </div>
+
+            <div style="background:#f8f9fa;border-radius:8px;padding:12px;text-align:center;">
+              <div style="font-size:0.75rem;font-weight:700;color:var(--text-color);margin-bottom:8px;">Capacitance Principle</div>
+              <div class="cap-diagram">
+                <div class="plate"></div>
+                <div class="dielectric" id="dielectricBlock" style="background:rgba(0,105,217,0.1);">
+                  <div>ε=<span id="epsilonVal">~1</span><br>Air</div>
+                </div>
+                <div class="plate"></div>
+              </div>
+              <div style="font-size:0.72rem;color:#888;margin-top:6px;">C = ε·A/d — higher water level → higher ε → higher C → higher mA</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- CONTROLS -->
+      <div class="card">
+        <h2>Controls Panel</h2>
+        <div class="controls-panel">
+          <div class="slider-group">
+            <label>Set Water Level (0 – 250 mm)</label>
+            <input type="range" id="levelSlider" min="0" max="250" value="0" step="0.5" oninput="updateSimulation(this.value)">
+            <div class="slider-val" id="sliderVal">0.0 mm</div>
+          </div>
+
+          <div class="btn-group">
+            <button class="btn btn-cyan" onclick="startFill()">Auto Fill</button>
+            <button class="btn btn-success" onclick="startDrain()">Auto Drain</button>
+            <button class="btn btn-warning" onclick="stopAuto()">Stop</button>
+            <button class="btn btn-danger" onclick="emergencyClose()">Emergency Close</button>
+            <button class="btn btn-primary" onclick="resetSim()">↺ Reset</button>
+          </div>
+
+          <!-- Setpoints -->
+          <div style="background:#f8f9fa;border-radius:10px;padding:14px;border:1px solid #dee2e6;">
+            <div style="font-weight:700;font-size:0.9rem;margin-bottom:12px;">PLC Setpoints</div>
+            <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:10px;">
+              <div>
+                <label style="font-size:0.72rem;color:#888;display:block;margin-bottom:4px;">Low-Low (mm)</label>
+                <input type="number" id="spLL" value="20" min="0" max="250" style="width:100%;padding:6px 8px;border:2px solid #dee2e6;border-radius:6px;font-size:0.85rem;" oninput="updateSetpoints()">
+              </div>
+              <div>
+                <label style="font-size:0.72rem;color:#888;display:block;margin-bottom:4px;">Low (mm)</label>
+                <input type="number" id="spL" value="40" min="0" max="250" style="width:100%;padding:6px 8px;border:2px solid #dee2e6;border-radius:6px;font-size:0.85rem;" oninput="updateSetpoints()">
+              </div>
+              <div>
+                <label style="font-size:0.72rem;color:#888;display:block;margin-bottom:4px;">High (mm)</label>
+                <input type="number" id="spH" value="200" min="0" max="250" style="width:100%;padding:6px 8px;border:2px solid #dee2e6;border-radius:6px;font-size:0.85rem;" oninput="updateSetpoints()">
+              </div>
+              <div>
+                <label style="font-size:0.72rem;color:#888;display:block;margin-bottom:4px;">High-High (mm)</label>
+                <input type="number" id="spHH" value="235" min="0" max="250" style="width:100%;padding:6px 8px;border:2px solid #dee2e6;border-radius:6px;font-size:0.85rem;" oninput="updateSetpoints()">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- RIGHT: LIVE FORMULAS -->
+    <div class="card">
+      <h2>Live Calculations</h2>
+
+      <div class="formula-box">
+        <div class="formula-title">Level from Current (mA → mm)</div>
+        <div class="formula-math">L = (I − 4) × (250 / 16)<br>L = (I − 4) × 15.625</div>
+        <div class="formula-result" id="fwd-result">L = (4−4)×15.625 = 0.00 mm</div>
+      </div>
+
+      <div class="formula-box">
+        <div class="formula-title">Current from Level (mm → mA)</div>
+        <div class="formula-math">mA = 4 + (L / 250) × 16</div>
+        <div class="formula-result" id="rev-result">mA = 4 + (0/250)×16 = 4.00 mA</div>
+      </div>
+
+      <div class="formula-box" style="background:#fff8e7;border-color:#ffd8a0;">
+        <div class="formula-title" style="color:var(--orange);">Hydrostatic Pressure</div>
+        <div class="formula-math">P = ρ × g × h<br>P = 1000 × 9.81 × h(m)</div>
+        <div class="formula-result" id="hydro-result" style="color:var(--orange);">P = 1000×9.81×0 = 0.00 Pa</div>
+      </div>
+
+      <div class="formula-box" style="background:#f0fff4;border-color:#b2dfdb;">
+        <div class="formula-title" style="color:var(--green);">% of Range</div>
+        <div class="formula-math">% = (L / 250) × 100</div>
+        <div class="formula-result" id="pct-result" style="color:var(--green);">% = (0/250)×100 = 0.00%</div>
+      </div>
+
+      <div class="formula-box" style="background:#f8f0ff;border-color:#d8b4fe;">
+        <div class="formula-title" style="color:#7c3aed;">Span Calculation</div>
+        <div class="formula-math">Span = 20−4 = 16 mA<br>Range = 250−0 = 250 mm<br>Scale = 250÷16 = 15.625 mm/mA</div>
+        <div class="formula-result" style="color:#7c3aed;">Scale: 15.625 mm/mA</div>
+      </div>
+
+      <!-- Quick reference -->
+      <div style="font-size:0.8rem;font-weight:700;margin-bottom:8px;margin-top:4px;">Quick Reference</div>
+      <table class="log-table">
+        <thead><tr><th>mA</th><th>Level (mm)</th><th>Status</th></tr></thead>
+        <tbody>
+          <tr><td>4.00</td><td>0</td><td><span class="badge badge-cyan">Empty</span></td></tr>
+          <tr><td>8.00</td><td>62.5</td><td><span class="badge badge-green">Normal</span></td></tr>
+          <tr><td>12.00</td><td>125</td><td><span class="badge badge-green">Normal</span></td></tr>
+          <tr><td>16.00</td><td>187.5</td><td><span class="badge badge-green">Normal</span></td></tr>
+          <tr><td>18.56</td><td>200</td><td><span class="badge badge-yellow">High</span></td></tr>
+          <tr><td>20.00</td><td>250</td><td><span class="badge badge-red">Full</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     TAB 2: THEORY
+============================================================ -->
+<div class="tab-content" id="tab-theory">
+  <div class="theory-grid">
+
+    <div class="info-card" style="border-top-color:#17a2b8;">
+      <h3>What is a Capacitive Level Sensor?</h3>
+      <p>A capacitive level sensor measures the dielectric change between two conductive plates (electrodes) as liquid rises between them. Since water has a dielectric constant (ε ≈ 80) much higher than air (ε ≈ 1), the capacitance changes linearly with the liquid level.</p>
+      <p>The transmitter converts this capacitance change into a standardized <strong>4–20 mA</strong> signal that the PLC can process and display.</p>
+      <ul>
+        <li><strong>4 mA</strong> → 0 mm (empty vessel — air between plates)</li>
+        <li><strong>20 mA</strong> → 250 mm (full vessel — water between plates)</li>
+        <li><strong>Live zero (4 mA)</strong> allows broken-wire detection</li>
+      </ul>
+    </div>
+
+    <div class="info-card" style="border-top-color:#28a745;">
+      <h3>Capacitance Formula — C = ε·A / d</h3>
+      <p>The fundamental relationship governing capacitive sensors:</p>
+      <ul>
+        <li><strong>C</strong> = Capacitance (Farads)</li>
+        <li><strong>ε</strong> = Dielectric constant of medium (air ≈ 1, water ≈ 80)</li>
+        <li><strong>A</strong> = Area of electrode overlap (m²)</li>
+        <li><strong>d</strong> = Distance between electrodes (m)</li>
+      </ul>
+      <p>As water rises between the probe and vessel wall, ε increases dramatically (from ~1 to ~80), causing <strong>capacitance to rise proportionally</strong>. The transmitter electronics convert this change to 4–20 mA.</p>
+    </div>
+
+    <div class="info-card" style="border-top-color:#fd7e14;">
+      <h3>Level Measurement Formulas</h3>
+      <div style="background:#f8f9fa;border-radius:8px;padding:12px;margin-top:8px;">
+        <div style="font-family:monospace;font-size:0.9rem;line-height:2;">
+          <strong>Forward (mA → mm):</strong><br>
+          L = (I − 4) × 15.625<br><br>
+          <strong>Reverse (mm → mA):</strong><br>
+          I = 4 + (L / 250) × 16<br><br>
+          <strong>Hydrostatic (Pa):</strong><br>
+          P = ρ × g × h<br>
+          P = 1000 × 9.81 × h(m)
+        </div>
+      </div>
+    </div>
+
+    <div class="info-card" style="border-top-color:#dc3545;">
+      <h3>Types of Capacitive Sensors</h3>
+      <ul>
+        <li><strong>Bare/Uncoated Probe</strong> — Direct contact with liquid. Best for clean water, chemicals. Cannot use in conductive liquids.</li>
+        <li><strong>Coated Probe (PTFE/PFA)</strong> — Insulating sleeve over electrode. Works with conductive liquids (water, acids). Most common in industry.</li>
+        <li><strong>Non-contact</strong> — Measures through non-conductive tank wall. Used with aggressive chemicals or hygienic applications.</li>
+        <li><strong>Differential</strong> — Two probes measure differential capacitance, compensating for density changes.</li>
+      </ul>
+    </div>
+
+    <div class="info-card" style="border-top-color:#6f42c1;">
+      <h3>Hydrostatic Pressure — P = ρgh</h3>
+      <p>Every column of liquid exerts pressure at its base due to gravity:</p>
+      <ul>
+        <li><strong>ρ</strong> (rho) = liquid density = 1000 kg/m³ for water</li>
+        <li><strong>g</strong> = gravitational acceleration = 9.81 m/s²</li>
+        <li><strong>h</strong> = height of liquid column (meters)</li>
+      </ul>
+      <p>Example — 250 mm of water:<br>
+      h = 0.250 m<br>
+      P = 1000 × 9.81 × 0.250 = <strong>2452.5 Pa</strong></p>
+    </div>
+
+    <div class="info-card" style="border-top-color:#20c997;">
+      <h3>PLC Alarm Logic for Level</h3>
+      <ul>
+        <li><strong>Low-Low (LL) &lt; 20 mm</strong> — Pump shutdown to prevent cavitation / dry running</li>
+        <li><strong>Low (L) &lt; 40 mm</strong> — Open inlet valve, alert operator</li>
+        <li><strong>Normal 40–200 mm</strong> — System operating correctly</li>
+        <li><strong>High (H) &gt; 200 mm</strong> — Close inlet valve, alert operator</li>
+        <li><strong>High-High (HH) &gt; 235 mm</strong> — Emergency shutdown, overflow alarm</li>
+      </ul>
+    </div>
+
+    <div class="info-card" style="border-top-color:#e83e8c;grid-column:1/-1;">
+      <h3>Complete Formula Sheet — 0–250 mm / 4–20 mA</h3>
+      <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px;margin-top:12px;">
+        <div class="formula-box"><div class="formula-title">At 4 mA</div><div class="formula-math">L = (4−4)×15.625 = 0 mm</div></div>
+        <div class="formula-box"><div class="formula-title">At 12 mA (mid)</div><div class="formula-math">L = (12−4)×15.625 = 125 mm</div></div>
+        <div class="formula-box"><div class="formula-title">At 20 mA</div><div class="formula-math">L = (20−4)×15.625 = 250 mm</div></div>
+        <div class="formula-box"><div class="formula-title">Reverse: 125 mm → mA</div><div class="formula-math">mA = 4+(125/250)×16 = 12 mA</div></div>
+        <div class="formula-box" style="background:#fff8e7;border-color:#ffd8a0;"><div class="formula-title" style="color:var(--orange);">Hydrostatic @ 250mm</div><div class="formula-math">P = 1000×9.81×0.25 = 2452.5 Pa</div></div>
+        <div class="formula-box" style="background:#f0fff4;border-color:#b2dfdb;"><div class="formula-title" style="color:var(--green);">Span</div><div class="formula-math">16 mA → 250 mm<br>Scale = 15.625 mm/mA</div></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ============================================================
+     TAB 3: FORMULA CALCULATOR
+============================================================ -->
+<div class="tab-content" id="tab-calculator">
+  <div class="card">
+    <h2>Interactive Formula Calculator</h2>
+    <p style="color:var(--accent-color);font-size:0.9rem;margin-bottom:20px;">Calculate level from current or current from level. Based on 4–20 mA transmitter with 0–250 mm measuring range. Water density = 1000 kg/m³.</p>
+
+    <div class="calc-section">
+
+      <!-- mA → Level -->
+      <div class="card" style="margin:0;border:2px solid #b8d0ff;">
+        <h3 style="color:var(--cyan);margin-bottom:16px;">🔵 Current → Level</h3>
+        <div class="input-group" style="margin-bottom:14px;">
+          <label>Input Current (mA) — range: 4 to 20</label>
+          <input type="number" id="calc-ma-in" min="4" max="20" value="4" step="0.01" oninput="calcFromMA()" placeholder="Enter 4–20 mA">
+        </div>
+        <div class="formula-box">
+          <div class="formula-title">Formula Applied</div>
+          <div class="formula-math">L = (I − 4) × 15.625</div>
+          <div class="formula-result" id="calc-ma-result">L = (4−4)×15.625 = 0.00 mm</div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px;">
+          <div style="text-align:center;background:#eef4ff;padding:10px;border-radius:8px;">
+            <div style="font-size:0.68rem;color:#888;margin-bottom:3px;">Level (mm)</div>
+            <div style="font-size:1.1rem;font-weight:700;color:var(--cyan);" id="o-mm-ma">0.00 mm</div>
+          </div>
+          <div style="text-align:center;background:#f0fff4;padding:10px;border-radius:8px;">
+            <div style="font-size:0.68rem;color:#888;margin-bottom:3px;">Level (m)</div>
+            <div style="font-size:1.1rem;font-weight:700;color:var(--green);" id="o-m-ma">0.0000 m</div>
+          </div>
+          <div style="text-align:center;background:#fff8e7;padding:10px;border-radius:8px;">
+            <div style="font-size:0.68rem;color:#888;margin-bottom:3px;">Hydro. Press.</div>
+            <div style="font-size:1.1rem;font-weight:700;color:var(--orange);" id="o-pa-ma">0.00 Pa</div>
+          </div>
+          <div style="text-align:center;background:#fde8e8;padding:10px;border-radius:8px;">
+            <div style="font-size:0.68rem;color:#888;margin-bottom:3px;">% Range</div>
+            <div style="font-size:1.1rem;font-weight:700;color:var(--red);" id="o-pct-ma">0.0%</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Level → mA -->
+      <div class="card" style="margin:0;border:2px solid #b2dfdb;">
+        <h3 style="color:var(--green);margin-bottom:16px;">🟢 Level → Current</h3>
+        <div class="input-group" style="margin-bottom:14px;">
+          <label>Input Level (mm) — range: 0 to 250</label>
+          <input type="number" id="calc-mm-in" min="0" max="250" value="0" step="0.5" oninput="calcFromMM()" placeholder="Enter 0–250 mm">
+        </div>
+        <div class="formula-box" style="background:#f0fff4;border-color:#b2dfdb;">
+          <div class="formula-title" style="color:var(--green);">Formula Applied</div>
+          <div class="formula-math">mA = 4 + (L / 250) × 16</div>
+          <div class="formula-result" id="calc-mm-result" style="color:var(--green);">mA = 4+(0/250)×16 = 4.00 mA</div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px;">
+          <div style="text-align:center;background:#f0fff4;padding:10px;border-radius:8px;">
+            <div style="font-size:0.68rem;color:#888;margin-bottom:3px;">Current (mA)</div>
+            <div style="font-size:1.1rem;font-weight:700;color:var(--green);" id="o-ma-mm">4.00 mA</div>
+          </div>
+          <div style="text-align:center;background:#eef4ff;padding:10px;border-radius:8px;">
+            <div style="font-size:0.68rem;color:#888;margin-bottom:3px;">Hydrostatic (Pa)</div>
+            <div style="font-size:1.1rem;font-weight:700;color:var(--cyan);" id="o-pa-mm">0.00 Pa</div>
+          </div>
+          <div style="text-align:center;background:#fff8e7;padding:10px;border-radius:8px;">
+            <div style="font-size:0.68rem;color:#888;margin-bottom:3px;">Level (m)</div>
+            <div style="font-size:1.1rem;font-weight:700;color:var(--orange);" id="o-m-mm">0.0000 m</div>
+          </div>
+          <div style="text-align:center;background:#fde8e8;padding:10px;border-radius:8px;">
+            <div style="font-size:0.68rem;color:#888;margin-bottom:3px;">% Range</div>
+            <div style="font-size:1.1rem;font-weight:700;color:var(--red);" id="o-pct-mm">0.0%</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Calibration table -->
+    <div style="margin-top:24px;">
+      <h3 style="margin-bottom:14px;">Standard Calibration Points</h3>
+      <div style="overflow-x:auto;">
+        <table class="log-table" id="calcTable">
+          <thead>
+            <tr>
+              <th>Current (mA)</th><th>Level (mm)</th><th>Level (m)</th>
+              <th>Hydrostatic (Pa)</th><th>% Range</th><th>Status</th>
+            </tr>
+          </thead>
+          <tbody id="calcTableBody"></tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     TAB 4: SCENARIOS
+============================================================ -->
+<div class="tab-content" id="tab-scenarios">
+  <div class="card">
+    <h2>Real-World Scenarios</h2>
+    <p style="color:var(--accent-color);font-size:0.9rem;margin-bottom:20px;">Click a scenario to simulate it. Watch the tank fill/drain and observe how the PLC responds.</p>
+
+    <div class="scenario-grid">
+      <button class="scenario-btn" onclick="runScenario('fill')">🚿 Tank Filling<br><small>Gradual fill to 80%</small></button>
+      <button class="scenario-btn" onclick="runScenario('drain')">🔽 Tank Draining<br><small>Controlled drain</small></button>
+      <button class="scenario-btn" onclick="runScenario('normal')">✅ Normal Operation<br><small>125 mm steady state</small></button>
+      <button class="scenario-btn" onclick="runScenario('overflow')">🌊 Overflow Event<br><small>HH alarm at 235mm</small></button>
+      <button class="scenario-btn" onclick="runScenario('pumpfail')">⚠️ Pump Failure<br><small>Level drops — LL alarm</small></button>
+      <button class="scenario-btn" onclick="runScenario('sensor_fail')">❌ Sensor Failure<br><small>0 mA open loop</small></button>
+      <button class="scenario-btn" onclick="runScenario('cycle')">〰️ Level Cycling<br><small>PID control oscillation</small></button>
+      <button class="scenario-btn" onclick="runScenario('calibrate')">🔧 Calibration<br><small>5-point cal check</small></button>
+    </div>
+
+    <div id="scenarioInfo" class="formula-box" style="display:none;">
+      <div class="formula-title" id="scenTitle"></div>
+      <div style="font-size:0.9rem;color:var(--text-color);line-height:1.6;" id="scenDesc"></div>
+    </div>
+
+    <div class="scen-display" id="scenLive" style="display:none;">
+      <div class="scen-box">
+        <div class="scen-lbl">LEVEL</div>
+        <div class="scen-val" id="scen-mm" style="color:#00d4ff;">0.0 mm</div>
+      </div>
+      <div class="scen-box">
+        <div class="scen-lbl">CURRENT</div>
+        <div class="scen-val" id="scen-ma" style="color:#00ff88;">4.0 mA</div>
+      </div>
+      <div class="scen-box">
+        <div class="scen-lbl">HYDRO. PRESS.</div>
+        <div class="scen-val" id="scen-pa" style="color:#ffaa00;font-size:1.1rem;">0 Pa</div>
+      </div>
+      <div class="scen-box">
+        <div class="scen-lbl">PLC ACTION</div>
+        <div class="scen-val" id="scen-action" style="color:#ffaa00;font-size:0.9rem;">MONITORING</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     TAB 5: MCQ QUIZ
+============================================================ -->
+<div class="tab-content" id="tab-mcq">
+  <div class="mcq-container">
+    <div class="score-board">
+      <h3>Your Score</h3>
+      <div class="score-val" id="scoreDisplay">0 / 10</div>
+      <div style="font-size:0.85rem;opacity:0.8;" id="scoreMsg">Answer all questions to see your result</div>
+    </div>
+    <div id="mcqArea"></div>
+    <div class="btn-group" style="margin-top:20px;">
+      <button class="btn btn-warning" onclick="resetQuiz()">↺ Reset Quiz</button>
+      <button class="btn btn-cyan" onclick="showAllAnswers()">👁 Reveal All Answers</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============================================================
+     TAB 6: DATA LOG
+============================================================ -->
+<div class="tab-content" id="tab-datalog">
+  <div class="card">
+    <h2>Real-Time Data Log</h2>
+    <div class="btn-group" style="margin-bottom:16px;">
+      <button class="btn btn-danger" onclick="clearLog()">🗑 Clear Log</button>
+      <button class="btn btn-primary" onclick="exportLog()">📥 Export CSV</button>
+    </div>
+    <div style="overflow-x:auto;">
+      <table class="log-table">
+        <thead>
+          <tr>
+            <th>#</th><th>Time</th><th>Level (mm)</th><th>Level (m)</th>
+            <th>Current (mA)</th><th>Hydro. Press. (Pa)</th><th>% Full</th><th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="logBody">
+          <tr><td colspan="8" style="text-align:center;color:#aaa;padding:20px;">No data yet — use the simulation to generate readings</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script>
+// =====================================================
+// STATE
+// =====================================================
+let currentLevel = 0;
+let autoInterval = null;
+let logData = [];
+let spLL = 20, spL = 40, spH = 200, spHH = 235;
+
+// =====================================================
+// TABS
+// =====================================================
+function showTab(tab, btn) {
+  document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + tab).classList.add('active');
+  if (btn) btn.classList.add('active');
+}
+
+// =====================================================
+// mA ARC GAUGE (canvas)
+// =====================================================
+function drawMAGauge(mA) {
+  const canvas = document.getElementById('maCanvas');
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const W = canvas.width, H = canvas.height;
+  // Centre low enough that the bottom gap is visible, high enough top fits
+  const cx = W / 2, cy = H - 15;
+  const R = 68;
+  ctx.clearRect(0, 0, W, H);
+
+  // Standard speedometer: start bottom-left (225°), sweep 270° clockwise to bottom-right (135° = -45°)
+  // In canvas: 0° = right, clockwise positive
+  // 225° = Math.PI * 1.25  →  bottom-left  ✅
+  // 270° span clockwise    →  ends at -45° = Math.PI * 1.25 + Math.PI * 1.5 = Math.PI * 2.75
+  const startA = Math.PI * 1.25;  // 225° — bottom-left (4 mA)
+  const span   = Math.PI * 1.5;   // 270° clockwise sweep
+  const endA   = -Math.PI * 0.25; // -45° = 315° — bottom-right (20 mA)
+
+  // Background track
+  ctx.beginPath();
+  ctx.arc(cx, cy, R, startA, endA, false);
+  ctx.strokeStyle = '#2a2a2a';
+  ctx.lineWidth = 14;
+  ctx.stroke();
+
+  // Coloured fill arc
+  const frac = Math.max(0, Math.min(1, (mA - 4) / 16));
+  const fillEnd = startA + frac * span;
+  const grad = ctx.createLinearGradient(cx - R, cy, cx + R, cy);
+  grad.addColorStop(0, '#0066cc');
+  grad.addColorStop(0.5, '#00aaff');
+  grad.addColorStop(1, '#17d4e8');
+  ctx.beginPath();
+  ctx.arc(cx, cy, R, startA, fillEnd, false);
+  ctx.strokeStyle = grad;
+  ctx.lineWidth = 14;
+  ctx.lineCap = 'round';
+  ctx.stroke();
+
+  // Tick marks
+  for (let i = 0; i <= 8; i++) {
+    const a = startA + (i / 8) * span;
+    ctx.beginPath();
+    ctx.moveTo(cx + Math.cos(a) * (R - 8),  cy + Math.sin(a) * (R - 8));
+    ctx.lineTo(cx + Math.cos(a) * (R + 2),  cy + Math.sin(a) * (R + 2));
+    ctx.strokeStyle = 'rgba(255,255,255,0.4)';
+    ctx.lineWidth = 1;
+    ctx.stroke();
+  }
+
+  // Labels
+  const labels = ['4mA', '8', '12', '16', '20mA'];
+  ctx.fillStyle = 'rgba(255,255,255,0.7)';
+  ctx.font = '9px monospace';
+  ctx.textAlign = 'center';
+  ctx.textBaseline = 'middle';
+  for (let i = 0; i < labels.length; i++) {
+    const a = startA + (i / 4) * span;
+    const lr = R - 20;
+    ctx.fillText(labels[i], cx + Math.cos(a) * lr, cy + Math.sin(a) * lr);
+  }
+
+  // Centre value text
+  ctx.fillStyle = '#00d4ff';
+  ctx.font = 'bold 13px monospace';
+  ctx.textAlign = 'center';
+  ctx.fillText(mA.toFixed(2) + ' mA', cx, cy - 20);
+
+  // Needle
+  const needleA = startA + frac * span;
+  ctx.save();
+  ctx.translate(cx, cy);
+  ctx.rotate(needleA);
+  ctx.beginPath();
+  ctx.moveTo(-3, 0);
+  ctx.lineTo(0, -(R - 14));
+  ctx.lineTo(3, 0);
+  ctx.closePath();
+  ctx.fillStyle = '#ff6b35';
+  ctx.fill();
+  ctx.restore();
+
+  // Centre dot
+  ctx.beginPath();
+  ctx.arc(cx, cy, 5, 0, Math.PI * 2);
+  ctx.fillStyle = '#555';
+  ctx.fill();
+}
+
+// =====================================================
+// HELPER: safe getElementById
+// =====================================================
+function safeSet(id, prop, val) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  if (prop === 'textContent') el.textContent = val;
+  else if (prop === 'innerHTML') el.innerHTML = val;
+  else if (prop === 'className') el.className = val;
+  else el.style[prop] = val;
+}
+
+// =====================================================
+// UPDATE SIMULATION
+// =====================================================
+function updateSimulation(val) {
+  currentLevel = parseFloat(val);
+
+  const slider = document.getElementById('levelSlider');
+  if (slider) slider.value = currentLevel;
+  safeSet('sliderVal', 'textContent', currentLevel.toFixed(1) + ' mm');
+
+  const mA = 4 + (currentLevel / 250) * 16;
+  const m = currentLevel / 1000;
+  const Pa = 1000 * 9.81 * m;
+  const pct = (currentLevel / 250) * 100;
+
+  drawMAGauge(mA);
+
+  // Vertical bar gauge
+  safeSet('gaugeBar', 'height', pct + '%');
+
+  // Determine status
+  let statusText, statusClass;
+  if (currentLevel >= spHH) {
+    statusText = 'OVERFLOW!'; statusClass = 'display-value danger';
+  } else if (currentLevel >= spH) {
+    statusText = 'HIGH'; statusClass = 'display-value warning';
+  } else if (currentLevel < spL && currentLevel > 0) {
+    statusText = currentLevel < spLL ? 'LOW-LOW' : 'LOW';
+    statusClass = 'display-value warning';
+  } else {
+    statusText = currentLevel === 0 ? 'EMPTY' : 'NORMAL';
+    statusClass = 'display-value normal';
+  }
+
+  const valClass = currentLevel >= spHH ? 'display-value danger'
+    : currentLevel >= spH || (currentLevel < spL && currentLevel > 0) ? 'display-value warning'
+    : 'display-value normal';
+
+  // Digital display updates (null-safe)
+  const dispMm = document.getElementById('disp-mm');
+  const dispMa = document.getElementById('disp-ma');
+  const statusEl = document.getElementById('disp-status');
+
+  if (dispMm) { dispMm.textContent = currentLevel.toFixed(2); dispMm.className = valClass; }
+  if (dispMa) { dispMa.textContent = mA.toFixed(3); dispMa.className = valClass; }
+  safeSet('disp-m', 'textContent', m.toFixed(4));
+  safeSet('disp-pa', 'textContent', Pa.toFixed(2));
+  safeSet('disp-pct', 'textContent', pct.toFixed(2) + '%');
+  if (statusEl) { statusEl.textContent = statusText; statusEl.className = statusClass; }
+
+  // *** FIX 1: Null-safe system status dot ***
+  const statusDot = document.getElementById('sysStatusDot');
+  const statusTextEl = document.getElementById('sysStatusText');
+  if (statusDot && statusTextEl) {
+    if (currentLevel >= spHH) {
+      statusDot.style.background = '#dc3545';
+      statusTextEl.textContent = 'OVERFLOW ALARM';
+    } else if (currentLevel >= spH || (currentLevel < spL && currentLevel > 0)) {
+      statusDot.style.background = '#ffc107';
+      statusTextEl.textContent = 'Alarm Active';
+    } else {
+      statusDot.style.background = '#28a745';
+      statusTextEl.textContent = 'System Online';
+    }
+  }
+
+  // Alarms
+  const alarmLow = document.getElementById('alarmLow');
+  const alarmHigh = document.getElementById('alarmHigh');
+  const alarmCritical = document.getElementById('alarmCritical');
+  if (alarmLow) alarmLow.className = 'alarm-panel low' + (currentLevel > 0 && currentLevel < spL ? ' show' : '');
+  if (alarmHigh) alarmHigh.className = 'alarm-panel' + (currentLevel >= spH && currentLevel < spHH ? ' show' : '');
+  if (alarmCritical) alarmCritical.className = 'alarm-panel critical' + (currentLevel >= spHH ? ' show' : '');
+
+  // Water fill animation
+  const waterFill = document.getElementById('waterFill');
+  const levelLine = document.getElementById('levelLine');
+  const fillBar = document.getElementById('fillBar');
+  const fillBarPct = document.getElementById('fillBarPct');
+
+  if (waterFill) {
+    waterFill.style.height = pct + '%';
+    if (currentLevel >= spHH) {
+      waterFill.style.background = 'linear-gradient(to top, rgba(160,0,0,0.9) 0%, rgba(220,50,50,0.8) 100%)';
+    } else if (currentLevel >= spH) {
+      waterFill.style.background = 'linear-gradient(to top, rgba(140,80,0,0.9) 0%, rgba(255,165,0,0.7) 100%)';
+    } else {
+      waterFill.style.background = 'linear-gradient(to top, rgba(0,60,140,0.95) 0%, rgba(0,105,217,0.85) 40%, rgba(30,144,255,0.75) 75%, rgba(100,180,255,0.5) 100%)';
+    }
+  }
+  if (levelLine) levelLine.style.bottom = pct + '%';
+  if (fillBar) fillBar.style.width = pct + '%';
+  if (fillBarPct) fillBarPct.textContent = pct.toFixed(1) + '%';
+
+  // Hydrostatic arrow
+  const hydroBar = document.getElementById('hydroBar');
+  const hydroLabel = document.getElementById('hydroLabel');
+  const hydroH = Math.min(120, (currentLevel / 250) * 120);
+  if (hydroBar) hydroBar.style.height = hydroH + 'px';
+  if (hydroLabel) hydroLabel.textContent = 'P=' + Pa.toFixed(0) + 'Pa';
+
+  // Capacitor dielectric visualization
+  const waterFrac = currentLevel / 250;
+  const epsilonEff = 1 + waterFrac * 79;
+  safeSet('epsilonVal', 'textContent', epsilonEff.toFixed(0));
+  const diBlock = document.getElementById('dielectricBlock');
+  if (diBlock) {
+    const waterBlue = Math.floor(waterFrac * 217);
+    diBlock.style.background = `rgba(0,${100 + Math.floor(waterFrac*100)},${waterBlue},${0.1 + waterFrac * 0.8})`;
+    diBlock.innerHTML = `<div>ε≈${epsilonEff.toFixed(0)}<br>${waterFrac > 0.5 ? 'Water' : waterFrac > 0.1 ? 'Mix' : 'Air'}</div>`;
+  }
+
+  // Update particles
+  updateParticles(currentLevel);
+
+  // Live formulas
+  safeSet('fwd-result', 'textContent', `L = (${mA.toFixed(3)}−4)×15.625 = ${currentLevel.toFixed(2)} mm`);
+  safeSet('rev-result', 'textContent', `mA = 4+(${currentLevel.toFixed(1)}/250)×16 = ${mA.toFixed(3)} mA`);
+  safeSet('hydro-result', 'textContent', `P = 1000×9.81×${m.toFixed(4)} = ${Pa.toFixed(2)} Pa`);
+  safeSet('pct-result', 'textContent', `% = (${currentLevel.toFixed(1)}/250)×100 = ${pct.toFixed(2)}%`);
+
+  logReading(currentLevel, mA, m, Pa, pct);
+}
+
+// =====================================================
+// PARTICLES
+// =====================================================
+function updateParticles(level) {
+  const layer = document.getElementById('particlesLayer');
+  if (!layer) return;
+  const target = Math.floor(level / 25);
+  while (layer.querySelectorAll('.particle').length < target) {
+    const p = document.createElement('div');
+    p.className = 'particle';
+    const sz = 2 + Math.random() * 5;
+    p.style.width = sz + 'px';
+    p.style.height = sz + 'px';
+    p.style.left = (5 + Math.random() * 88) + '%';
+    p.style.bottom = (5 + Math.random() * 60) + '%';
+    p.style.animationDuration = (3 + Math.random() * 4) + 's';
+    p.style.animationDelay = (Math.random() * 3) + 's';
+    layer.appendChild(p);
+  }
+  while (layer.querySelectorAll('.particle').length > target) {
+    const p = layer.querySelector('.particle');
+    if (p) p.remove();
+  }
+}
+
+// =====================================================
+// LOG
+// =====================================================
+let lastLogTime = 0;
+function logReading(mm, mA, m, Pa, pct) {
+  const now = Date.now();
+  if (now - lastLogTime < 1500) return;
+  lastLogTime = now;
+  const status = mm >= spHH ? 'OVERFLOW' : mm >= spH ? 'HIGH' : mm < spL && mm > 0 ? 'LOW' : mm === 0 ? 'EMPTY' : 'NORMAL';
+  logData.unshift({ time: new Date().toLocaleTimeString(), mm, m, mA, Pa, pct, status });
+  if (logData.length > 60) logData.pop();
+  renderLog();
+}
+
+function renderLog() {
+  const tbody = document.getElementById('logBody');
+  if (!tbody) return;
+  if (!logData.length) {
+    tbody.innerHTML = '<tr><td colspan="8" style="text-align:center;color:#aaa;padding:20px;">No data</td></tr>';
+    return;
+  }
+  tbody.innerHTML = logData.map((d, i) => {
+    const cls = d.status === 'OVERFLOW' ? 'badge-red' : d.status === 'HIGH' || d.status === 'LOW' ? 'badge-yellow' : d.status === 'EMPTY' ? 'badge-cyan' : 'badge-green';
+    return `<tr>
+      <td>${logData.length - i}</td>
+      <td>${d.time}</td>
+      <td>${d.mm.toFixed(2)}</td>
+      <td>${d.m.toFixed(4)}</td>
+      <td>${d.mA.toFixed(3)}</td>
+      <td>${d.Pa.toFixed(2)}</td>
+      <td>${d.pct.toFixed(1)}%</td>
+      <td><span class="badge ${cls}">${d.status}</span></td>
+    </tr>`;
+  }).join('');
+}
+
+function clearLog() { logData = []; renderLog(); }
+function exportLog() {
+  const headers = 'Time,Level(mm),Level(m),Current(mA),Hydrostatic(Pa),%Range,Status\n';
+  const rows = logData.map(d => `${d.time},${d.mm.toFixed(2)},${d.m.toFixed(4)},${d.mA.toFixed(3)},${d.Pa.toFixed(2)},${d.pct.toFixed(1)},${d.status}`).join('\n');
+  const blob = new Blob([headers + rows], { type: 'text/csv' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href = url; a.download = 'level_log.csv'; a.click();
+  URL.revokeObjectURL(url);
+}
+
+// =====================================================
+// AUTO FILL / DRAIN
+// =====================================================
+function stopAuto() { if (autoInterval) { clearInterval(autoInterval); autoInterval = null; } }
+
+function startFill() {
+  stopAuto();
+  autoInterval = setInterval(() => {
+    if (currentLevel < 250) updateSimulation(Math.min(250, currentLevel + 1.5));
+    else stopAuto();
+  }, 80);
+}
+
+function startDrain() {
+  stopAuto();
+  autoInterval = setInterval(() => {
+    if (currentLevel > 0) updateSimulation(Math.max(0, currentLevel - 1.5));
+    else stopAuto();
+  }, 80);
+}
+
+function emergencyClose() {
+  stopAuto();
+  autoInterval = setInterval(() => {
+    if (currentLevel > 0) updateSimulation(Math.max(0, currentLevel - 8));
+    else stopAuto();
+  }, 60);
+}
+
+function resetSim() { stopAuto(); updateSimulation(0); }
+
+function updateSetpoints() {
+  spLL = parseFloat(document.getElementById('spLL').value) || 20;
+  spL  = parseFloat(document.getElementById('spL').value)  || 40;
+  spH  = parseFloat(document.getElementById('spH').value)  || 200;
+  spHH = parseFloat(document.getElementById('spHH').value) || 235;
+  updateSimulation(currentLevel);
+}
+
+// =====================================================
+// SCENARIOS
+// =====================================================
+const scenarios = {
+  fill: {
+    title: '🚿 Tank Filling',
+    desc: 'Inlet valve opens and water fills the tank gradually from 0 to 200 mm. At 200 mm the HIGH alarm triggers and inlet valve closes.',
+    action: (cb) => {
+      let l = 0;
+      const iv = setInterval(() => {
+        l = Math.min(200, l + 2);
+        const mA = 4 + (l/250)*16;
+        const Pa = 1000*9.81*(l/1000);
+        cb(l, mA, Pa, l >= 200 ? 'CLOSE INLET VALVE' : 'FILLING', l >= 200 ? 'HIGH ALARM' : 'NORMAL');
+        if (l >= 200) clearInterval(iv);
+      }, 100);
+    }
+  },
+  drain: {
+    title: '🔽 Tank Draining',
+    desc: 'Outlet valve opens, level drops from 150 mm to empty. PLC triggers LOW alarm at 40 mm and LOW-LOW at 20 mm.',
+    action: (cb) => {
+      let l = 150;
+      const iv = setInterval(() => {
+        l = Math.max(0, l - 2.5);
+        const mA = 4 + (l/250)*16;
+        const Pa = 1000*9.81*(l/1000);
+        const action = l < 20 ? 'PUMP SHUTOFF' : l < 40 ? 'OPEN INLET' : 'DRAINING';
+        const alarm = l < 20 ? 'LOW-LOW' : l < 40 ? 'LOW' : 'NORMAL';
+        cb(l, mA, Pa, action, alarm);
+        if (l <= 0) clearInterval(iv);
+      }, 100);
+    }
+  },
+  normal: {
+    title: '✅ Normal Operation',
+    desc: 'Level maintained at 125 mm (50% range). Transmitter outputs 12 mA. No alarms active. Hydrostatic pressure = 1226.25 Pa.',
+    action: (cb) => setTimeout(() => cb(125, 12, 1226.25, 'MONITORING', 'NORMAL'), 400)
+  },
+  overflow: {
+    title: '🌊 Overflow Event',
+    desc: 'Inlet control valve fails open. Level rises beyond 235 mm HH setpoint. PLC triggers emergency closure.',
+    action: (cb) => {
+      let l = 200;
+      const iv = setInterval(() => {
+        l = Math.min(250, l + 1.5);
+        const mA = 4 + (l/250)*16;
+        const Pa = 1000*9.81*(l/1000);
+        cb(l, mA, Pa, l >= 235 ? '🚨 EMERGENCY CLOSE' : 'RISING', l >= 235 ? 'OVERFLOW!' : 'HIGH');
+        if (l >= 250) clearInterval(iv);
+      }, 100);
+    }
+  },
+  pumpfail: {
+    title: '⚠️ Pump Failure / Supply Loss',
+    desc: 'Water supply fails. Level drops below LOW-LOW (20 mm). PLC shuts down pump to prevent dry running.',
+    action: (cb) => {
+      let l = 80;
+      const iv = setInterval(() => {
+        l = Math.max(0, l - 2);
+        const mA = 4 + (l/250)*16;
+        const Pa = 1000*9.81*(l/1000);
+        const action = l < 20 ? 'PUMP SHUTDOWN' : l < 40 ? 'ALERT: OPEN SUPPLY' : 'MONITORING';
+        cb(l, mA, Pa, action, l < 20 ? 'LOW-LOW!' : l < 40 ? 'LOW' : 'NORMAL');
+        if (l <= 0) clearInterval(iv);
+      }, 120);
+    }
+  },
+  sensor_fail: {
+    title: '❌ Sensor / Open-Circuit Failure',
+    desc: 'Transmitter wire breaks → output drops to 0 mA (below live zero of 4 mA). PLC detects SENSOR FAULT.',
+    action: (cb) => setTimeout(() => cb(-1, 0, 0, 'CHECK WIRING', 'SENSOR FAULT'), 400)
+  },
+  cycle: {
+    title: '〰️ Level Cycling — PID Hunting',
+    desc: 'A poorly tuned PID controller causes the inlet valve to overshoot. Level cycles around 125 mm setpoint.',
+    action: (cb) => {
+      let t = 0;
+      const iv = setInterval(() => {
+        t += 0.25;
+        const l = Math.max(0, Math.min(250, 125 + 60 * Math.sin(t) * Math.exp(-t * 0.04)));
+        const mA = 4 + (l/250)*16;
+        const Pa = 1000*9.81*(l/1000);
+        cb(l, mA, Pa, 'RETUNE PID', 'CYCLING');
+        if (t > 25) clearInterval(iv);
+      }, 100);
+    }
+  },
+  calibrate: {
+    title: '🔧 5-Point Calibration',
+    desc: 'Technician sets known levels (0%, 25%, 50%, 75%, 100%) and records transmitter output. Expected: 4, 8, 12, 16, 20 mA.',
+    action: (cb) => {
+      const pts = [0, 62.5, 125, 187.5, 250];
+      let i = 0;
+      const iv = setInterval(() => {
+        if (i < pts.length) {
+          const l = pts[i];
+          const mA = 4 + (l/250)*16;
+          const Pa = 1000*9.81*(l/1000);
+          cb(l, mA, Pa, `CAL POINT ${i+1}/5 — expect ${mA.toFixed(1)} mA`, 'CALIBRATING');
+          i++;
+        } else clearInterval(iv);
+      }, 1500);
+    }
+  }
+};
+
+// *** FIX 2: Find Scenarios tab button safely by onclick attribute ***
+function runScenario(key) {
+  stopAuto();
+  const sc = scenarios[key];
+  const infoEl = document.getElementById('scenarioInfo');
+  const liveEl = document.getElementById('scenLive');
+  if (infoEl) infoEl.style.display = 'block';
+  safeSet('scenTitle', 'textContent', sc.title);
+  safeSet('scenDesc', 'textContent', sc.desc);
+  if (liveEl) liveEl.style.display = 'grid';
+
+  sc.action((mm, mA, Pa, action) => {
+    if (mm < 0) {
+      safeSet('scen-mm', 'textContent', 'FAULT');
+      safeSet('scen-ma', 'textContent', '0.00 mA');
+      safeSet('scen-pa', 'textContent', 'N/A');
+      safeSet('scen-action', 'textContent', action);
+      const mmEl = document.getElementById('scen-mm');
+      if (mmEl) mmEl.style.color = '#ff4444';
+      updateSimulation(0);
+    } else {
+      safeSet('scen-mm', 'textContent', mm.toFixed(1) + ' mm');
+      safeSet('scen-ma', 'textContent', mA.toFixed(3) + ' mA');
+      safeSet('scen-pa', 'textContent', Pa.toFixed(1) + ' Pa');
+      safeSet('scen-action', 'textContent', action);
+      const mmEl = document.getElementById('scen-mm');
+      if (mmEl) mmEl.style.color = mm >= spHH ? '#ff4444' : mm >= spH ? '#ffc107' : '#00d4ff';
+      updateSimulation(mm);
+    }
+  });
+
+  // *** FIX 2: Find the scenarios tab button safely by checking onclick attribute ***
+  const allBtns = document.querySelectorAll('.tab-btn');
+  let scenBtn = null;
+  allBtns.forEach(b => {
+    if ((b.getAttribute('onclick') || '').includes("'scenarios'")) scenBtn = b;
+  });
+  showTab('scenarios', scenBtn);
+}
+
+// =====================================================
+// CALCULATOR
+// =====================================================
+function calcFromMA() {
+  const mA = parseFloat(document.getElementById('calc-ma-in').value) || 4;
+  const mm = Math.max(0, (mA - 4) * 15.625);
+  const m = mm / 1000;
+  const Pa = 1000 * 9.81 * m;
+  const pct = (mm / 250) * 100;
+  safeSet('calc-ma-result', 'textContent', `L = (${mA.toFixed(2)}−4)×15.625 = ${mm.toFixed(2)} mm`);
+  safeSet('o-mm-ma', 'textContent', mm.toFixed(2) + ' mm');
+  safeSet('o-m-ma', 'textContent', m.toFixed(4) + ' m');
+  safeSet('o-pa-ma', 'textContent', Pa.toFixed(2) + ' Pa');
+  safeSet('o-pct-ma', 'textContent', pct.toFixed(1) + '%');
+}
+
+function calcFromMM() {
+  const mm = parseFloat(document.getElementById('calc-mm-in').value) || 0;
+  const mA = 4 + (mm / 250) * 16;
+  const m = mm / 1000;
+  const Pa = 1000 * 9.81 * m;
+  const pct = (mm / 250) * 100;
+  safeSet('calc-mm-result', 'textContent', `mA = 4+(${mm.toFixed(1)}/250)×16 = ${mA.toFixed(3)} mA`);
+  safeSet('o-ma-mm', 'textContent', mA.toFixed(3) + ' mA');
+  safeSet('o-pa-mm', 'textContent', Pa.toFixed(2) + ' Pa');
+  safeSet('o-m-mm', 'textContent', m.toFixed(4) + ' m');
+  safeSet('o-pct-mm', 'textContent', pct.toFixed(1) + '%');
+}
+
+function buildCalcTable() {
+  const pts = [0, 62.5, 125, 187.5, 200, 235, 250];
+  const tbody = document.getElementById('calcTableBody');
+  if (!tbody) return;
+  tbody.innerHTML = pts.map(mm => {
+    const mA = 4 + (mm/250)*16;
+    const m = mm/1000;
+    const Pa = 1000*9.81*m;
+    const pct = (mm/250)*100;
+    const status = mm >= 235 ? '<span class="badge badge-red">Overflow</span>'
+      : mm >= 200 ? '<span class="badge badge-yellow">High</span>'
+      : mm === 0 ? '<span class="badge badge-cyan">Empty</span>'
+      : '<span class="badge badge-green">Normal</span>';
+    return `<tr>
+      <td>${mA.toFixed(3)}</td>
+      <td>${mm.toFixed(1)}</td>
+      <td>${m.toFixed(4)}</td>
+      <td>${Pa.toFixed(2)}</td>
+      <td>${pct.toFixed(1)}%</td>
+      <td>${status}</td>
+    </tr>`;
+  }).join('');
+}
+
+// =====================================================
+// MCQ
+// =====================================================
+const questions = [
+  {
+    q: "A capacitive level transmitter outputs 12 mA for a 0–250 mm range. What is the water level?",
+    opts: ["62.5 mm", "100.0 mm", "125.0 mm", "150.0 mm"],
+    ans: 2,
+    exp: "L = (12 − 4) × 15.625 = 8 × 15.625 = 125.0 mm. This is exactly 50% of the 250 mm range."
+  },
+  {
+    q: "What is the scale factor for a 0–250 mm / 4–20 mA level transmitter?",
+    opts: ["12.5 mm/mA", "15.0 mm/mA", "15.625 mm/mA", "16.0 mm/mA"],
+    ans: 2,
+    exp: "Scale = Range ÷ Span = 250 mm ÷ 16 mA = 15.625 mm/mA."
+  },
+  {
+    q: "The transmitter reads 0 mA. What does the PLC interpret this as?",
+    opts: ["Empty tank (0 mm)", "Half-full (125 mm)", "Open circuit / sensor fault", "Overflow condition"],
+    ans: 2,
+    exp: "0 mA is below the 4 mA 'live zero'. The PLC interprets this as a wiring fault or sensor failure — NOT as 0 mm level."
+  },
+  {
+    q: "What physical principle does a capacitive level sensor use?",
+    opts: ["Change in resistance with liquid pressure", "Change in dielectric constant between electrodes", "Ultrasonic reflection from liquid surface", "Buoyancy force on a float"],
+    ans: 1,
+    exp: "Capacitive sensors work on C = ε·A/d. When water (ε ≈ 80) replaces air (ε ≈ 1), capacitance increases proportional to the level."
+  },
+  {
+    q: "Calculate the hydrostatic pressure at 250 mm water depth (ρ=1000 kg/m³, g=9.81 m/s²).",
+    opts: ["981 Pa", "1962.5 Pa", "2452.5 Pa", "9810 Pa"],
+    ans: 2,
+    exp: "P = ρ × g × h = 1000 × 9.81 × 0.250 = 2452.5 Pa. Always convert mm to meters."
+  },
+  {
+    q: "Water level is 187.5 mm. What is the transmitter output current?",
+    opts: ["14 mA", "15 mA", "16 mA", "17 mA"],
+    ans: 2,
+    exp: "mA = 4 + (187.5 / 250) × 16 = 4 + 12 = 16 mA. 187.5 mm is exactly 75% of range."
+  },
+  {
+    q: "Why is a coated (PTFE-sleeved) probe used instead of a bare probe in water?",
+    opts: ["Water is non-conductive so no issue", "To prevent electrical leakage through conductive water", "To increase probe sensitivity", "To reduce installation cost"],
+    ans: 1,
+    exp: "Water is conductive. A bare probe would short-circuit. The PTFE coating keeps the capacitor plates electrically isolated while allowing capacitance to change with level."
+  },
+  {
+    q: "At 8 mA output, what level does the transmitter indicate?",
+    opts: ["31.25 mm", "50.0 mm", "62.5 mm", "80.0 mm"],
+    ans: 2,
+    exp: "L = (8 − 4) × 15.625 = 4 × 15.625 = 62.5 mm. This is 25% of the full 250 mm range."
+  },
+  {
+    q: "A PLC has a HIGH-HIGH setpoint at 235 mm. What PLC action should trigger at this point?",
+    opts: ["Open the outlet valve only", "Send operator alert only", "Emergency close inlet valve + activate overflow alarm", "Increase pump speed"],
+    ans: 2,
+    exp: "HH triggers an emergency interlock: close the inlet valve immediately AND activate the overflow alarm."
+  },
+  {
+    q: "What is the advantage of using 4 mA (not 0 mA) as the minimum signal?",
+    opts: ["4 mA draws less power", "4 mA allows loop-powered transmitters and broken-wire detection", "4 mA is easier to measure", "4 mA corresponds to 25 mm level"],
+    ans: 1,
+    exp: "The '4 mA live zero' allows loop-powered transmitters and distinguishes broken wire (0 mA) from empty tank (4 mA)."
+  }
+];
+
+let answered = new Array(questions.length).fill(false);
+let scores = new Array(questions.length).fill(null);
+
+function buildMCQ() {
+  const area = document.getElementById('mcqArea');
+  if (!area) return;
+  area.innerHTML = questions.map((q, qi) => `
+    <div class="mcq-question" id="q-${qi}">
+      <div class="question-num">Question ${qi + 1} of ${questions.length}</div>
+      <div class="question-text">${q.q}</div>
+      <div class="options">
+        ${q.opts.map((opt, oi) => `
+          <div class="option" id="opt-${qi}-${oi}" onclick="selectOption(${qi},${oi})">
+            <input type="radio" name="q${qi}" value="${oi}" id="r-${qi}-${oi}">
+            <label class="option-label" for="r-${qi}-${oi}">${String.fromCharCode(65+oi)}. ${opt}</label>
+          </div>`).join('')}
+      </div>
+      <button class="check-btn" onclick="checkAnswer(${qi})">Check Answer</button>
+      <div class="feedback" id="fb-${qi}"></div>
+    </div>`).join('');
+}
+
+function selectOption(qi, oi) {
+  if (answered[qi]) return;
+  document.querySelectorAll(`[id^="opt-${qi}-"]`).forEach(el => el.style.background = '');
+  const optEl = document.getElementById(`opt-${qi}-${oi}`);
+  if (optEl) optEl.style.background = 'var(--hover-color)';
+  const radioEl = document.querySelector(`#r-${qi}-${oi}`);
+  if (radioEl) radioEl.checked = true;
+}
+
+function checkAnswer(qi) {
+  if (answered[qi]) return;
+  const selected = document.querySelector(`input[name="q${qi}"]:checked`);
+  if (!selected) { alert('Please select an answer!'); return; }
+  answered[qi] = true;
+  const userAns = parseInt(selected.value);
+  const correct = questions[qi].ans;
+  const isCorrect = userAns === correct;
+  scores[qi] = isCorrect;
+  for (let i = 0; i < questions[qi].opts.length; i++) {
+    const el = document.getElementById(`opt-${qi}-${i}`);
+    if (!el) continue;
+    el.style.cursor = 'default';
+    if (i === correct) el.className = 'option correct';
+    else if (i === userAns && !isCorrect) el.className = 'option wrong';
+  }
+  const fb = document.getElementById(`fb-${qi}`);
+  if (fb) {
+    fb.className = 'feedback ' + (isCorrect ? 'correct' : 'wrong');
+    fb.innerHTML = (isCorrect ? '✅ Correct! ' : '❌ Incorrect. ') + questions[qi].exp;
+  }
+  updateScore();
+}
+
+function updateScore() {
+  const correct = scores.filter(s => s === true).length;
+  const total = scores.filter(s => s !== null).length;
+  safeSet('scoreDisplay', 'textContent', `${correct} / ${questions.length}`);
+  if (total === questions.length) {
+    const pct = Math.round((correct/questions.length)*100);
+    safeSet('scoreMsg', 'textContent', `Quiz complete! ${pct}% — ${pct>=80?'🎉 Excellent!':pct>=60?'👍 Good job!':'📚 Keep studying!'}`);
+  }
+}
+
+function resetQuiz() {
+  answered = new Array(questions.length).fill(false);
+  scores = new Array(questions.length).fill(null);
+  buildMCQ();
+  safeSet('scoreDisplay', 'textContent', '0 / 10');
+  safeSet('scoreMsg', 'textContent', 'Answer all questions to see your result');
+}
+
+function showAllAnswers() {
+  questions.forEach((q, qi) => {
+    if (!answered[qi]) {
+      const el = document.getElementById(`opt-${qi}-${q.ans}`);
+      if (el) el.className = 'option correct';
+      const fb = document.getElementById(`fb-${qi}`);
+      if (fb) { fb.className = 'feedback correct'; fb.innerHTML = '💡 Answer: ' + q.exp; }
+      answered[qi] = true; scores[qi] = false;
+    }
+  });
+  updateScore();
+}
+
+// =====================================================
+// INIT
+// =====================================================
+window.onload = () => {
+  drawMAGauge(4);
+  updateSimulation(0);
+  buildMCQ();
+  buildCalcTable();
+  calcFromMA();
+  calcFromMM();
+};
+</script>
+</body>
+</html>

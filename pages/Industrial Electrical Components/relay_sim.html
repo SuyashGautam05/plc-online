@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Relay Simulation</title>
+    <link rel="stylesheet" href="../defination.css">
+    <style>
+        :root {
+            --primary-color: #f8f9fa;
+            --secondary-color: #e9ecef;
+            --text-color: #343a40;
+            --accent-color: #6c757d;
+            --border-color: #dee2e6;
+            --shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: Georgia, 'Times New Roman', Times, serif;
+            background-color: var(--primary-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 5px 16px;
+        }
+
+        .sim-card {
+            background: white;
+            border-radius: 10px;
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            width: 100%;
+            max-width: 820px;
+        }
+
+        .sim-header {
+            background-color: var(--secondary-color);
+            /* padding: 14px 22px; */
+            padding: 7px 15px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .sim-header h2 {
+            font-size: clamp(1rem, 3vw, 1.3rem);
+            color: var(--text-color);
+        }
+
+        .state-badge {
+            padding: 4px 14px;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+            transition: all 0.3s ease;
+            background: #fce8e8;
+            color: #c0392b;
+            border: 1px solid #f5c6c6;
+        }
+
+        .state-badge.on {
+            background: #e8f5e9;
+            color: #2e7d32;
+            border-color: #c8e6c9;
+        }
+
+        .image-wrapper {
+            position: relative;
+            width: 100%;
+            background: #fff;
+            padding: 18px;
+        }
+
+        .diagram-img {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            transition: opacity 0.25s ease;
+        }
+
+        /* Hidden image sits on top, fades in/out */
+        .diagram-img.overlay {
+            position: absolute;
+            top: 18px;
+            left: 18px;
+            width: calc(100% - 36px);
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .diagram-img.overlay.visible {
+            opacity: 1;
+        }
+
+        .btn-row {
+            padding: 18px 22px;
+            border-top: 1px solid var(--border-color);
+            background: var(--secondary-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            flex-wrap: wrap;
+        }
+
+        .toggle-btn {
+            background-color: var(--text-color);
+            color: white;
+            border: none;
+            padding: 10px 36px;
+            border-radius: 5px;
+            font-size: clamp(0.9rem, 2.5vw, 1rem);
+            font-family: Georgia, serif;
+            cursor: pointer;
+            transition: background 0.2s ease, transform 0.1s;
+            letter-spacing: 0.3px;
+        }
+
+        .toggle-btn:hover { background-color: #495057; }
+        .toggle-btn:active { transform: scale(0.97); }
+
+        .toggle-btn.active {
+            background-color: #2e7d32;
+        }
+
+        .toggle-btn.active:hover { background-color: #1b5e20; }
+
+        .hint {
+            font-size: 0.8rem;
+            color: var(--accent-color);
+            text-align: center;
+            padding: 0 22px 14px;
+            background: var(--secondary-color);
+        }
+    </style>
+</head>
+<body>
+      <header style="margin-bottom: 10px; padding: 0px;" class="site-header">
+      <div class="logo-container" style="margin-bottom: 0px;gap: clamp(15px, 15vw, 180px);">
+        <img style="margin-left: -2pc" src="../../assets/Scientech logo-2.png" alt="Scientech Logo" />
+        <h1 style="margin-left: 89px;margin-right: -8pc;">
+          Relay Simulation
+        </h1>
+        <div class="button-container" style="margin-bottom: 0px" >
+                  <a href="./Relays.html" class="back-button" style="margin-left: 210px;">
+                      <i class="fas fa-arrow-left"></i><img style="height: 30px;width: 30px;" src="../Transducers, Sensors and Transmitters/left-arrow.png" alt=""> Back to Course
+                  </a>
+        </div>
+      </div>
+    </header>
+
+<div class="sim-card">
+    <div class="sim-header">
+        <h2>8-Pin Relay — Wiring Simulation</h2>
+        <span class="state-badge" id="badge">Switch: OFF</span>
+    </div>
+
+    <div class="image-wrapper">
+        <!-- Base image: Relay OFF -->
+        <img class="diagram-img" src="./Relay_off.jpg" alt="Relay OFF state" id="imgOff">
+        <!-- Overlay image: Relay ON -->
+        <img class="diagram-img overlay" src="./Relay_on.JPG" alt="Relay ON state" id="imgOn">
+    </div>
+
+    <div class="btn-row">
+        <button class="toggle-btn" id="toggleBtn" onclick="toggle()">Toggle Switch</button>
+    </div>
+    <!-- <p class="hint">Click the button to toggle the switch ON / OFF and observe the relay behaviour.</p> -->
+</div>
+
+<script>
+    let isOn = false;
+
+    function toggle() {
+        isOn = !isOn;
+        const btn = document.getElementById('toggleBtn');
+        const badge = document.getElementById('badge');
+        const imgOn = document.getElementById('imgOn');
+
+        if (isOn) {
+            imgOn.classList.add('visible');
+            btn.classList.add('active');
+            btn.textContent = 'Toggle Switch';
+            badge.textContent = 'Switch: ON';
+            badge.classList.add('on');
+        } else {
+            imgOn.classList.remove('visible');
+            btn.classList.remove('active');
+            btn.textContent = 'Toggle Switch';
+            badge.textContent = 'Switch: OFF';
+            badge.classList.remove('on');
+        }
+    }
+</script>
+
+</body>
+</html>

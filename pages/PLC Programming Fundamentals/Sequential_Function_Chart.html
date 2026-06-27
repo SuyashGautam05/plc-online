@@ -1,0 +1,317 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PLC Software</title>
+    <link rel="stylesheet" href="../defination.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+  </head>
+
+  <body>
+    <div class="container">
+      <header style="display: flex">
+        <div class="logo-container">
+          <img src="../../assets/Scientech logo-2.png" alt="Scientech Logo" />
+          <h1>Sequential Function Chart</h1>
+        </div>
+      </header>
+
+      <main>
+        <a href="../../index.html" class="back-button">
+          <i class="fas fa-arrow-left"></i> Back to Course
+        </a>
+
+        <div class="content-wrapper">
+          <div class="image-section">
+            <img
+              style="border-radius: 20px; border: 2px solid black"
+              src="../../assets/Sequential Function Chart.png"
+              alt="Sequential Function Chart"
+            />
+          </div>
+
+          <div class="theory-section">
+            <h2>Sequential Function Chart</h2>
+
+            <p>
+              A Sequential Function Chart (SFC) is a graphical programming
+              language used in programmable logic controllers (PLCs) to model
+              sequential processes. It is part of the IEC 61131-3 standard for
+              PLC programming.
+            </p>
+
+            <ul>
+              <li>
+                <b>Purpose:</b> To represent control processes that occur in
+                steps and transitions.
+              </li>
+              <li>
+                <b>Key idea:</b> Divide a process into steps (states) and
+                transitions (conditions to move between steps).
+              </li>
+            </ul>
+
+            <p>
+              In simpler terms, it’s a flowchart-like diagram for controlling
+              sequential operations in industrial automation.
+            </p>
+
+            <img style="margin-left: 30px;margin-bottom: 30px; border: 2px solid black; align-self: center;height: auto; width: 528px;border-radius: 20px;"
+                src="../../assets/Sequential Function Chart_2.png" alt="Sequential Function Chart_2">
+
+            <h2>What is a sequence in SFC?</h2>
+
+            <p>
+              A sequence is a step-by-step operation that should be used to
+              perform a task. An example of a sequence can be a part painting
+              process.
+            </p>
+
+            <p>Here are the steps in a part painting process.</p>
+
+            <ol>
+              <li>
+                The first step is placing the part that needs to be painted in
+                the machine.
+              </li>
+              <img style="margin-left: 30px;margin-bottom: 30px; border: 2px solid black; align-self: center;height: auto; width: 528px;border-radius: 20px;"
+                    src="../../assets/Sequential Function Chart_3.png" alt="Sequential Function Chart">
+              <li>And next step is the first coat of paint.</li>
+              <img style="margin-left: 30px;margin-bottom: 30px; border: 2px solid black; align-self: center;height: auto; width: 528px;border-radius: 20px;"
+                    src="../../assets/Sequential Function Chart_4.png" alt="Sequential Function Chart">
+              <li>The next step is drying.</li>
+              <img style="margin-left: 30px;margin-bottom: 30px; border: 2px solid black; align-self: center;height: auto; width: 528px;border-radius: 20px;"
+                    src="../../assets/Sequential Function Chart_5.png" alt="Sequential Function Chart">
+              <li>And the last step is the final coat of paint.</li>
+              <img style="margin-left: 30px;margin-bottom: 30px; border: 2px solid black; align-self: center;height: auto; width: 528px;border-radius: 20px;"
+                    src="../../assets/Sequential Function Chart_6.png" alt="Sequential Function Chart">
+            </ol>
+
+            <p>
+              Let’s see how we can implement these steps easily using SFC
+              programming. An SFC makes it easy to program the sequence directly
+              in the PLC.
+            </p>
+
+            <p>
+              An SFC program is composed of graphic symbols. Each graphic symbol
+              represents one step. A step is the same as a state.
+            </p>
+
+            <h2>Components of SFC</h2>
+
+            <p>SFCs are built using a few basic elements:</p>
+
+            <img style="margin-left: 30px;margin-bottom: 30px; border: 2px solid black; align-self: center;height: auto; width: 528px;border-radius: 20px;"
+                    src="../../assets/Components of SFC.png" alt="Components of SFC">
+
+            <ol>
+              <li>
+                <b>Steps (States):</b>
+                <ul>
+                  <li>
+                    Represent a particular operation or state in the process.
+                  </li>
+                  <li>Can be active or inactive.</li>
+                  <li>Symbol: Rectangle.</li>
+                </ul>
+              </li>
+
+              <li>
+                <b>Transitions:</b>
+                <ul>
+                  <li>
+                    Logical conditions that determine whether the next step
+                    should activate.
+                  </li>
+                  <li>
+                    Symbol: Horizontal line with a condition written on it.
+                  </li>
+                </ul>
+              </li>
+
+              <li>
+                <b>Actions:</b>
+                <ul>
+                  <li>Operations performed when a step is active.</li>
+                  <li>Can be of types:</li>
+                  <ul>
+                    <li>
+                      Continuous action: Active as long as step is active.
+                    </li>
+                    <li>
+                      Set/Reset action: Changes output only once when step
+                      becomes active.
+                    </li>
+                    <li>
+                      Pulse action: Action occurs briefly when step becomes
+                      active.
+                    </li>
+                  </ul>
+                </ul>
+              </li>
+
+              <li>
+                <b>Connections / Flow Lines:</b>
+                <ul>
+                  <li>
+                    Show the direction of process flow from one step to another.
+                  </li>
+                </ul>
+              </li>
+
+              <li>
+                <b>Initial Step:</b>
+                <ul>
+                  <li>
+                    The first step that is active when the process starts.
+                  </li>
+                  <li>Marked with a double rectangle or arrow.</li>
+                </ul>
+              </li>
+            </ol>
+
+            <h2>Working of SFC</h2>
+
+            <p>
+              The working of SFC involves activating steps and checking
+              transitions:
+            </p>
+
+            <ol>
+              <li>Start with the initial step.</li>
+              <li>Execute the action(s) of the active step.</li>
+              <li>Check the transition conditions connected to that step.</li>
+              <li>
+                If the transition condition is true, deactivate the current step
+                and activate the next step.
+              </li>
+              <li>Repeat this process until the final step is reached.</li>
+            </ol>
+
+            <p><b>Key points:</b></p>
+
+            <ul>
+              <li>
+                Multiple steps can be active in parallel (parallel branches).
+              </li>
+              <li>
+                Transitions only allow step change when conditions are
+                satisfied.
+              </li>
+            </ul>
+
+            <h2>SFC example</h2>
+
+            <p>
+              Let’s look at an SFC example. We want a lamp to flash at 2
+              secondsinterval.
+            </p>
+
+            <p>To program the SFC we start with the init step.</p>
+
+            <p>
+              We need to add two steps. The sequence includes one step for the
+              lamp to turn on, and another step for the lamp to turn off.
+            </p>
+
+            <img style="margin-left: 30px;margin-bottom: 30px; border: 2px solid black; align-self: center;height: auto; width: 528px;border-radius: 20px;"
+                src="../../assets/SFC example.png" alt="SFC example">
+
+            <ul>
+              <li>There is always a transition between each step.</li>
+              <li>
+                If a condition always is full fit just enter TRUE as shown
+                between Init and Step1.
+              </li>
+              <li>
+                When right after entering Init step the program will go to
+                Step1.
+              </li>
+              <li>
+                The program needs to be repeated, because of the continuous
+                flashing.
+              </li>
+              <li>Draw a line from Step 2 to the end before step 1.</li>
+              <li>The lamp needs to flash at 2 seconds intervals.</li>
+              <li>
+                Therefore, a time delay of 2 seconds between the steps is
+                needed.
+              </li>
+              <li>
+                The on-time and the off-time are the same therefore same delay
+                time is used.
+              </li>
+              <li>Then the action to control the lamp is to be added.</li>
+              <li>
+                The qualifier letter N is used because the lamp must be turned
+                on only in Step1.
+              </li>
+              <li>
+                The lamp turns automatically off when leaving Step1 when using
+                the qualifier letter N.
+              </li>
+              <li>
+                No action is needed for Step2 because the lamp is turned off
+                when entering step 2.
+              </li>
+
+              <img style="margin-left: 30px;margin-bottom: 30px; border: 2px solid black; align-self: center;height: auto; width: 528px;border-radius: 20px;"
+                src="../../assets/SFC example_2.png" alt="SFC example">
+              <li>
+                The variable name or TAG name is Lamp and is assigned to the
+                output module where the physical lamp is wired.
+              </li>
+              <li>
+                Another solution for implementing a flashing lamp is to use the
+                qualifier S to turn the lamp on and the qualifier R to turn the
+                lamp off.
+              </li>
+              <img style="margin-left: 30px;margin-bottom: 30px; border: 2px solid black; align-self: center;height: auto; width: 528px;border-radius: 20px;"
+                src="../../assets/SFC example_3.png" alt="SFC example">
+            </ul>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <script>
+      // Add smooth scroll behavior for anchor links
+      document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+        anchor.addEventListener("click", function (e) {
+          e.preventDefault();
+          const target = document.querySelector(this.getAttribute("href"));
+          if (target) {
+            target.scrollIntoView({ behavior: "smooth" });
+          }
+        });
+      });
+    </script>
+
+    <!-- MCQ Modal -->
+    <div id="mcq-modal" class="mcq-modal">
+      <div class="mcq-modal-content">
+        <div class="mcq-modal-header">
+          <h2>Multiple Choice Questions</h2>
+          <button class="close-btn" onclick="closeMCQModal()">&times;</button>
+        </div>
+        <div class="mcq-modal-body">
+          <div id="mcq-container"></div>
+        </div>
+        <div class="mcq-modal-footer">
+          <button class="reset-btn" onclick="resetMCQs()">Reset Answers</button>
+          <button class="close-modal-btn" onclick="closeMCQModal()">
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MCQ Handler Script -->
+    <script src="../mcq-handler.js"></script>
+  </body>
+</html>

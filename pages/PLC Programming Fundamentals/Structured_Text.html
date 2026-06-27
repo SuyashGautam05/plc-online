@@ -1,0 +1,402 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PLC Software</title>
+    <link rel="stylesheet" href="../defination.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+  </head>
+
+  <body>
+    <div class="container">
+      <header style="display: flex">
+        <div class="logo-container">
+          <img src="../../assets/Scientech logo-2.png" alt="Scientech Logo" />
+          <h1>Structured Text</h1>
+        </div>
+      </header>
+
+      <main>
+        <a href="../../index.html" class="back-button">
+          <i class="fas fa-arrow-left"></i> Back to Course
+        </a>
+
+        <div class="content-wrapper">
+          <div class="image-section">
+            <img
+              style="border-radius: 20px; border: 2px solid black"
+              src="../../assets/Structured Text.png"
+              alt="Structured Text"
+            />
+          </div>
+
+          <div class="theory-section">
+            <h2>Structured Text</h2>
+
+            <p>
+              Structured Text (ST) is a high-level, text-based PLC programming
+              language standardized under IEC 61131-3. It is similar in syntax
+              and structure to conventional programming languages such as Pascal
+              and C. Structured Text is mainly used for complex control logic,
+              mathematical calculations, data processing, and advanced
+              automation tasks that are difficult to implement using graphical
+              languages.
+            </p>
+
+            <img
+              style="
+                margin-left: 81px;
+                margin-bottom: 30px;
+                border: 2px solid black;
+                align-self: center;
+                height: 322px;
+                width: 510px;
+                border-radius: 20px;
+              "
+              src="../../assets/Structured Text_2.png"
+              alt="Structured Text"
+            />
+
+            <p>
+              Structured Text allows programmers to write compact, readable, and
+              powerful programs using structured programming concepts. It is
+              particularly useful in applications that require loops,
+              conditional statements, arithmetic operations, and data
+              manipulation.
+            </p>
+
+            <img
+              style="
+                margin-left: 81px;
+                margin-bottom: 30px;
+                border: 2px solid black;
+                align-self: center;
+                height: 380px;
+                width: 510px;
+                border-radius: 20px;
+              "
+              src="../../assets/Structured Text_3.png"
+              alt="Structured Text"
+            />
+
+            <h2>Basic Elements of Structured Text</h2>
+
+            <p>
+              Structured Text supports a wide range of programming constructs,
+              including:
+            </p>
+
+            <ul>
+              <li>Conditional statements such as IF-THEN-ELSE and CASE.</li>
+              <li>Looping structures such as FOR, WHILE, and REPEAT.</li>
+              <li>Arithmetic and logical operations.</li>
+              <li>Variables, constants, and data types.</li>
+              <li>Functions and function blocks.</li>
+            </ul>
+
+            <p>
+              These elements allow programmers to implement advanced control
+              strategies efficiently.
+            </p>
+
+            <h2>Working of Structured Text</h2>
+
+            <p>
+              During PLC operation, the Structured Text program is executed
+              sequentially as part of the PLC scan cycle. The PLC uses input
+              values stored in memory, performs calculations and logic
+              operations, and updates internal variables and outputs
+              accordingly.
+            </p>
+
+            <p>
+              Structured Text programs can access timers, counters, data
+              registers, and communication variables, making them highly
+              flexible for complex automation tasks.
+            </p>
+
+            <h2>Basic rules of ST syntax</h2>
+
+            <p>The syntax of Structured Text follows some basic rules.</p>
+
+            <ul>
+              <li>
+                First, all statements in Structured Text will end with a
+                semicolon.
+              </li>
+              <li>A routine will close out with an End_If statement.</li>
+              <li>
+                Spaces and tabs are not required, but a good programmer will
+                still use them for readability.
+              </li>
+              <li>
+                Also, Structured Text is not case sensitive, but if you are
+                assigning a variable, known as a tag or a symbol such as <b>control
+                valve 1</b>, then using camelCase <b>ControlValve1</b> is a good practice
+                to get into.
+              </li>
+            </ul>
+
+            <img
+              style="
+                margin-left: 81px;
+                margin-bottom: 30px;
+                border: 2px solid rgb(0, 0, 0);
+                align-self: center;
+                height: 215px;
+                width: 510px;
+                border-radius: 20px;
+              "
+              src="../../assets/Basic rules of ST syntax.png"
+              alt="Basic rules of ST syntax"
+            />
+
+            <h2>Use of comments in ST programming</h2>
+
+            <p>
+              Another very common and useful syntax of Structured Text is the
+              use of a comment. As a beginning programmer, the use of comments
+              is essential to creating code that can be read later on.
+            </p>
+
+            <p>
+              Here is an example of a comment in structured text programming:
+            </p>
+
+            <p>(*this line of code will close control valve 1*)</p>
+
+            <p>
+              As you can see, to add a comment in Structured Text you will start
+              with a left parenthesis followed by an asterisk. To close your
+              comment, you will then add another asterisk followed by a right
+              parenthesis.
+            </p>
+
+            <h2>Structured text operators</h2>
+
+            <p>
+              Structured Text also uses operators to manipulate data. Some
+              examples of operators are the logical operators such as AND, OR,
+              and NOT. A logical operator is used to compare Boolean data and
+              create logic from it.
+            </p>
+
+            <img
+              style="
+                margin-left: 81px;
+                margin-bottom: 30px;
+                border: 2px solid black;
+                align-self: center;
+                height: 301px;
+                width: 510px;
+                border-radius: 20px;
+              "
+              src="../../assets/Structured text operators.png"
+              alt="Structured text operators"
+            />
+
+            <h2>Structured text examples</h2>
+
+            <p>
+              An example of a logical operator in Structured Text looks like
+              this:
+            </p>
+
+            <img
+              style="
+                margin-left: 81px;
+                margin-bottom: 30px;
+                border: 2px solid black;
+                align-self: center;
+                height: 297px;
+                width: 510px;
+                border-radius: 20px;
+              "
+              src="../../assets/Structured text examples.png"
+              alt="Structured text examples"
+            />
+
+            <p>
+              In this case, if the control valve 1 is NOT closed, the program
+              would execute based on any following instructions that follow the
+              instruction.
+            </p>
+
+            <p>Here is another example:</p>
+
+            <img
+              style="
+                margin-left: 81px;
+                margin-bottom: 30px;
+                border: 2px solid black;
+                align-self: center;
+                height: 301px;
+                width: 510px;
+                border-radius: 20px;
+              "
+              src="../../assets/Structured text examples_2.png"
+              alt="Structured text examples"
+            />
+
+            <p>
+              In this case, if the control valve 1 is closed, or if another
+              parallel condition was true, the program would execute based on
+              any following instructions that follow the instruction.
+            </p>
+
+            <p>
+              Remember, just because the expression told us that the <b>control
+              valve 1</b> is not closed, we still aren’t sure it is open! We will
+              need to create logic that tells us that it is open.
+            </p>
+
+            <p>
+              Let’s create a simple statement in Structured Text to turn on a
+              pump when the control valve is open.
+            </p>
+
+            <p>
+              First, let’s start by evaluating the state of the control valve.
+              You will want to ensure that the valve is open by using this
+              statement. IF <b>ControlValve1_Closed</b> is False AND <b>ControlValve1_Open</b>
+              is True.
+            </p>
+
+            <img
+              style="
+                margin-left: 81px;
+                margin-bottom: 30px;
+                border: 2px solid black;
+                align-self: center;
+                height: 298px;
+                width: 510px;
+                border-radius: 20px;
+              "
+              src="../../assets/Structured text examples_3.png"
+              alt="Structured text examples"
+            />
+
+            <p>
+              With this statement, you have evaluated that the control valve is
+              not closed and that the control valve is open.
+            </p>
+
+            <p>
+              Now, let’s turn on the pump. To do this you will add <b>then
+              Pump_Start</b> is true to the statement.
+            </p>
+
+            <pre>
+<b>IF #ControlValve1_Closed = false AND #ControlValve1_Open = True THEN</b> <br>
+    <b>#Pump_Start := True;</b>
+    </pre
+            >
+
+            <p>
+              Now that the pump is running, you need to add logic to stop the
+              pump if the control valve closes. To do this you will simply add
+              another statement to the logic as… IF <b>ControlValve1_Closed</b> is TRUE
+              OR <b>ControlValve1_Open</b> is FALSE THEN pump start is FALSE.
+            </p>
+
+            <pre>
+<b>IF #ControlValve1_Closed = true OR #ControlValve1_Open = False THEN</b> <br>
+    <b>#Pump_Start := False;</b>
+    </pre
+            >
+
+
+             <img
+              style="
+                margin-left: 81px;
+                margin-bottom: 30px;
+                border: 2px solid black;
+                align-self: center;
+                height: 307px;
+                width: 510px;
+                border-radius: 20px;
+              "
+              src="../../assets/Structured text examples_4.png"
+              alt="Structured text examples"
+            />
+
+            <h2>ELSIF statement</h2>
+
+            <p>
+              Now let’s put all of our statements together to create a routine.
+              To do this you’ll have the first statement and then add <b>ELSE</b> below
+              that. Next, you’ll have the second statement and then add… <b>END_IF</b>
+              at the end.
+            </p>
+
+            <pre>
+<b>IF #ControlValve1_Closed = false AND #ControlValve1_Open = True THEN</b> <br>
+    <b>#Pump_Start := True;</b>
+<b>ELSIF #ControlValve1_Closed = true OR #ControlValve1_Open = False THEN</b> <br>
+    <b>#Pump_Start := False;</b>
+<b>END_IF;</b>
+    </pre
+            >
+
+            <p>
+              With this routine, if the control valve 1 is not closed AND it’s
+              open THEN the pump starts. Otherwise, if the control valve 1 is
+              closed and it’s not open then the pump stops. Very easy, right?
+            </p>
+
+            <h2>Applications of Structured Text</h2>
+
+            <p>Structured Text is commonly used in:</p>
+
+            <ul>
+              <li>Advanced control algorithms.</li>
+              <li>Data processing and calculations.</li>
+              <li>Motion control systems.</li>
+              <li>Complex automation applications.</li>
+              <li>Systems requiring structured programming.</li>
+            </ul>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <script>
+      // Add smooth scroll behavior for anchor links
+      document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+        anchor.addEventListener("click", function (e) {
+          e.preventDefault();
+          const target = document.querySelector(this.getAttribute("href"));
+          if (target) {
+            target.scrollIntoView({ behavior: "smooth" });
+          }
+        });
+      });
+    </script>
+
+    <!-- MCQ Modal -->
+    <div id="mcq-modal" class="mcq-modal">
+      <div class="mcq-modal-content">
+        <div class="mcq-modal-header">
+          <h2>Multiple Choice Questions</h2>
+          <button class="close-btn" onclick="closeMCQModal()">&times;</button>
+        </div>
+        <div class="mcq-modal-body">
+          <div id="mcq-container"></div>
+        </div>
+        <div class="mcq-modal-footer">
+          <button class="reset-btn" onclick="resetMCQs()">Reset Answers</button>
+          <button class="close-modal-btn" onclick="closeMCQModal()">
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MCQ Handler Script -->
+    <script src="../mcq-handler.js"></script>
+  </body>
+</html>

@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PLC Software</title>
+    <link rel="stylesheet" href="../defination.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+  </head>
+
+  <body>
+    <div class="container">
+      <header style="display: flex">
+        <div class="logo-container">
+          <img src="../../assets/Scientech logo-2.png" alt="Scientech Logo" />
+          <h1>Ethernet/IP</h1>
+        </div>
+      </header>
+
+      <main>
+        <a href="../../index.html" class="back-button">
+          <i class="fas fa-arrow-left"></i> Back to Course
+        </a>
+
+        <div class="content-wrapper">
+          <div class="image-section">
+            <img
+              style="border-radius: 20px; border: 2px solid black"
+              src="../../assets/Ethernet-IP.png"
+              alt="Ethernet/IP"
+            />
+          </div>
+
+          <div class="theory-section">
+            <h2>Ethernet/IP</h2>
+
+            <p>
+              EtherNet/IP (Ethernet Industrial Protocol) is an industrial
+              Ethernet communication protocol developed by ODVA (Open DeviceNet
+              Vendors Association). It is widely used for real-time control and
+              data exchange between automation devices such as PLCs, VFDs,
+              sensors, actuators, and HMIs.
+            </p>
+
+            <p>
+              EtherNet/IP uses standard Ethernet (TCP/IP and UDP/IP) for
+              communication and is based on the Common Industrial Protocol
+              (CIP), which standardizes messaging and device profiles.
+            </p>
+
+            <h2>Key Features of EtherNet/IP</h2>
+            <ul>
+              <li>Ethernet-based communication using TCP/IP and UDP/IP</li>
+              <li>Supports real-time I/O and messaging</li>
+              <li>
+                Uses CIP object model for standardized device communication
+              </li>
+              <li>Open and vendor-independent</li>
+              <li>Supports large-scale industrial networks</li>
+              <li>Allows integration with IT and enterprise networks</li>
+            </ul>
+
+            <h2>Communication Types</h2>
+
+            <h3>1. Explicit Messaging</h3>
+            <ul>
+              <li>Non-time-critical communication</li>
+              <li>Uses TCP/IP</li>
+              <li>Example: Read/write device parameters, configuration</li>
+            </ul>
+
+            <h3>2. Implicit Messaging</h3>
+            <ul>
+              <li>Real-time communication for control signals</li>
+              <li>Uses UDP/IP</li>
+              <li>Example: PLC sending I/O data to a VFD in real time</li>
+            </ul>
+
+            <h2>Advantages of EtherNet/IP</h2>
+            <ul>
+              <li>Uses standard Ethernet hardware and cables</li>
+              <li>High data throughput (100 Mbps or more)</li>
+              <li>Vendor-independent and widely supported</li>
+              <li>
+                Real-time communication suitable for control and monitoring
+              </li>
+              <li>Easy integration with existing IT infrastructure</li>
+            </ul>
+
+            <h2>Typical Applications</h2>
+            <ul>
+              <li>PLC → VFD communication</li>
+              <li>Conveyor systems and material handling</li>
+              <li>Robotics and motion control</li>
+              <li>Process automation in manufacturing plants</li>
+              <li>Remote monitoring and SCADA systems</li>
+            </ul>
+
+            <h2>Working Principle – Example: PLC to VFD via EtherNet/IP</h2>
+            <ol>
+              <li>PLC acts as EtherNet/IP scanner (master).</li>
+              <li>VFD acts as EtherNet/IP adapter (slave).</li>
+              <li>
+                PLC sends speed, direction, and torque commands to VFD via
+                implicit messaging (UDP).
+              </li>
+              <li>
+                VFD sends feedback (motor speed, current, fault status) to PLC
+                in real-time.
+              </li>
+              <li>
+                Explicit messaging (TCP) can be used to change VFD parameters or
+                read status logs.
+              </li>
+            </ol>
+
+            <h2>EtherNet/IP vs Profinet (Quick Comparison)</h2>
+            <table class="comparison-table">
+              <tr>
+                <th>Feature</th>
+                <th>EtherNet/IP</th>
+                <th>Profinet</th>
+              </tr>
+              <tr>
+                <td>Medium</td>
+                <td>Ethernet</td>
+                <td>Ethernet</td>
+              </tr>
+              <tr>
+                <td>Protocol</td>
+                <td>CIP-based</td>
+                <td>Profinet RT/IRT</td>
+              </tr>
+              <tr>
+                <td>Real-time</td>
+                <td>Yes (UDP, implicit messaging)</td>
+                <td>RT/IRT</td>
+              </tr>
+              <tr>
+                <td>Integration</td>
+                <td>TCP/IP compatible</td>
+                <td>TCP/IP compatible</td>
+              </tr>
+              <tr>
+                <td>Vendor</td>
+                <td>ODVA standard</td>
+                <td>Siemens & open standard</td>
+              </tr>
+              <tr>
+                <td>Applications</td>
+                <td>Factory automation, PLC-VFD</td>
+                <td>Motion control, robotics, Industry 4.0</td>
+              </tr>
+            </table>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <script>
+      // Add smooth scroll behavior for anchor links
+      document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+        anchor.addEventListener("click", function (e) {
+          e.preventDefault();
+          const target = document.querySelector(this.getAttribute("href"));
+          if (target) {
+            target.scrollIntoView({ behavior: "smooth" });
+          }
+        });
+      });
+    </script>
+
+    <!-- MCQ Modal -->
+    <div id="mcq-modal" class="mcq-modal">
+      <div class="mcq-modal-content">
+        <div class="mcq-modal-header">
+          <h2>Multiple Choice Questions</h2>
+          <button class="close-btn" onclick="closeMCQModal()">&times;</button>
+        </div>
+        <div class="mcq-modal-body">
+          <div id="mcq-container"></div>
+        </div>
+        <div class="mcq-modal-footer">
+          <button class="reset-btn" onclick="resetMCQs()">Reset Answers</button>
+          <button class="close-modal-btn" onclick="closeMCQModal()">
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MCQ Handler Script -->
+    <script src="../mcq-handler.js"></script>
+  </body>
+</html>

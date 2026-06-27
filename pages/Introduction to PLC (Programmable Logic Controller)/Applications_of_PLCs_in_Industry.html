@@ -1,0 +1,132 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>PLC Software</title>
+    <link rel="stylesheet" href="../defination.css" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
+    />
+  </head>
+
+  <body>
+    <div class="container">
+      <header style="display: flex">
+        <div class="logo-container">
+          <img src="../../assets/Scientech logo-2.png" alt="Scientech Logo" />
+          <h1>Applications of PLCs in Industry</h1>
+        </div>
+      </header>
+
+      <main>
+        <a href="../../index.html" class="back-button">
+          <i class="fas fa-arrow-left"></i> Back to Course
+        </a>
+
+        <div class="content-wrapper">
+          <div class="image-section">
+            <img
+              style="border-radius: 20px; border: 2px solid black"
+              src="../../assets/Applications of PLCs in Industry_2.png"
+              alt="Applications of PLCs in Industry"
+            />
+          </div>
+
+          <div class="theory-section">
+            <h2>Application</h2>
+            <p>
+              PLCs are widely used in various industrial and commercial
+              applications, including:
+            </p>
+            <ol>
+              <li>
+                <b>Manufacturing and Assembly Lines: </b> control of conveyors,
+                robotic arms, and packaging systems.
+              </li>
+
+              <img style="margin-bottom: 30px; border: 2px solid black; align-self: center;height: auto; width: auto;border-radius: 20px;"
+                    src="../../assets/Manufacturing and Assembly Lines.png" alt="Manufacturing and Assembly Lines">
+
+              <li>
+                <b>Process Industries: </b> chemical plants, oil and gas, water
+                treatment systems.
+              </li>
+
+              <img style="margin-bottom: 30px; border: 2px solid black; align-self: center;height: auto; width: auto;border-radius: 20px;"
+                    src="../../assets/Process Industries.png" alt="Process Industries">
+
+              <li>
+                <b>Power Plants: </b> control of turbines, boilers, and
+                substations.
+              </li>
+
+              <img style="margin-bottom: 30px; border: 2px solid black; align-self: center;height: auto; width: auto;border-radius: 20px;"
+                    src="../../assets/Power Plants.png" alt="Power Plants">
+
+              <li>
+                <b>Automobile Industry: </b> automated welding, painting, and
+                testing systems.
+              </li>
+
+              <img style="margin-bottom: 30px; border: 2px solid black; align-self: center;height: auto; width: auto;border-radius: 20px;"
+                    src="../../assets/Automobile Industry.png" alt="Automobile Industry">
+
+              <li>
+                <b>Building Automation: </b> HVAC systems, elevators, lighting
+                control.
+              </li>
+
+              <img style="margin-bottom: 30px; border: 2px solid black; align-self: center;height: auto; width: auto;border-radius: 20px;"
+                    src="../../assets/Building Automation.png" alt="Building Automation">
+
+              <li>
+                <b>Food and Beverage Industry: </b> bottling, filling, and
+                labeling processes.
+              </li>
+
+              <img style="margin-bottom: 30px; border: 2px solid black; align-self: center;height: auto; width: auto;border-radius: 20px;"
+                    src="../../assets/Food and Beverage Industry_2.png" alt="Food and Beverage Industry">
+            </ol>
+          </div>
+        </div>
+      </main>
+    </div>
+
+    <script>
+      // Add smooth scroll behavior for anchor links
+      document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
+        anchor.addEventListener("click", function (e) {
+          e.preventDefault();
+          const target = document.querySelector(this.getAttribute("href"));
+          if (target) {
+            target.scrollIntoView({ behavior: "smooth" });
+          }
+        });
+      });
+    </script>
+
+    <!-- MCQ Modal -->
+    <div id="mcq-modal" class="mcq-modal">
+      <div class="mcq-modal-content">
+        <div class="mcq-modal-header">
+          <h2>Multiple Choice Questions</h2>
+          <button class="close-btn" onclick="closeMCQModal()">&times;</button>
+        </div>
+        <div class="mcq-modal-body">
+          <div id="mcq-container"></div>
+        </div>
+        <div class="mcq-modal-footer">
+          <button class="reset-btn" onclick="resetMCQs()">Reset Answers</button>
+          <button class="close-modal-btn" onclick="closeMCQModal()">
+            Close
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MCQ Handler Script -->
+    <script src="../mcq-handler.js"></script>
+  </body>
+</html>
