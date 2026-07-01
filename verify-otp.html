@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verify Email - PLC Training</title>
+    <link rel="stylesheet" href="login.css">
+</head>
+<body>
+    <div class="login-wrapper">
+        <div class="login-card">
+            <img src="./assets/Scientech logo-2.png" alt="Logo" class="login-logo">
+            <h1>Verify Your Email</h1>
+            <p style="font-size: 13px; color: #666; margin-bottom: 20px; text-align: center;">
+                Enter the 6-digit code sent to your email address.
+            </p>
+            <form id="verifyForm">
+                <label>Email
+                    <input type="email" id="email" required autocomplete="username">
+                </label>
+                <label>Verification Code
+                    <input type="text" id="otp" required maxlength="6" inputmode="numeric" pattern="[0-9]{6}" placeholder="123456">
+                </label>
+                <button type="submit" id="verifyBtn">Verify</button>
+                <p id="errorMsg" class="error"></p>
+                <p id="successMsg" class="error" style="color: #198754;"></p>
+            </form>
+            <p style="text-align:center; margin-top: 16px; font-size: 13px;">
+                Didn't get a code? <a href="#" id="resendLink">Resend</a>
+            </p>
+        </div>
+    </div>
+
+    <script src="auth-config.js"></script>
+    <script src="verify-otp.js"></script>
+</body>
+</html>
