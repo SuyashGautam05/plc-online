@@ -306,10 +306,14 @@
             const data = await res.json();
 
             if (data.success) {
-                showMsg('reg-success', data.message, 'success');
+                showMsg('reg-success', data.message + ' Redirecting to verification...', 'success');
+                const registeredEmail = email;
                 document.getElementById('reg-name').value = '';
                 document.getElementById('reg-email').value = '';
                 document.getElementById('reg-password').value = '';
+                setTimeout(() => {
+                    window.location.href = 'verify-otp.html?email=' + encodeURIComponent(registeredEmail);
+                }, 1200);
             } else {
                 showMsg('reg-error', data.message || 'Registration failed.', 'error');
             }
