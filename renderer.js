@@ -1,128 +1,160 @@
+/**
+ * PLC SimTel – Modernized Card-Grid Renderer
+ * Handles: expand/collapse, expand-all, live search, subtopic toggling
+ */
+
 document.addEventListener('DOMContentLoaded', () => {
-    // Toggle subtopics
-    const sectionHeaders = document.querySelectorAll('.menu-section h3');
-    
-    sectionHeaders.forEach(header => {
-        header.addEventListener('click', () => {
-            const content = header.nextElementSibling;
-            const icon = header.querySelector('i');
-            
-            if (content.style.display === 'none') {
-                content.style.display = 'block';
-                icon.classList.remove('fa-chevron-right');
-                icon.classList.add('fa-chevron-down');
+
+    const searchInput = document.getElementById('search');
+    const searchClear = document.getElementById('search-clear');
+    const expandAllBtn = document.getElementById('btn-expand-all');
+    const allCards = document.querySelectorAll('.course-card');
+    let allExpanded = false;
+
+    // ── Expand / Collapse Single Card ──
+    window.toggleCard = function (headerEl) {
+        const card = headerEl.closest('.course-card');
+        const isExpanded = card.classList.contains('expanded');
+
+        if (isExpanded) {
+            card.classList.remove('expanded');
+        } else {
+            card.classList.add('expanded');
+        }
+    };
+
+    // ── Toggle Subtopics ──
+    window.toggleSubtopics = function (toggleEl) {
+        // Find the parent .has-subtopics li
+        const parentLi = toggleEl.closest('.has-subtopics');
+
+        if (parentLi) {
+            parentLi.classList.toggle('open');
+        } else {
+            // Fallback for sub-l2 toggles inside a .has-subtopics
+            toggleEl.classList.toggle('open');
+            const siblingList = toggleEl.nextElementSibling;
+            if (siblingList && siblingList.classList.contains('subtopic-list')) {
+                if (toggleEl.classList.contains('open')) {
+                    siblingList.style.maxHeight = siblingList.scrollHeight + 'px';
+                } else {
+                    siblingList.style.maxHeight = '0px';
+                }
+            }
+        }
+    };
+
+    // ── Expand / Collapse All ──
+    expandAllBtn.addEventListener('click', () => {
+        allExpanded = !allExpanded;
+
+        allCards.forEach(card => {
+            if (allExpanded) {
+                card.classList.add('expanded');
             } else {
-                content.style.display = 'none';
-                icon.classList.remove('fa-chevron-down');
-                icon.classList.add('fa-chevron-right');
+                card.classList.remove('expanded');
             }
         });
-    });
-    
-    // Add dropdown functionality to nested list items
-    const allListItems = document.querySelectorAll('.menu-section ul li');
-    
-    allListItems.forEach(item => {
-        // Check if this item has a nested ul
-        const nestedUl = item.querySelector(':scope > ul');
-        if (nestedUl) {
-            // Initially hide the nested ul
-            nestedUl.style.display = 'none';
-            
-            // Create a wrapper span for the item text and icon
-            const itemText = document.createTextNode(item.textContent);
-            const items = Array.from(item.childNodes);
-            
-            // Clear the item and rebuild it
-            item.innerHTML = '';
-            
-            // Get the text content (before the nested ul)
-            let textContent = '';
-            for (let node of items) {
-                if (node.nodeType === Node.TEXT_NODE) {
-                    textContent += node.textContent;
-                } else if (node.nodeName !== 'UL') {
-                    item.appendChild(node);
-                }
-            }
-            
-            // Create a clickable header for the item
-            const itemHeader = document.createElement('span');
-            itemHeader.style.cursor = 'pointer';
-            itemHeader.style.display = 'flex';
-            itemHeader.style.alignItems = 'center';
-            itemHeader.style.gap = '8px';
-            itemHeader.textContent = textContent.trim();
-            
-            // Add chevron icon (initially pointing right since nested ul is closed)
-            const icon = document.createElement('i');
-            icon.classList.add('fas', 'fa-chevron-right');
-            icon.style.fontSize = '0.75rem';
-            itemHeader.appendChild(icon);
-            
-            // Insert header at the beginning
-            item.insertBefore(itemHeader, item.firstChild);
-            
-            // Re-append the nested ul
-            item.appendChild(nestedUl);
-            
-            // Add click event to toggle nested ul
-            itemHeader.addEventListener('click', (e) => {
-                e.stopPropagation();
-                if (nestedUl.style.display === 'none') {
-                    nestedUl.style.display = 'block';
-                    icon.classList.remove('fa-chevron-right');
-                    icon.classList.add('fa-chevron-down');
-                } else {
-                    nestedUl.style.display = 'none';
-                    icon.classList.remove('fa-chevron-down');
-                    icon.classList.add('fa-chevron-right');
-                }
-            });
+
+        const icon = expandAllBtn.querySelector('i');
+        const label = expandAllBtn.querySelector('span');
+
+        if (allExpanded) {
+            icon.className = 'fas fa-compress-alt';
+            if (label) label.textContent = 'Collapse All';
+            expandAllBtn.classList.add('expanded');
+        } else {
+            icon.className = 'fas fa-expand-alt';
+            if (label) label.textContent = 'Expand All';
+            expandAllBtn.classList.remove('expanded');
         }
     });
-    
-    // Search functionality
-    const searchInput = document.getElementById('search');
-    const menuItems = document.querySelectorAll('.menu-section > ul > li');
-    
-    searchInput.addEventListener('input', (e) => {
-        const searchTerm = e.target.value.toLowerCase();
-        
-        menuItems.forEach(item => {
-            const text = item.textContent.toLowerCase();
-            const parentSection = item.closest('.menu-section');
-            
-            if (text.includes(searchTerm)) {
-                item.style.display = 'block';
-                parentSection.style.display = 'block';
-                
-                // Expand parent section
-                const sectionHeader = parentSection.querySelector('h3');
-                const sectionContent = sectionHeader.nextElementSibling;
-                const icon = sectionHeader.querySelector('i');
-                
-                sectionContent.style.display = 'block';
-                icon.classList.remove('fa-chevron-right');
-                icon.classList.add('fa-chevron-down');
+
+    // ── Live Search ──
+    searchInput.addEventListener('input', () => {
+        const query = searchInput.value.trim().toLowerCase();
+
+        // Toggle clear button
+        if (query.length > 0) {
+            searchClear.classList.add('visible');
+        } else {
+            searchClear.classList.remove('visible');
+        }
+
+        // Remove any existing no-results message
+        const existingNoResults = document.querySelector('.no-results');
+        if (existingNoResults) existingNoResults.remove();
+
+        if (query.length === 0) {
+            // Reset: show all cards, remove highlights
+            allCards.forEach(card => {
+                card.classList.remove('hidden-search');
+                card.querySelectorAll('.search-highlight').forEach(el => {
+                    el.replaceWith(document.createTextNode(el.textContent));
+                });
+            });
+            return;
+        }
+
+        let anyVisible = false;
+
+        allCards.forEach(card => {
+            const allText = card.textContent.toLowerCase();
+            const hasMatch = allText.includes(query);
+
+            if (hasMatch) {
+                card.classList.remove('hidden-search');
+                anyVisible = true;
+
+                // Auto-expand matching cards
+                card.classList.add('expanded');
+
+                // Also expand subtopics that contain the match
+                card.querySelectorAll('.has-subtopics').forEach(sub => {
+                    if (sub.textContent.toLowerCase().includes(query)) {
+                        sub.classList.add('open');
+                    }
+                });
             } else {
-                item.style.display = 'none';
+                card.classList.add('hidden-search');
             }
         });
-        
-        // Hide sections with no visible items
-        document.querySelectorAll('.menu-section').forEach(section => {
-            const visibleItems = section.querySelectorAll('.menu-section > ul > li:not([style*="display: none"])');
-            if (visibleItems.length === 0) {
-                section.style.display = 'none';
-            }
-        });
+
+        // Show "no results" message if nothing matches
+        if (!anyVisible) {
+            const grid = document.getElementById('card-grid');
+            const msg = document.createElement('div');
+            msg.className = 'no-results';
+            msg.innerHTML = `
+                <i class="fas fa-search"></i>
+                <p>No results found</p>
+                <span>Try a different search term</span>
+            `;
+            grid.appendChild(msg);
+        }
     });
-    
-    // Add chevron icons to section headers
-    sectionHeaders.forEach(header => {
-        const icon = document.createElement('i');
-        icon.classList.add('fas', 'fa-chevron-down');
-        header.appendChild(icon);
+
+    // ── Clear Search ──
+    searchClear.addEventListener('click', () => {
+        searchInput.value = '';
+        searchInput.dispatchEvent(new Event('input'));
+        searchInput.focus();
     });
+
+    // ── Keyboard shortcut: Ctrl+K or / to focus search ──
+    document.addEventListener('keydown', (e) => {
+        if ((e.ctrlKey && e.key === 'k') || (e.key === '/' && document.activeElement.tagName !== 'INPUT')) {
+            e.preventDefault();
+            searchInput.focus();
+            searchInput.select();
+        }
+
+        // Escape to clear search
+        if (e.key === 'Escape' && document.activeElement === searchInput) {
+            searchInput.value = '';
+            searchInput.dispatchEvent(new Event('input'));
+            searchInput.blur();
+        }
+    });
+
 });
