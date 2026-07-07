@@ -9,8 +9,14 @@
     <title>Menu</title>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 </head>
 <body>
+    <div class="blob-field">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+    </div>
     <div class="container">
         <header style="display: flex; margin-bottom: 20px;">
             <div class="logo-container"  style="gap: clamp(15px, 9vw, 153px);">
@@ -336,5 +342,13 @@
     </div>
 
     <script src="renderer.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            if (!window.gsap) return;
+            gsap.from('header', { opacity: 0, y: -16, duration: 0.6, ease: 'power2.out' });
+            gsap.from('.menu-container', { opacity: 0, y: 24, duration: 0.7, delay: 0.1, ease: 'power3.out' });
+            gsap.from('.menu-section', { opacity: 0, y: 14, stagger: 0.05, duration: 0.5, delay: 0.35, ease: 'power2.out' });
+        });
+    </script>
 </body>
 </html>

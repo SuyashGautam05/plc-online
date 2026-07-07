@@ -5,166 +5,321 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login – PLC SimTel</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
     <script src="./auth-config.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
+        :root {
+            --bg-deep: #0a0e1a;
+            --bg-deep-2: #0d1326;
+            --glass: rgba(255, 255, 255, 0.055);
+            --glass-strong: rgba(255, 255, 255, 0.09);
+            --glass-border: rgba(255, 255, 255, 0.12);
+            --blob-violet: #6c5ce7;
+            --blob-cyan: #22d3ee;
+            --blob-amber: #f59e0b;
+            --text-hi: #f1f5f9;
+            --text-mid: #a8b3c7;
+            --text-dim: #64748b;
+            --success: #34d399;
+            --danger: #fb7185;
+        }
+
+        html, body { height: 100%; }
+
         body {
-            font-family: Georgia, 'Times New Roman', serif;
-            background: #f8f9fa;
+            font-family: 'Inter', sans-serif;
+            background: var(--bg-deep);
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 20px;
+            position: relative;
+            overflow: hidden;
+            color: var(--text-hi);
+        }
+
+        /* Ambient animated gradient blobs */
+        .blob-field {
+            position: fixed;
+            inset: 0;
+            z-index: 0;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.55;
+            will-change: transform;
+        }
+
+        .blob-1 {
+            width: 480px; height: 480px;
+            background: radial-gradient(circle at 30% 30%, var(--blob-violet), transparent 70%);
+            top: -120px; left: -100px;
+            animation: drift1 16s ease-in-out infinite;
+        }
+
+        .blob-2 {
+            width: 420px; height: 420px;
+            background: radial-gradient(circle at 60% 40%, var(--blob-cyan), transparent 70%);
+            bottom: -140px; right: -80px;
+            animation: drift2 20s ease-in-out infinite;
+        }
+
+        .blob-3 {
+            width: 300px; height: 300px;
+            background: radial-gradient(circle at 50% 50%, var(--blob-amber), transparent 70%);
+            top: 45%; left: 65%;
+            opacity: 0.25;
+            animation: drift3 24s ease-in-out infinite;
+        }
+
+        @keyframes drift1 {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(60px, 40px) scale(1.12); }
+        }
+        @keyframes drift2 {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(-50px, -30px) scale(1.08); }
+        }
+        @keyframes drift3 {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(-40px, 50px) scale(1.15); }
+        }
+
+        .grain-overlay {
+            position: fixed;
+            inset: 0;
+            z-index: 1;
+            pointer-events: none;
+            background-image: radial-gradient(rgba(255,255,255,0.025) 1px, transparent 1px);
+            background-size: 3px 3px;
         }
 
         .auth-card {
-            background: #fff;
-            border-radius: 10px;
-            box-shadow: 0 4px 24px rgba(0,0,0,0.10);
+            position: relative;
+            z-index: 2;
+            background: var(--glass);
+            backdrop-filter: blur(24px) saturate(160%);
+            -webkit-backdrop-filter: blur(24px) saturate(160%);
+            border: 1px solid var(--glass-border);
+            border-radius: 20px;
+            box-shadow: 0 8px 40px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.06);
             width: 100%;
             max-width: 420px;
             overflow: hidden;
+            opacity: 0;
         }
 
         .auth-card-header {
-            background: #343a40;
-            color: #fff;
-            padding: 28px 32px 22px;
+            padding: 34px 32px 24px;
             text-align: center;
+            border-bottom: 1px solid var(--glass-border);
+            position: relative;
         }
 
         .auth-card-header img {
-            height: 48px;
-            margin-bottom: 10px;
+            height: 46px;
+            margin-bottom: 12px;
+        }
+
+        .brand-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .status-led {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--success);
+            box-shadow: 0 0 8px 2px rgba(52, 211, 153, 0.7);
+            animation: blink 2.4s ease-in-out infinite;
+        }
+
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.35; }
         }
 
         .auth-card-header h1 {
-            font-size: 1.25rem;
+            font-family: 'Sora', sans-serif;
+            font-size: 1.4rem;
             font-weight: 700;
             letter-spacing: 0.01em;
         }
 
         .auth-card-header p {
-            font-size: 0.85rem;
-            color: #adb5bd;
-            margin-top: 4px;
+            font-size: 0.82rem;
+            color: var(--text-mid);
+            margin-top: 6px;
+            font-family: 'JetBrains Mono', monospace;
+            letter-spacing: 0.02em;
         }
 
         .auth-tabs {
             display: flex;
-            border-bottom: 2px solid #e9ecef;
+            position: relative;
         }
 
         .auth-tab {
             flex: 1;
-            padding: 12px;
+            padding: 14px;
             text-align: center;
             font-size: 0.9rem;
+            font-family: 'Inter', sans-serif;
             cursor: pointer;
-            color: #6c757d;
+            color: var(--text-dim);
             background: none;
             border: none;
-            font-family: inherit;
-            border-bottom: 2px solid transparent;
-            margin-bottom: -2px;
-            transition: all 0.15s;
-        }
-
-        .auth-tab.active {
-            color: #343a40;
-            border-bottom-color: #343a40;
             font-weight: 600;
+            position: relative;
+            transition: color 0.25s ease;
         }
 
-        .auth-body { padding: 28px 32px 32px; }
+        .auth-tab.active { color: var(--text-hi); }
 
-        .form-group {
-            margin-bottom: 16px;
+        .tab-indicator {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 50%;
+            height: 2px;
+            background: linear-gradient(90deg, var(--blob-violet), var(--blob-cyan));
+            box-shadow: 0 0 10px rgba(108, 92, 231, 0.7);
+            transition: transform 0.35s cubic-bezier(0.65, 0, 0.35, 1);
         }
+
+        .auth-body { padding: 28px 32px 32px; position: relative; overflow: hidden; }
+
+        .form-group { margin-bottom: 16px; }
 
         .form-group label {
             display: block;
-            font-size: 0.83rem;
-            color: #495057;
-            margin-bottom: 5px;
+            font-size: 0.8rem;
+            color: var(--text-mid);
+            margin-bottom: 6px;
             font-weight: 600;
+            letter-spacing: 0.02em;
         }
 
         .form-group input {
             width: 100%;
-            padding: 9px 12px;
-            border: 1px solid #dee2e6;
-            border-radius: 5px;
+            padding: 11px 14px;
+            background: rgba(255,255,255,0.04);
+            border: 1px solid var(--glass-border);
+            border-radius: 8px;
             font-size: 0.95rem;
-            font-family: inherit;
-            color: #343a40;
-            transition: border-color 0.15s;
+            font-family: 'Inter', sans-serif;
+            color: var(--text-hi);
+            transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
         }
+
+        .form-group input::placeholder { color: var(--text-dim); }
 
         .form-group input:focus {
             outline: none;
-            border-color: #6c757d;
+            border-color: var(--blob-cyan);
+            background: rgba(255,255,255,0.07);
+            box-shadow: 0 0 0 3px rgba(34, 211, 238, 0.15);
         }
 
         .btn {
             width: 100%;
-            padding: 10px;
-            background: #343a40;
+            padding: 12px;
+            background: linear-gradient(135deg, var(--blob-violet), #4f46e5);
             color: #fff;
             border: none;
-            border-radius: 5px;
-            font-size: 1rem;
-            font-family: inherit;
-            font-weight: 600;
+            border-radius: 8px;
+            font-size: 0.98rem;
+            font-family: 'Inter', sans-serif;
+            font-weight: 700;
             cursor: pointer;
             margin-top: 8px;
-            transition: background 0.15s;
+            transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease;
+            box-shadow: 0 4px 18px rgba(108, 92, 231, 0.35);
         }
 
-        .btn:hover { background: #23272b; }
-        .btn:disabled { background: #adb5bd; cursor: not-allowed; }
+        .btn:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 8px 26px rgba(108, 92, 231, 0.5); filter: brightness(1.08); }
+        .btn:active:not(:disabled) { transform: translateY(0); }
+        .btn:disabled { background: #3a3f52; cursor: not-allowed; box-shadow: none; }
 
         .alert {
             padding: 10px 14px;
-            border-radius: 5px;
-            font-size: 0.88rem;
+            border-radius: 8px;
+            font-size: 0.85rem;
             margin-bottom: 16px;
             display: none;
+            border: 1px solid transparent;
         }
 
-        .alert.error { background: #f8d7da; color: #842029; border: 1px solid #f5c2c7; }
-        .alert.success { background: #d1e7dd; color: #0f5132; border: 1px solid #badbcc; }
+        .alert.error { background: rgba(251, 113, 133, 0.1); color: #ffb4c0; border-color: rgba(251, 113, 133, 0.3); }
+        .alert.success { background: rgba(52, 211, 153, 0.1); color: #86e6c2; border-color: rgba(52, 211, 153, 0.3); }
         .alert.show { display: block; }
 
         .form-panel { display: none; }
         .form-panel.active { display: block; }
 
         .pending-note {
-            font-size: 0.8rem;
-            color: #6c757d;
+            font-size: 0.78rem;
+            color: var(--text-dim);
             text-align: center;
             margin-top: 14px;
             line-height: 1.5;
         }
 
-        .spinner { display: inline-block; width: 14px; height: 14px; border: 2px solid #fff; border-top-color: transparent; border-radius: 50%; animation: spin 0.6s linear infinite; vertical-align: middle; margin-right: 6px; }
+        .pending-note strong { color: var(--text-mid); }
+
+        .spinner {
+            display: inline-block;
+            width: 14px; height: 14px;
+            border: 2px solid #fff;
+            border-top-color: transparent;
+            border-radius: 50%;
+            animation: spin 0.6s linear infinite;
+            vertical-align: middle;
+            margin-right: 6px;
+        }
         @keyframes spin { to { transform: rotate(360deg); } }
+
+        @media (prefers-reduced-motion: reduce) {
+            .blob, .status-led, .spinner { animation: none !important; }
+        }
     </style>
 </head>
 <body>
 
-<div class="auth-card">
+<div class="blob-field">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
+</div>
+<div class="grain-overlay"></div>
+
+<div class="auth-card" id="auth-card">
     <div class="auth-card-header">
         <img src="./assets/Scientech logo-2.png" alt="Scientech" onerror="this.style.display='none'">
-        <h1>PLC SimTel</h1>
+        <div class="brand-row">
+            <h1>PLC SimTel</h1>
+            <span class="status-led"></span>
+        </div>
         <p>Programmable Logic Controller Training</p>
     </div>
 
     <div class="auth-tabs">
         <button class="auth-tab active" id="tab-login" onclick="switchTab('login')">Login</button>
         <button class="auth-tab" id="tab-register" onclick="switchTab('register')">Register</button>
+        <div class="tab-indicator" id="tab-indicator"></div>
     </div>
 
     <div class="auth-body">
@@ -222,17 +377,38 @@
         window.location.replace(redirectUrl);
     }
 
+    // Entrance animation
+    if (window.gsap) {
+        gsap.set('#auth-card', { y: 24 });
+        gsap.to('#auth-card', { opacity: 1, y: 0, duration: 0.7, ease: 'power3.out', delay: 0.05 });
+        gsap.from('.auth-card-header img, .auth-card-header h1, .status-led, .auth-card-header p', {
+            opacity: 0, y: 10, stagger: 0.06, duration: 0.5, delay: 0.15, ease: 'power2.out'
+        });
+    } else {
+        document.getElementById('auth-card').style.opacity = 1;
+    }
+
     function switchTab(tab) {
         document.querySelectorAll('.form-panel').forEach(p => p.classList.remove('active'));
         document.querySelectorAll('.auth-tab').forEach(t => t.classList.remove('active'));
         document.getElementById('panel-' + tab).classList.add('active');
         document.getElementById('tab-' + tab).classList.add('active');
+
+        const indicator = document.getElementById('tab-indicator');
+        indicator.style.transform = tab === 'register' ? 'translateX(100%)' : 'translateX(0%)';
+
+        if (window.gsap) {
+            gsap.fromTo('#panel-' + tab, { opacity: 0, y: 8 }, { opacity: 1, y: 0, duration: 0.35, ease: 'power2.out' });
+        }
     }
 
     function showMsg(id, msg, type) {
         const el = document.getElementById(id);
         el.textContent = msg;
         el.className = `alert ${type} show`;
+        if (window.gsap) {
+            gsap.fromTo(el, { opacity: 0, y: -6 }, { opacity: 1, y: 0, duration: 0.3, ease: 'power2.out' });
+        }
     }
 
     function hideMsg(id) {
