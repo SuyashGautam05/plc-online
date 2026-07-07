@@ -4,153 +4,356 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login – PLC SimTel</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="./auth-config.js"></script>
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            font-family: Georgia, 'Times New Roman', serif;
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
             background: #f8f9fa;
             min-height: 100vh;
             display: flex;
             align-items: center;
             justify-content: center;
             padding: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Subtle animated background pattern */
+        body::before {
+            content: '';
+            position: fixed;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle at 20% 50%, rgba(52,58,64,0.03) 0%, transparent 50%),
+                        radial-gradient(circle at 80% 20%, rgba(108,117,125,0.04) 0%, transparent 50%),
+                        radial-gradient(circle at 40% 80%, rgba(52,58,64,0.02) 0%, transparent 50%);
+            animation: bgFloat 20s ease-in-out infinite;
+            z-index: 0;
+        }
+
+        @keyframes bgFloat {
+            0%, 100% { transform: translate(0, 0) rotate(0deg); }
+            33% { transform: translate(30px, -30px) rotate(1deg); }
+            66% { transform: translate(-20px, 20px) rotate(-1deg); }
         }
 
         .auth-card {
-            background: #fff;
-            border-radius: 10px;
-            box-shadow: 0 4px 24px rgba(0,0,0,0.10);
+            background: rgba(255, 255, 255, 0.85);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            border-radius: 20px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.08), 0 2px 8px rgba(0, 0, 0, 0.04);
             width: 100%;
-            max-width: 420px;
+            max-width: 440px;
             overflow: hidden;
+            position: relative;
+            z-index: 1;
+            animation: cardEntry 0.6s cubic-bezier(0.16, 1, 0.3, 1) both;
+        }
+
+        @keyframes cardEntry {
+            from {
+                opacity: 0;
+                transform: translateY(30px) scale(0.97);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
         }
 
         .auth-card-header {
             background: #343a40;
             color: #fff;
-            padding: 28px 32px 22px;
+            padding: 32px 32px 24px;
             text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .auth-card-header::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
         }
 
         .auth-card-header img {
-            height: 48px;
-            margin-bottom: 10px;
+            height: 52px;
+            margin-bottom: 12px;
+            transition: transform 0.3s ease;
+        }
+
+        .auth-card-header img:hover {
+            transform: scale(1.05);
         }
 
         .auth-card-header h1 {
-            font-size: 1.25rem;
+            font-size: 1.3rem;
             font-weight: 700;
-            letter-spacing: 0.01em;
+            letter-spacing: 0.02em;
         }
 
         .auth-card-header p {
-            font-size: 0.85rem;
+            font-size: 0.82rem;
             color: #adb5bd;
-            margin-top: 4px;
+            margin-top: 6px;
+            font-weight: 300;
+            letter-spacing: 0.03em;
         }
 
         .auth-tabs {
             display: flex;
-            border-bottom: 2px solid #e9ecef;
+            border-bottom: 1px solid #e9ecef;
+            position: relative;
         }
 
         .auth-tab {
             flex: 1;
-            padding: 12px;
+            padding: 14px;
             text-align: center;
-            font-size: 0.9rem;
+            font-size: 0.88rem;
             cursor: pointer;
             color: #6c757d;
             background: none;
             border: none;
-            font-family: inherit;
-            border-bottom: 2px solid transparent;
-            margin-bottom: -2px;
-            transition: all 0.15s;
+            font-family: 'Inter', sans-serif;
+            font-weight: 500;
+            letter-spacing: 0.02em;
+            position: relative;
+            transition: color 0.25s ease;
+        }
+
+        .auth-tab::after {
+            content: '';
+            position: absolute;
+            bottom: -1px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 0;
+            height: 2.5px;
+            background: #343a40;
+            border-radius: 2px 2px 0 0;
+            transition: width 0.3s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .auth-tab.active {
             color: #343a40;
-            border-bottom-color: #343a40;
             font-weight: 600;
         }
 
-        .auth-body { padding: 28px 32px 32px; }
+        .auth-tab.active::after {
+            width: 60%;
+        }
+
+        .auth-tab:hover {
+            color: #495057;
+        }
+
+        .auth-body { padding: 32px; }
 
         .form-group {
-            margin-bottom: 16px;
+            margin-bottom: 20px;
+            position: relative;
         }
 
         .form-group label {
             display: block;
-            font-size: 0.83rem;
-            color: #495057;
-            margin-bottom: 5px;
+            font-size: 0.8rem;
+            color: #6c757d;
+            margin-bottom: 7px;
             font-weight: 600;
+            letter-spacing: 0.04em;
+            text-transform: uppercase;
         }
 
-        .form-group input {
+        .input-wrapper {
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .input-wrapper i {
+            position: absolute;
+            left: 14px;
+            color: #adb5bd;
+            font-size: 0.9rem;
+            transition: color 0.25s ease;
+            z-index: 1;
+        }
+
+        .input-wrapper input {
             width: 100%;
-            padding: 9px 12px;
-            border: 1px solid #dee2e6;
-            border-radius: 5px;
+            padding: 12px 14px 12px 42px;
+            border: 1.5px solid #dee2e6;
+            border-radius: 12px;
             font-size: 0.95rem;
-            font-family: inherit;
+            font-family: 'Inter', sans-serif;
             color: #343a40;
-            transition: border-color 0.15s;
+            background: #f8f9fa;
+            transition: all 0.25s ease;
+            outline: none;
         }
 
-        .form-group input:focus {
-            outline: none;
+        .input-wrapper input::placeholder {
+            color: #adb5bd;
+            font-weight: 300;
+        }
+
+        .input-wrapper input:focus {
             border-color: #6c757d;
+            background: #fff;
+            box-shadow: 0 0 0 3px rgba(108, 117, 125, 0.1);
+        }
+
+        .input-wrapper input:focus + i,
+        .input-wrapper input:focus ~ i {
+            color: #343a40;
+        }
+
+        .input-wrapper:has(input:focus) i {
+            color: #343a40;
         }
 
         .btn {
             width: 100%;
-            padding: 10px;
+            padding: 13px;
             background: #343a40;
             color: #fff;
             border: none;
-            border-radius: 5px;
-            font-size: 1rem;
-            font-family: inherit;
+            border-radius: 12px;
+            font-size: 0.95rem;
+            font-family: 'Inter', sans-serif;
             font-weight: 600;
             cursor: pointer;
-            margin-top: 8px;
-            transition: background 0.15s;
+            margin-top: 10px;
+            transition: all 0.25s ease;
+            letter-spacing: 0.02em;
+            position: relative;
+            overflow: hidden;
         }
 
-        .btn:hover { background: #23272b; }
-        .btn:disabled { background: #adb5bd; cursor: not-allowed; }
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);
+            transition: left 0.5s ease;
+        }
+
+        .btn:hover {
+            background: #23272b;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(52, 58, 64, 0.25);
+        }
+
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn:active {
+            transform: translateY(0);
+            box-shadow: none;
+        }
+
+        .btn:disabled {
+            background: #adb5bd;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
 
         .alert {
-            padding: 10px 14px;
-            border-radius: 5px;
-            font-size: 0.88rem;
-            margin-bottom: 16px;
+            padding: 12px 16px;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            margin-bottom: 18px;
             display: none;
+            align-items: center;
+            gap: 10px;
+            animation: alertSlide 0.3s ease both;
         }
 
-        .alert.error { background: #f8d7da; color: #842029; border: 1px solid #f5c2c7; }
-        .alert.success { background: #d1e7dd; color: #0f5132; border: 1px solid #badbcc; }
-        .alert.show { display: block; }
+        @keyframes alertSlide {
+            from { opacity: 0; transform: translateY(-8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
 
-        .form-panel { display: none; }
+        .alert.error {
+            background: #fef2f2;
+            color: #842029;
+            border: 1px solid #fecaca;
+        }
+
+        .alert.success {
+            background: #f0fdf4;
+            color: #0f5132;
+            border: 1px solid #bbf7d0;
+        }
+
+        .alert.show { display: flex; }
+
+        .form-panel {
+            display: none;
+            animation: panelFade 0.35s ease both;
+        }
+
+        @keyframes panelFade {
+            from { opacity: 0; transform: translateX(10px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+
         .form-panel.active { display: block; }
 
         .pending-note {
             font-size: 0.8rem;
             color: #6c757d;
             text-align: center;
-            margin-top: 14px;
-            line-height: 1.5;
+            margin-top: 16px;
+            line-height: 1.6;
+            padding: 12px;
+            background: #f1f3f5;
+            border-radius: 10px;
         }
 
-        .spinner { display: inline-block; width: 14px; height: 14px; border: 2px solid #fff; border-top-color: transparent; border-radius: 50%; animation: spin 0.6s linear infinite; vertical-align: middle; margin-right: 6px; }
+        .pending-note i {
+            color: #343a40;
+        }
+
+        .spinner {
+            display: inline-block;
+            width: 16px;
+            height: 16px;
+            border: 2px solid rgba(255,255,255,0.3);
+            border-top-color: #fff;
+            border-radius: 50%;
+            animation: spin 0.7s linear infinite;
+            vertical-align: middle;
+            margin-right: 8px;
+        }
+
         @keyframes spin { to { transform: rotate(360deg); } }
+
+        @media (max-width: 480px) {
+            .auth-card { border-radius: 16px; }
+            .auth-card-header { padding: 24px 20px 20px; }
+            .auth-body { padding: 24px 20px; }
+        }
     </style>
 </head>
 <body>
@@ -171,36 +374,51 @@
 
         <!-- LOGIN FORM -->
         <div class="form-panel active" id="panel-login">
-            <div class="alert error" id="login-error"></div>
-            <div class="alert success" id="login-success"></div>
+            <div class="alert error" id="login-error"><i class="fas fa-exclamation-circle"></i><span></span></div>
+            <div class="alert success" id="login-success"><i class="fas fa-check-circle"></i><span></span></div>
 
             <div class="form-group">
                 <label>Email Address</label>
-                <input type="email" id="login-email" placeholder="you@example.com" autocomplete="email">
+                <div class="input-wrapper">
+                    <input type="email" id="login-email" placeholder="you@example.com" autocomplete="email">
+                    <i class="fas fa-envelope"></i>
+                </div>
             </div>
             <div class="form-group">
                 <label>Password</label>
-                <input type="password" id="login-password" placeholder="••••••••" autocomplete="current-password">
+                <div class="input-wrapper">
+                    <input type="password" id="login-password" placeholder="Enter your password" autocomplete="current-password">
+                    <i class="fas fa-lock"></i>
+                </div>
             </div>
             <button class="btn" id="login-btn" onclick="handleLogin()">Login</button>
         </div>
 
         <!-- REGISTER FORM -->
         <div class="form-panel" id="panel-register">
-            <div class="alert error" id="reg-error"></div>
-            <div class="alert success" id="reg-success"></div>
+            <div class="alert error" id="reg-error"><i class="fas fa-exclamation-circle"></i><span></span></div>
+            <div class="alert success" id="reg-success"><i class="fas fa-check-circle"></i><span></span></div>
 
             <div class="form-group">
                 <label>Full Name</label>
-                <input type="text" id="reg-name" placeholder="Your name">
+                <div class="input-wrapper">
+                    <input type="text" id="reg-name" placeholder="Your name">
+                    <i class="fas fa-user"></i>
+                </div>
             </div>
             <div class="form-group">
                 <label>Email Address</label>
-                <input type="email" id="reg-email" placeholder="you@example.com" autocomplete="email">
+                <div class="input-wrapper">
+                    <input type="email" id="reg-email" placeholder="you@example.com" autocomplete="email">
+                    <i class="fas fa-envelope"></i>
+                </div>
             </div>
             <div class="form-group">
                 <label>Password</label>
-                <input type="password" id="reg-password" placeholder="Min. 6 characters" autocomplete="new-password">
+                <div class="input-wrapper">
+                    <input type="password" id="reg-password" placeholder="Min. 6 characters" autocomplete="new-password">
+                    <i class="fas fa-lock"></i>
+                </div>
             </div>
             <button class="btn" id="reg-btn" onclick="handleRegister()">Create Account</button>
             <p class="pending-note">
@@ -215,7 +433,6 @@
 <script>
     const cfg = window.SIMTEL_AUTH_CONFIG;
 
-    // If already logged in, redirect to main page
     const existingToken = localStorage.getItem(cfg.TOKEN_KEY);
     if (existingToken) {
         const redirectUrl = new URLSearchParams(window.location.search).get('redirect') || '/index.html';
@@ -231,7 +448,9 @@
 
     function showMsg(id, msg, type) {
         const el = document.getElementById(id);
-        el.textContent = msg;
+        const span = el.querySelector('span');
+        if (span) span.textContent = msg;
+        else el.textContent = msg;
         el.className = `alert ${type} show`;
     }
 
@@ -325,7 +544,6 @@
         btn.textContent = 'Create Account';
     }
 
-    // Allow Enter key to submit
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Enter') {
             const loginPanel = document.getElementById('panel-login');
