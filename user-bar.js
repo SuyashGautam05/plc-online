@@ -73,7 +73,8 @@
             #simtel-user-bar .simtel-admin-link:hover {
                 text-decoration: underline;
             }
-            body { padding-top: 34px !important; }
+            // body { padding-top: 34px !important; }
+            body { padding-top: 1px !important; }
         `;
         document.head.appendChild(style);
 

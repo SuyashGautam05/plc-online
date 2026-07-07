@@ -266,7 +266,8 @@ main {
 .button-container {
     display: flex;
     gap: clamp(12px, 2vw, 25px);
-    margin-bottom: clamp(15px, 2vw, 30px);
+    /* margin-bottom: clamp(15px, 2vw, 30px); */
+    margin-bottom: -8px;
     flex-wrap: wrap;
     align-items: center;
 }
