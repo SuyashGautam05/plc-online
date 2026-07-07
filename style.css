@@ -1,28 +1,14 @@
-@import url('https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap');
-
 :root {
-    --bg-deep: #0a0e1a;
-    --glass: rgba(255, 255, 255, 0.05);
-    --glass-strong: rgba(255, 255, 255, 0.085);
-    --glass-border: rgba(255, 255, 255, 0.1);
-    --blob-violet: #6c5ce7;
-    --blob-cyan: #22d3ee;
-    --blob-amber: #f59e0b;
-    --text-hi: #f1f5f9;
-    --text-mid: #a8b3c7;
-    --text-dim: #64748b;
-    --success: #34d399;
-
-    /* legacy variable names kept for compatibility */
-    --primary-color: var(--bg-deep);
-    --secondary-color: var(--glass-strong);
-    --text-color: var(--text-hi);
-    --accent-color: var(--text-mid);
-    --border-color: var(--glass-border);
-    --hover-color: rgba(255, 255, 255, 0.05);
-    --shadow: 0 4px 24px rgba(0, 0, 0, 0.35);
+    --primary-color: #f8f9fa;
+    --secondary-color: #e9ecef;
+    --text-color: #343a40;
+    --accent-color: #6c757d;
+    --border-color: #dee2e6;
+    --hover-color: #f1f3f5;
+    --shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
     --header-padding: 10px;
     --container-margin: 25px;
+    /* --container-padding: 20px; */
     --section-title-size: 1.2rem;
     --list-item-size: 1rem;
     --list-item-padding: 8px;
@@ -40,65 +26,15 @@ html {
 }
 
 body {
-    font-family: 'Inter', sans-serif;
-    background-color: var(--bg-deep);
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    background-color: var(--primary-color);
     color: var(--text-color);
     line-height: 1.6;
     width: 100%;
     overflow-x: hidden;
-    position: relative;
-}
-
-/* Ambient animated gradient blobs */
-.blob-field {
-    position: fixed;
-    inset: 0;
-    z-index: 0;
-    overflow: hidden;
-    pointer-events: none;
-}
-
-.blob {
-    position: absolute;
-    border-radius: 50%;
-    filter: blur(110px);
-    opacity: 0.32;
-    will-change: transform;
-}
-
-.blob-1 {
-    width: 560px; height: 560px;
-    background: radial-gradient(circle at 30% 30%, var(--blob-violet), transparent 70%);
-    top: -180px; left: -140px;
-    animation: drift1 22s ease-in-out infinite;
-}
-
-.blob-2 {
-    width: 480px; height: 480px;
-    background: radial-gradient(circle at 60% 40%, var(--blob-cyan), transparent 70%);
-    bottom: -160px; right: -100px;
-    animation: drift2 26s ease-in-out infinite;
-}
-
-.blob-3 {
-    width: 340px; height: 340px;
-    background: radial-gradient(circle at 50% 50%, var(--blob-amber), transparent 70%);
-    top: 40%; left: 70%;
-    opacity: 0.16;
-    animation: drift3 30s ease-in-out infinite;
-}
-
-@keyframes drift1 { 0%, 100% { transform: translate(0,0) scale(1); } 50% { transform: translate(60px, 40px) scale(1.1); } }
-@keyframes drift2 { 0%, 100% { transform: translate(0,0) scale(1); } 50% { transform: translate(-50px, -30px) scale(1.08); } }
-@keyframes drift3 { 0%, 100% { transform: translate(0,0) scale(1); } 50% { transform: translate(-40px, 50px) scale(1.15); } }
-
-@media (prefers-reduced-motion: reduce) {
-    .blob { animation: none !important; }
 }
 
 .container {
-    position: relative;
-    z-index: 1;
     display: flex;
     flex-direction: column;
     min-height: 100vh;
@@ -130,20 +66,17 @@ header {
 .logo-container img {
     height: clamp(40px, 10vw, 60px);
     width: auto;
-    filter: drop-shadow(0 0 12px rgba(108, 92, 231, 0.25));
 }
 
 .logo-container i {
     font-size: clamp(1.5rem, 5vw, 2.5rem);
-    color: var(--blob-cyan);
+    color: var(--accent-color);
 }
 
 h1 {
-    font-family: 'Sora', sans-serif;
     font-size: clamp(1.5rem, 6vw, 2.5rem);
     font-weight: 700;
     color: var(--text-color);
-    letter-spacing: 0.01em;
 }
 
 header p {
@@ -158,18 +91,15 @@ main {
 }
 
 .menu-container {
-    background-color: var(--glass);
-    backdrop-filter: blur(22px) saturate(160%);
-    -webkit-backdrop-filter: blur(22px) saturate(160%);
-    border: 1px solid var(--glass-border);
-    border-radius: 16px;
-    box-shadow: var(--shadow), inset 0 1px 0 rgba(255,255,255,0.05);
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: var(--shadow);
     overflow: hidden;
     width: 100%;
 }
 
 .menu-header {
-    background-color: rgba(255, 255, 255, 0.03);
+    background-color: var(--secondary-color);
     padding: clamp(12px, 3vw, 15px) clamp(15px, 4vw, 20px);
     display: flex;
     flex-wrap: wrap;
@@ -180,7 +110,6 @@ main {
 }
 
 .menu-header h2 {
-    font-family: 'Sora', sans-serif;
     font-size: clamp(1.2rem, 4vw, 1.5rem);
     color: var(--text-color);
 }
@@ -194,22 +123,9 @@ main {
 .search-container input {
     width: 100%;
     padding: clamp(6px, 1.5vw, 8px) clamp(10px, 2vw, 15px);
-    background: rgba(255, 255, 255, 0.04);
     border: 1px solid var(--border-color);
-    border-radius: 6px;
+    border-radius: 4px;
     font-size: clamp(0.8rem, 2vw, 0.9rem);
-    color: var(--text-hi);
-    font-family: 'Inter', sans-serif;
-    transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
-}
-
-.search-container input::placeholder { color: var(--text-dim); }
-
-.search-container input:focus {
-    outline: none;
-    border-color: var(--blob-cyan);
-    background: rgba(255, 255, 255, 0.07);
-    box-shadow: 0 0 0 3px rgba(34, 211, 238, 0.15);
 }
 
 .search-container i {
@@ -217,7 +133,7 @@ main {
     right: clamp(8px, 2vw, 10px);
     top: 50%;
     transform: translateY(-50%);
-    color: var(--text-dim);
+    color: var(--accent-color);
 }
 
 .menu-content {
@@ -227,21 +143,10 @@ main {
     width: 100%;
 }
 
-.menu-content::-webkit-scrollbar { width: 8px; }
-.menu-content::-webkit-scrollbar-track { background: transparent; }
-.menu-content::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.12); border-radius: 8px; }
-.menu-content::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.2); }
-
 .menu-section {
     margin-bottom: clamp(15px, 3vw, 20px);
     border-bottom: 1px solid var(--border-color);
     padding-bottom: clamp(12px, 2vw, 15px);
-    border-radius: 10px;
-    transition: background 0.2s ease;
-}
-
-.menu-section:hover {
-    background: rgba(255, 255, 255, 0.015);
 }
 
 .menu-section:last-child {
@@ -250,7 +155,6 @@ main {
 }
 
 .menu-section h3 {
-    font-family: 'Sora', sans-serif;
     font-size: clamp(1rem, 3.5vw, 1.2rem);
     color: var(--text-color);
     margin-bottom: clamp(8px, 1.5vw, 10px);
@@ -259,16 +163,15 @@ main {
     gap: 10px;
     cursor: pointer;
     transition: color 0.2s ease;
-    padding: 4px 6px;
 }
 
 .menu-section h3:hover {
-    color: var(--blob-cyan);
+    color: var(--accent-color);
 }
 
 .menu-section h3 i {
     font-size: clamp(0.7rem, 2vw, 0.9rem);
-    color: var(--blob-cyan);
+    color: var(--accent-color);
     transition: transform 0.2s ease;
 }
 
@@ -288,14 +191,14 @@ main {
 }
 
 .menu-section > ul > li:hover {
-    color: var(--blob-cyan);
+    color: var(--accent-color);
 }
 
 .menu-section > ul > li::before {
     content: "•";
     position: absolute;
     left: clamp(-12px, -3vw, -15px);
-    color: var(--blob-violet);
+    color: var(--accent-color);
 }
 
 .menu-section ul ul {
@@ -315,7 +218,7 @@ main {
     content: "◦";
     position: absolute;
     left: clamp(-12px, -3vw, -15px);
-    color: var(--blob-cyan);
+    color: var(--accent-color);
 }
 
 footer {
@@ -330,14 +233,15 @@ footer {
 /* Extra Large Screens (1920px and above) */
 @media (min-width: 1920px) {
     .container {
+        /* margin: 40px auto; */
         margin: auto;
         max-width: 1500px;
     }
-
+    
     .menu-section h3 {
         font-size: 1.4rem;
     }
-
+    
     .menu-section > ul > li {
         font-size: 1.1rem;
     }
@@ -346,6 +250,7 @@ footer {
 /* Large Screens (1200px to 1919px) */
 @media (min-width: 1200px) and (max-width: 1919px) {
     .container {
+        /* margin: 30px auto; */
         margin: auto;
     }
 }
@@ -356,30 +261,30 @@ footer {
         margin: 20px 15px;
         padding: 15px;
     }
-
+    
     header {
         margin-bottom: clamp(15px, 4vw, 25px);
     }
-
+    
     .logo-container {
         gap: clamp(15px, 10vw, 200px);
     }
-
+    
     .menu-header {
         flex-direction: column;
         gap: 15px;
         align-items: flex-start;
     }
-
+    
     .menu-header h2 {
         width: 100%;
     }
-
+    
     .search-container {
         width: 100%;
         max-width: 100%;
     }
-
+    
     .menu-content {
         max-height: 65vh;
     }
@@ -392,43 +297,43 @@ footer {
         --list-item-size: 0.95rem;
         --nested-list-size: 0.85rem;
     }
-
+    
     .container {
         margin: 15px 10px;
         padding: 12px;
     }
-
+    
     h1 {
         font-size: clamp(1.3rem, 5vw, 2rem);
     }
-
+    
     .logo-container {
         gap: clamp(10px, 8vw, 150px);
     }
-
+    
     .menu-header {
         padding: 12px 15px;
         flex-direction: column;
     }
-
+    
     .search-container {
         width: 100%;
     }
-
+    
     .menu-content {
         padding: 12px 15px;
         max-height: 60vh;
     }
-
+    
     .menu-section {
         margin-bottom: 15px;
         padding-bottom: 12px;
     }
-
+    
     .menu-section h3 {
         font-size: 1.05rem;
     }
-
+    
     .menu-section > ul > li {
         font-size: 0.95rem;
     }
@@ -441,91 +346,91 @@ footer {
         --list-item-size: 0.9rem;
         --nested-list-size: 0.8rem;
     }
-
+    
     .container {
         margin: 12px 8px;
         padding: 10px;
         max-width: 100%;
     }
-
+    
     header {
         padding: 8px 0;
         margin-bottom: 20px;
     }
-
+    
     .logo-container {
         flex-direction: column;
         gap: 10px;
         margin-bottom: 0;
     }
-
+    
     .logo-container img {
         height: 50px;
     }
-
+    
     .logo-container i {
         display: none;
     }
-
+    
     h1 {
         font-size: clamp(1.2rem, 5vw, 1.8rem);
         margin-top: 10px;
     }
-
+    
     main {
         padding: 0;
     }
-
+    
     .menu-header {
         padding: 10px 12px;
         flex-direction: column;
         gap: 12px;
     }
-
+    
     .menu-header h2 {
         font-size: 1.1rem;
     }
-
+    
     .search-container {
         width: 100%;
         min-width: auto;
     }
-
+    
     .search-container input {
         font-size: 1rem;
         padding: 6px 12px;
     }
-
+    
     .menu-content {
         padding: 10px 12px;
         max-height: 55vh;
     }
-
+    
     .menu-section {
         margin-bottom: 12px;
         padding-bottom: 10px;
     }
-
+    
     .menu-section h3 {
         font-size: 0.95rem;
         margin-bottom: 8px;
     }
-
+    
     .menu-section > ul > li {
         font-size: 0.9rem;
         padding: 6px 0;
     }
-
+    
     .menu-section ul ul {
         padding-left: 12px;
         margin-top: 3px;
     }
-
+    
     .menu-section ul ul li {
         font-size: 0.8rem;
         padding: 3px 0;
     }
-
+    
     footer {
         font-size: 0.8rem;
         margin-top: 20px;
@@ -539,110 +444,110 @@ footer {
         --list-item-size: 0.85rem;
         --nested-list-size: 0.75rem;
     }
-
+    
     .container {
         margin: 10px 5px;
         padding: 8px;
         min-height: auto;
     }
-
+    
     header {
         padding: 6px 0;
         margin-bottom: 15px;
     }
-
+    
     .logo-container {
         flex-direction: column;
         gap: 5px;
         margin-bottom: 0;
     }
-
+    
     .logo-container img {
         height: 40px;
     }
-
+    
     h1 {
         font-size: 1.1rem;
         margin-top: 5px;
         font-weight: 600;
     }
-
+    
     header p {
         font-size: 0.8rem;
     }
-
+    
     .menu-container {
-        border-radius: 10px;
+        border-radius: 4px;
     }
-
+    
     .menu-header {
         padding: 8px 10px;
         flex-direction: column;
         gap: 10px;
     }
-
+    
     .menu-header h2 {
         font-size: 1rem;
     }
-
+    
     .search-container {
         width: 100%;
     }
-
+    
     .search-container input {
         font-size: 0.95rem;
         padding: 5px 10px;
     }
-
+    
     .menu-content {
         padding: 8px 10px;
         max-height: 50vh;
     }
-
+    
     .menu-section {
         margin-bottom: 10px;
         padding-bottom: 8px;
     }
-
+    
     .menu-section h3 {
         font-size: 0.9rem;
         margin-bottom: 6px;
         gap: 6px;
     }
-
+    
     .menu-section > ul > li {
         font-size: 0.8rem;
         padding: 4px 0;
     }
-
+    
     .menu-section > ul > li::before {
         left: -12px;
         font-size: 0.8rem;
     }
-
+    
     .menu-section ul {
         padding-left: 12px;
     }
-
+    
     .menu-section ul ul {
         padding-left: 8px;
         margin-top: 2px;
     }
-
+    
     .menu-section ul ul li {
         font-size: 0.75rem;
         padding: 2px 0;
     }
-
+    
     .menu-section ul ul li::before {
         left: -10px;
         font-size: 0.6rem;
     }
-
+    
     .menu-section h3 i {
         font-size: 0.7rem;
     }
-
+    
     footer {
         font-size: 0.75rem;
         margin-top: 15px;
@@ -656,11 +561,11 @@ footer {
         margin: 8px 5px;
         padding: 6px;
     }
-
+    
     header {
         margin-bottom: 10px;
     }
-
+    
     .menu-content {
         max-height: 45vh;
     }

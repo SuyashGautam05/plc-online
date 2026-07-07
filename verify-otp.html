@@ -4,252 +4,34 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Verify Email - PLC Training</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Sora:wght@600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;600&display=swap" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-
-        :root {
-            --bg-deep: #0a0e1a;
-            --glass: rgba(255, 255, 255, 0.055);
-            --glass-border: rgba(255, 255, 255, 0.12);
-            --blob-violet: #6c5ce7;
-            --blob-cyan: #22d3ee;
-            --blob-amber: #f59e0b;
-            --text-hi: #f1f5f9;
-            --text-mid: #a8b3c7;
-            --text-dim: #64748b;
-            --success: #34d399;
-            --danger: #fb7185;
-        }
-
-        html, body { height: 100%; }
-
-        body {
-            font-family: 'Inter', sans-serif;
-            background: var(--bg-deep);
-            min-height: 100vh;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            position: relative;
-            overflow: hidden;
-            color: var(--text-hi);
-        }
-
-        .blob-field { position: fixed; inset: 0; z-index: 0; overflow: hidden; pointer-events: none; }
-
-        .blob { position: absolute; border-radius: 50%; filter: blur(80px); opacity: 0.55; will-change: transform; }
-
-        .blob-1 {
-            width: 460px; height: 460px;
-            background: radial-gradient(circle at 30% 30%, var(--blob-cyan), transparent 70%);
-            top: -110px; right: -90px;
-            animation: drift1 18s ease-in-out infinite;
-        }
-        .blob-2 {
-            width: 420px; height: 420px;
-            background: radial-gradient(circle at 60% 40%, var(--blob-violet), transparent 70%);
-            bottom: -130px; left: -90px;
-            animation: drift2 22s ease-in-out infinite;
-        }
-
-        @keyframes drift1 {
-            0%, 100% { transform: translate(0,0) scale(1); }
-            50% { transform: translate(-40px, 30px) scale(1.1); }
-        }
-        @keyframes drift2 {
-            0%, 100% { transform: translate(0,0) scale(1); }
-            50% { transform: translate(40px, -30px) scale(1.08); }
-        }
-
-        .login-wrapper { position: relative; z-index: 2; width: 100%; display: flex; justify-content: center; }
-
-        .login-card {
-            background: var(--glass);
-            backdrop-filter: blur(24px) saturate(160%);
-            -webkit-backdrop-filter: blur(24px) saturate(160%);
-            border: 1px solid var(--glass-border);
-            border-radius: 20px;
-            box-shadow: 0 8px 40px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.06);
-            width: 100%;
-            max-width: 400px;
-            padding: 36px 32px 30px;
-            opacity: 0;
-            text-align: center;
-        }
-
-        .login-logo { height: 44px; margin-bottom: 14px; }
-
-        .otp-badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            padding: 4px 12px;
-            border-radius: 20px;
-            background: rgba(34, 211, 238, 0.1);
-            border: 1px solid rgba(34, 211, 238, 0.3);
-            color: var(--blob-cyan);
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.7rem;
-            letter-spacing: 0.06em;
-            text-transform: uppercase;
-            margin-bottom: 14px;
-        }
-
-        .otp-badge .dot {
-            width: 6px; height: 6px; border-radius: 50%;
-            background: var(--blob-cyan);
-            box-shadow: 0 0 6px 1px rgba(34, 211, 238, 0.8);
-            animation: blink 2s ease-in-out infinite;
-        }
-
-        @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
-
-        h1 {
-            font-family: 'Sora', sans-serif;
-            font-size: 1.35rem;
-            font-weight: 700;
-            margin-bottom: 8px;
-        }
-
-        .login-card > p {
-            font-size: 0.85rem;
-            color: var(--text-mid);
-            margin-bottom: 22px;
-            line-height: 1.5;
-        }
-
-        form { text-align: left; }
-
-        label {
-            display: block;
-            font-size: 0.8rem;
-            color: var(--text-mid);
-            margin-bottom: 6px;
-            font-weight: 600;
-            letter-spacing: 0.02em;
-        }
-
-        .form-field { margin-bottom: 16px; }
-
-        input {
-            width: 100%;
-            padding: 11px 14px;
-            background: rgba(255,255,255,0.04);
-            border: 1px solid var(--glass-border);
-            border-radius: 8px;
-            font-size: 0.95rem;
-            font-family: 'Inter', sans-serif;
-            color: var(--text-hi);
-            transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
-        }
-
-        #otp {
-            font-family: 'JetBrains Mono', monospace;
-            letter-spacing: 0.5em;
-            font-size: 1.15rem;
-            text-align: center;
-            padding-left: 8px;
-        }
-
-        input::placeholder { color: var(--text-dim); letter-spacing: 0.5em; }
-        input:focus {
-            outline: none;
-            border-color: var(--blob-cyan);
-            background: rgba(255,255,255,0.07);
-            box-shadow: 0 0 0 3px rgba(34, 211, 238, 0.15);
-        }
-
-        button[type="submit"] {
-            width: 100%;
-            padding: 12px;
-            background: linear-gradient(135deg, var(--blob-violet), #4f46e5);
-            color: #fff;
-            border: none;
-            border-radius: 8px;
-            font-size: 0.98rem;
-            font-family: 'Inter', sans-serif;
-            font-weight: 700;
-            cursor: pointer;
-            margin-top: 6px;
-            transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease;
-            box-shadow: 0 4px 18px rgba(108, 92, 231, 0.35);
-        }
-
-        button[type="submit"]:hover:not(:disabled) { transform: translateY(-2px); box-shadow: 0 8px 26px rgba(108, 92, 231, 0.5); filter: brightness(1.08); }
-        button[type="submit"]:disabled { background: #3a3f52; cursor: not-allowed; box-shadow: none; }
-
-        .error {
-            font-size: 0.83rem;
-            color: var(--danger);
-            margin-top: 12px;
-            min-height: 1em;
-            text-align: center;
-        }
-
-        .login-wrapper a {
-            color: var(--blob-cyan);
-            text-decoration: none;
-            font-weight: 600;
-        }
-        .login-wrapper a:hover { text-decoration: underline; }
-
-        .bottom-note {
-            text-align: center;
-            margin-top: 16px;
-            font-size: 0.83rem;
-            color: var(--text-mid);
-        }
-
-        @media (prefers-reduced-motion: reduce) {
-            .blob, .otp-badge .dot { animation: none !important; }
-        }
-    </style>
+    <link rel="stylesheet" href="login.css">
 </head>
 <body>
-
-<div class="blob-field">
-    <div class="blob blob-1"></div>
-    <div class="blob blob-2"></div>
-</div>
-
-<div class="login-wrapper">
-    <div class="login-card" id="verify-card">
-        <img src="./assets/Scientech logo-2.png" alt="Logo" class="login-logo" onerror="this.style.display='none'">
-        <div class="otp-badge"><span class="dot"></span>Email Verification</div>
-        <h1>Verify Your Email</h1>
-        <p>Enter the 6-digit code sent to your email address.</p>
-        <form id="verifyForm">
-            <div class="form-field">
-                <label for="email">Email</label>
-                <input type="email" id="email" required autocomplete="username">
-            </div>
-            <div class="form-field">
-                <label for="otp">Verification Code</label>
-                <input type="text" id="otp" required maxlength="6" inputmode="numeric" pattern="[0-9]{6}" placeholder="••••••">
-            </div>
-            <button type="submit" id="verifyBtn">Verify</button>
-            <p id="errorMsg" class="error"></p>
-            <p id="successMsg" class="error" style="color: var(--success);"></p>
-        </form>
-        <p class="bottom-note">
-            Didn't get a code? <a href="#" id="resendLink">Resend</a>
-        </p>
+    <div class="login-wrapper">
+        <div class="login-card">
+            <img src="./assets/Scientech logo-2.png" alt="Logo" class="login-logo">
+            <h1>Verify Your Email</h1>
+            <p style="font-size: 13px; color: #666; margin-bottom: 20px; text-align: center;">
+                Enter the 6-digit code sent to your email address.
+            </p>
+            <form id="verifyForm">
+                <label>Email
+                    <input type="email" id="email" required autocomplete="username">
+                </label>
+                <label>Verification Code
+                    <input type="text" id="otp" required maxlength="6" inputmode="numeric" pattern="[0-9]{6}" placeholder="******">
+                </label>
+                <button type="submit" id="verifyBtn">Verify</button>
+                <p id="errorMsg" class="error"></p>
+                <p id="successMsg" class="error" style="color: #198754;"></p>
+            </form>
+            <p style="text-align:center; margin-top: 16px; font-size: 13px;">
+                Didn't get a code? <a href="#" id="resendLink">Resend</a>
+            </p>
+        </div>
     </div>
-</div>
 
-<script>
-    if (window.gsap) {
-        gsap.set('#verify-card', { y: 24 });
-        gsap.to('#verify-card', { opacity: 1, y: 0, duration: 0.7, ease: 'power3.out', delay: 0.05 });
-    } else {
-        document.getElementById('verify-card').style.opacity = 1;
-    }
-</script>
-<script src="auth-config.js"></script>
-<script src="verify-otp.js"></script>
+    <script src="auth-config.js"></script>
+    <script src="verify-otp.js"></script>
 </body>
 </html>
