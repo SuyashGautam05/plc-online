@@ -6,576 +6,333 @@
     <script src="./user-bar.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PLC SimTel – Course Content</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <title>Menu</title>
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-    <div class="app-container">
-        <!-- Hero Toolbar -->
-        <header class="hero-toolbar">
-            <div class="hero-inner">
-                <div class="hero-brand">
-                    <img src="./assets/Scientech logo-2.png" alt="Scientech" onerror="this.style.display='none'">
-                    <div class="hero-text">
-                        <h1>PLC SimTel</h1>
-                        <p>Programmable Logic Controller Training</p>
-                    </div>
-                </div>
-                <div class="hero-actions">
-                    <div class="search-box">
-                        <i class="fas fa-search"></i>
-                        <input type="text" id="search" placeholder="Search topics..." autocomplete="off">
-                        <kbd id="search-clear" class="search-clear" title="Clear search"><i class="fas fa-times"></i></kbd>
-                    </div>
-                    <button class="btn-expand-all" id="btn-expand-all" title="Expand / Collapse All">
-                        <i class="fas fa-expand-alt"></i>
-                        <span>Expand All</span>
-                    </button>
-                </div>
+    <div class="container">
+        <header style="display: flex; margin-bottom: 20px;">
+            <div class="logo-container"  style="gap: clamp(15px, 9vw, 153px);">
+                <img style="height: 60px;" src="./assets/Scientech logo-2.png" alt="">
+                <h1>Programmable Logic Controller</h1>
             </div>
         </header>
 
-        <!-- Main Content -->
-        <main class="card-grid" id="card-grid">
-
-            <div class="course-card" data-section="1">
-                <div class="card-header" onclick="toggleCard(this)">
-                    <div class="card-number">01</div>
-                    <div class="card-info">
-                        <h3>Introduction to Industrial Automation</h3>
-                        <span class="card-meta">5 topics</span>
-                    </div>
-                    <div class="card-chevron">
-                        <i class="fas fa-chevron-down"></i>
+        <main>
+            <div class="menu-container">
+                <div class="menu-header">
+                    <h2>Course Content</h2>
+                    <div class="search-container">
+                        <input type="text" id="search" placeholder="Search topics...">
+                        <i class="fas fa-search"></i>
                     </div>
                 </div>
-                <div class="card-body">
-                    <ul class="topic-list">
-                        <li><a href="./pages/Introduction to Industrial Automation/Definition_and_Scope_of_Industrial_Automation.html"><i class="fas fa-file-alt"></i> Definition and Scope of Industrial Automation</a></li>
-                        <li><a href="./pages/Introduction to Industrial Automation/Automation_Pyramid.html"><i class="fas fa-file-alt"></i> Automation Pyramid</a></li>
-                        <li><a href="./pages/Introduction to Industrial Automation/Industrial_Automation_Tools_and_Technologies.html"><i class="fas fa-file-alt"></i> Industrial Automation Tools and Technologies</a></li>
-                        <li><a href="./pages/Introduction to Industrial Automation/Evolution_of_Industrial_Automation.html"><i class="fas fa-file-alt"></i> Evolution of Industrial Automation</a></li>
-                        <li><a href="./pages/Introduction to Industrial Automation/Industrial_Applications_of_Automation.html"><i class="fas fa-file-alt"></i> Industrial Applications of Automation</a></li>
-                    </ul>
+
+                <div class="menu-content">
+                    <div class="menu-section">
+                        <h3>1. Introduction to Industrial Automation</h3>
+                        <ul>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Introduction to Industrial Automation/Definition_and_Scope_of_Industrial_Automation.html">Definition and Scope of Industrial Automation</a></li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Introduction to Industrial Automation/Automation_Pyramid.html">Automation Pyramid</a></li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Introduction to Industrial Automation/Industrial_Automation_Tools_and_Technologies.html">Industrial Automation Tools and Technologies</a></li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Introduction to Industrial Automation/Evolution_of_Industrial_Automation.html">Evolution of Industrial Automation</a></li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Introduction to Industrial Automation/Industrial_Applications_of_Automation.html">Industrial Applications of Automation</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="menu-section">
+                        <h3>2. Industrial Safety and Standards</h3>
+                        <ul>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Industrial Safety and Standards/Importance_of_Safety_in_Industrial_Automation.html">Importance of Safety in Industrial Automation</a></li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Industrial Safety and Standards/Machine_Safety_Systems.html">Machine Safety Systems</a></li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Industrial Safety and Standards/Emergency_Stop_Systems.html">Emergency Stop (E-Stop) Systems</a></li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Industrial Safety and Standards/Interlock_and_Safety_Relay_Systems.html">Interlock and Safety Relay Systems</a></li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Industrial Safety and Standards/International_Standards_and_Regulations.html">International Standards and Regulations</a></li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Industrial Safety and Standards/Safety_Compliance_in_Industrial_Systems.html">Safety Compliance in Industrial Systems</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="menu-section">
+                        <h3>3. Basics of Electrical Engineering for Automation</h3>
+                        <ul>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Basics of Electrical Engineering for Automation/Electrical_Quantities.html">Electrical Quantities</a></li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Basics of Electrical Engineering for Automation/DC_and_AC_Circuits.html">DC Circuits and AC Circuits</a></li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Basics of Electrical Engineering for Automation/Single-Phase_and_Three-Phase_Systems.html">Single-Phase and Three-Phase Systems</a></li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Basics of Electrical Engineering for Automation/Power_Factor_and_Earthing_Concepts.html">Power Factor and Earthing Concepts</a></li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Basics of Electrical Engineering for Automation/Electrical_Symbols_and_Schematics.html">Electrical Symbols and Schematics</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="menu-section">
+                        <h3>4. Industrial Electrical Components</h3>
+                        <ul>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Industrial Electrical Components/Circuit_Breakers_and_Fuses.html">Circuit Breakers and Fuses</a></li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Industrial Electrical Components/Power_Supplies.html">Power Supplies (SMPS, Linear)</a></li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Industrial Electrical Components/Relays.html">Relays</a></li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Industrial Electrical Components/Contactors.html">Contactors</a></li>
+                            <li>Types of Switches
+                                <ul>
+                                    <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Industrial Electrical Components/push_button_switch.html">Pushbuttons</a></li>
+                                    <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Industrial Electrical Components/toggle_switch.html">Toggle Switch</a></li>
+                                    <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Industrial Electrical Components/rocker_switch.html">Rocker Switch</a></li>
+                                    <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Industrial Electrical Components/DIP_switch.html">DIP Switch</a></li>
+                                    <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Industrial Electrical Components/Reed_switch.html">Reed Switch</a></li>
+                                    <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Industrial Electrical Components/Limit_switch.html">Limit Switch</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="menu-section">
+                        <h3>5. Transducers, Sensors and Transmitters</h3>
+                        <ul>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Transducers, Sensors and Transmitters/Definition_of_Transducers_Sensors_and_Transmitters.html">Definition of Transducers, Sensors and Transmitters</a></li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Transducers, Sensors and Transmitters/Characteristics_and_Selection_Criteria.html">Characteristics and Selection Criteria</a></li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Transducers, Sensors and Transmitters/Sinking_(PNP)_and_Sourcing_(NPN)_Concept.html">Sinking (PNP) and Sourcing (NPN) Concept</a></li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Transducers, Sensors and Transmitters/Types_of_Proximity_Sensors.html">Types of Proximity Sensors</a></li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Transducers, Sensors and Transmitters/Temperature_Sensors_and_Temperature_Transmitter.html">Temperature Sensors and Temperature Transmitter</a></li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Transducers, Sensors and Transmitters/Pressure_Transmitter.html">Pressure Transmitter</a></li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Transducers, Sensors and Transmitters/Level_Transmitter.html">Level Transmitter</a></li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Transducers, Sensors and Transmitters/Flow_Transmitter.html">Flow Transmitter</a></li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Transducers, Sensors and Transmitters/Position_Sensor.html">Position Sensor</a></li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Transducers, Sensors and Transmitters/Vision_Sensor.html">Vision Sensor</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="menu-section">
+                        <h3>6. Actuators</h3>
+                        <ul>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Actuators/Introduction_and_Function_of_Actuators.html">Introduction and Function of Actuators</a></li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Actuators/Classification_of_Actuators.html">Classification of Actuators</a></li>
+                            <li>Electrical Actuators
+                                <ul>
+                                    <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Actuators/AC_Motors.html">AC Motors</a></li>
+                                    <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Actuators/DC_Motors.html">DC Motors</a></li>
+                                    <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Actuators/Servo_Motors.html">Servo Motors</a></li>
+                                    <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Actuators/Stepper_Motors.html">Stepper Motors</a></li>
+                                    <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Actuators/Solenoids.html">Solenoids</a></li>
+                                    <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Actuators/Linear_Electric_Actuator.html">Linear Electric Actuators</a></li>
+                                </ul>
+                            </li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Actuators/Pneumatic_Actuators.html">Pneumatic Actuators</a></li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Actuators/Hydraulic_Actuators.html">Hydraulic Actuators</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="menu-section">
+                        <h3>7. Industrial Control Panels</h3>
+                        <ul>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Introduction to Control Panels/Introduction_to_Control_Panels.html">Introduction to Control Panels</a></li>
+                            <li>Types of Control Panels
+                                <ul>
+                                    <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Introduction to Control Panels/PLC_Panels.html">PLC Panels</a></li>
+                                    <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Introduction to Control Panels/MCC_(Motor_Control_Center)_Panels.html">MCC (Motor Control Center) Panels</a></li>
+                                    <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Introduction to Control Panels/PCC_(Power_Control_Center)_Panels.html">PCC (Power Control Center) Panels</a></li>
+                                </ul>
+                            </li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Introduction to Control Panels/Panel_Layout_and_Component_Placement.html">Panel Layout and Component Placement</a></li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Introduction to Control Panels/Selection_of_Electrical_Components.html">Selection of Electrical Components</a></li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Introduction to Control Panels/Panel_Cooling_and_Ventilation.html">Panel Cooling and Ventilation</a></li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Introduction to Control Panels/Ingress_Protection_(IP_Ratings).html">Ingress Protection (IP Ratings)</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="menu-section">
+                        <h3>8. Introduction to PLC (Programmable Logic Controller)</h3>
+                        <ul>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Introduction to PLC (Programmable Logic Controller)/Definition_and_Purpose_of_PLCs.html">Definition and Purpose of PLCs</a></li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Introduction to PLC (Programmable Logic Controller)/Applications_of_PLCs_in_Industry.html">Applications of PLCs in Industry</a></li>
+                            <li>Classification of PLCs
+                                <ul>
+                                    <li>Based on Size
+                                        <ul>
+                                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Introduction to PLC (Programmable Logic Controller)/compact_plc.html">Compact PLC</a></li>
+                                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Introduction to PLC (Programmable Logic Controller)/modular_plc.html">Modular PLC</a></li>
+                                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Introduction to PLC (Programmable Logic Controller)/Distributed_PLC.html">Distributed PLC</a></li>
+                                        </ul>
+                                    </li>
+                                    <li>Based on Output
+                                        <ul>
+                                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Introduction to PLC (Programmable Logic Controller)/Relay.html">Relay</a></li>
+                                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Introduction to PLC (Programmable Logic Controller)/Transistor.html">Transistor</a></li>
+                                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Introduction to PLC (Programmable Logic Controller)/SCR.html">SCR</a></li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="menu-section">
+                        <h3>9. PLC Hardware and Architecture</h3>
+                        <ul>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/PLC Hardware and Architecture/PLC_System_Architecture.html">PLC System Architecture</a></li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/PLC Hardware and Architecture/Central_Processing_Unit.html">Central Processing Unit (CPU)</a></li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/PLC Hardware and Architecture/Power_Supply_Units.html">Power Supply Units</a></li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/PLC Hardware and Architecture/Digital_Input_Modules.html">Digital Input Modules</a></li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/PLC Hardware and Architecture/Digital_Output_Modules.html">Digital Output Modules</a></li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/PLC Hardware and Architecture/Analog_Input_Modules.html">Analog Input Modules</a></li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/PLC Hardware and Architecture/Analog_Output_Modules.html">Analog output Modules</a></li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/PLC Hardware and Architecture/Communication_and_Interface_Modules.html">Communication and Interface Modules</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="menu-section">
+                        <h3>10. PLC Programming Fundamentals</h3>
+                        <ul>
+                            <li>PLC Programming Standards
+                                <ul>
+                                    <li>IEC 61131-3 Programming Languages
+                                        <ul>
+                                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/PLC Programming Fundamentals/Ladder_Diagram_(LD).html">Ladder Diagram (LD)</a></li>
+                                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/PLC Programming Fundamentals/Function_Block_Diagram.html">Function Block Diagram (FBD)</a></li>
+                                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/PLC Programming Fundamentals/Structured_Text.html">Structured Text (ST)</a></li>
+                                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/PLC Programming Fundamentals/Statement_List.html">Statement List (STL)</a></li>
+                                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/PLC Programming Fundamentals/Sequential_Function_Chart.html">Sequential Function Chart (SFC)</a></li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>PLC Instructions and Programming Concepts
+                                <ul>
+                                    <li>Logical Instructions
+                                        <ul>
+                                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/PLC Programming Fundamentals/NO_and_NC.html">NO and NC</a></li>
+                                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/PLC Programming Fundamentals/Set_and_Reset.html">Set and Reset</a></li>
+                                        </ul>
+                                    </li>
+                                    <li>Timers
+                                        <ul>
+                                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/PLC Programming Fundamentals/TON.html">TON (On-Delay)</a></li>
+                                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/PLC Programming Fundamentals/TOFF.html">TOFF (Off-Delay)</a></li>
+                                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/PLC Programming Fundamentals/RTO.html">RTO (Retentive Timer)</a></li>
+                                        </ul>
+                                    </li>
+                                    <li>Counters
+                                        <ul>
+                                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/PLC Programming Fundamentals/CTU.html">CTU</a></li>
+                                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/PLC Programming Fundamentals/CTD.html">CTD</a></li>
+                                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/PLC Programming Fundamentals/CTUD.html">CTUD</a></li>
+                                        </ul>
+                                    </li>
+                                    <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/PLC Programming Fundamentals/Set and Reset Coils.html">Set and Reset Coils</a></li>
+                                    <li>Comparison Instructions
+                                        <ul>
+                                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/PLC Programming Fundamentals/Equal.html">Equal (=)</a></li>
+                                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/PLC Programming Fundamentals/Greater_Than.html">Greater Than (>)</a></li>
+                                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/PLC Programming Fundamentals/Less_Than.html">Less Than (&lt;)</a></li>
+                                        </ul>
+                                    </li>
+                                    <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/PLC Programming Fundamentals/Move_and_Arithmetic_Instructions.html">Move and Arithmetic Instructions</a></li>
+                                </ul>
+                            </li>
+                            <li>PLC Programming Software Tools
+                                <ul>
+                                    <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/PLC Programming Fundamentals/Siemens_TIA_Portal.html">Siemens TIA Portal</a></li>
+                                    <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/PLC Programming Fundamentals/WinProLadder.html">WinProLadder</a></li>
+                                    <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/PLC Programming Fundamentals/Connected_Components_Workbench.html">Connected Components Workbench (CCW)</a></li>
+                                    <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/PLC Programming Fundamentals/RSLogix_Micro.html">RSLogix Micro</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="menu-section">
+                        <h3>11. Human Machine Interface (HMI)</h3>
+                        <ul>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Human Machine Interface/Introduction_to_HMI.html">Introduction to HMI</a></li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Human Machine Interface/HMI_System_Components.html">HMI System Components</a></li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Human Machine Interface/Functions_and_Importance_of_HMI.html">Functions and Importance of HMI</a></li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Human Machine Interface/Types_of_HMI_Systems.html">Types of HMI Systems</a></li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Human Machine Interface/HMI_Design_Principles.html">HMI Design Principles</a></li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Human Machine Interface/Overview_of_HMI_Development_Software.html">Overview of HMI Development Software</a></li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Human Machine Interface/Industrial_Applications_of_HMI.html">Industrial Applications of HMI</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="menu-section">
+                        <h3>12. Supervisory Control and Data Acquisition (SCADA)</h3>
+                        <ul>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Supervisory_Control_and_Data_Acquisition/Introduction_to_SCADA_Systems.html">Introduction to SCADA Systems</a></li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Supervisory_Control_and_Data_Acquisition/Purpose_and_Benefits_of_SCADA.html">Purpose and Benefits of SCADA</a></li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Supervisory_Control_and_Data_Acquisition/SCADA_Architecture.html">SCADA Architecture</a></li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Supervisory_Control_and_Data_Acquisition/SCADA_System_Components.html">SCADA System Components</a></li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Supervisory_Control_and_Data_Acquisition/Types_of_SCADA_Software.html">Types of SCADA Software</a></li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Supervisory_Control_and_Data_Acquisition/Key_Functions_of_a_SCADA_system.html">Key Functions of a SCADA system</a></li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Supervisory_Control_and_Data_Acquisition/Industrial_Applications_of_SCADA.html">Industrial Applications of SCADA</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="menu-section">
+                        <h3>13. Variable Frequency Drives (VFD)</h3>
+                        <ul>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Variable Frequency Drives/Introduction_to_Variable_Frequency_Drives.html">Introduction to Variable Frequency Drives</a></li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Variable Frequency Drives/Construction_and_Operating_Principle_of_VFD.html">Construction and Operating Principle of VFD</a></li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Variable Frequency Drives/Speed_Control_of_AC_Motors_Using_VFD.html">Speed Control of AC Motors Using VFD</a></li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Variable Frequency Drives/Control_and_Vector_Control.html">V/f Control and Vector Control</a></li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Variable Frequency Drives/VFD_Parameters_and_Settings.html">VFD Parameters and Settings</a></li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Variable Frequency Drives/Industrial_Applications_of_VFDs.html">Industrial Applications of VFDs</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="menu-section">
+                        <h3>14. Distributed Control Systems (DCS)</h3>
+                        <ul>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Distributed Control Systems/Introduction_to_Distributed_Control_Systems.html">Introduction to Distributed Control Systems</a></li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Distributed Control Systems/DCS_Architecture_and_Components.html">DCS Architecture and Components</a></li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Distributed Control Systems/Comparison_Between_PLC_and_DCS.html">Comparison Between PLC and DCS</a></li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Distributed Control Systems/Advantages_and_Limitations_of_DCS.html">Advantages and Limitations of DCS</a></li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Distributed Control Systems/Industrial_Applications_of_DCS.html">Industrial Applications of DCS</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="menu-section">
+                        <h3>15. Industrial Communication Networks</h3>
+                        <ul>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Industrial Communication Networks/Introduction_to_Industrial_Communication.html">Introduction to Industrial Communication</a></li>
+                            <li>Modbus
+                                <ul>
+                                    <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Industrial Communication Networks/RTU.html">RTU</a></li>
+                                    <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Industrial Communication Networks/TCP-IP.html">TCP/IP</a></li>
+                                </ul>
+                            </li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Industrial Communication Networks/Profibus.html">Profibus</a></li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Industrial Communication Networks/Profinet.html">Profinet</a></li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Industrial Communication Networks/Ethernet-IP.html">Ethernet/IP</a></li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Industrial Communication Networks/CANopen.html">CANopen</a></li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Industrial Communication Networks/OPC_UA.html">OPC UA</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="menu-section">
+                        <h3>16. Advanced Automation & Industry 5.0</h3>
+                        <ul>
+                            <li>Industry 5.0
+                                <ul>
+                                    <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Advanced Automation & Industry 5.0/Concept_and_Definition_of_Industry_5.0.html">Concept and Definition of Industry 5.0</a></li>
+                                    <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Advanced Automation & Industry 5.0/Human-Machine_Collaboration.html">Human-Machine Collaboration</a></li>
+                                    <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Advanced Automation & Industry 5.0/Smart_Sensors_and_Intelligent_Actuators.html">Smart Sensors and Intelligent Actuators</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="menu-section">
+                        <h3>17. Advanced Automation Technologies</h3>
+                        <ul>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Advanced Automation Technologies/Artificial_Intelligence_in_Industrial_Automation.html">Artificial Intelligence in Industrial Automation</a></li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Advanced Automation Technologies/Industrial_Internet_of_Things_(IIoT).html">Industrial Internet of Things (IIoT)</a></li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Advanced Automation Technologies/Digital_Twins.html">Digital Twins</a></li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Advanced Automation Technologies/Collaborative_Robots_(Cobots).html">Collaborative Robots (Cobots)</a></li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Advanced Automation Technologies/Cybersecurity_in_Industrial_Automation_Systems.html">Cybersecurity in Industrial Automation Systems</a></li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Advanced Automation Technologies/AR_and_VR.html">AR and VR</a></li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Advanced Automation Technologies/Additive_Manufacturing_(AM).html">Additive Manufacturing (AM)</a></li>
+                        </ul>
+                    </div>
                 </div>
             </div>
-
-            <div class="course-card" data-section="2">
-                <div class="card-header" onclick="toggleCard(this)">
-                    <div class="card-number">02</div>
-                    <div class="card-info">
-                        <h3>Industrial Safety and Standards</h3>
-                        <span class="card-meta">6 topics</span>
-                    </div>
-                    <div class="card-chevron"><i class="fas fa-chevron-down"></i></div>
-                </div>
-                <div class="card-body">
-                    <ul class="topic-list">
-                        <li><a href="./pages/Industrial Safety and Standards/Importance_of_Safety_in_Industrial_Automation.html"><i class="fas fa-file-alt"></i> Importance of Safety in Industrial Automation</a></li>
-                        <li><a href="./pages/Industrial Safety and Standards/Machine_Safety_Systems.html"><i class="fas fa-file-alt"></i> Machine Safety Systems</a></li>
-                        <li><a href="./pages/Industrial Safety and Standards/Emergency_Stop_Systems.html"><i class="fas fa-file-alt"></i> Emergency Stop (E-Stop) Systems</a></li>
-                        <li><a href="./pages/Industrial Safety and Standards/Interlock_and_Safety_Relay_Systems.html"><i class="fas fa-file-alt"></i> Interlock and Safety Relay Systems</a></li>
-                        <li><a href="./pages/Industrial Safety and Standards/International_Standards_and_Regulations.html"><i class="fas fa-file-alt"></i> International Standards and Regulations</a></li>
-                        <li><a href="./pages/Industrial Safety and Standards/Safety_Compliance_in_Industrial_Systems.html"><i class="fas fa-file-alt"></i> Safety Compliance in Industrial Systems</a></li>
-                    </ul>
-                </div>
-            </div>
-
-            <div class="course-card" data-section="3">
-                <div class="card-header" onclick="toggleCard(this)">
-                    <div class="card-number">03</div>
-                    <div class="card-info">
-                        <h3>Basics of Electrical Engineering for Automation</h3>
-                        <span class="card-meta">5 topics</span>
-                    </div>
-                    <div class="card-chevron"><i class="fas fa-chevron-down"></i></div>
-                </div>
-                <div class="card-body">
-                    <ul class="topic-list">
-                        <li><a href="./pages/Basics of Electrical Engineering for Automation/Electrical_Quantities.html"><i class="fas fa-file-alt"></i> Electrical Quantities</a></li>
-                        <li><a href="./pages/Basics of Electrical Engineering for Automation/DC_and_AC_Circuits.html"><i class="fas fa-file-alt"></i> DC Circuits and AC Circuits</a></li>
-                        <li><a href="./pages/Basics of Electrical Engineering for Automation/Single-Phase_and_Three-Phase_Systems.html"><i class="fas fa-file-alt"></i> Single-Phase and Three-Phase Systems</a></li>
-                        <li><a href="./pages/Basics of Electrical Engineering for Automation/Power_Factor_and_Earthing_Concepts.html"><i class="fas fa-file-alt"></i> Power Factor and Earthing Concepts</a></li>
-                        <li><a href="./pages/Basics of Electrical Engineering for Automation/Electrical_Symbols_and_Schematics.html"><i class="fas fa-file-alt"></i> Electrical Symbols and Schematics</a></li>
-                    </ul>
-                </div>
-            </div>
-
-            <div class="course-card" data-section="4">
-                <div class="card-header" onclick="toggleCard(this)">
-                    <div class="card-number">04</div>
-                    <div class="card-info">
-                        <h3>Industrial Electrical Components</h3>
-                        <span class="card-meta">9 topics</span>
-                    </div>
-                    <div class="card-chevron"><i class="fas fa-chevron-down"></i></div>
-                </div>
-                <div class="card-body">
-                    <ul class="topic-list">
-                        <li><a href="./pages/Industrial Electrical Components/Circuit_Breakers_and_Fuses.html"><i class="fas fa-file-alt"></i> Circuit Breakers and Fuses</a></li>
-                        <li><a href="./pages/Industrial Electrical Components/Power_Supplies.html"><i class="fas fa-file-alt"></i> Power Supplies (SMPS, Linear)</a></li>
-                        <li><a href="./pages/Industrial Electrical Components/Relays.html"><i class="fas fa-file-alt"></i> Relays</a></li>
-                        <li><a href="./pages/Industrial Electrical Components/Contactors.html"><i class="fas fa-file-alt"></i> Contactors</a></li>
-                        <li class="has-subtopics">
-                            <div class="subtopic-toggle" onclick="event.stopPropagation(); toggleSubtopics(this)">
-                                <i class="fas fa-file-alt"></i> Types of Switches
-                                <span class="sub-count">6</span>
-                                <i class="fas fa-chevron-right sub-chevron"></i>
-                            </div>
-                            <ul class="subtopic-list">
-                                <li><a href="./pages/Industrial Electrical Components/push_button_switch.html">Pushbuttons</a></li>
-                                <li><a href="./pages/Industrial Electrical Components/toggle_switch.html">Toggle Switch</a></li>
-                                <li><a href="./pages/Industrial Electrical Components/rocker_switch.html">Rocker Switch</a></li>
-                                <li><a href="./pages/Industrial Electrical Components/DIP_switch.html">DIP Switch</a></li>
-                                <li><a href="./pages/Industrial Electrical Components/Reed_switch.html">Reed Switch</a></li>
-                                <li><a href="./pages/Industrial Electrical Components/Limit_switch.html">Limit Switch</a></li>
-                            </ul>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-
-            <div class="course-card" data-section="5">
-                <div class="card-header" onclick="toggleCard(this)">
-                    <div class="card-number">05</div>
-                    <div class="card-info">
-                        <h3>Transducers, Sensors and Transmitters</h3>
-                        <span class="card-meta">10 topics</span>
-                    </div>
-                    <div class="card-chevron"><i class="fas fa-chevron-down"></i></div>
-                </div>
-                <div class="card-body">
-                    <ul class="topic-list">
-                        <li><a href="./pages/Transducers, Sensors and Transmitters/Definition_of_Transducers_Sensors_and_Transmitters.html"><i class="fas fa-file-alt"></i> Definition of Transducers, Sensors and Transmitters</a></li>
-                        <li><a href="./pages/Transducers, Sensors and Transmitters/Characteristics_and_Selection_Criteria.html"><i class="fas fa-file-alt"></i> Characteristics and Selection Criteria</a></li>
-                        <li><a href="./pages/Transducers, Sensors and Transmitters/Sinking_(PNP)_and_Sourcing_(NPN)_Concept.html"><i class="fas fa-file-alt"></i> Sinking (PNP) and Sourcing (NPN) Concept</a></li>
-                        <li><a href="./pages/Transducers, Sensors and Transmitters/Types_of_Proximity_Sensors.html"><i class="fas fa-file-alt"></i> Types of Proximity Sensors</a></li>
-                        <li><a href="./pages/Transducers, Sensors and Transmitters/Temperature_Sensors_and_Temperature_Transmitter.html"><i class="fas fa-file-alt"></i> Temperature Sensors and Temperature Transmitter</a></li>
-                        <li><a href="./pages/Transducers, Sensors and Transmitters/Pressure_Transmitter.html"><i class="fas fa-file-alt"></i> Pressure Transmitter</a></li>
-                        <li><a href="./pages/Transducers, Sensors and Transmitters/Level_Transmitter.html"><i class="fas fa-file-alt"></i> Level Transmitter</a></li>
-                        <li><a href="./pages/Transducers, Sensors and Transmitters/Flow_Transmitter.html"><i class="fas fa-file-alt"></i> Flow Transmitter</a></li>
-                        <li><a href="./pages/Transducers, Sensors and Transmitters/Position_Sensor.html"><i class="fas fa-file-alt"></i> Position Sensor</a></li>
-                        <li><a href="./pages/Transducers, Sensors and Transmitters/Vision_Sensor.html"><i class="fas fa-file-alt"></i> Vision Sensor</a></li>
-                    </ul>
-                </div>
-            </div>
-
-            <div class="course-card" data-section="6">
-                <div class="card-header" onclick="toggleCard(this)">
-                    <div class="card-number">06</div>
-                    <div class="card-info">
-                        <h3>Actuators</h3>
-                        <span class="card-meta">12 topics</span>
-                    </div>
-                    <div class="card-chevron"><i class="fas fa-chevron-down"></i></div>
-                </div>
-                <div class="card-body">
-                    <ul class="topic-list">
-                        <li><a href="./pages/Actuators/Introduction_and_Function_of_Actuators.html"><i class="fas fa-file-alt"></i> Introduction and Function of Actuators</a></li>
-                        <li><a href="./pages/Actuators/Classification_of_Actuators.html"><i class="fas fa-file-alt"></i> Classification of Actuators</a></li>
-                        <li class="has-subtopics">
-                            <div class="subtopic-toggle" onclick="event.stopPropagation(); toggleSubtopics(this)">
-                                <i class="fas fa-file-alt"></i> Electrical Actuators
-                                <span class="sub-count">6</span>
-                                <i class="fas fa-chevron-right sub-chevron"></i>
-                            </div>
-                            <ul class="subtopic-list">
-                                <li><a href="./pages/Actuators/AC_Motors.html">AC Motors</a></li>
-                                <li><a href="./pages/Actuators/DC_Motors.html">DC Motors</a></li>
-                                <li><a href="./pages/Actuators/Servo_Motors.html">Servo Motors</a></li>
-                                <li><a href="./pages/Actuators/Stepper_Motors.html">Stepper Motors</a></li>
-                                <li><a href="./pages/Actuators/Solenoids.html">Solenoids</a></li>
-                                <li><a href="./pages/Actuators/Linear_Electric_Actuator.html">Linear Electric Actuators</a></li>
-                            </ul>
-                        </li>
-                        <li><a href="./pages/Actuators/Pneumatic_Actuators.html"><i class="fas fa-file-alt"></i> Pneumatic Actuators</a></li>
-                        <li><a href="./pages/Actuators/Hydraulic_Actuators.html"><i class="fas fa-file-alt"></i> Hydraulic Actuators</a></li>
-                    </ul>
-                </div>
-            </div>
-
-            <div class="course-card" data-section="7">
-                <div class="card-header" onclick="toggleCard(this)">
-                    <div class="card-number">07</div>
-                    <div class="card-info">
-                        <h3>Industrial Control Panels</h3>
-                        <span class="card-meta">8 topics</span>
-                    </div>
-                    <div class="card-chevron"><i class="fas fa-chevron-down"></i></div>
-                </div>
-                <div class="card-body">
-                    <ul class="topic-list">
-                        <li><a href="./pages/Introduction to Control Panels/Introduction_to_Control_Panels.html"><i class="fas fa-file-alt"></i> Introduction to Control Panels</a></li>
-                        <li class="has-subtopics">
-                            <div class="subtopic-toggle" onclick="event.stopPropagation(); toggleSubtopics(this)">
-                                <i class="fas fa-file-alt"></i> Types of Control Panels
-                                <span class="sub-count">3</span>
-                                <i class="fas fa-chevron-right sub-chevron"></i>
-                            </div>
-                            <ul class="subtopic-list">
-                                <li><a href="./pages/Introduction to Control Panels/PLC_Panels.html">PLC Panels</a></li>
-                                <li><a href="./pages/Introduction to Control Panels/MCC_(Motor_Control_Center)_Panels.html">MCC (Motor Control Center) Panels</a></li>
-                                <li><a href="./pages/Introduction to Control Panels/PCC_(Power_Control_Center)_Panels.html">PCC (Power Control Center) Panels</a></li>
-                            </ul>
-                        </li>
-                        <li><a href="./pages/Introduction to Control Panels/Panel_Layout_and_Component_Placement.html"><i class="fas fa-file-alt"></i> Panel Layout and Component Placement</a></li>
-                        <li><a href="./pages/Introduction to Control Panels/Selection_of_Electrical_Components.html"><i class="fas fa-file-alt"></i> Selection of Electrical Components</a></li>
-                        <li><a href="./pages/Introduction to Control Panels/Panel_Cooling_and_Ventilation.html"><i class="fas fa-file-alt"></i> Panel Cooling and Ventilation</a></li>
-                        <li><a href="./pages/Introduction to Control Panels/Ingress_Protection_(IP_Ratings).html"><i class="fas fa-file-alt"></i> Ingress Protection (IP Ratings)</a></li>
-                    </ul>
-                </div>
-            </div>
-
-            <div class="course-card" data-section="8">
-                <div class="card-header" onclick="toggleCard(this)">
-                    <div class="card-number">08</div>
-                    <div class="card-info">
-                        <h3>Introduction to PLC (Programmable Logic Controller)</h3>
-                        <span class="card-meta">5 topics</span>
-                    </div>
-                    <div class="card-chevron"><i class="fas fa-chevron-down"></i></div>
-                </div>
-                <div class="card-body">
-                    <ul class="topic-list">
-                        <li><a href="./pages/Introduction to PLC (Programmable Logic Controller)/Definition_and_Purpose_of_PLCs.html"><i class="fas fa-file-alt"></i> Definition and Purpose of PLCs</a></li>
-                        <li><a href="./pages/Introduction to PLC (Programmable Logic Controller)/Applications_of_PLCs_in_Industry.html"><i class="fas fa-file-alt"></i> Applications of PLCs in Industry</a></li>
-                        <li class="has-subtopics">
-                            <div class="subtopic-toggle" onclick="event.stopPropagation(); toggleSubtopics(this)">
-                                <i class="fas fa-file-alt"></i> Classification of PLCs
-                                <span class="sub-count">6</span>
-                                <i class="fas fa-chevron-right sub-chevron"></i>
-                            </div>
-                            <ul class="subtopic-list">
-                                <li class="has-subtopics">
-                                    <div class="subtopic-toggle sub-l2" onclick="event.stopPropagation(); toggleSubtopics(this)">
-                                        <span>Based on Size</span>
-                                        <i class="fas fa-chevron-right sub-chevron"></i>
-                                    </div>
-                                    <ul class="subtopic-list sub-l2-list">
-                                        <li><a href="./pages/Introduction to PLC (Programmable Logic Controller)/compact_plc.html">Compact PLC</a></li>
-                                        <li><a href="./pages/Introduction to PLC (Programmable Logic Controller)/modular_plc.html">Modular PLC</a></li>
-                                        <li><a href="./pages/Introduction to PLC (Programmable Logic Controller)/Distributed_PLC.html">Distributed PLC</a></li>
-                                    </ul>
-                                </li>
-                                <li class="has-subtopics">
-                                    <div class="subtopic-toggle sub-l2" onclick="event.stopPropagation(); toggleSubtopics(this)">
-                                        <span>Based on Output</span>
-                                        <i class="fas fa-chevron-right sub-chevron"></i>
-                                    </div>
-                                    <ul class="subtopic-list sub-l2-list">
-                                        <li><a href="./pages/Introduction to PLC (Programmable Logic Controller)/Relay.html">Relay</a></li>
-                                        <li><a href="./pages/Introduction to PLC (Programmable Logic Controller)/Transistor.html">Transistor</a></li>
-                                        <li><a href="./pages/Introduction to PLC (Programmable Logic Controller)/SCR.html">SCR</a></li>
-                                    </ul>
-                                </li>
-                            </ul>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-
-            <div class="course-card" data-section="9">
-                <div class="card-header" onclick="toggleCard(this)">
-                    <div class="card-number">09</div>
-                    <div class="card-info">
-                        <h3>PLC Hardware and Architecture</h3>
-                        <span class="card-meta">8 topics</span>
-                    </div>
-                    <div class="card-chevron"><i class="fas fa-chevron-down"></i></div>
-                </div>
-                <div class="card-body">
-                    <ul class="topic-list">
-                        <li><a href="./pages/PLC Hardware and Architecture/PLC_System_Architecture.html"><i class="fas fa-file-alt"></i> PLC System Architecture</a></li>
-                        <li><a href="./pages/PLC Hardware and Architecture/Central_Processing_Unit.html"><i class="fas fa-file-alt"></i> Central Processing Unit (CPU)</a></li>
-                        <li><a href="./pages/PLC Hardware and Architecture/Power_Supply_Units.html"><i class="fas fa-file-alt"></i> Power Supply Units</a></li>
-                        <li><a href="./pages/PLC Hardware and Architecture/Digital_Input_Modules.html"><i class="fas fa-file-alt"></i> Digital Input Modules</a></li>
-                        <li><a href="./pages/PLC Hardware and Architecture/Digital_Output_Modules.html"><i class="fas fa-file-alt"></i> Digital Output Modules</a></li>
-                        <li><a href="./pages/PLC Hardware and Architecture/Analog_Input_Modules.html"><i class="fas fa-file-alt"></i> Analog Input Modules</a></li>
-                        <li><a href="./pages/PLC Hardware and Architecture/Analog_Output_Modules.html"><i class="fas fa-file-alt"></i> Analog Output Modules</a></li>
-                        <li><a href="./pages/PLC Hardware and Architecture/Communication_and_Interface_Modules.html"><i class="fas fa-file-alt"></i> Communication and Interface Modules</a></li>
-                    </ul>
-                </div>
-            </div>
-
-            <div class="course-card" data-section="10">
-                <div class="card-header" onclick="toggleCard(this)">
-                    <div class="card-number">10</div>
-                    <div class="card-info">
-                        <h3>PLC Programming Fundamentals</h3>
-                        <span class="card-meta">22 topics</span>
-                    </div>
-                    <div class="card-chevron"><i class="fas fa-chevron-down"></i></div>
-                </div>
-                <div class="card-body">
-                    <ul class="topic-list">
-                        <li class="has-subtopics">
-                            <div class="subtopic-toggle" onclick="event.stopPropagation(); toggleSubtopics(this)">
-                                <i class="fas fa-code"></i> PLC Programming Standards
-                                <span class="sub-count">5</span>
-                                <i class="fas fa-chevron-right sub-chevron"></i>
-                            </div>
-                            <ul class="subtopic-list">
-                                <li class="has-subtopics">
-                                    <div class="subtopic-toggle sub-l2" onclick="event.stopPropagation(); toggleSubtopics(this)">
-                                        <span>IEC 61131-3 Programming Languages</span>
-                                        <i class="fas fa-chevron-right sub-chevron"></i>
-                                    </div>
-                                    <ul class="subtopic-list sub-l2-list">
-                                        <li><a href="./pages/PLC Programming Fundamentals/Ladder_Diagram_(LD).html">Ladder Diagram (LD)</a></li>
-                                        <li><a href="./pages/PLC Programming Fundamentals/Function_Block_Diagram.html">Function Block Diagram (FBD)</a></li>
-                                        <li><a href="./pages/PLC Programming Fundamentals/Structured_Text.html">Structured Text (ST)</a></li>
-                                        <li><a href="./pages/PLC Programming Fundamentals/Statement_List.html">Statement List (STL)</a></li>
-                                        <li><a href="./pages/PLC Programming Fundamentals/Sequential_Function_Chart.html">Sequential Function Chart (SFC)</a></li>
-                                    </ul>
-                                </li>
-                            </ul>
-                        </li>
-                        <li class="has-subtopics">
-                            <div class="subtopic-toggle" onclick="event.stopPropagation(); toggleSubtopics(this)">
-                                <i class="fas fa-code"></i> PLC Instructions and Programming Concepts
-                                <span class="sub-count">13</span>
-                                <i class="fas fa-chevron-right sub-chevron"></i>
-                            </div>
-                            <ul class="subtopic-list">
-                                <li class="has-subtopics">
-                                    <div class="subtopic-toggle sub-l2" onclick="event.stopPropagation(); toggleSubtopics(this)">
-                                        <span>Logical Instructions</span>
-                                        <i class="fas fa-chevron-right sub-chevron"></i>
-                                    </div>
-                                    <ul class="subtopic-list sub-l2-list">
-                                        <li><a href="./pages/PLC Programming Fundamentals/NO_and_NC.html">NO and NC</a></li>
-                                        <li><a href="./pages/PLC Programming Fundamentals/Set_and_Reset.html">Set and Reset</a></li>
-                                    </ul>
-                                </li>
-                                <li class="has-subtopics">
-                                    <div class="subtopic-toggle sub-l2" onclick="event.stopPropagation(); toggleSubtopics(this)">
-                                        <span>Timers</span>
-                                        <i class="fas fa-chevron-right sub-chevron"></i>
-                                    </div>
-                                    <ul class="subtopic-list sub-l2-list">
-                                        <li><a href="./pages/PLC Programming Fundamentals/TON.html">TON (On-Delay)</a></li>
-                                        <li><a href="./pages/PLC Programming Fundamentals/TOFF.html">TOFF (Off-Delay)</a></li>
-                                        <li><a href="./pages/PLC Programming Fundamentals/RTO.html">RTO (Retentive Timer)</a></li>
-                                    </ul>
-                                </li>
-                                <li class="has-subtopics">
-                                    <div class="subtopic-toggle sub-l2" onclick="event.stopPropagation(); toggleSubtopics(this)">
-                                        <span>Counters</span>
-                                        <i class="fas fa-chevron-right sub-chevron"></i>
-                                    </div>
-                                    <ul class="subtopic-list sub-l2-list">
-                                        <li><a href="./pages/PLC Programming Fundamentals/CTU.html">CTU</a></li>
-                                        <li><a href="./pages/PLC Programming Fundamentals/CTD.html">CTD</a></li>
-                                        <li><a href="./pages/PLC Programming Fundamentals/CTUD.html">CTUD</a></li>
-                                    </ul>
-                                </li>
-                                <li><a href="./pages/PLC Programming Fundamentals/Set and Reset Coils.html"><i class="fas fa-file-alt"></i> Set and Reset Coils</a></li>
-                                <li class="has-subtopics">
-                                    <div class="subtopic-toggle sub-l2" onclick="event.stopPropagation(); toggleSubtopics(this)">
-                                        <span>Comparison Instructions</span>
-                                        <i class="fas fa-chevron-right sub-chevron"></i>
-                                    </div>
-                                    <ul class="subtopic-list sub-l2-list">
-                                        <li><a href="./pages/PLC Programming Fundamentals/Equal.html">Equal (=)</a></li>
-                                        <li><a href="./pages/PLC Programming Fundamentals/Greater_Than.html">Greater Than (>)</a></li>
-                                        <li><a href="./pages/PLC Programming Fundamentals/Less_Than.html">Less Than (&lt;)</a></li>
-                                    </ul>
-                                </li>
-                                <li><a href="./pages/PLC Programming Fundamentals/Move_and_Arithmetic_Instructions.html"><i class="fas fa-file-alt"></i> Move and Arithmetic Instructions</a></li>
-                            </ul>
-                        </li>
-                        <li class="has-subtopics">
-                            <div class="subtopic-toggle" onclick="event.stopPropagation(); toggleSubtopics(this)">
-                                <i class="fas fa-laptop-code"></i> PLC Programming Software Tools
-                                <span class="sub-count">4</span>
-                                <i class="fas fa-chevron-right sub-chevron"></i>
-                            </div>
-                            <ul class="subtopic-list">
-                                <li><a href="./pages/PLC Programming Fundamentals/Siemens_TIA_Portal.html">Siemens TIA Portal</a></li>
-                                <li><a href="./pages/PLC Programming Fundamentals/WinProLadder.html">WinProLadder</a></li>
-                                <li><a href="./pages/PLC Programming Fundamentals/Connected_Components_Workbench.html">Connected Components Workbench (CCW)</a></li>
-                                <li><a href="./pages/PLC Programming Fundamentals/RSLogix_Micro.html">RSLogix Micro</a></li>
-                            </ul>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-
-            <div class="course-card" data-section="11">
-                <div class="card-header" onclick="toggleCard(this)">
-                    <div class="card-number">11</div>
-                    <div class="card-info">
-                        <h3>Human Machine Interface (HMI)</h3>
-                        <span class="card-meta">7 topics</span>
-                    </div>
-                    <div class="card-chevron"><i class="fas fa-chevron-down"></i></div>
-                </div>
-                <div class="card-body">
-                    <ul class="topic-list">
-                        <li><a href="./pages/Human Machine Interface/Introduction_to_HMI.html"><i class="fas fa-file-alt"></i> Introduction to HMI</a></li>
-                        <li><a href="./pages/Human Machine Interface/HMI_System_Components.html"><i class="fas fa-file-alt"></i> HMI System Components</a></li>
-                        <li><a href="./pages/Human Machine Interface/Functions_and_Importance_of_HMI.html"><i class="fas fa-file-alt"></i> Functions and Importance of HMI</a></li>
-                        <li><a href="./pages/Human Machine Interface/Types_of_HMI_Systems.html"><i class="fas fa-file-alt"></i> Types of HMI Systems</a></li>
-                        <li><a href="./pages/Human Machine Interface/HMI_Design_Principles.html"><i class="fas fa-file-alt"></i> HMI Design Principles</a></li>
-                        <li><a href="./pages/Human Machine Interface/Overview_of_HMI_Development_Software.html"><i class="fas fa-file-alt"></i> Overview of HMI Development Software</a></li>
-                        <li><a href="./pages/Human Machine Interface/Industrial_Applications_of_HMI.html"><i class="fas fa-file-alt"></i> Industrial Applications of HMI</a></li>
-                    </ul>
-                </div>
-            </div>
-
-            <div class="course-card" data-section="12">
-                <div class="card-header" onclick="toggleCard(this)">
-                    <div class="card-number">12</div>
-                    <div class="card-info">
-                        <h3>Supervisory Control and Data Acquisition (SCADA)</h3>
-                        <span class="card-meta">7 topics</span>
-                    </div>
-                    <div class="card-chevron"><i class="fas fa-chevron-down"></i></div>
-                </div>
-                <div class="card-body">
-                    <ul class="topic-list">
-                        <li><a href="./pages/Supervisory_Control_and_Data_Acquisition/Introduction_to_SCADA_Systems.html"><i class="fas fa-file-alt"></i> Introduction to SCADA Systems</a></li>
-                        <li><a href="./pages/Supervisory_Control_and_Data_Acquisition/Purpose_and_Benefits_of_SCADA.html"><i class="fas fa-file-alt"></i> Purpose and Benefits of SCADA</a></li>
-                        <li><a href="./pages/Supervisory_Control_and_Data_Acquisition/SCADA_Architecture.html"><i class="fas fa-file-alt"></i> SCADA Architecture</a></li>
-                        <li><a href="./pages/Supervisory_Control_and_Data_Acquisition/SCADA_System_Components.html"><i class="fas fa-file-alt"></i> SCADA System Components</a></li>
-                        <li><a href="./pages/Supervisory_Control_and_Data_Acquisition/Types_of_SCADA_Software.html"><i class="fas fa-file-alt"></i> Types of SCADA Software</a></li>
-                        <li><a href="./pages/Supervisory_Control_and_Data_Acquisition/Key_Functions_of_a_SCADA_system.html"><i class="fas fa-file-alt"></i> Key Functions of a SCADA System</a></li>
-                        <li><a href="./pages/Supervisory_Control_and_Data_Acquisition/Industrial_Applications_of_SCADA.html"><i class="fas fa-file-alt"></i> Industrial Applications of SCADA</a></li>
-                    </ul>
-                </div>
-            </div>
-
-            <div class="course-card" data-section="13">
-                <div class="card-header" onclick="toggleCard(this)">
-                    <div class="card-number">13</div>
-                    <div class="card-info">
-                        <h3>Variable Frequency Drives (VFD)</h3>
-                        <span class="card-meta">6 topics</span>
-                    </div>
-                    <div class="card-chevron"><i class="fas fa-chevron-down"></i></div>
-                </div>
-                <div class="card-body">
-                    <ul class="topic-list">
-                        <li><a href="./pages/Variable Frequency Drives/Introduction_to_Variable_Frequency_Drives.html"><i class="fas fa-file-alt"></i> Introduction to Variable Frequency Drives</a></li>
-                        <li><a href="./pages/Variable Frequency Drives/Construction_and_Operating_Principle_of_VFD.html"><i class="fas fa-file-alt"></i> Construction and Operating Principle of VFD</a></li>
-                        <li><a href="./pages/Variable Frequency Drives/Speed_Control_of_AC_Motors_Using_VFD.html"><i class="fas fa-file-alt"></i> Speed Control of AC Motors Using VFD</a></li>
-                        <li><a href="./pages/Variable Frequency Drives/Control_and_Vector_Control.html"><i class="fas fa-file-alt"></i> V/f Control and Vector Control</a></li>
-                        <li><a href="./pages/Variable Frequency Drives/VFD_Parameters_and_Settings.html"><i class="fas fa-file-alt"></i> VFD Parameters and Settings</a></li>
-                        <li><a href="./pages/Variable Frequency Drives/Industrial_Applications_of_VFDs.html"><i class="fas fa-file-alt"></i> Industrial Applications of VFDs</a></li>
-                    </ul>
-                </div>
-            </div>
-
-            <div class="course-card" data-section="14">
-                <div class="card-header" onclick="toggleCard(this)">
-                    <div class="card-number">14</div>
-                    <div class="card-info">
-                        <h3>Distributed Control Systems (DCS)</h3>
-                        <span class="card-meta">5 topics</span>
-                    </div>
-                    <div class="card-chevron"><i class="fas fa-chevron-down"></i></div>
-                </div>
-                <div class="card-body">
-                    <ul class="topic-list">
-                        <li><a href="./pages/Distributed Control Systems/Introduction_to_Distributed_Control_Systems.html"><i class="fas fa-file-alt"></i> Introduction to Distributed Control Systems</a></li>
-                        <li><a href="./pages/Distributed Control Systems/DCS_Architecture_and_Components.html"><i class="fas fa-file-alt"></i> DCS Architecture and Components</a></li>
-                        <li><a href="./pages/Distributed Control Systems/Comparison_Between_PLC_and_DCS.html"><i class="fas fa-file-alt"></i> Comparison Between PLC and DCS</a></li>
-                        <li><a href="./pages/Distributed Control Systems/Advantages_and_Limitations_of_DCS.html"><i class="fas fa-file-alt"></i> Advantages and Limitations of DCS</a></li>
-                        <li><a href="./pages/Distributed Control Systems/Industrial_Applications_of_DCS.html"><i class="fas fa-file-alt"></i> Industrial Applications of DCS</a></li>
-                    </ul>
-                </div>
-            </div>
-
-            <div class="course-card" data-section="15">
-                <div class="card-header" onclick="toggleCard(this)">
-                    <div class="card-number">15</div>
-                    <div class="card-info">
-                        <h3>Industrial Communication Networks</h3>
-                        <span class="card-meta">9 topics</span>
-                    </div>
-                    <div class="card-chevron"><i class="fas fa-chevron-down"></i></div>
-                </div>
-                <div class="card-body">
-                    <ul class="topic-list">
-                        <li><a href="./pages/Industrial Communication Networks/Introduction_to_Industrial_Communication.html"><i class="fas fa-file-alt"></i> Introduction to Industrial Communication</a></li>
-                        <li class="has-subtopics">
-                            <div class="subtopic-toggle" onclick="event.stopPropagation(); toggleSubtopics(this)">
-                                <i class="fas fa-network-wired"></i> Modbus
-                                <span class="sub-count">2</span>
-                                <i class="fas fa-chevron-right sub-chevron"></i>
-                            </div>
-                            <ul class="subtopic-list">
-                                <li><a href="./pages/Industrial Communication Networks/RTU.html">RTU</a></li>
-                                <li><a href="./pages/Industrial Communication Networks/TCP-IP.html">TCP/IP</a></li>
-                            </ul>
-                        </li>
-                        <li><a href="./pages/Industrial Communication Networks/Profibus.html"><i class="fas fa-file-alt"></i> Profibus</a></li>
-                        <li><a href="./pages/Industrial Communication Networks/Profinet.html"><i class="fas fa-file-alt"></i> Profinet</a></li>
-                        <li><a href="./pages/Industrial Communication Networks/Ethernet-IP.html"><i class="fas fa-file-alt"></i> Ethernet/IP</a></li>
-                        <li><a href="./pages/Industrial Communication Networks/CANopen.html"><i class="fas fa-file-alt"></i> CANopen</a></li>
-                        <li><a href="./pages/Industrial Communication Networks/OPC_UA.html"><i class="fas fa-file-alt"></i> OPC UA</a></li>
-                    </ul>
-                </div>
-            </div>
-
-            <div class="course-card" data-section="16">
-                <div class="card-header" onclick="toggleCard(this)">
-                    <div class="card-number">16</div>
-                    <div class="card-info">
-                        <h3>Advanced Automation &amp; Industry 5.0</h3>
-                        <span class="card-meta">3 topics</span>
-                    </div>
-                    <div class="card-chevron"><i class="fas fa-chevron-down"></i></div>
-                </div>
-                <div class="card-body">
-                    <ul class="topic-list">
-                        <li class="has-subtopics">
-                            <div class="subtopic-toggle" onclick="event.stopPropagation(); toggleSubtopics(this)">
-                                <i class="fas fa-industry"></i> Industry 5.0
-                                <span class="sub-count">3</span>
-                                <i class="fas fa-chevron-right sub-chevron"></i>
-                            </div>
-                            <ul class="subtopic-list">
-                                <li><a href="./pages/Advanced Automation & Industry 5.0/Concept_and_Definition_of_Industry_5.0.html">Concept and Definition of Industry 5.0</a></li>
-                                <li><a href="./pages/Advanced Automation & Industry 5.0/Human-Machine_Collaboration.html">Human-Machine Collaboration</a></li>
-                                <li><a href="./pages/Advanced Automation & Industry 5.0/Smart_Sensors_and_Intelligent_Actuators.html">Smart Sensors and Intelligent Actuators</a></li>
-                            </ul>
-                        </li>
-                    </ul>
-                </div>
-            </div>
-
-            <div class="course-card" data-section="17">
-                <div class="card-header" onclick="toggleCard(this)">
-                    <div class="card-number">17</div>
-                    <div class="card-info">
-                        <h3>Advanced Automation Technologies</h3>
-                        <span class="card-meta">7 topics</span>
-                    </div>
-                    <div class="card-chevron"><i class="fas fa-chevron-down"></i></div>
-                </div>
-                <div class="card-body">
-                    <ul class="topic-list">
-                        <li><a href="./pages/Advanced Automation Technologies/Artificial_Intelligence_in_Industrial_Automation.html"><i class="fas fa-file-alt"></i> Artificial Intelligence in Industrial Automation</a></li>
-                        <li><a href="./pages/Advanced Automation Technologies/Industrial_Internet_of_Things_(IIoT).html"><i class="fas fa-file-alt"></i> Industrial Internet of Things (IIoT)</a></li>
-                        <li><a href="./pages/Advanced Automation Technologies/Digital_Twins.html"><i class="fas fa-file-alt"></i> Digital Twins</a></li>
-                        <li><a href="./pages/Advanced Automation Technologies/Collaborative_Robots_(Cobots).html"><i class="fas fa-file-alt"></i> Collaborative Robots (Cobots)</a></li>
-                        <li><a href="./pages/Advanced Automation Technologies/Cybersecurity_in_Industrial_Automation_Systems.html"><i class="fas fa-file-alt"></i> Cybersecurity in Industrial Automation Systems</a></li>
-                        <li><a href="./pages/Advanced Automation Technologies/AR_and_VR.html"><i class="fas fa-file-alt"></i> AR and VR</a></li>
-                        <li><a href="./pages/Advanced Automation Technologies/Additive_Manufacturing_(AM).html"><i class="fas fa-file-alt"></i> Additive Manufacturing (AM)</a></li>
-                    </ul>
-                </div>
-            </div>
-
         </main>
-
-        <footer>
-            <p>&copy; 2024 Scientech — PLC SimTel Training Platform</p>
-        </footer>
     </div>
 
     <script src="renderer.js"></script>

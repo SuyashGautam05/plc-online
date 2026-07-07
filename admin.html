@@ -4,9 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Panel – PLC SimTel</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="./auth-config.js"></script>
     <script src="./auth-guard.js"></script>
@@ -14,397 +11,222 @@
         * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
-            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            font-family: Georgia, 'Times New Roman', serif;
             background: #f8f9fa;
             color: #343a40;
             min-height: 100vh;
         }
 
-        /* ── Header ── */
         .admin-header {
             background: #343a40;
             color: #fff;
-            padding: 0 32px;
-            height: 64px;
+            padding: 14px 28px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-            box-shadow: 0 1px 10px rgba(0,0,0,0.1);
+            gap: 16px;
+            flex-wrap: wrap;
         }
 
         .admin-header h1 {
-            font-size: 1.05rem;
-            font-weight: 600;
+            font-size: 1.15rem;
+            font-weight: 700;
             display: flex;
             align-items: center;
             gap: 10px;
-            letter-spacing: 0.01em;
-        }
-
-        .admin-header h1 i {
-            font-size: 1.1rem;
-            opacity: 0.8;
         }
 
         .admin-header-right {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 12px;
         }
 
         .admin-header a {
             color: #adb5bd;
             text-decoration: none;
-            font-size: 0.84rem;
-            font-weight: 500;
-            padding: 8px 14px;
-            border-radius: 8px;
-            transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
-            gap: 6px;
+            font-size: 0.85rem;
         }
 
-        .admin-header a:hover {
-            color: #fff;
-            background: rgba(255,255,255,0.08);
-        }
+        .admin-header a:hover { color: #fff; }
 
-        .btn-logout {
-            background: rgba(220, 53, 69, 0.15);
-            color: #ffa8b4;
-            border: 1px solid rgba(220, 53, 69, 0.25);
-            border-radius: 8px;
-            padding: 8px 16px;
-            font-size: 0.84rem;
-            cursor: pointer;
-            font-family: 'Inter', sans-serif;
-            font-weight: 500;
-            transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .btn-logout:hover {
+        .admin-header button {
             background: #dc3545;
             color: #fff;
-            border-color: #dc3545;
+            border: none;
+            border-radius: 4px;
+            padding: 5px 14px;
+            font-size: 0.85rem;
+            cursor: pointer;
+            font-family: inherit;
         }
 
-        /* ── Body ── */
         .admin-body {
-            max-width: 1200px;
+            max-width: 1100px;
             margin: 0 auto;
-            padding: 28px 24px;
+            padding: 28px 20px;
         }
 
-        /* ── Stats ── */
+        /* Stats */
         .stats-row {
-            display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 18px;
+            display: flex;
+            gap: 16px;
             margin-bottom: 28px;
+            flex-wrap: wrap;
         }
 
         .stat-card {
             background: #fff;
-            border-radius: 16px;
-            padding: 22px 20px;
-            box-shadow: 0 1px 6px rgba(0,0,0,0.05);
+            border-radius: 8px;
+            padding: 16px 22px;
+            box-shadow: 0 1px 6px rgba(0,0,0,0.07);
+            flex: 1;
+            min-width: 130px;
             text-align: center;
-            position: relative;
-            overflow: hidden;
-            transition: transform 0.25s ease, box-shadow 0.25s ease;
-            animation: statPop 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
-        }
-
-        .stat-card:nth-child(1) { animation-delay: 0.05s; }
-        .stat-card:nth-child(2) { animation-delay: 0.1s; }
-        .stat-card:nth-child(3) { animation-delay: 0.15s; }
-        .stat-card:nth-child(4) { animation-delay: 0.2s; }
-
-        @keyframes statPop {
-            from { opacity: 0; transform: translateY(16px) scale(0.96); }
-            to { opacity: 1; transform: translateY(0) scale(1); }
-        }
-
-        .stat-card:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 8px 24px rgba(0,0,0,0.08);
-        }
-
-        .stat-card::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 3px;
-            background: #343a40;
-            border-radius: 16px 16px 0 0;
-        }
-
-        .stat-card .stat-icon {
-            width: 42px;
-            height: 42px;
-            border-radius: 12px;
-            background: #f1f3f5;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 0 auto 12px;
-            font-size: 1rem;
-            color: #343a40;
         }
 
         .stat-card .stat-num {
             font-size: 2rem;
             font-weight: 700;
             color: #343a40;
-            line-height: 1;
         }
 
         .stat-card .stat-label {
-            font-size: 0.78rem;
+            font-size: 0.82rem;
             color: #6c757d;
-            margin-top: 6px;
-            font-weight: 500;
-            text-transform: uppercase;
-            letter-spacing: 0.06em;
+            margin-top: 2px;
         }
 
-        /* ── Panels ── */
+        /* Create User */
         .panel {
             background: #fff;
-            border-radius: 16px;
-            box-shadow: 0 1px 6px rgba(0,0,0,0.05);
+            border-radius: 8px;
+            box-shadow: 0 1px 6px rgba(0,0,0,0.07);
             margin-bottom: 24px;
             overflow: hidden;
-            animation: panelUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) both;
         }
-
-        @keyframes panelUp {
-            from { opacity: 0; transform: translateY(12px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .panel:nth-child(2) { animation-delay: 0.15s; }
-        .panel:nth-child(3) { animation-delay: 0.25s; }
 
         .panel-header {
-            padding: 16px 22px;
+            padding: 14px 20px;
             border-bottom: 1px solid #e9ecef;
             display: flex;
             align-items: center;
             justify-content: space-between;
             gap: 12px;
+            flex-wrap: wrap;
         }
 
         .panel-header h2 {
-            font-size: 0.95rem;
-            font-weight: 600;
+            font-size: 1rem;
+            font-weight: 700;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
         }
 
-        .panel-header h2 i {
-            color: #6c757d;
-            font-size: 0.9rem;
-        }
+        .panel-body { padding: 20px; }
 
-        .panel-body { padding: 20px 22px; }
-
-        /* ── Create User Form ── */
         .create-form {
             display: flex;
             gap: 12px;
             flex-wrap: wrap;
         }
 
-        .form-field {
+        .create-form input, .create-form select {
             flex: 1;
-            min-width: 150px;
-        }
-
-        .form-field label {
-            display: block;
-            font-size: 0.75rem;
-            color: #6c757d;
-            margin-bottom: 5px;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 0.04em;
-        }
-
-        .form-field input,
-        .form-field select {
-            width: 100%;
-            padding: 10px 14px;
-            border: 1.5px solid #dee2e6;
-            border-radius: 10px;
-            font-size: 0.88rem;
-            font-family: 'Inter', sans-serif;
+            min-width: 140px;
+            padding: 8px 11px;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            font-size: 0.9rem;
+            font-family: inherit;
             color: #343a40;
-            background: #f8f9fa;
-            transition: all 0.2s ease;
-            outline: none;
         }
 
-        .form-field input:focus,
-        .form-field select:focus {
+        .create-form input:focus, .create-form select:focus {
+            outline: none;
             border-color: #6c757d;
-            background: #fff;
-            box-shadow: 0 0 0 3px rgba(108, 117, 125, 0.08);
         }
 
         .btn-primary {
             background: #343a40;
             color: #fff;
             border: none;
-            border-radius: 10px;
-            padding: 10px 20px;
-            font-size: 0.88rem;
-            font-family: 'Inter', sans-serif;
+            border-radius: 5px;
+            padding: 8px 18px;
+            font-size: 0.9rem;
+            font-family: inherit;
             font-weight: 600;
             cursor: pointer;
             white-space: nowrap;
-            transition: all 0.2s ease;
+        }
+
+        .btn-primary:hover { background: #23272b; }
+
+        /* Search */
+        .search-bar {
             display: flex;
             align-items: center;
             gap: 8px;
-            align-self: flex-end;
-            margin-bottom: 1px;
-        }
-
-        .btn-primary:hover {
-            background: #23272b;
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(52, 58, 64, 0.2);
-        }
-
-        .btn-primary:active { transform: translateY(0); }
-
-        /* ── Search ── */
-        .search-bar {
-            position: relative;
-            display: flex;
-            align-items: center;
-        }
-
-        .search-bar i {
-            position: absolute;
-            left: 12px;
-            color: #adb5bd;
-            font-size: 0.85rem;
-            pointer-events: none;
         }
 
         .search-bar input {
-            padding: 8px 14px 8px 36px;
-            border: 1.5px solid #dee2e6;
-            border-radius: 10px;
-            font-size: 0.85rem;
-            font-family: 'Inter', sans-serif;
-            width: 220px;
-            background: #f8f9fa;
-            transition: all 0.2s ease;
-            outline: none;
+            padding: 7px 12px;
+            border: 1px solid #dee2e6;
+            border-radius: 5px;
+            font-size: 0.88rem;
+            font-family: inherit;
+            width: 200px;
         }
 
         .search-bar input:focus {
+            outline: none;
             border-color: #6c757d;
-            background: #fff;
-            box-shadow: 0 0 0 3px rgba(108, 117, 125, 0.08);
-            width: 260px;
         }
 
-        /* ── Table ── */
-        .table-wrap {
-            overflow-x: auto;
-            border-radius: 12px;
-            border: 1px solid #e9ecef;
-        }
-
+        /* Table */
         .user-table {
             width: 100%;
             border-collapse: collapse;
-            font-size: 0.86rem;
+            font-size: 0.88rem;
         }
 
         .user-table th {
-            background: #f8f9fa;
-            padding: 12px 16px;
+            background: #f1f3f5;
+            padding: 10px 14px;
             text-align: left;
-            font-size: 0.72rem;
+            font-size: 0.8rem;
             text-transform: uppercase;
-            letter-spacing: 0.06em;
+            letter-spacing: 0.04em;
             color: #6c757d;
-            font-weight: 600;
             border-bottom: 1px solid #dee2e6;
         }
 
         .user-table td {
-            padding: 13px 16px;
-            border-bottom: 1px solid #f1f3f5;
+            padding: 11px 14px;
+            border-bottom: 1px solid #e9ecef;
             vertical-align: middle;
-            transition: background 0.15s ease;
         }
 
-        .user-table tbody tr {
-            transition: background 0.15s ease;
-        }
+        .user-table tr:last-child td { border-bottom: none; }
 
-        .user-table tbody tr:hover td {
-            background: #f8f9fa;
-        }
+        .user-table tr:hover td { background: #f8f9fa; }
 
-        .user-table tbody tr:last-child td { border-bottom: none; }
-
-        .user-name {
-            font-weight: 600;
-            color: #343a40;
-        }
-
-        .user-email {
-            color: #6c757d;
-            font-size: 0.82rem;
-        }
-
-        /* ── Badges ── */
         .badge {
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 0.72rem;
+            display: inline-block;
+            padding: 2px 9px;
+            border-radius: 10px;
+            font-size: 0.75rem;
             font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 0.04em;
         }
 
-        .badge::before {
-            content: '';
-            width: 6px;
-            height: 6px;
-            border-radius: 50%;
-        }
-
         .badge-active { background: #d1e7dd; color: #0f5132; }
-        .badge-active::before { background: #198754; }
         .badge-inactive { background: #f8d7da; color: #842029; }
-        .badge-inactive::before { background: #dc3545; }
-        .badge-admin { background: #e2e9f3; color: #084298; }
-        .badge-admin::before { background: #0d6efd; }
+        .badge-admin { background: #cfe2ff; color: #084298; }
         .badge-user { background: #e9ecef; color: #495057; }
-        .badge-user::before { background: #6c757d; }
 
-        /* ── Action Buttons ── */
         .action-btns {
             display: flex;
             gap: 6px;
@@ -412,89 +234,45 @@
         }
 
         .btn-sm {
-            padding: 6px 12px;
-            border-radius: 8px;
-            font-size: 0.75rem;
-            font-family: 'Inter', sans-serif;
+            padding: 4px 11px;
+            border-radius: 4px;
+            font-size: 0.78rem;
+            font-family: inherit;
             cursor: pointer;
             border: 1px solid transparent;
             font-weight: 600;
-            transition: all 0.2s ease;
-            display: inline-flex;
-            align-items: center;
-            gap: 4px;
+            transition: all 0.12s;
         }
 
         .btn-activate { background: #d1e7dd; color: #0a3622; border-color: #a3cfbb; }
-        .btn-activate:hover { background: #198754; color: #fff; border-color: #198754; transform: translateY(-1px); }
+        .btn-activate:hover { background: #198754; color: #fff; }
         .btn-deactivate { background: #f8d7da; color: #58151c; border-color: #f1aeb5; }
-        .btn-deactivate:hover { background: #dc3545; color: #fff; border-color: #dc3545; transform: translateY(-1px); }
-        .btn-delete { background: #fff; color: #dc3545; border-color: #f5c2c7; }
-        .btn-delete:hover { background: #dc3545; color: #fff; border-color: #dc3545; transform: translateY(-1px); }
-        .btn-make-admin { background: #e2e9f3; color: #084298; border-color: #9ec5fe; }
-        .btn-make-admin:hover { background: #0d6efd; color: #fff; border-color: #0d6efd; transform: translateY(-1px); }
+        .btn-deactivate:hover { background: #dc3545; color: #fff; }
+        .btn-delete { background: #fff; color: #dc3545; border-color: #dc3545; }
+        .btn-delete:hover { background: #dc3545; color: #fff; }
+        .btn-make-admin { background: #cfe2ff; color: #084298; border-color: #9ec5fe; }
+        .btn-make-admin:hover { background: #0d6efd; color: #fff; }
         .btn-remove-admin { background: #e9ecef; color: #495057; border-color: #ced4da; }
-        .btn-remove-admin:hover { background: #6c757d; color: #fff; border-color: #6c757d; transform: translateY(-1px); }
+        .btn-remove-admin:hover { background: #6c757d; color: #fff; }
 
-        .btn-sm:active { transform: translateY(0) !important; }
-
-        /* ── Alerts ── */
         .alert {
-            padding: 12px 16px;
-            border-radius: 10px;
-            font-size: 0.85rem;
-            margin-bottom: 16px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            animation: alertSlide 0.3s ease both;
+            padding: 10px 14px;
+            border-radius: 5px;
+            font-size: 0.88rem;
+            margin-bottom: 14px;
+            display: none;
         }
+        .alert.error { background: #f8d7da; color: #842029; border: 1px solid #f5c2c7; }
+        .alert.success { background: #d1e7dd; color: #0f5132; border: 1px solid #badbcc; }
+        .alert.show { display: block; }
 
-        @keyframes alertSlide {
-            from { opacity: 0; transform: translateY(-6px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+        .loading { text-align: center; color: #6c757d; padding: 30px; font-style: italic; }
 
-        .alert.error { background: #fef2f2; color: #842029; border: 1px solid #fecaca; display: none; }
-        .alert.success { background: #f0fdf4; color: #0f5132; border: 1px solid #bbf7d0; display: none; }
-        .alert.show { display: flex !important; }
-
-        .loading {
-            text-align: center;
-            color: #6c757d;
-            padding: 40px;
-            font-size: 0.9rem;
-        }
-
-        .loading i {
-            display: block;
-            font-size: 1.5rem;
-            margin-bottom: 10px;
-            animation: pulse 1.5s ease-in-out infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 0.4; }
-            50% { opacity: 1; }
-        }
-
-        /* ── Responsive ── */
-        @media (max-width: 900px) {
-            .stats-row { grid-template-columns: repeat(2, 1fr); }
-        }
+        .table-wrap { overflow-x: auto; }
 
         @media (max-width: 600px) {
-            .admin-header { padding: 0 16px; height: 56px; }
-            .admin-header h1 { font-size: 0.9rem; }
-            .admin-header a span { display: none; }
-            .admin-body { padding: 16px 12px; }
-            .stats-row { grid-template-columns: 1fr 1fr; gap: 10px; }
-            .stat-card { padding: 16px 14px; }
-            .stat-card .stat-num { font-size: 1.6rem; }
+            .admin-body { padding: 16px 10px; }
             .create-form { flex-direction: column; }
-            .panel-body { padding: 16px; }
-            .search-bar input { width: 160px; }
-            .search-bar input:focus { width: 180px; }
             .user-table th:nth-child(4), .user-table td:nth-child(4),
             .user-table th:nth-child(5), .user-table td:nth-child(5) { display: none; }
         }
@@ -503,10 +281,10 @@
 <body>
 
 <div class="admin-header">
-    <h1><i class="fas fa-shield-alt"></i> PLC SimTel Admin</h1>
+    <h1><i class="fas fa-shield-alt"></i> PLC SimTel — Admin Panel</h1>
     <div class="admin-header-right">
-        <a href="/index.html"><i class="fas fa-arrow-left"></i> <span>Back to App</span></a>
-        <button class="btn-logout" onclick="logout()"><i class="fas fa-sign-out-alt"></i> <span>Logout</span></button>
+        <a href="/index.html"><i class="fas fa-arrow-left"></i> Back to App</a>
+        <button onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
     </div>
 </div>
 
@@ -514,26 +292,10 @@
 
     <!-- Stats -->
     <div class="stats-row" id="stats-row">
-        <div class="stat-card">
-            <div class="stat-icon"><i class="fas fa-users"></i></div>
-            <div class="stat-num" id="stat-total">–</div>
-            <div class="stat-label">Total Users</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-icon"><i class="fas fa-user-check"></i></div>
-            <div class="stat-num" id="stat-active">–</div>
-            <div class="stat-label">Active</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-icon"><i class="fas fa-clock"></i></div>
-            <div class="stat-num" id="stat-pending">–</div>
-            <div class="stat-label">Pending Approval</div>
-        </div>
-        <div class="stat-card">
-            <div class="stat-icon"><i class="fas fa-user-shield"></i></div>
-            <div class="stat-num" id="stat-admins">–</div>
-            <div class="stat-label">Admins</div>
-        </div>
+        <div class="stat-card"><div class="stat-num" id="stat-total">–</div><div class="stat-label">Total Users</div></div>
+        <div class="stat-card"><div class="stat-num" id="stat-active">–</div><div class="stat-label">Active</div></div>
+        <div class="stat-card"><div class="stat-num" id="stat-pending">–</div><div class="stat-label">Pending Approval</div></div>
+        <div class="stat-card"><div class="stat-num" id="stat-admins">–</div><div class="stat-label">Admins</div></div>
     </div>
 
     <!-- Create User -->
@@ -542,30 +304,18 @@
             <h2><i class="fas fa-user-plus"></i> Create User</h2>
         </div>
         <div class="panel-body">
-            <div class="alert error" id="create-error"><i class="fas fa-exclamation-circle"></i><span></span></div>
-            <div class="alert success" id="create-success"><i class="fas fa-check-circle"></i><span></span></div>
+            <div class="alert error" id="create-error"></div>
+            <div class="alert success" id="create-success"></div>
             <div class="create-form">
-                <div class="form-field">
-                    <label>Full Name</label>
-                    <input type="text" id="c-name" placeholder="John Doe">
-                </div>
-                <div class="form-field">
-                    <label>Email</label>
-                    <input type="email" id="c-email" placeholder="john@example.com">
-                </div>
-                <div class="form-field">
-                    <label>Password</label>
-                    <input type="password" id="c-password" placeholder="Min 6 characters">
-                </div>
-                <div class="form-field">
-                    <label>Role</label>
-                    <select id="c-role">
-                        <option value="user">User</option>
-                        <option value="admin">Admin</option>
-                    </select>
-                </div>
+                <input type="text" id="c-name" placeholder="Full Name">
+                <input type="email" id="c-email" placeholder="Email Address">
+                <input type="password" id="c-password" placeholder="Password (min 6)">
+                <select id="c-role">
+                    <option value="user">User</option>
+                    <option value="admin">Admin</option>
+                </select>
                 <button class="btn-primary" onclick="createUser()">
-                    <i class="fas fa-plus"></i> Create
+                    <i class="fas fa-plus"></i> Create &amp; Activate
                 </button>
             </div>
         </div>
@@ -576,12 +326,12 @@
         <div class="panel-header">
             <h2><i class="fas fa-users"></i> All Users</h2>
             <div class="search-bar">
-                <i class="fas fa-search"></i>
+                <i class="fas fa-search" style="color:#6c757d;"></i>
                 <input type="text" id="user-search" placeholder="Filter users..." oninput="filterTable()">
             </div>
         </div>
         <div class="panel-body">
-            <div class="alert error" id="list-error"><i class="fas fa-exclamation-circle"></i><span></span></div>
+            <div class="alert error" id="list-error"></div>
             <div class="table-wrap">
                 <table class="user-table">
                     <thead>
@@ -595,7 +345,7 @@
                         </tr>
                     </thead>
                     <tbody id="user-tbody">
-                        <tr><td colspan="6" class="loading"><i class="fas fa-spinner fa-spin"></i>Loading users...</td></tr>
+                        <tr><td colspan="6" class="loading">Loading users...</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -608,6 +358,7 @@
     const cfg = window.SIMTEL_AUTH_CONFIG;
     let allUsers = [];
 
+    // Guard: only admin can access this page
     const userRaw = localStorage.getItem(cfg.USER_KEY);
     const currentUser = userRaw ? JSON.parse(userRaw) : null;
     if (!currentUser || currentUser.role !== 'admin') {
@@ -616,17 +367,16 @@
     }
 
     function getToken() { return localStorage.getItem(cfg.TOKEN_KEY); }
+
     function authHeaders() {
         return { 'Content-Type': 'application/json', 'Authorization': `Bearer ${getToken()}` };
     }
 
     function showMsg(id, msg, type) {
         const el = document.getElementById(id);
-        const span = el.querySelector('span');
-        if (span) span.textContent = msg;
-        else el.textContent = msg;
+        el.textContent = msg;
         el.className = `alert ${type} show`;
-        setTimeout(() => { el.classList.remove('show'); }, 4000);
+        setTimeout(() => el.className = 'alert', 4000);
     }
 
     async function loadUsers() {
@@ -638,35 +388,16 @@
             renderTable(allUsers);
             updateStats(allUsers);
         } catch (err) {
-            const el = document.getElementById('list-error');
-            el.querySelector('span').textContent = err.message;
-            el.className = 'alert error show';
+            document.getElementById('list-error').textContent = err.message;
+            document.getElementById('list-error').className = 'alert error show';
         }
     }
 
     function updateStats(users) {
-        animateCounter('stat-total', users.length);
-        animateCounter('stat-active', users.filter(u => u.isActive).length);
-        animateCounter('stat-pending', users.filter(u => !u.isActive).length);
-        animateCounter('stat-admins', users.filter(u => u.role === 'admin').length);
-    }
-
-    function animateCounter(id, target) {
-        const el = document.getElementById(id);
-        const duration = 600;
-        const start = parseInt(el.textContent) || 0;
-        const diff = target - start;
-        if (diff === 0) { el.textContent = target; return; }
-        const startTime = performance.now();
-
-        function step(now) {
-            const elapsed = now - startTime;
-            const progress = Math.min(elapsed / duration, 1);
-            const eased = 1 - Math.pow(1 - progress, 3);
-            el.textContent = Math.round(start + diff * eased);
-            if (progress < 1) requestAnimationFrame(step);
-        }
-        requestAnimationFrame(step);
+        document.getElementById('stat-total').textContent = users.length;
+        document.getElementById('stat-active').textContent = users.filter(u => u.isActive).length;
+        document.getElementById('stat-pending').textContent = users.filter(u => !u.isActive).length;
+        document.getElementById('stat-admins').textContent = users.filter(u => u.role === 'admin').length;
     }
 
     function filterTable() {
@@ -680,13 +411,13 @@
     function renderTable(users) {
         const tbody = document.getElementById('user-tbody');
         if (users.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="6" class="loading"><i class="fas fa-search"></i>No users found.</td></tr>';
+            tbody.innerHTML = '<tr><td colspan="6" class="loading">No users found.</td></tr>';
             return;
         }
         tbody.innerHTML = users.map(u => `
             <tr id="row-${u._id}">
-                <td><span class="user-name">${escHtml(u.name)}</span></td>
-                <td><span class="user-email">${escHtml(u.email)}</span></td>
+                <td><strong>${escHtml(u.name)}</strong></td>
+                <td>${escHtml(u.email)}</td>
                 <td>
                     <span class="badge ${u.isActive ? 'badge-active' : 'badge-inactive'}">
                         ${u.isActive ? 'Active' : 'Pending'}
@@ -697,18 +428,18 @@
                         ${u.role}
                     </span>
                 </td>
-                <td style="font-size:0.82rem; color:#6c757d;">${new Date(u.createdAt).toLocaleDateString('en-IN')}</td>
+                <td>${new Date(u.createdAt).toLocaleDateString('en-IN')}</td>
                 <td>
                     <div class="action-btns">
                         ${u.isActive
-                            ? `<button class="btn-sm btn-deactivate" onclick="setActive('${u._id}', false)"><i class="fas fa-ban"></i> Revoke</button>`
-                            : `<button class="btn-sm btn-activate" onclick="setActive('${u._id}', true)"><i class="fas fa-check"></i> Approve</button>`
+                            ? `<button class="btn-sm btn-deactivate" onclick="setActive('${u._id}', false)">Revoke</button>`
+                            : `<button class="btn-sm btn-activate" onclick="setActive('${u._id}', true)">Approve</button>`
                         }
                         ${u.role === 'admin'
-                            ? `<button class="btn-sm btn-remove-admin" onclick="setRole('${u._id}', 'user')"><i class="fas fa-minus"></i></button>`
-                            : `<button class="btn-sm btn-make-admin" onclick="setRole('${u._id}', 'admin')"><i class="fas fa-crown"></i></button>`
+                            ? `<button class="btn-sm btn-remove-admin" onclick="setRole('${u._id}', 'user')">Remove Admin</button>`
+                            : `<button class="btn-sm btn-make-admin" onclick="setRole('${u._id}', 'admin')">Make Admin</button>`
                         }
-                        <button class="btn-sm btn-delete" onclick="deleteUser('${u._id}', '${escHtml(u.name)}')"><i class="fas fa-trash"></i></button>
+                        <button class="btn-sm btn-delete" onclick="deleteUser('${u._id}', '${escHtml(u.name)}')">Delete</button>
                     </div>
                 </td>
             </tr>
