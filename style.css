@@ -1,18 +1,39 @@
+/* ============================================================
+   PLC SimTel — style.css
+   Modernized design tokens + animations, palette pulled from the
+   Scientech flame mark (gold → orange → purple → indigo) with
+   the wordmark's ink for text. All original selectors/classes
+   kept as-is so index.html / admin.html / renderer.js need zero
+   changes.
+   ============================================================ */
+
 :root {
-    --primary-color: #f8f9fa;
-    --secondary-color: #e9ecef;
-    --text-color: #343a40;
-    --accent-color: #6c757d;
-    --border-color: #dee2e6;
-    --hover-color: #f1f3f5;
-    --shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    /* ---- Brand palette (sampled from Scientech_logo-2.png) ---- */
+    --flame-gold:    #ca9b40;
+    --flame-orange:  #b73628;
+    --flame-purple:  #806c9b;
+    --flame-indigo:  #434575;
+    --ink:           #221e1c;   /* wordmark black */
+
+    --brand-gradient: linear-gradient(135deg, var(--flame-gold) 0%, var(--flame-orange) 32%, var(--flame-purple) 68%, var(--flame-indigo) 100%);
+
+    /* ---- Design tokens (same variable names as before) ---- */
+    --primary-color: #f7f7f9;              /* page background */
+    --secondary-color: #efedf3;            /* header strip background */
+    --text-color: var(--ink);
+    --accent-color: #6b5c86;               /* blended purple/indigo for secondary text + icons */
+    --border-color: #e3e1e8;
+    --hover-color: #f4f1f8;
+    --shadow: 0 10px 30px rgba(34, 30, 28, 0.08);
+    --shadow-lift: 0 16px 40px rgba(67, 69, 117, 0.16);
     --header-padding: 10px;
     --container-margin: 25px;
-    /* --container-padding: 20px; */
     --section-title-size: 1.2rem;
     --list-item-size: 1rem;
     --list-item-padding: 8px;
     --nested-list-size: 0.9rem;
+
+    --ease: cubic-bezier(0.22, 1, 0.36, 1);
 }
 
 * {
@@ -27,7 +48,9 @@ html {
 
 body {
     font-family: Georgia, 'Times New Roman', Times, serif;
-    background-color: var(--primary-color);
+    background: radial-gradient(1200px 600px at 15% -10%, rgba(202, 155, 64, 0.08), transparent 60%),
+                radial-gradient(1000px 500px at 110% 10%, rgba(67, 69, 117, 0.08), transparent 55%),
+                var(--primary-color);
     color: var(--text-color);
     line-height: 1.6;
     width: 100%;
@@ -44,14 +67,29 @@ body {
     padding: var(--container-padding);
     padding-top: 1px;
     width: 100%;
+    animation: fadeInUp 0.5s var(--ease) both;
 }
 
 header {
     text-align: center;
     padding: var(--header-padding) 0;
-    border-bottom: 1px solid var(--border-color);
     margin-bottom: clamp(15px, 5vw, 30px);
     width: 100%;
+    position: relative;
+    border-bottom: none;
+}
+
+/* animated gradient underline replacing the flat border-bottom */
+header::after {
+    content: "";
+    display: block;
+    height: 3px;
+    width: 72px;
+    margin: 14px auto 0;
+    border-radius: 999px;
+    background: var(--brand-gradient);
+    background-size: 250% 100%;
+    animation: shimmer 3.5s ease-in-out infinite;
 }
 
 .logo-container {
@@ -66,17 +104,27 @@ header {
 .logo-container img {
     height: clamp(40px, 10vw, 60px);
     width: auto;
+    filter: drop-shadow(0 4px 10px rgba(34, 30, 28, 0.12));
+    transition: transform 0.35s var(--ease);
+}
+
+.logo-container img:hover {
+    transform: translateY(-2px) scale(1.03);
 }
 
 .logo-container i {
     font-size: clamp(1.5rem, 5vw, 2.5rem);
-    color: var(--accent-color);
+    background: var(--brand-gradient);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
 }
 
 h1 {
     font-size: clamp(1.5rem, 6vw, 2.5rem);
     font-weight: 700;
     color: var(--text-color);
+    letter-spacing: -0.01em;
 }
 
 header p {
@@ -91,14 +139,24 @@ main {
 }
 
 .menu-container {
-    background-color: white;
-    border-radius: 8px;
+    background-color: rgba(255, 255, 255, 0.82);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border: 1px solid rgba(255, 255, 255, 0.6);
+    border-radius: 16px;
     box-shadow: var(--shadow);
     overflow: hidden;
     width: 100%;
+    transition: box-shadow 0.35s var(--ease);
+    animation: fadeInUp 0.6s 0.05s var(--ease) both;
+}
+
+.menu-container:hover {
+    box-shadow: var(--shadow-lift);
 }
 
 .menu-header {
+    position: relative;
     background-color: var(--secondary-color);
     padding: clamp(12px, 3vw, 15px) clamp(15px, 4vw, 20px);
     display: flex;
@@ -107,6 +165,14 @@ main {
     align-items: center;
     gap: clamp(10px, 3vw, 20px);
     border-bottom: 1px solid var(--border-color);
+}
+
+.menu-header::before {
+    content: "";
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 4px;
+    background: var(--brand-gradient);
 }
 
 .menu-header h2 {
@@ -124,8 +190,16 @@ main {
     width: 100%;
     padding: clamp(6px, 1.5vw, 8px) clamp(10px, 2vw, 15px);
     border: 1px solid var(--border-color);
-    border-radius: 4px;
+    border-radius: 8px;
     font-size: clamp(0.8rem, 2vw, 0.9rem);
+    background: #fff;
+    transition: border-color 0.25s var(--ease), box-shadow 0.25s var(--ease);
+}
+
+.search-container input:focus {
+    outline: none;
+    border-color: var(--flame-purple);
+    box-shadow: 0 0 0 3px rgba(128, 108, 155, 0.18);
 }
 
 .search-container i {
@@ -147,12 +221,23 @@ main {
     margin-bottom: clamp(15px, 3vw, 20px);
     border-bottom: 1px solid var(--border-color);
     padding-bottom: clamp(12px, 2vw, 15px);
+    animation: fadeIn 0.5s var(--ease) both;
 }
 
 .menu-section:last-child {
     border-bottom: none;
     margin-bottom: 0;
 }
+
+/* stagger the section reveal a touch — purely cosmetic, safe no-op past nth 8 */
+.menu-section:nth-child(1) { animation-delay: 0.02s; }
+.menu-section:nth-child(2) { animation-delay: 0.06s; }
+.menu-section:nth-child(3) { animation-delay: 0.10s; }
+.menu-section:nth-child(4) { animation-delay: 0.14s; }
+.menu-section:nth-child(5) { animation-delay: 0.18s; }
+.menu-section:nth-child(6) { animation-delay: 0.22s; }
+.menu-section:nth-child(7) { animation-delay: 0.26s; }
+.menu-section:nth-child(8) { animation-delay: 0.30s; }
 
 .menu-section h3 {
     font-size: clamp(1rem, 3.5vw, 1.2rem);
@@ -162,17 +247,17 @@ main {
     align-items: center;
     gap: 10px;
     cursor: pointer;
-    transition: color 0.2s ease;
+    transition: color 0.2s var(--ease);
 }
 
 .menu-section h3:hover {
-    color: var(--accent-color);
+    color: var(--flame-indigo);
 }
 
 .menu-section h3 i {
     font-size: clamp(0.7rem, 2vw, 0.9rem);
-    color: var(--accent-color);
-    transition: transform 0.2s ease;
+    color: var(--flame-purple);
+    transition: transform 0.25s var(--ease), color 0.2s var(--ease);
 }
 
 .menu-section ul {
@@ -186,19 +271,25 @@ main {
     color: var(--text-color);
     position: relative;
     cursor: pointer;
-    transition: color 0.2s ease;
+    transition: color 0.2s var(--ease), transform 0.2s var(--ease);
     word-break: break-word;
 }
 
 .menu-section > ul > li:hover {
-    color: var(--accent-color);
+    color: var(--flame-indigo);
+    transform: translateX(3px);
 }
 
 .menu-section > ul > li::before {
     content: "•";
     position: absolute;
     left: clamp(-12px, -3vw, -15px);
-    color: var(--accent-color);
+    color: var(--flame-orange);
+    transition: color 0.2s var(--ease);
+}
+
+.menu-section > ul > li:hover::before {
+    color: var(--flame-gold);
 }
 
 .menu-section ul ul {
@@ -212,13 +303,19 @@ main {
     color: var(--accent-color);
     position: relative;
     word-break: break-word;
+    transition: color 0.2s var(--ease), transform 0.2s var(--ease);
+}
+
+.menu-section ul ul li:hover {
+    color: var(--flame-purple);
+    transform: translateX(3px);
 }
 
 .menu-section ul ul li::before {
     content: "◦";
     position: absolute;
     left: clamp(-12px, -3vw, -15px);
-    color: var(--accent-color);
+    color: var(--flame-purple);
 }
 
 footer {
@@ -230,18 +327,42 @@ footer {
     font-size: clamp(0.8rem, 2vw, 0.9rem);
 }
 
+/* ---- Keyframes ---- */
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(14px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+@keyframes shimmer {
+    0%   { background-position: 0% 50%; }
+    50%  { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.001ms !important;
+    }
+}
+
 /* Extra Large Screens (1920px and above) */
 @media (min-width: 1920px) {
     .container {
-        /* margin: 40px auto; */
         margin: auto;
         max-width: 1500px;
     }
-    
+
     .menu-section h3 {
         font-size: 1.4rem;
     }
-    
+
     .menu-section > ul > li {
         font-size: 1.1rem;
     }
@@ -250,7 +371,6 @@ footer {
 /* Large Screens (1200px to 1919px) */
 @media (min-width: 1200px) and (max-width: 1919px) {
     .container {
-        /* margin: 30px auto; */
         margin: auto;
     }
 }
@@ -261,30 +381,30 @@ footer {
         margin: 20px 15px;
         padding: 15px;
     }
-    
+
     header {
         margin-bottom: clamp(15px, 4vw, 25px);
     }
-    
+
     .logo-container {
         gap: clamp(15px, 10vw, 200px);
     }
-    
+
     .menu-header {
         flex-direction: column;
         gap: 15px;
         align-items: flex-start;
     }
-    
+
     .menu-header h2 {
         width: 100%;
     }
-    
+
     .search-container {
         width: 100%;
         max-width: 100%;
     }
-    
+
     .menu-content {
         max-height: 65vh;
     }
@@ -297,43 +417,43 @@ footer {
         --list-item-size: 0.95rem;
         --nested-list-size: 0.85rem;
     }
-    
+
     .container {
         margin: 15px 10px;
         padding: 12px;
     }
-    
+
     h1 {
         font-size: clamp(1.3rem, 5vw, 2rem);
     }
-    
+
     .logo-container {
         gap: clamp(10px, 8vw, 150px);
     }
-    
+
     .menu-header {
         padding: 12px 15px;
         flex-direction: column;
     }
-    
+
     .search-container {
         width: 100%;
     }
-    
+
     .menu-content {
         padding: 12px 15px;
         max-height: 60vh;
     }
-    
+
     .menu-section {
         margin-bottom: 15px;
         padding-bottom: 12px;
     }
-    
+
     .menu-section h3 {
         font-size: 1.05rem;
     }
-    
+
     .menu-section > ul > li {
         font-size: 0.95rem;
     }
@@ -346,91 +466,91 @@ footer {
         --list-item-size: 0.9rem;
         --nested-list-size: 0.8rem;
     }
-    
+
     .container {
         margin: 12px 8px;
         padding: 10px;
         max-width: 100%;
     }
-    
+
     header {
         padding: 8px 0;
         margin-bottom: 20px;
     }
-    
+
     .logo-container {
         flex-direction: column;
         gap: 10px;
         margin-bottom: 0;
     }
-    
+
     .logo-container img {
         height: 50px;
     }
-    
+
     .logo-container i {
         display: none;
     }
-    
+
     h1 {
         font-size: clamp(1.2rem, 5vw, 1.8rem);
         margin-top: 10px;
     }
-    
+
     main {
         padding: 0;
     }
-    
+
     .menu-header {
         padding: 10px 12px;
         flex-direction: column;
         gap: 12px;
     }
-    
+
     .menu-header h2 {
         font-size: 1.1rem;
     }
-    
+
     .search-container {
         width: 100%;
         min-width: auto;
     }
-    
+
     .search-container input {
         font-size: 1rem;
         padding: 6px 12px;
     }
-    
+
     .menu-content {
         padding: 10px 12px;
         max-height: 55vh;
     }
-    
+
     .menu-section {
         margin-bottom: 12px;
         padding-bottom: 10px;
     }
-    
+
     .menu-section h3 {
         font-size: 0.95rem;
         margin-bottom: 8px;
     }
-    
+
     .menu-section > ul > li {
         font-size: 0.9rem;
         padding: 6px 0;
     }
-    
+
     .menu-section ul ul {
         padding-left: 12px;
         margin-top: 3px;
     }
-    
+
     .menu-section ul ul li {
         font-size: 0.8rem;
         padding: 3px 0;
     }
-    
+
     footer {
         font-size: 0.8rem;
         margin-top: 20px;
@@ -444,110 +564,110 @@ footer {
         --list-item-size: 0.85rem;
         --nested-list-size: 0.75rem;
     }
-    
+
     .container {
         margin: 10px 5px;
         padding: 8px;
         min-height: auto;
     }
-    
+
     header {
         padding: 6px 0;
         margin-bottom: 15px;
     }
-    
+
     .logo-container {
         flex-direction: column;
         gap: 5px;
         margin-bottom: 0;
     }
-    
+
     .logo-container img {
         height: 40px;
     }
-    
+
     h1 {
         font-size: 1.1rem;
         margin-top: 5px;
         font-weight: 600;
     }
-    
+
     header p {
         font-size: 0.8rem;
     }
-    
+
     .menu-container {
-        border-radius: 4px;
+        border-radius: 10px;
     }
-    
+
     .menu-header {
         padding: 8px 10px;
         flex-direction: column;
         gap: 10px;
     }
-    
+
     .menu-header h2 {
         font-size: 1rem;
     }
-    
+
     .search-container {
         width: 100%;
     }
-    
+
     .search-container input {
         font-size: 0.95rem;
         padding: 5px 10px;
     }
-    
+
     .menu-content {
         padding: 8px 10px;
         max-height: 50vh;
     }
-    
+
     .menu-section {
         margin-bottom: 10px;
         padding-bottom: 8px;
     }
-    
+
     .menu-section h3 {
         font-size: 0.9rem;
         margin-bottom: 6px;
         gap: 6px;
     }
-    
+
     .menu-section > ul > li {
         font-size: 0.8rem;
         padding: 4px 0;
     }
-    
+
     .menu-section > ul > li::before {
         left: -12px;
         font-size: 0.8rem;
     }
-    
+
     .menu-section ul {
         padding-left: 12px;
     }
-    
+
     .menu-section ul ul {
         padding-left: 8px;
         margin-top: 2px;
     }
-    
+
     .menu-section ul ul li {
         font-size: 0.75rem;
         padding: 2px 0;
     }
-    
+
     .menu-section ul ul li::before {
         left: -10px;
         font-size: 0.6rem;
     }
-    
+
     .menu-section h3 i {
         font-size: 0.7rem;
     }
-    
+
     footer {
         font-size: 0.75rem;
         margin-top: 15px;
@@ -561,11 +681,11 @@ footer {
         margin: 8px 5px;
         padding: 6px;
     }
-    
+
     header {
         margin-bottom: 10px;
     }
-    
+
     .menu-content {
         max-height: 45vh;
     }
