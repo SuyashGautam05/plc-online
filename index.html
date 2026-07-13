@@ -1,944 +1,340 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <script src="./auth-config.js"></script>
+    <script src="./auth-guard.js"></script>
+    <script src="./user-bar.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PLC SimTel — Course Library 2026</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <style>
-/* ============================================================
-   PLC SimTel — 2026 Course Library
-   Light theme · Your gray/white palette · Red accent
-   ============================================================ */
-:root {
-    /* ── Your exact provided variables ── */
-    --primary-color:   #f8f9fa;
-    --secondary-color: #e9ecef;
-    --text-color:      #343a40;
-    --accent-color:    #6c757d;
-    --border-color:    #dee2e6;
-    --hover-color:     #f1f3f5;
-    --shadow:          0 2px 10px rgba(0, 0, 0, 0.1);
-    --header-padding:  10px;
-    --container-margin:25px;
-    --section-title-size: 1.2rem;
-    --list-item-size:    1rem;
-    --list-item-padding: 8px;
-    --nested-list-size:  0.9rem;
-
-    /* ── Red accent (primary CTA) ── */
-    --red:         #dc3545;
-    --red-hover:   #c82333;
-    --red-soft:    rgba(220, 53, 69, 0.08);
-    --red-border:  rgba(220, 53, 69, 0.20);
-    --red-glow:    rgba(220, 53, 69, 0.15);
-
-    /* ── Category palette (muted for light bg) ── */
-    --cat-blue:    #2563eb;
-    --cat-green:   #16a34a;
-    --cat-orange:  #ea580c;
-    --cat-purple:  #7c3aed;
-    --cat-teal:    #0d9488;
-    --cat-amber:   #d97706;
-
-    /* ── UI tokens ── */
-    --white:       #ffffff;
-    --star-color:  #f59e0b;
-    --star-empty:  #dee2e6;
-    --r-1:  8px;
-    --r-2:  12px;
-    --r-3:  16px;
-    --r-pill: 999px;
-    --ease:   cubic-bezier(0.22, 1, 0.36, 1);
-    --dur:    0.3s;
-    --pad:    clamp(16px, 3vw, 36px);
-    --gap:    22px;
-    --max-w:  1400px;
-    --card-min: 380px;
-}
-
-*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-html { scroll-behavior: smooth; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; }
-
-body {
-    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-    background-color: var(--primary-color);
-    color: var(--text-color);
-    line-height: 1.6;
-    min-height: 100vh;
-    overflow-x: hidden;
-}
-
-::selection { background: rgba(220, 53, 69, 0.15); color: var(--text-color); }
-::-webkit-scrollbar { width: 7px; }
-::-webkit-scrollbar-track { background: var(--primary-color); }
-::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: 4px; }
-::-webkit-scrollbar-thumb:hover { background: var(--accent-color); }
-
-/* ── NAVBAR ── */
-.topbar {
-    position: sticky;
-    top: 0;
-    z-index: 100;
-    background: rgba(255, 255, 255, 0.85);
-    backdrop-filter: blur(16px) saturate(1.4);
-    -webkit-backdrop-filter: blur(16px) saturate(1.4);
-    border-bottom: 1px solid var(--border-color);
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
-}
-
-.topbar-inner {
-    max-width: var(--max-w);
-    margin: 0 auto;
-    padding: 0 var(--pad);
-    height: 62px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-}
-
-.topbar-brand {
-    display: flex;
-    align-items: center;
-    gap: 11px;
-    font-weight: 800;
-    font-size: 1.08rem;
-    color: var(--text-color);
-    letter-spacing: -0.03em;
-    text-decoration: none;
-}
-
-.topbar-brand img { height: 30px; width: auto; }
-
-.topbar-nav { display: flex; align-items: center; gap: 4px; }
-
-.topbar-nav a {
-    padding: 7px 14px;
-    border-radius: var(--r-2);
-    font-size: 0.82rem;
-    font-weight: 500;
-    color: var(--accent-color);
-    text-decoration: none;
-    transition: color 0.2s var(--ease), background 0.2s var(--ease);
-}
-
-.topbar-nav a:hover { color: var(--text-color); background: var(--hover-color); }
-
-.topbar-nav a.active {
-    color: var(--red);
-    background: var(--red-soft);
-    font-weight: 600;
-}
-
-/* ── HERO ── */
-.hero {
-    position: relative;
-    z-index: 1;
-    text-align: center;
-    padding: clamp(56px, 10vw, 108px) var(--pad) clamp(48px, 10vw, 96px);
-    background: var(--white);
-    overflow: hidden;
-}
-
-.hero::after {
-    content: "";
-    position: absolute;
-    left: 50%;
-    bottom: 0;
-    transform: translateX(-50%);
-    width: min(700px, 90%);
-    height: 1px;
-    background: linear-gradient(90deg, transparent, var(--border-color), transparent);
-}
-
-.hero-inner {
-    position: relative;
-    z-index: 2;
-    max-width: 720px;
-    margin: 0 auto;
-    animation: revealUp 0.7s var(--ease) both;
-}
-
-@keyframes revealUp {
-    from { opacity: 0; transform: translateY(28px); }
-    to   { opacity: 1; transform: translateY(0); }
-}
-
-.hero-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 8px;
-    padding: 5px 14px 5px 6px;
-    border-radius: var(--r-pill);
-    background: var(--red-soft);
-    border: 1px solid var(--red-border);
-    color: var(--red);
-    font-size: 0.72rem;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    margin-bottom: 28px;
-}
-
-.hero-badge::before {
-    content: "\2726";
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    width: 22px;
-    height: 22px;
-    border-radius: 50%;
-    background: var(--red);
-    color: var(--white);
-    font-size: 0.55rem;
-}
-
-.hero h1 {
-    font-size: clamp(2.2rem, 5.5vw, 3.8rem);
-    font-weight: 900;
-    letter-spacing: -0.04em;
-    line-height: 1.06;
-    color: var(--text-color);
-    margin-bottom: 18px;
-}
-
-.hero h1 span {
-    color: var(--red);
-    -webkit-text-fill-color: var(--red);
-}
-
-.hero p {
-    font-size: clamp(0.92rem, 1.8vw, 1.08rem);
-    color: var(--accent-color);
-    line-height: 1.75;
-    margin-bottom: 40px;
-    max-width: 520px;
-    margin-left: auto;
-    margin-right: auto;
-    font-weight: 400;
-}
-
-/* ── STATS BAR ── */
-.stats-bar {
-    display: flex;
-    justify-content: center;
-    gap: clamp(24px, 5vw, 56px);
-    margin-bottom: 40px;
-    flex-wrap: wrap;
-}
-
-.stat-item { text-align: center; }
-
-.stat-num {
-    font-size: 1.5rem;
-    font-weight: 800;
-    color: var(--text-color);
-    letter-spacing: -0.03em;
-}
-
-.stat-label {
-    font-size: 0.72rem;
-    color: var(--accent-color);
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    font-weight: 600;
-    margin-top: 2px;
-}
-
-/* ── SEARCH ── */
-.search-container { position: relative; max-width: 520px; margin: 0 auto; }
-
-.search-container input {
-    width: 100%;
-    padding: 15px 20px 15px 50px;
-    border: 1px solid var(--border-color);
-    border-radius: var(--r-3);
-    font-size: 0.92rem;
-    font-family: inherit;
-    font-weight: 450;
-    color: var(--text-color);
-    background: var(--white);
-    box-shadow: var(--shadow);
-    transition: border-color var(--dur) var(--ease), box-shadow var(--dur) var(--ease);
-}
-
-.search-container input::placeholder { color: var(--accent-color); }
-
-.search-container input:focus {
-    outline: none;
-    border-color: var(--red);
-    box-shadow: 0 0 0 3px var(--red-soft), var(--shadow);
-}
-
-.search-container i {
-    position: absolute;
-    left: 18px;
-    top: 50%;
-    transform: translateY(-50%);
-    color: var(--accent-color);
-    font-size: 0.88rem;
-}
-
-/* ── FILTER TABS ── */
-.filter-section {
-    position: relative;
-    z-index: 1;
-    max-width: var(--max-w);
-    margin: 0 auto;
-    padding: 0 var(--pad);
-}
-
-.filter-tabs {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 20px 0 8px;
-    overflow-x: auto;
-    scrollbar-width: none;
-    -ms-overflow-style: none;
-}
-
-.filter-tabs::-webkit-scrollbar { display: none; }
-
-.filter-tab {
-    flex-shrink: 0;
-    padding: 8px 18px;
-    border-radius: var(--r-pill);
-    font-size: 0.8rem;
-    font-weight: 600;
-    color: var(--accent-color);
-    background: var(--white);
-    border: 1px solid var(--border-color);
-    cursor: pointer;
-    transition: all 0.25s var(--ease);
-    white-space: nowrap;
-    font-family: inherit;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
-}
-
-.filter-tab:hover {
-    color: var(--text-color);
-    border-color: var(--accent-color);
-    background: var(--hover-color);
-}
-
-.filter-tab.active {
-    color: var(--white);
-    background: var(--red);
-    border-color: var(--red);
-    box-shadow: 0 2px 8px var(--red-glow);
-}
-
-.filter-count {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    min-width: 20px;
-    height: 20px;
-    border-radius: 10px;
-    font-size: 0.68rem;
-    font-weight: 700;
-    margin-left: 6px;
-    padding: 0 6px;
-}
-
-.filter-tab.active .filter-count {
-    background: rgba(255, 255, 255, 0.25);
-    color: var(--white);
-}
-
-.filter-tab:not(.active) .filter-count {
-    background: var(--secondary-color);
-    color: var(--accent-color);
-}
-
-/* ── MAIN GRID ── */
-.container {
-    position: relative;
-    z-index: 1;
-    max-width: var(--max-w);
-    margin: 0 auto;
-    padding: 8px var(--pad) clamp(48px, 6vw, 80px);
-    width: 100%;
-}
-
-.course-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(var(--card-min), 1fr));
-    gap: var(--gap);
-    align-items: start;
-}
-
-/* ── COURSE CARD ── */
-.course-card {
-    position: relative;
-    background: var(--white);
-    border: 1px solid var(--border-color);
-    border-radius: var(--r-3);
-    overflow: hidden;
-    animation: cardIn 0.55s var(--ease) both;
-    transition: transform 0.4s var(--ease), border-color 0.4s var(--ease), box-shadow 0.4s var(--ease);
-    cursor: pointer;
-    box-shadow: var(--shadow);
-}
-
-.course-card::before {
-    content: "";
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 3px;
-    opacity: 0.8;
-    transition: opacity 0.3s var(--ease), height 0.3s var(--ease);
-}
-
-.course-card:hover {
-    transform: translateY(-4px);
-    border-color: rgba(0, 0, 0, 0.12);
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
-}
-
-.course-card:hover::before { opacity: 1; }
-
-/* Per-category top stripe */
-.course-card[data-cat="plc"]::before        { background: var(--cat-amber); }
-.course-card[data-cat="networking"]::before  { background: var(--cat-blue); }
-.course-card[data-cat="scada"]::before       { background: var(--cat-teal); }
-.course-card[data-cat="automation"]::before  { background: var(--cat-purple); }
-.course-card[data-cat="safety"]::before      { background: var(--red); }
-.course-card[data-cat="drives"]::before      { background: var(--cat-orange); }
-
-/* Per-category hover shadow tint */
-.course-card[data-cat="plc"]:hover        { box-shadow: 0 8px 30px rgba(217, 119, 6, 0.12); }
-.course-card[data-cat="networking"]:hover  { box-shadow: 0 8px 30px rgba(37, 99, 235, 0.12); }
-.course-card[data-cat="scada"]:hover       { box-shadow: 0 8px 30px rgba(13, 148, 136, 0.12); }
-.course-card[data-cat="automation"]:hover  { box-shadow: 0 8px 30px rgba(124, 58, 237, 0.12); }
-.course-card[data-cat="safety"]:hover      { box-shadow: 0 8px 30px rgba(220, 53, 69, 0.12); }
-.course-card[data-cat="drives"]:hover      { box-shadow: 0 8px 30px rgba(234, 88, 12, 0.12); }
-
-/* Stagger */
-.course-card:nth-child(1)  { animation-delay: 0.03s; }
-.course-card:nth-child(2)  { animation-delay: 0.06s; }
-.course-card:nth-child(3)  { animation-delay: 0.09s; }
-.course-card:nth-child(4)  { animation-delay: 0.12s; }
-.course-card:nth-child(5)  { animation-delay: 0.15s; }
-.course-card:nth-child(6)  { animation-delay: 0.18s; }
-.course-card:nth-child(7)  { animation-delay: 0.21s; }
-.course-card:nth-child(8)  { animation-delay: 0.24s; }
-.course-card:nth-child(9)  { animation-delay: 0.27s; }
-.course-card:nth-child(10) { animation-delay: 0.30s; }
-.course-card:nth-child(11) { animation-delay: 0.33s; }
-.course-card:nth-child(12) { animation-delay: 0.36s; }
-
-@keyframes cardIn {
-    from { opacity: 0; transform: translateY(24px) scale(0.97); }
-    to   { opacity: 1; transform: translateY(0) scale(1); }
-}
-
-/* Card inner */
-.card-body { padding: 22px 22px 18px; }
-
-.card-category {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    font-size: 0.68rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.08em;
-    margin-bottom: 12px;
-}
-
-.card-category i { font-size: 0.62rem; }
-
-.course-card[data-cat="plc"] .card-category        { color: var(--cat-amber); }
-.course-card[data-cat="networking"] .card-category  { color: var(--cat-blue); }
-.course-card[data-cat="scada"] .card-category       { color: var(--cat-teal); }
-.course-card[data-cat="automation"] .card-category  { color: var(--cat-purple); }
-.course-card[data-cat="safety"] .card-category      { color: var(--red); }
-.course-card[data-cat="drives"] .card-category      { color: var(--cat-orange); }
-
-.card-title {
-    font-size: 1rem;
-    font-weight: 700;
-    color: var(--text-color);
-    line-height: 1.4;
-    letter-spacing: -0.015em;
-    margin-bottom: 14px;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-    min-height: 2.8em;
-}
-
-/* Rating row */
-.card-rating { display: flex; align-items: center; gap: 8px; margin-bottom: 16px; }
-
-.stars { display: flex; gap: 2px; }
-.stars i { font-size: 0.72rem; color: var(--star-color); }
-.stars i.empty { color: var(--star-empty); }
-
-.rating-num { font-size: 0.85rem; font-weight: 700; color: var(--text-color); }
-.rating-count { font-size: 0.75rem; color: var(--accent-color); }
-
-/* Meta row */
-.card-meta { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
-
-.meta-pill {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    padding: 5px 10px;
-    border-radius: var(--r-pill);
-    font-size: 0.72rem;
-    font-weight: 600;
-    background: var(--secondary-color);
-    color: var(--accent-color);
-    border: 1px solid var(--border-color);
-}
-
-.meta-pill i { font-size: 0.65rem; color: var(--accent-color); }
-
-/* Difficulty badges */
-.diff-beginner {
-    color: var(--cat-green) !important;
-    border-color: rgba(22, 163, 74, 0.25) !important;
-    background: rgba(22, 163, 74, 0.08) !important;
-}
-.diff-beginner i { color: var(--cat-green) !important; }
-
-.diff-intermediate {
-    color: var(--cat-amber) !important;
-    border-color: rgba(217, 119, 6, 0.25) !important;
-    background: rgba(217, 119, 6, 0.08) !important;
-}
-.diff-intermediate i { color: var(--cat-amber) !important; }
-
-.diff-advanced {
-    color: var(--red) !important;
-    border-color: var(--red-border) !important;
-    background: var(--red-soft) !important;
-}
-.diff-advanced i { color: var(--red) !important; }
-
-/* Certificate badge */
-.cert-badge {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    padding: 5px 10px;
-    border-radius: var(--r-pill);
-    font-size: 0.72rem;
-    font-weight: 600;
-    color: var(--cat-blue);
-    border: 1px solid rgba(37, 99, 235, 0.2);
-    background: rgba(37, 99, 235, 0.06);
-}
-
-.cert-badge i { font-size: 0.62rem; }
-
-/* Card footer */
-.card-footer {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    padding: 14px 22px;
-    border-top: 1px solid var(--border-color);
-    margin-top: 4px;
-    background: var(--hover-color);
-}
-
-.card-footer-text {
-    font-size: 0.75rem;
-    color: var(--accent-color);
-    display: flex;
-    align-items: center;
-    gap: 6px;
-}
-
-.card-footer-text i { font-size: 0.65rem; }
-
-.card-action {
-    display: inline-flex;
-    align-items: center;
-    gap: 5px;
-    padding: 6px 14px;
-    border-radius: var(--r-2);
-    font-size: 0.75rem;
-    font-weight: 600;
-    color: var(--red);
-    background: var(--red-soft);
-    border: 1px solid var(--red-border);
-    transition: all 0.25s var(--ease);
-    cursor: pointer;
-    font-family: inherit;
-}
-
-.card-action:hover {
-    background: var(--red);
-    color: var(--white);
-    border-color: var(--red);
-    box-shadow: 0 2px 10px var(--red-glow);
-}
-
-.card-action i {
-    font-size: 0.65rem;
-    transition: transform 0.25s var(--ease);
-}
-
-.card-action:hover i { transform: translateX(2px); }
-
-/* ── NO RESULTS ── */
-.no-results {
-    grid-column: 1 / -1;
-    text-align: center;
-    padding: 80px 20px;
-    animation: revealUp 0.5s var(--ease) both;
-}
-
-.no-results i { font-size: 2.5rem; color: var(--border-color); margin-bottom: 16px; display: block; }
-.no-results h3 { font-size: 1.1rem; color: var(--text-color); margin-bottom: 6px; font-weight: 700; }
-.no-results p { font-size: 0.88rem; color: var(--accent-color); }
-
-/* ── FOOTER ── */
-footer {
-    position: relative;
-    z-index: 1;
-    text-align: center;
-    padding: clamp(24px, 4vw, 36px) var(--pad);
-    border-top: 1px solid var(--border-color);
-    color: var(--accent-color);
-    font-size: 0.82rem;
-    background: var(--white);
-}
-
-footer a { color: var(--accent-color); text-decoration: none; transition: color 0.2s var(--ease); }
-footer a:hover { color: var(--red); }
-
-/* ── ACCESSIBILITY ── */
-@media (prefers-reduced-motion: reduce) {
-    *, *::before, *::after {
-        animation-duration: 0.001ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 0.001ms !important;
-    }
-}
-
-/* ── RESPONSIVE ── */
-
-/* Extra Large Screens */
-@media (min-width: 1920px) {
-    :root { --card-min: 400px; --gap: 26px; }
-    .course-grid { grid-template-columns: repeat(4, 1fr); }
-}
-
-/* Large Screens (1200px to 1919px) */
-@media (min-width: 1200px) and (max-width: 1919px) {
-    .container { margin: auto; }
-}
-
-/* Tablets and Medium Screens (768px to 1199px) */
-@media (max-width: 1199px) {
-    .course-grid { grid-template-columns: repeat(2, 1fr); --card-min: 340px; }
-    .topbar-nav { display: none; }
-}
-
-/* Tablets and Small Screens (768px to 899px) */
-@media (max-width: 899px) {
-    :root {
-        --section-title-size: 1.1rem;
-        --list-item-size: 0.95rem;
-        --nested-list-size: 0.85rem;
-    }
-    .container { padding: 8px 10px clamp(36px, 5vw, 60px); }
-    .hero { padding: 40px var(--pad) 48px; }
-    .hero h1 { letter-spacing: -0.025em; }
-    .course-grid { grid-template-columns: 1fr; --card-min: 0; }
-    .card-body { padding: 18px 18px 14px; }
-    .card-footer { padding: 12px 18px; }
-    .card-title { font-size: 0.95rem; }
-}
-
-/* Small Phones (600px to 767px) */
-@media (max-width: 767px) {
-    :root {
-        --section-title-size: 1rem;
-        --list-item-size: 0.9rem;
-        --nested-list-size: 0.8rem;
-    }
-    .container { padding: 8px 8px clamp(32px, 5vw, 48px); }
-    .topbar-inner { height: 52px; }
-    .hero { padding: 32px var(--pad) 40px; }
-    .hero h1 { font-size: clamp(1.5rem, 5vw, 2.2rem); }
-    .stats-bar { gap: 18px; }
-    .stat-num { font-size: 1.25rem; }
-    .card-body { padding: 16px 16px 12px; }
-    .card-footer { padding: 10px 16px; }
-    .card-title { font-size: 0.92rem; }
-    .search-container input { padding: 13px 16px 13px 44px; font-size: 0.88rem; }
-    .search-container i { left: 15px; }
-    .filter-tab { padding: 6px 14px; font-size: 0.75rem; }
-    footer { font-size: 0.8rem; margin-top: 20px; }
-}
-
-/* Extra Small Phones (below 600px) */
-@media (max-width: 599px) {
-    :root {
-        --section-title-size: 0.95rem;
-        --list-item-size: 0.85rem;
-        --nested-list-size: 0.75rem;
-    }
-    .container { padding: 6px 5px clamp(24px, 4vw, 40px); }
-    .hero { padding: 24px 5px 32px; }
-    .hero h1 { font-size: 1.35rem; }
-    .hero p { font-size: 0.85rem; margin-bottom: 28px; }
-    .stats-bar { gap: 14px; margin-bottom: 28px; }
-    .stat-num { font-size: 1.1rem; }
-    .stat-label { font-size: 0.65rem; }
-    .search-container input { font-size: 0.88rem; padding: 12px 14px 12px 40px; }
-    .search-container i { left: 13px; font-size: 0.82rem; }
-    .filter-tab { padding: 5px 12px; font-size: 0.72rem; }
-    .filter-count { min-width: 18px; height: 18px; font-size: 0.62rem; }
-    .card-body { padding: 14px 14px 10px; }
-    .card-footer { padding: 10px 14px; }
-    .card-title { font-size: 0.88rem; min-height: 2.5em; }
-    .card-rating { gap: 6px; margin-bottom: 12px; }
-    .stars i { font-size: 0.65rem; }
-    .rating-num { font-size: 0.8rem; }
-    .rating-count { font-size: 0.68rem; }
-    .meta-pill, .cert-badge { font-size: 0.65rem; padding: 4px 8px; }
-    .card-action { padding: 5px 12px; font-size: 0.72rem; }
-    footer { font-size: 0.75rem; margin-top: 15px; padding: 12px 0; }
-}
-
-/* Landscape Mode for Small Devices */
-@media (max-width: 767px) and (orientation: landscape) {
-    .hero { padding: 20px 5px 24px; }
-    .stats-bar { gap: 12px; margin-bottom: 20px; }
-}
-    </style>
+    <title>Menu</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
+    <div class="container">
+        <header style="display: flex; margin-bottom: 20px;">
+            <div class="logo-container"  style="gap: clamp(15px, 9vw, 153px);">
+                <img style="height: 60px;" src="./assets/Scientech logo-2.png" alt="">
+                <h1>Programmable Logic Controller</h1>
+            </div>
+        </header>
 
-<!-- ═══════ NAVBAR ═══════ -->
-<nav class="topbar">
-    <div class="topbar-inner">
-        <a href="#" class="topbar-brand">
-            <img src="https://www.scientechworld.com/images/scientech-logo.png" alt="Scientech" onerror="this.style.display='none'">
-            PLC SimTel
-        </a>
-        <div class="topbar-nav">
-            <a href="#" class="active">Courses</a>
-            <a href="#">Labs</a>
-            <a href="#">Paths</a>
-            <a href="#">Community</a>
-        </div>
+        <main>
+            <div class="menu-container">
+                <div class="menu-header">
+                    <h2>Course Content</h2>
+                    <div class="search-container">
+                        <input type="text" id="search" placeholder="Search topics...">
+                        <i class="fas fa-search"></i>
+                    </div>
+                </div>
+
+                <div class="menu-content">
+                    <div class="menu-section">
+                        <h3>1. Introduction to Industrial Automation</h3>
+                        <ul>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Introduction to Industrial Automation/Definition_and_Scope_of_Industrial_Automation.html">Definition and Scope of Industrial Automation</a></li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Introduction to Industrial Automation/Automation_Pyramid.html">Automation Pyramid</a></li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Introduction to Industrial Automation/Industrial_Automation_Tools_and_Technologies.html">Industrial Automation Tools and Technologies</a></li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Introduction to Industrial Automation/Evolution_of_Industrial_Automation.html">Evolution of Industrial Automation</a></li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Introduction to Industrial Automation/Industrial_Applications_of_Automation.html">Industrial Applications of Automation</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="menu-section">
+                        <h3>2. Industrial Safety and Standards</h3>
+                        <ul>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Industrial Safety and Standards/Importance_of_Safety_in_Industrial_Automation.html">Importance of Safety in Industrial Automation</a></li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Industrial Safety and Standards/Machine_Safety_Systems.html">Machine Safety Systems</a></li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Industrial Safety and Standards/Emergency_Stop_Systems.html">Emergency Stop (E-Stop) Systems</a></li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Industrial Safety and Standards/Interlock_and_Safety_Relay_Systems.html">Interlock and Safety Relay Systems</a></li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Industrial Safety and Standards/International_Standards_and_Regulations.html">International Standards and Regulations</a></li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Industrial Safety and Standards/Safety_Compliance_in_Industrial_Systems.html">Safety Compliance in Industrial Systems</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="menu-section">
+                        <h3>3. Basics of Electrical Engineering for Automation</h3>
+                        <ul>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Basics of Electrical Engineering for Automation/Electrical_Quantities.html">Electrical Quantities</a></li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Basics of Electrical Engineering for Automation/DC_and_AC_Circuits.html">DC Circuits and AC Circuits</a></li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Basics of Electrical Engineering for Automation/Single-Phase_and_Three-Phase_Systems.html">Single-Phase and Three-Phase Systems</a></li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Basics of Electrical Engineering for Automation/Power_Factor_and_Earthing_Concepts.html">Power Factor and Earthing Concepts</a></li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Basics of Electrical Engineering for Automation/Electrical_Symbols_and_Schematics.html">Electrical Symbols and Schematics</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="menu-section">
+                        <h3>4. Industrial Electrical Components</h3>
+                        <ul>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Industrial Electrical Components/Circuit_Breakers_and_Fuses.html">Circuit Breakers and Fuses</a></li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Industrial Electrical Components/Power_Supplies.html">Power Supplies (SMPS, Linear)</a></li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Industrial Electrical Components/Relays.html">Relays</a></li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Industrial Electrical Components/Contactors.html">Contactors</a></li>
+                            <li>Types of Switches
+                                <ul>
+                                    <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Industrial Electrical Components/push_button_switch.html">Pushbuttons</a></li>
+                                    <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Industrial Electrical Components/toggle_switch.html">Toggle Switch</a></li>
+                                    <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Industrial Electrical Components/rocker_switch.html">Rocker Switch</a></li>
+                                    <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Industrial Electrical Components/DIP_switch.html">DIP Switch</a></li>
+                                    <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Industrial Electrical Components/Reed_switch.html">Reed Switch</a></li>
+                                    <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Industrial Electrical Components/Limit_switch.html">Limit Switch</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="menu-section">
+                        <h3>5. Transducers, Sensors and Transmitters</h3>
+                        <ul>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Transducers, Sensors and Transmitters/Definition_of_Transducers_Sensors_and_Transmitters.html">Definition of Transducers, Sensors and Transmitters</a></li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Transducers, Sensors and Transmitters/Characteristics_and_Selection_Criteria.html">Characteristics and Selection Criteria</a></li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Transducers, Sensors and Transmitters/Sinking_(PNP)_and_Sourcing_(NPN)_Concept.html">Sinking (PNP) and Sourcing (NPN) Concept</a></li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Transducers, Sensors and Transmitters/Types_of_Proximity_Sensors.html">Types of Proximity Sensors</a></li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Transducers, Sensors and Transmitters/Temperature_Sensors_and_Temperature_Transmitter.html">Temperature Sensors and Temperature Transmitter</a></li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Transducers, Sensors and Transmitters/Pressure_Transmitter.html">Pressure Transmitter</a></li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Transducers, Sensors and Transmitters/Level_Transmitter.html">Level Transmitter</a></li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Transducers, Sensors and Transmitters/Flow_Transmitter.html">Flow Transmitter</a></li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Transducers, Sensors and Transmitters/Position_Sensor.html">Position Sensor</a></li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Transducers, Sensors and Transmitters/Vision_Sensor.html">Vision Sensor</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="menu-section">
+                        <h3>6. Actuators</h3>
+                        <ul>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Actuators/Introduction_and_Function_of_Actuators.html">Introduction and Function of Actuators</a></li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Actuators/Classification_of_Actuators.html">Classification of Actuators</a></li>
+                            <li>Electrical Actuators
+                                <ul>
+                                    <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Actuators/AC_Motors.html">AC Motors</a></li>
+                                    <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Actuators/DC_Motors.html">DC Motors</a></li>
+                                    <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Actuators/Servo_Motors.html">Servo Motors</a></li>
+                                    <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Actuators/Stepper_Motors.html">Stepper Motors</a></li>
+                                    <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Actuators/Solenoids.html">Solenoids</a></li>
+                                    <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Actuators/Linear_Electric_Actuator.html">Linear Electric Actuators</a></li>
+                                </ul>
+                            </li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Actuators/Pneumatic_Actuators.html">Pneumatic Actuators</a></li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Actuators/Hydraulic_Actuators.html">Hydraulic Actuators</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="menu-section">
+                        <h3>7. Industrial Control Panels</h3>
+                        <ul>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Introduction to Control Panels/Introduction_to_Control_Panels.html">Introduction to Control Panels</a></li>
+                            <li>Types of Control Panels
+                                <ul>
+                                    <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Introduction to Control Panels/PLC_Panels.html">PLC Panels</a></li>
+                                    <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Introduction to Control Panels/MCC_(Motor_Control_Center)_Panels.html">MCC (Motor Control Center) Panels</a></li>
+                                    <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Introduction to Control Panels/PCC_(Power_Control_Center)_Panels.html">PCC (Power Control Center) Panels</a></li>
+                                </ul>
+                            </li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Introduction to Control Panels/Panel_Layout_and_Component_Placement.html">Panel Layout and Component Placement</a></li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Introduction to Control Panels/Selection_of_Electrical_Components.html">Selection of Electrical Components</a></li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Introduction to Control Panels/Panel_Cooling_and_Ventilation.html">Panel Cooling and Ventilation</a></li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Introduction to Control Panels/Ingress_Protection_(IP_Ratings).html">Ingress Protection (IP Ratings)</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="menu-section">
+                        <h3>8. Introduction to PLC (Programmable Logic Controller)</h3>
+                        <ul>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Introduction to PLC (Programmable Logic Controller)/Definition_and_Purpose_of_PLCs.html">Definition and Purpose of PLCs</a></li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Introduction to PLC (Programmable Logic Controller)/Applications_of_PLCs_in_Industry.html">Applications of PLCs in Industry</a></li>
+                            <li>Classification of PLCs
+                                <ul>
+                                    <li>Based on Size
+                                        <ul>
+                                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Introduction to PLC (Programmable Logic Controller)/compact_plc.html">Compact PLC</a></li>
+                                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Introduction to PLC (Programmable Logic Controller)/modular_plc.html">Modular PLC</a></li>
+                                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Introduction to PLC (Programmable Logic Controller)/Distributed_PLC.html">Distributed PLC</a></li>
+                                        </ul>
+                                    </li>
+                                    <li>Based on Output
+                                        <ul>
+                                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Introduction to PLC (Programmable Logic Controller)/Relay.html">Relay</a></li>
+                                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Introduction to PLC (Programmable Logic Controller)/Transistor.html">Transistor</a></li>
+                                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Introduction to PLC (Programmable Logic Controller)/SCR.html">SCR</a></li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="menu-section">
+                        <h3>9. PLC Hardware and Architecture</h3>
+                        <ul>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/PLC Hardware and Architecture/PLC_System_Architecture.html">PLC System Architecture</a></li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/PLC Hardware and Architecture/Central_Processing_Unit.html">Central Processing Unit (CPU)</a></li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/PLC Hardware and Architecture/Power_Supply_Units.html">Power Supply Units</a></li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/PLC Hardware and Architecture/Digital_Input_Modules.html">Digital Input Modules</a></li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/PLC Hardware and Architecture/Digital_Output_Modules.html">Digital Output Modules</a></li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/PLC Hardware and Architecture/Analog_Input_Modules.html">Analog Input Modules</a></li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/PLC Hardware and Architecture/Analog_Output_Modules.html">Analog output Modules</a></li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/PLC Hardware and Architecture/Communication_and_Interface_Modules.html">Communication and Interface Modules</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="menu-section">
+                        <h3>10. PLC Programming Fundamentals</h3>
+                        <ul>
+                            <li>PLC Programming Standards
+                                <ul>
+                                    <li>IEC 61131-3 Programming Languages
+                                        <ul>
+                                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/PLC Programming Fundamentals/Ladder_Diagram_(LD).html">Ladder Diagram (LD)</a></li>
+                                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/PLC Programming Fundamentals/Function_Block_Diagram.html">Function Block Diagram (FBD)</a></li>
+                                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/PLC Programming Fundamentals/Structured_Text.html">Structured Text (ST)</a></li>
+                                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/PLC Programming Fundamentals/Statement_List.html">Statement List (STL)</a></li>
+                                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/PLC Programming Fundamentals/Sequential_Function_Chart.html">Sequential Function Chart (SFC)</a></li>
+                                        </ul>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li>PLC Instructions and Programming Concepts
+                                <ul>
+                                    <li>Logical Instructions
+                                        <ul>
+                                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/PLC Programming Fundamentals/NO_and_NC.html">NO and NC</a></li>
+                                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/PLC Programming Fundamentals/Set_and_Reset.html">Set and Reset</a></li>
+                                        </ul>
+                                    </li>
+                                    <li>Timers
+                                        <ul>
+                                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/PLC Programming Fundamentals/TON.html">TON (On-Delay)</a></li>
+                                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/PLC Programming Fundamentals/TOFF.html">TOFF (Off-Delay)</a></li>
+                                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/PLC Programming Fundamentals/RTO.html">RTO (Retentive Timer)</a></li>
+                                        </ul>
+                                    </li>
+                                    <li>Counters
+                                        <ul>
+                                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/PLC Programming Fundamentals/CTU.html">CTU</a></li>
+                                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/PLC Programming Fundamentals/CTD.html">CTD</a></li>
+                                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/PLC Programming Fundamentals/CTUD.html">CTUD</a></li>
+                                        </ul>
+                                    </li>
+                                    <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/PLC Programming Fundamentals/Set and Reset Coils.html">Set and Reset Coils</a></li>
+                                    <li>Comparison Instructions
+                                        <ul>
+                                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/PLC Programming Fundamentals/Equal.html">Equal (=)</a></li>
+                                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/PLC Programming Fundamentals/Greater_Than.html">Greater Than (>)</a></li>
+                                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/PLC Programming Fundamentals/Less_Than.html">Less Than (&lt;)</a></li>
+                                        </ul>
+                                    </li>
+                                    <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/PLC Programming Fundamentals/Move_and_Arithmetic_Instructions.html">Move and Arithmetic Instructions</a></li>
+                                </ul>
+                            </li>
+                            <li>PLC Programming Software Tools
+                                <ul>
+                                    <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/PLC Programming Fundamentals/Siemens_TIA_Portal.html">Siemens TIA Portal</a></li>
+                                    <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/PLC Programming Fundamentals/WinProLadder.html">WinProLadder</a></li>
+                                    <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/PLC Programming Fundamentals/Connected_Components_Workbench.html">Connected Components Workbench (CCW)</a></li>
+                                    <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/PLC Programming Fundamentals/RSLogix_Micro.html">RSLogix Micro</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="menu-section">
+                        <h3>11. Human Machine Interface (HMI)</h3>
+                        <ul>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Human Machine Interface/Introduction_to_HMI.html">Introduction to HMI</a></li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Human Machine Interface/HMI_System_Components.html">HMI System Components</a></li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Human Machine Interface/Functions_and_Importance_of_HMI.html">Functions and Importance of HMI</a></li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Human Machine Interface/Types_of_HMI_Systems.html">Types of HMI Systems</a></li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Human Machine Interface/HMI_Design_Principles.html">HMI Design Principles</a></li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Human Machine Interface/Overview_of_HMI_Development_Software.html">Overview of HMI Development Software</a></li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Human Machine Interface/Industrial_Applications_of_HMI.html">Industrial Applications of HMI</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="menu-section">
+                        <h3>12. Supervisory Control and Data Acquisition (SCADA)</h3>
+                        <ul>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Supervisory_Control_and_Data_Acquisition/Introduction_to_SCADA_Systems.html">Introduction to SCADA Systems</a></li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Supervisory_Control_and_Data_Acquisition/Purpose_and_Benefits_of_SCADA.html">Purpose and Benefits of SCADA</a></li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Supervisory_Control_and_Data_Acquisition/SCADA_Architecture.html">SCADA Architecture</a></li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Supervisory_Control_and_Data_Acquisition/SCADA_System_Components.html">SCADA System Components</a></li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Supervisory_Control_and_Data_Acquisition/Types_of_SCADA_Software.html">Types of SCADA Software</a></li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Supervisory_Control_and_Data_Acquisition/Key_Functions_of_a_SCADA_system.html">Key Functions of a SCADA system</a></li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Supervisory_Control_and_Data_Acquisition/Industrial_Applications_of_SCADA.html">Industrial Applications of SCADA</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="menu-section">
+                        <h3>13. Variable Frequency Drives (VFD)</h3>
+                        <ul>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Variable Frequency Drives/Introduction_to_Variable_Frequency_Drives.html">Introduction to Variable Frequency Drives</a></li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Variable Frequency Drives/Construction_and_Operating_Principle_of_VFD.html">Construction and Operating Principle of VFD</a></li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Variable Frequency Drives/Speed_Control_of_AC_Motors_Using_VFD.html">Speed Control of AC Motors Using VFD</a></li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Variable Frequency Drives/Control_and_Vector_Control.html">V/f Control and Vector Control</a></li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Variable Frequency Drives/VFD_Parameters_and_Settings.html">VFD Parameters and Settings</a></li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Variable Frequency Drives/Industrial_Applications_of_VFDs.html">Industrial Applications of VFDs</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="menu-section">
+                        <h3>14. Distributed Control Systems (DCS)</h3>
+                        <ul>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Distributed Control Systems/Introduction_to_Distributed_Control_Systems.html">Introduction to Distributed Control Systems</a></li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Distributed Control Systems/DCS_Architecture_and_Components.html">DCS Architecture and Components</a></li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Distributed Control Systems/Comparison_Between_PLC_and_DCS.html">Comparison Between PLC and DCS</a></li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Distributed Control Systems/Advantages_and_Limitations_of_DCS.html">Advantages and Limitations of DCS</a></li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Distributed Control Systems/Industrial_Applications_of_DCS.html">Industrial Applications of DCS</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="menu-section">
+                        <h3>15. Industrial Communication Networks</h3>
+                        <ul>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Industrial Communication Networks/Introduction_to_Industrial_Communication.html">Introduction to Industrial Communication</a></li>
+                            <li>Modbus
+                                <ul>
+                                    <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Industrial Communication Networks/RTU.html">RTU</a></li>
+                                    <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Industrial Communication Networks/TCP-IP.html">TCP/IP</a></li>
+                                </ul>
+                            </li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Industrial Communication Networks/Profibus.html">Profibus</a></li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Industrial Communication Networks/Profinet.html">Profinet</a></li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Industrial Communication Networks/Ethernet-IP.html">Ethernet/IP</a></li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Industrial Communication Networks/CANopen.html">CANopen</a></li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Industrial Communication Networks/OPC_UA.html">OPC UA</a></li>
+                        </ul>
+                    </div>
+
+                    <div class="menu-section">
+                        <h3>16. Advanced Automation & Industry 5.0</h3>
+                        <ul>
+                            <li>Industry 5.0
+                                <ul>
+                                    <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Advanced Automation & Industry 5.0/Concept_and_Definition_of_Industry_5.0.html">Concept and Definition of Industry 5.0</a></li>
+                                    <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Advanced Automation & Industry 5.0/Human-Machine_Collaboration.html">Human-Machine Collaboration</a></li>
+                                    <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Advanced Automation & Industry 5.0/Smart_Sensors_and_Intelligent_Actuators.html">Smart Sensors and Intelligent Actuators</a></li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="menu-section">
+                        <h3>17. Advanced Automation Technologies</h3>
+                        <ul>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Advanced Automation Technologies/Artificial_Intelligence_in_Industrial_Automation.html">Artificial Intelligence in Industrial Automation</a></li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Advanced Automation Technologies/Industrial_Internet_of_Things_(IIoT).html">Industrial Internet of Things (IIoT)</a></li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Advanced Automation Technologies/Digital_Twins.html">Digital Twins</a></li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Advanced Automation Technologies/Collaborative_Robots_(Cobots).html">Collaborative Robots (Cobots)</a></li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Advanced Automation Technologies/Cybersecurity_in_Industrial_Automation_Systems.html">Cybersecurity in Industrial Automation Systems</a></li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Advanced Automation Technologies/AR_and_VR.html">AR and VR</a></li>
+                            <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Advanced Automation Technologies/Additive_Manufacturing_(AM).html">Additive Manufacturing (AM)</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </main>
     </div>
-</nav>
 
-<!-- ═══════ HERO ═══════ -->
-<section class="hero">
-    <div class="hero-inner">
-        <div class="hero-badge">2026 International Edition</div>
-        <h1>Master Industrial<br><span>Automation</span> Skills</h1>
-        <p>Hands-on PLC programming, SCADA design, OT cybersecurity, and motion control — built for engineers who build the future.</p>
-
-        <div class="stats-bar">
-            <div class="stat-item">
-                <div class="stat-num">12</div>
-                <div class="stat-label">Courses</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-num">290+</div>
-                <div class="stat-label">Lessons</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-num">4.6</div>
-                <div class="stat-label">Avg Rating</div>
-            </div>
-            <div class="stat-item">
-                <div class="stat-num">6</div>
-                <div class="stat-label">Categories</div>
-            </div>
-        </div>
-
-        <div class="search-container">
-            <i class="fas fa-search"></i>
-            <input type="text" id="search" placeholder="Search courses, topics, protocols…">
-        </div>
-    </div>
-</section>
-
-<!-- ═══════ FILTERS ═══════ -->
-<div class="filter-section">
-    <div class="filter-tabs" id="filterTabs"></div>
-</div>
-
-<!-- ═══════ COURSE GRID ═══════ -->
-<div class="container">
-    <div class="course-grid" id="courseGrid"></div>
-</div>
-
-<!-- ═══════ FOOTER ═══════ -->
-<footer>
-    <p>&copy; 2026 Scientech Instruments Pvt. Ltd. &mdash; PLC SimTel Course Library &middot; <a href="#">Terms</a> &middot; <a href="#">Privacy</a></p>
-</footer>
-
-<script>
-const courses = [
-    {
-        id: 1, title: "CODESYS 1: Introduction to PLC Programming",
-        category: "plc", categoryLabel: "PLC Programming", categoryIcon: "fa-microchip",
-        rating: 4.7, reviews: 12, lessons: 58, difficulty: "Beginner", certificate: true
-    },
-    {
-        id: 2, title: "CODESYS Virtual PLC",
-        category: "plc", categoryLabel: "PLC Programming", categoryIcon: "fa-microchip",
-        rating: 4.5, reviews: 8, lessons: 10, difficulty: "Advanced", certificate: true
-    },
-    {
-        id: 3, title: "Structured Text (ST) Programming Masterclass",
-        category: "plc", categoryLabel: "PLC Programming", categoryIcon: "fa-microchip",
-        rating: 4.8, reviews: 19, lessons: 32, difficulty: "Intermediate", certificate: true
-    },
-    {
-        id: 4, title: "Ladder Logic Design Patterns",
-        category: "plc", categoryLabel: "PLC Programming", categoryIcon: "fa-microchip",
-        rating: 4.6, reviews: 15, lessons: 24, difficulty: "Intermediate", certificate: true
-    },
-    {
-        id: 5, title: "OT Cybersecurity and Network Design for Manufacturing with Moxa",
-        category: "networking", categoryLabel: "Industrial Networking", categoryIcon: "fa-network-wired",
-        rating: 4.9, reviews: 22, lessons: 18, difficulty: "Advanced", certificate: true
-    },
-    {
-        id: 6, title: "PROFINET & EtherNet/IP Configuration",
-        category: "networking", categoryLabel: "Industrial Networking", categoryIcon: "fa-network-wired",
-        rating: 4.7, reviews: 14, lessons: 22, difficulty: "Intermediate", certificate: true
-    },
-    {
-        id: 7, title: "Modbus TCP/RTU Protocol Implementation",
-        category: "networking", categoryLabel: "Industrial Networking", categoryIcon: "fa-network-wired",
-        rating: 4.4, reviews: 9, lessons: 16, difficulty: "Beginner", certificate: true
-    },
-    {
-        id: 8, title: "Ignition SCADA Platform Fundamentals",
-        category: "scada", categoryLabel: "SCADA & HMI", categoryIcon: "fa-display",
-        rating: 4.8, reviews: 17, lessons: 40, difficulty: "Beginner", certificate: true
-    },
-    {
-        id: 9, title: "Advanced HMI Design with FactoryTalk View",
-        category: "scada", categoryLabel: "SCADA & HMI", categoryIcon: "fa-display",
-        rating: 4.6, reviews: 11, lessons: 28, difficulty: "Advanced", certificate: true
-    },
-    {
-        id: 10, title: "PLC-Based Process Control Systems",
-        category: "automation", categoryLabel: "Industrial Automation", categoryIcon: "fa-gears",
-        rating: 4.5, reviews: 13, lessons: 20, difficulty: "Intermediate", certificate: true
-    },
-    {
-        id: 11, title: "Motion Control with Servo Drives",
-        category: "drives", categoryLabel: "Drives & Motion", categoryIcon: "fa-rotate",
-        rating: 4.7, reviews: 10, lessons: 18, difficulty: "Advanced", certificate: true
-    },
-    {
-        id: 12, title: "Industrial Safety Systems (SIL & SIF)",
-        category: "safety", categoryLabel: "Functional Safety", categoryIcon: "fa-shield-halved",
-        rating: 4.8, reviews: 7, lessons: 24, difficulty: "Advanced", certificate: true
-    }
-];
-
-function renderStars(rating) {
-    let html = '<div class="stars">';
-    for (let i = 1; i <= 5; i++) {
-        if (i <= Math.floor(rating)) html += '<i class="fas fa-star"></i>';
-        else if (i - rating < 1) html += '<i class="fas fa-star-half-alt"></i>';
-        else html += '<i class="fas fa-star empty"></i>';
-    }
-    return html + '</div>';
-}
-
-function diffClass(d) { return 'diff-' + d.toLowerCase(); }
-function diffIcon(d) { return d === 'Beginner' ? 'fa-seedling' : d === 'Intermediate' ? 'fa-fire' : 'fa-rocket'; }
-
-function renderCard(c) {
-    return `<article class="course-card" data-cat="${c.category}" data-title="${c.title.toLowerCase()}" data-diff="${c.difficulty.toLowerCase()}">
-        <div class="card-body">
-            <div class="card-category"><i class="fas ${c.categoryIcon}"></i>${c.categoryLabel}</div>
-            <h3 class="card-title">${c.title}</h3>
-            <div class="card-rating">
-                ${renderStars(c.rating)}
-                <span class="rating-num">${c.rating}</span>
-                <span class="rating-count">(${c.reviews} reviews)</span>
-            </div>
-            <div class="card-meta">
-                <span class="meta-pill"><i class="fas fa-play-circle"></i>${c.lessons} lessons</span>
-                <span class="meta-pill ${diffClass(c.difficulty)}"><i class="fas ${diffIcon(c.difficulty)}"></i>${c.difficulty}</span>
-                ${c.certificate ? '<span class="cert-badge"><i class="fas fa-certificate"></i> Certificate</span>' : ''}
-            </div>
-        </div>
-        <div class="card-footer">
-            <span class="card-footer-text"><i class="fas fa-clock"></i>Self-paced</span>
-            <span class="card-action">Start <i class="fas fa-arrow-right"></i></span>
-        </div>
-    </article>`;
-}
-
-const categories = [
-    { key: 'all', label: 'All Courses' },
-    { key: 'plc', label: 'PLC Programming' },
-    { key: 'networking', label: 'Industrial Networking' },
-    { key: 'scada', label: 'SCADA & HMI' },
-    { key: 'automation', label: 'Industrial Automation' },
-    { key: 'drives', label: 'Drives & Motion' },
-    { key: 'safety', label: 'Functional Safety' }
-];
-
-function renderFilters() {
-    document.getElementById('filterTabs').innerHTML = categories.map(cat => {
-        const count = cat.key === 'all' ? courses.length : courses.filter(c => c.category === cat.key).length;
-        return `<button class="filter-tab${cat.key === 'all' ? ' active' : ''}" data-filter="${cat.key}">${cat.label}<span class="filter-count">${count}</span></button>`;
-    }).join('');
-}
-
-let activeFilter = 'all', searchQuery = '';
-
-function applyFilters() {
-    const grid = document.getElementById('courseGrid');
-    const filtered = courses.filter(c => {
-        const matchCat = activeFilter === 'all' || c.category === activeFilter;
-        const matchSearch = searchQuery === '' ||
-            c.title.toLowerCase().includes(searchQuery) ||
-            c.categoryLabel.toLowerCase().includes(searchQuery) ||
-            c.difficulty.toLowerCase().includes(searchQuery);
-        return matchCat && matchSearch;
-    });
-    if (!filtered.length) {
-        grid.innerHTML = `<div class="no-results"><i class="fas fa-search"></i><h3>No courses found</h3><p>Try adjusting your search or filter.</p></div>`;
-        return;
-    }
-    grid.innerHTML = filtered.map(renderCard).join('');
-}
-
-document.getElementById('filterTabs').addEventListener('click', e => {
-    const tab = e.target.closest('.filter-tab');
-    if (!tab) return;
-    document.querySelectorAll('.filter-tab').forEach(t => t.classList.remove('active'));
-    tab.classList.add('active');
-    activeFilter = tab.dataset.filter;
-    applyFilters();
-});
-
-document.getElementById('search').addEventListener('input', e => {
-    searchQuery = e.target.value.toLowerCase().trim();
-    applyFilters();
-});
-
-renderFilters();
-applyFilters();
-</script>
+    <script src="renderer.js"></script>
 </body>
 </html>
