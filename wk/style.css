@@ -1,0 +1,435 @@
+/* ============================================================
+   PLC SimTel — Menu Page (index.html)
+   Full modern redesign: sticky navbar, gradient hero, masonry
+   card grid of course modules, accordion topic lists.
+   Palette sampled from the Scientech flame mark.
+   All original hooks (#search, .menu-section, h3 + ul adjacency,
+   nested <ul> in <li>) preserved — renderer.js untouched.
+   ============================================================ */
+
+:root {
+    --flame-gold:    #ca9b40;
+    --flame-orange:  #b73628;
+    --flame-purple:  #806c9b;
+    --flame-indigo:  #434575;
+    --ink:           #221e1c;
+    --brand-gradient: linear-gradient(135deg, var(--flame-gold) 0%, var(--flame-orange) 32%, var(--flame-purple) 68%, var(--flame-indigo) 100%);
+
+    --primary-color: #f7f7f9;
+    --secondary-color: #efedf3;
+    --text-color: var(--ink);
+    --accent-color: #6b5c86;
+    --border-color: #e3e1e8;
+    --hover-color: #f4f1f8;
+    --shadow: 0 10px 30px rgba(34, 30, 28, 0.08);
+    --shadow-lift: 0 18px 44px rgba(67, 69, 117, 0.16);
+    --ease: cubic-bezier(0.22, 1, 0.36, 1);
+    --container-margin: 25px;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    background-color: var(--primary-color);
+    color: var(--text-color);
+    line-height: 1.6;
+    width: 100%;
+    overflow-x: hidden;
+}
+
+/* ---------------------------------------------------------
+   Sticky top bar
+   --------------------------------------------------------- */
+.topbar {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: rgba(255, 255, 255, 0.82);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-bottom: 1px solid rgba(227, 225, 232, 0.8);
+}
+
+.topbar-inner {
+    max-width: 1300px;
+    margin: 0 auto;
+    padding: 12px 25px;
+    display: flex;
+    align-items: center;
+}
+
+.topbar-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 700;
+    font-size: 1.05rem;
+    color: var(--ink);
+}
+
+.topbar-brand img {
+    height: 30px;
+    width: auto;
+}
+
+/* ---------------------------------------------------------
+   Hero
+   --------------------------------------------------------- */
+.hero {
+    position: relative;
+    text-align: center;
+    padding: clamp(40px, 8vw, 72px) 20px clamp(50px, 9vw, 84px);
+    background:
+        radial-gradient(900px 460px at 12% -15%, rgba(202, 155, 64, 0.16), transparent 60%),
+        radial-gradient(800px 460px at 105% 10%, rgba(67, 69, 117, 0.18), transparent 55%),
+        radial-gradient(700px 380px at 50% 120%, rgba(128, 108, 155, 0.14), transparent 55%),
+        #fbfaf7;
+    overflow: hidden;
+}
+
+.hero::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    transform: translateX(-50%);
+    width: min(760px, 90%);
+    height: 3px;
+    border-radius: 999px;
+    background: var(--brand-gradient);
+    background-size: 250% 100%;
+    animation: shimmer 4s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+    0%, 100% { background-position: 0% 50%; }
+    50%      { background-position: 100% 50%; }
+}
+
+.hero-inner {
+    max-width: 760px;
+    margin: 0 auto;
+    animation: fadeInUp 0.6s var(--ease) both;
+}
+
+.hero-eyebrow {
+    display: inline-block;
+    padding: 5px 14px;
+    border-radius: 999px;
+    background: rgba(128, 108, 155, 0.12);
+    color: var(--flame-indigo);
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+}
+
+.hero h1 {
+    font-size: clamp(1.7rem, 5vw, 2.7rem);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+    margin-bottom: 12px;
+}
+
+.hero p {
+    font-size: clamp(0.95rem, 2vw, 1.1rem);
+    color: var(--accent-color);
+    margin-bottom: 28px;
+}
+
+/* ---------------------------------------------------------
+   Search
+   --------------------------------------------------------- */
+.search-container {
+    position: relative;
+    max-width: 560px;
+    margin: 0 auto;
+}
+
+.search-container input {
+    width: 100%;
+    padding: 14px 20px 14px 46px;
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    font-size: 1rem;
+    font-family: inherit;
+    background: #fff;
+    box-shadow: var(--shadow);
+    transition: border-color 0.25s var(--ease), box-shadow 0.25s var(--ease);
+}
+
+.search-container input:focus {
+    outline: none;
+    border-color: var(--flame-purple);
+    box-shadow: 0 0 0 4px rgba(128, 108, 155, 0.16), var(--shadow);
+}
+
+.search-container i {
+    position: absolute;
+    left: 18px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--flame-purple);
+    font-size: 0.95rem;
+}
+
+/* ---------------------------------------------------------
+   Main container / layout
+   --------------------------------------------------------- */
+.container {
+    display: flex;
+    flex-direction: column;
+    min-height: 60vh;
+    max-width: 1300px;
+    margin: 0 auto;
+    padding: clamp(24px, 4vw, 40px) 25px;
+    width: 100%;
+}
+
+main { width: 100%; }
+
+.menu-container { width: 100%; }
+
+/* Masonry-style module grid via CSS columns */
+.menu-content {
+    column-count: 3;
+    column-gap: 22px;
+}
+
+/* ---------------------------------------------------------
+   Module cards (.menu-section)
+   --------------------------------------------------------- */
+.menu-section {
+    display: inline-block;
+    width: 100%;
+    break-inside: avoid;
+    margin-bottom: 22px;
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid var(--border-color);
+    border-radius: 14px;
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    animation: fadeIn 0.5s var(--ease) both;
+    transition: box-shadow 0.3s var(--ease), transform 0.3s var(--ease);
+}
+
+.menu-section:hover {
+    box-shadow: var(--shadow-lift);
+    transform: translateY(-2px);
+}
+
+/* stagger the reveal — cosmetic, safe past nth(12) */
+.menu-section:nth-child(1)  { animation-delay: 0.02s; }
+.menu-section:nth-child(2)  { animation-delay: 0.05s; }
+.menu-section:nth-child(3)  { animation-delay: 0.08s; }
+.menu-section:nth-child(4)  { animation-delay: 0.11s; }
+.menu-section:nth-child(5)  { animation-delay: 0.14s; }
+.menu-section:nth-child(6)  { animation-delay: 0.17s; }
+.menu-section:nth-child(7)  { animation-delay: 0.20s; }
+.menu-section:nth-child(8)  { animation-delay: 0.23s; }
+.menu-section:nth-child(9)  { animation-delay: 0.26s; }
+.menu-section:nth-child(10) { animation-delay: 0.29s; }
+.menu-section:nth-child(11) { animation-delay: 0.32s; }
+.menu-section:nth-child(12) { animation-delay: 0.35s; }
+
+.menu-section h3 {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 1.02rem;
+    font-weight: 700;
+    color: var(--ink);
+    padding: 16px 18px;
+    cursor: pointer;
+    background: linear-gradient(180deg, #fff, #fbfaf9);
+    border-bottom: 1px solid var(--border-color);
+    transition: color 0.2s var(--ease);
+}
+
+.menu-section h3:hover {
+    color: var(--flame-indigo);
+}
+
+/* Decorative module swatch — a pure CSS pseudo-element, never a real
+   DOM node, so it can never collide with renderer.js's querySelector('i')
+   chevron logic. */
+.menu-section h3::before {
+    content: "";
+    flex-shrink: 0;
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    background: var(--brand-gradient);
+    background-size: 220% 220%;
+}
+
+.menu-section:nth-child(3n+1) h3::before   { background-position: 0% 0%; }
+.menu-section:nth-child(3n+2) h3::before   { background-position: 50% 50%; }
+.menu-section:nth-child(3n)   h3::before   { background-position: 100% 100%; }
+
+.section-title-text {
+    flex: 1;
+    line-height: 1.35;
+}
+
+/* the toggle chevron JS appends at the end of h3 */
+.menu-section h3 > i.fas.fa-chevron-down,
+.menu-section h3 > i.fas.fa-chevron-right {
+    flex-shrink: 0;
+    color: var(--flame-purple);
+    font-size: 0.85rem;
+    transition: transform 0.25s var(--ease);
+}
+
+.menu-section > ul {
+    list-style: none;
+    padding: 10px 12px 14px;
+}
+
+.menu-section > ul > li {
+    position: relative;
+    padding: 9px 12px 9px 30px;
+    font-size: 0.92rem;
+    color: var(--text-color);
+    cursor: pointer;
+    border-radius: 8px;
+    transition: background 0.2s var(--ease), color 0.2s var(--ease), transform 0.2s var(--ease);
+}
+
+.menu-section > ul > li:hover {
+    background: var(--hover-color);
+    color: var(--flame-indigo);
+    transform: translateX(2px);
+}
+
+.menu-section > ul > li::before {
+    content: "";
+    position: absolute;
+    left: 12px;
+    top: 16px;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--flame-orange);
+    transition: background 0.2s var(--ease);
+}
+
+.menu-section > ul > li:hover::before {
+    background: var(--flame-gold);
+}
+
+.menu-section a {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
+
+/* Nested topic groups (e.g. "Types of Switches") */
+.menu-section ul ul {
+    list-style: none;
+    padding-left: 16px;
+    margin-top: 6px;
+    border-left: 2px solid var(--border-color);
+}
+
+.menu-section ul ul li {
+    padding: 6px 10px 6px 18px;
+    font-size: 0.85rem;
+    color: var(--accent-color);
+    position: relative;
+    border-radius: 6px;
+    transition: background 0.2s var(--ease), color 0.2s var(--ease), transform 0.2s var(--ease);
+}
+
+.menu-section ul ul li:hover {
+    background: var(--hover-color);
+    color: var(--flame-purple);
+    transform: translateX(2px);
+}
+
+.menu-section ul ul li::before {
+    content: "";
+    position: absolute;
+    left: 4px;
+    top: 13px;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--flame-purple);
+}
+
+/* the little header span renderer.js builds for nested-parent <li> items */
+.menu-section li > span {
+    font-weight: 600;
+    color: var(--ink);
+}
+
+.menu-section li > span i {
+    color: var(--flame-purple);
+    font-size: 0.75rem;
+}
+
+/* ---------------------------------------------------------
+   Footer
+   --------------------------------------------------------- */
+footer {
+    text-align: center;
+    padding: clamp(20px, 3vw, 28px) 0;
+    margin-top: clamp(24px, 4vw, 36px);
+    border-top: 1px solid var(--border-color);
+    color: var(--accent-color);
+    font-size: 0.85rem;
+}
+
+/* ---------------------------------------------------------
+   Keyframes
+   --------------------------------------------------------- */
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(14px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.001ms !important;
+    }
+}
+
+/* ---------------------------------------------------------
+   Responsive
+   --------------------------------------------------------- */
+@media (max-width: 1199px) {
+    .menu-content { column-count: 2; }
+}
+
+@media (max-width: 767px) {
+    .topbar-inner { padding: 10px 16px; }
+    .hero { padding: 32px 16px 44px; }
+    .container { padding: 20px 16px; }
+    .menu-content { column-count: 1; }
+    .menu-section h3 { padding: 14px 15px; font-size: 0.96rem; }
+    .section-icon { width: 30px; height: 30px; font-size: 0.78rem; }
+}
+
+@media (min-width: 1920px) {
+    .container { max-width: 1500px; }
+    .menu-content { column-count: 4; }
+}
