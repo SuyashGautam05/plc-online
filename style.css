@@ -1,18 +1,30 @@
+/* ============================================================
+   PLC SimTel — Menu Page (index.html)
+   Full modern redesign: sticky navbar, gradient hero, masonry
+   card grid of course modules, accordion topic lists.
+   Palette sampled from the Scientech flame mark.
+   All original hooks (#search, .menu-section, h3 + ul adjacency,
+   nested <ul> in <li>) preserved — renderer.js untouched.
+   ============================================================ */
+
 :root {
-    --primary-color: #f8f9fa;
-    --secondary-color: #e9ecef;
-    --text-color: #343a40;
-    --accent-color: #6c757d;
-    --border-color: #dee2e6;
-    --hover-color: #f1f3f5;
-    --shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    --header-padding: 10px;
+    --flame-gold:    #ca9b40;
+    --flame-orange:  #b73628;
+    --flame-purple:  #806c9b;
+    --flame-indigo:  #434575;
+    --ink:           #221e1c;
+    --brand-gradient: linear-gradient(135deg, var(--flame-gold) 0%, var(--flame-orange) 32%, var(--flame-purple) 68%, var(--flame-indigo) 100%);
+
+    --primary-color: #f7f7f9;
+    --secondary-color: #efedf3;
+    --text-color: var(--ink);
+    --accent-color: #6b5c86;
+    --border-color: #e3e1e8;
+    --hover-color: #f4f1f8;
+    --shadow: 0 10px 30px rgba(34, 30, 28, 0.08);
+    --shadow-lift: 0 18px 44px rgba(67, 69, 117, 0.16);
+    --ease: cubic-bezier(0.22, 1, 0.36, 1);
     --container-margin: 25px;
-    /* --container-padding: 20px; */
-    --section-title-size: 1.2rem;
-    --list-item-size: 1rem;
-    --list-item-padding: 8px;
-    --nested-list-size: 0.9rem;
 }
 
 * {
@@ -34,539 +46,390 @@ body {
     overflow-x: hidden;
 }
 
-.container {
-    display: flex;
-    flex-direction: column;
-    min-height: 100vh;
+/* ---------------------------------------------------------
+   Sticky top bar
+   --------------------------------------------------------- */
+.topbar {
+    position: sticky;
+    top: 0;
+    z-index: 50;
+    background: rgba(255, 255, 255, 0.82);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    border-bottom: 1px solid rgba(227, 225, 232, 0.8);
+}
+
+.topbar-inner {
     max-width: 1300px;
-    margin: var(--container-margin);
-    margin-top: 1px;
-    padding: var(--container-padding);
-    padding-top: 1px;
-    width: 100%;
-}
-
-header {
-    text-align: center;
-    padding: var(--header-padding) 0;
-    border-bottom: 1px solid var(--border-color);
-    margin-bottom: clamp(15px, 5vw, 30px);
-    width: 100%;
-}
-
-.logo-container {
+    margin: 0 auto;
+    padding: 12px 25px;
     display: flex;
     align-items: center;
-    justify-content: center;
-    gap: clamp(20px, 15vw, 315px);
-    margin-bottom: -10px;
-    flex-wrap: wrap;
 }
 
-.logo-container img {
-    height: clamp(40px, 10vw, 60px);
+.topbar-brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 700;
+    font-size: 1.05rem;
+    color: var(--ink);
+}
+
+.topbar-brand img {
+    height: 30px;
     width: auto;
 }
 
-.logo-container i {
-    font-size: clamp(1.5rem, 5vw, 2.5rem);
-    color: var(--accent-color);
-}
-
-h1 {
-    font-size: clamp(1.5rem, 6vw, 2.5rem);
-    font-weight: 700;
-    color: var(--text-color);
-}
-
-header p {
-    font-size: clamp(0.9rem, 2.5vw, 1.1rem);
-    color: var(--accent-color);
-    margin-top: 10px;
-}
-
-main {
-    flex: 1;
-    width: 100%;
-}
-
-.menu-container {
-    background-color: white;
-    border-radius: 8px;
-    box-shadow: var(--shadow);
+/* ---------------------------------------------------------
+   Hero
+   --------------------------------------------------------- */
+.hero {
+    position: relative;
+    text-align: center;
+    padding: clamp(40px, 8vw, 72px) 20px clamp(50px, 9vw, 84px);
+    background:
+        radial-gradient(900px 460px at 12% -15%, rgba(202, 155, 64, 0.16), transparent 60%),
+        radial-gradient(800px 460px at 105% 10%, rgba(67, 69, 117, 0.18), transparent 55%),
+        radial-gradient(700px 380px at 50% 120%, rgba(128, 108, 155, 0.14), transparent 55%),
+        #fbfaf7;
     overflow: hidden;
-    width: 100%;
 }
 
-.menu-header {
-    background-color: var(--secondary-color);
-    padding: clamp(12px, 3vw, 15px) clamp(15px, 4vw, 20px);
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-between;
-    align-items: center;
-    gap: clamp(10px, 3vw, 20px);
-    border-bottom: 1px solid var(--border-color);
+.hero::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: 0;
+    transform: translateX(-50%);
+    width: min(760px, 90%);
+    height: 3px;
+    border-radius: 999px;
+    background: var(--brand-gradient);
+    background-size: 250% 100%;
+    animation: shimmer 4s ease-in-out infinite;
 }
 
-.menu-header h2 {
-    font-size: clamp(1.2rem, 4vw, 1.5rem);
-    color: var(--text-color);
+@keyframes shimmer {
+    0%, 100% { background-position: 0% 50%; }
+    50%      { background-position: 100% 50%; }
 }
 
+.hero-inner {
+    max-width: 760px;
+    margin: 0 auto;
+    animation: fadeInUp 0.6s var(--ease) both;
+}
+
+.hero-eyebrow {
+    display: inline-block;
+    padding: 5px 14px;
+    border-radius: 999px;
+    background: rgba(128, 108, 155, 0.12);
+    color: var(--flame-indigo);
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    margin-bottom: 16px;
+}
+
+.hero h1 {
+    font-size: clamp(1.7rem, 5vw, 2.7rem);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    color: var(--ink);
+    margin-bottom: 12px;
+}
+
+.hero p {
+    font-size: clamp(0.95rem, 2vw, 1.1rem);
+    color: var(--accent-color);
+    margin-bottom: 28px;
+}
+
+/* ---------------------------------------------------------
+   Search
+   --------------------------------------------------------- */
 .search-container {
     position: relative;
-    width: clamp(180px, 90vw, 250px);
-    min-width: 150px;
+    max-width: 560px;
+    margin: 0 auto;
 }
 
 .search-container input {
     width: 100%;
-    padding: clamp(6px, 1.5vw, 8px) clamp(10px, 2vw, 15px);
+    padding: 14px 20px 14px 46px;
     border: 1px solid var(--border-color);
-    border-radius: 4px;
-    font-size: clamp(0.8rem, 2vw, 0.9rem);
+    border-radius: 12px;
+    font-size: 1rem;
+    font-family: inherit;
+    background: #fff;
+    box-shadow: var(--shadow);
+    transition: border-color 0.25s var(--ease), box-shadow 0.25s var(--ease);
+}
+
+.search-container input:focus {
+    outline: none;
+    border-color: var(--flame-purple);
+    box-shadow: 0 0 0 4px rgba(128, 108, 155, 0.16), var(--shadow);
 }
 
 .search-container i {
     position: absolute;
-    right: clamp(8px, 2vw, 10px);
+    left: 18px;
     top: 50%;
     transform: translateY(-50%);
-    color: var(--accent-color);
+    color: var(--flame-purple);
+    font-size: 0.95rem;
 }
 
-.menu-content {
-    padding: clamp(15px, 3vw, 20px);
-    max-height: 70vh;
-    overflow-y: auto;
+/* ---------------------------------------------------------
+   Main container / layout
+   --------------------------------------------------------- */
+.container {
+    display: flex;
+    flex-direction: column;
+    min-height: 60vh;
+    max-width: 1300px;
+    margin: 0 auto;
+    padding: clamp(24px, 4vw, 40px) 25px;
     width: 100%;
 }
 
-.menu-section {
-    margin-bottom: clamp(15px, 3vw, 20px);
-    border-bottom: 1px solid var(--border-color);
-    padding-bottom: clamp(12px, 2vw, 15px);
+main { width: 100%; }
+
+.menu-container { width: 100%; }
+
+/* Masonry-style module grid via CSS columns */
+.menu-content {
+    column-count: 3;
+    column-gap: 22px;
 }
 
-.menu-section:last-child {
-    border-bottom: none;
-    margin-bottom: 0;
+/* ---------------------------------------------------------
+   Module cards (.menu-section)
+   --------------------------------------------------------- */
+.menu-section {
+    display: inline-block;
+    width: 100%;
+    break-inside: avoid;
+    margin-bottom: 22px;
+    background: rgba(255, 255, 255, 0.9);
+    border: 1px solid var(--border-color);
+    border-radius: 14px;
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    animation: fadeIn 0.5s var(--ease) both;
+    transition: box-shadow 0.3s var(--ease), transform 0.3s var(--ease);
 }
+
+.menu-section:hover {
+    box-shadow: var(--shadow-lift);
+    transform: translateY(-2px);
+}
+
+/* stagger the reveal — cosmetic, safe past nth(12) */
+.menu-section:nth-child(1)  { animation-delay: 0.02s; }
+.menu-section:nth-child(2)  { animation-delay: 0.05s; }
+.menu-section:nth-child(3)  { animation-delay: 0.08s; }
+.menu-section:nth-child(4)  { animation-delay: 0.11s; }
+.menu-section:nth-child(5)  { animation-delay: 0.14s; }
+.menu-section:nth-child(6)  { animation-delay: 0.17s; }
+.menu-section:nth-child(7)  { animation-delay: 0.20s; }
+.menu-section:nth-child(8)  { animation-delay: 0.23s; }
+.menu-section:nth-child(9)  { animation-delay: 0.26s; }
+.menu-section:nth-child(10) { animation-delay: 0.29s; }
+.menu-section:nth-child(11) { animation-delay: 0.32s; }
+.menu-section:nth-child(12) { animation-delay: 0.35s; }
 
 .menu-section h3 {
-    font-size: clamp(1rem, 3.5vw, 1.2rem);
-    color: var(--text-color);
-    margin-bottom: clamp(8px, 1.5vw, 10px);
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 12px;
+    font-size: 1.02rem;
+    font-weight: 700;
+    color: var(--ink);
+    padding: 16px 18px;
     cursor: pointer;
-    transition: color 0.2s ease;
+    background: linear-gradient(180deg, #fff, #fbfaf9);
+    border-bottom: 1px solid var(--border-color);
+    transition: color 0.2s var(--ease);
 }
 
 .menu-section h3:hover {
-    color: var(--accent-color);
+    color: var(--flame-indigo);
 }
 
-.menu-section h3 i {
-    font-size: clamp(0.7rem, 2vw, 0.9rem);
-    color: var(--accent-color);
-    transition: transform 0.2s ease;
+/* Decorative module swatch — a pure CSS pseudo-element, never a real
+   DOM node, so it can never collide with renderer.js's querySelector('i')
+   chevron logic. */
+.menu-section h3::before {
+    content: "";
+    flex-shrink: 0;
+    width: 34px;
+    height: 34px;
+    border-radius: 10px;
+    background: var(--brand-gradient);
+    background-size: 220% 220%;
 }
 
-.menu-section ul {
-    list-style-type: none;
-    padding-left: clamp(15px, 4vw, 25px);
+.menu-section:nth-child(3n+1) h3::before   { background-position: 0% 0%; }
+.menu-section:nth-child(3n+2) h3::before   { background-position: 50% 50%; }
+.menu-section:nth-child(3n)   h3::before   { background-position: 100% 100%; }
+
+.section-title-text {
+    flex: 1;
+    line-height: 1.35;
+}
+
+/* the toggle chevron JS appends at the end of h3 */
+.menu-section h3 > i.fas.fa-chevron-down,
+.menu-section h3 > i.fas.fa-chevron-right {
+    flex-shrink: 0;
+    color: var(--flame-purple);
+    font-size: 0.85rem;
+    transition: transform 0.25s var(--ease);
+}
+
+.menu-section > ul {
+    list-style: none;
+    padding: 10px 12px 14px;
 }
 
 .menu-section > ul > li {
-    padding: clamp(5px, 1.5vw, 8px) 0;
-    font-size: clamp(0.9rem, 2.5vw, 1rem);
-    color: var(--text-color);
     position: relative;
+    padding: 9px 12px 9px 30px;
+    font-size: 0.92rem;
+    color: var(--text-color);
     cursor: pointer;
-    transition: color 0.2s ease;
-    word-break: break-word;
+    border-radius: 8px;
+    transition: background 0.2s var(--ease), color 0.2s var(--ease), transform 0.2s var(--ease);
 }
 
 .menu-section > ul > li:hover {
-    color: var(--accent-color);
+    background: var(--hover-color);
+    color: var(--flame-indigo);
+    transform: translateX(2px);
 }
 
 .menu-section > ul > li::before {
-    content: "•";
+    content: "";
     position: absolute;
-    left: clamp(-12px, -3vw, -15px);
-    color: var(--accent-color);
+    left: 12px;
+    top: 16px;
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--flame-orange);
+    transition: background 0.2s var(--ease);
 }
 
+.menu-section > ul > li:hover::before {
+    background: var(--flame-gold);
+}
+
+.menu-section a {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
+
+/* Nested topic groups (e.g. "Types of Switches") */
 .menu-section ul ul {
-    padding-left: clamp(12px, 3vw, 20px);
-    margin-top: clamp(3px, 1vw, 5px);
+    list-style: none;
+    padding-left: 16px;
+    margin-top: 6px;
+    border-left: 2px solid var(--border-color);
 }
 
 .menu-section ul ul li {
-    padding: clamp(3px, 1vw, 5px) 0;
-    font-size: clamp(0.8rem, 2vw, 0.9rem);
+    padding: 6px 10px 6px 18px;
+    font-size: 0.85rem;
     color: var(--accent-color);
     position: relative;
-    word-break: break-word;
+    border-radius: 6px;
+    transition: background 0.2s var(--ease), color 0.2s var(--ease), transform 0.2s var(--ease);
+}
+
+.menu-section ul ul li:hover {
+    background: var(--hover-color);
+    color: var(--flame-purple);
+    transform: translateX(2px);
 }
 
 .menu-section ul ul li::before {
-    content: "◦";
+    content: "";
     position: absolute;
-    left: clamp(-12px, -3vw, -15px);
-    color: var(--accent-color);
+    left: 4px;
+    top: 13px;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--flame-purple);
 }
 
+/* the little header span renderer.js builds for nested-parent <li> items */
+.menu-section li > span {
+    font-weight: 600;
+    color: var(--ink);
+}
+
+.menu-section li > span i {
+    color: var(--flame-purple);
+    font-size: 0.75rem;
+}
+
+/* ---------------------------------------------------------
+   Footer
+   --------------------------------------------------------- */
 footer {
     text-align: center;
-    padding: clamp(15px, 3vw, 20px) 0;
-    margin-top: clamp(20px, 5vw, 30px);
+    padding: clamp(20px, 3vw, 28px) 0;
+    margin-top: clamp(24px, 4vw, 36px);
     border-top: 1px solid var(--border-color);
     color: var(--accent-color);
-    font-size: clamp(0.8rem, 2vw, 0.9rem);
+    font-size: 0.85rem;
 }
 
-/* Extra Large Screens (1920px and above) */
-@media (min-width: 1920px) {
-    .container {
-        /* margin: 40px auto; */
-        margin: auto;
-        max-width: 1500px;
-    }
-    
-    .menu-section h3 {
-        font-size: 1.4rem;
-    }
-    
-    .menu-section > ul > li {
-        font-size: 1.1rem;
-    }
+/* ---------------------------------------------------------
+   Keyframes
+   --------------------------------------------------------- */
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(14px); }
+    to   { opacity: 1; transform: translateY(0); }
 }
 
-/* Large Screens (1200px to 1919px) */
-@media (min-width: 1200px) and (max-width: 1919px) {
-    .container {
-        /* margin: 30px auto; */
-        margin: auto;
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to   { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.001ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.001ms !important;
     }
 }
 
-/* Tablets and Medium Screens (768px to 1199px) */
+/* ---------------------------------------------------------
+   Responsive
+   --------------------------------------------------------- */
 @media (max-width: 1199px) {
-    .container {
-        margin: 20px 15px;
-        padding: 15px;
-    }
-    
-    header {
-        margin-bottom: clamp(15px, 4vw, 25px);
-    }
-    
-    .logo-container {
-        gap: clamp(15px, 10vw, 200px);
-    }
-    
-    .menu-header {
-        flex-direction: column;
-        gap: 15px;
-        align-items: flex-start;
-    }
-    
-    .menu-header h2 {
-        width: 100%;
-    }
-    
-    .search-container {
-        width: 100%;
-        max-width: 100%;
-    }
-    
-    .menu-content {
-        max-height: 65vh;
-    }
+    .menu-content { column-count: 2; }
 }
 
-/* Tablets and Small Screens (768px to 899px) */
-@media (max-width: 899px) {
-    :root {
-        --section-title-size: 1.1rem;
-        --list-item-size: 0.95rem;
-        --nested-list-size: 0.85rem;
-    }
-    
-    .container {
-        margin: 15px 10px;
-        padding: 12px;
-    }
-    
-    h1 {
-        font-size: clamp(1.3rem, 5vw, 2rem);
-    }
-    
-    .logo-container {
-        gap: clamp(10px, 8vw, 150px);
-    }
-    
-    .menu-header {
-        padding: 12px 15px;
-        flex-direction: column;
-    }
-    
-    .search-container {
-        width: 100%;
-    }
-    
-    .menu-content {
-        padding: 12px 15px;
-        max-height: 60vh;
-    }
-    
-    .menu-section {
-        margin-bottom: 15px;
-        padding-bottom: 12px;
-    }
-    
-    .menu-section h3 {
-        font-size: 1.05rem;
-    }
-    
-    .menu-section > ul > li {
-        font-size: 0.95rem;
-    }
-}
-
-/* Small Phones (600px to 767px) */
 @media (max-width: 767px) {
-    :root {
-        --section-title-size: 1rem;
-        --list-item-size: 0.9rem;
-        --nested-list-size: 0.8rem;
-    }
-    
-    .container {
-        margin: 12px 8px;
-        padding: 10px;
-        max-width: 100%;
-    }
-    
-    header {
-        padding: 8px 0;
-        margin-bottom: 20px;
-    }
-    
-    .logo-container {
-        flex-direction: column;
-        gap: 10px;
-        margin-bottom: 0;
-    }
-    
-    .logo-container img {
-        height: 50px;
-    }
-    
-    .logo-container i {
-        display: none;
-    }
-    
-    h1 {
-        font-size: clamp(1.2rem, 5vw, 1.8rem);
-        margin-top: 10px;
-    }
-    
-    main {
-        padding: 0;
-    }
-    
-    .menu-header {
-        padding: 10px 12px;
-        flex-direction: column;
-        gap: 12px;
-    }
-    
-    .menu-header h2 {
-        font-size: 1.1rem;
-    }
-    
-    .search-container {
-        width: 100%;
-        min-width: auto;
-    }
-    
-    .search-container input {
-        font-size: 1rem;
-        padding: 6px 12px;
-    }
-    
-    .menu-content {
-        padding: 10px 12px;
-        max-height: 55vh;
-    }
-    
-    .menu-section {
-        margin-bottom: 12px;
-        padding-bottom: 10px;
-    }
-    
-    .menu-section h3 {
-        font-size: 0.95rem;
-        margin-bottom: 8px;
-    }
-    
-    .menu-section > ul > li {
-        font-size: 0.9rem;
-        padding: 6px 0;
-    }
-    
-    .menu-section ul ul {
-        padding-left: 12px;
-        margin-top: 3px;
-    }
-    
-    .menu-section ul ul li {
-        font-size: 0.8rem;
-        padding: 3px 0;
-    }
-    
-    footer {
-        font-size: 0.8rem;
-        margin-top: 20px;
-    }
+    .topbar-inner { padding: 10px 16px; }
+    .hero { padding: 32px 16px 44px; }
+    .container { padding: 20px 16px; }
+    .menu-content { column-count: 1; }
+    .menu-section h3 { padding: 14px 15px; font-size: 0.96rem; }
+    .section-icon { width: 30px; height: 30px; font-size: 0.78rem; }
 }
 
-/* Extra Small Phones (below 600px) */
-@media (max-width: 599px) {
-    :root {
-        --section-title-size: 0.95rem;
-        --list-item-size: 0.85rem;
-        --nested-list-size: 0.75rem;
-    }
-    
-    .container {
-        margin: 10px 5px;
-        padding: 8px;
-        min-height: auto;
-    }
-    
-    header {
-        padding: 6px 0;
-        margin-bottom: 15px;
-    }
-    
-    .logo-container {
-        flex-direction: column;
-        gap: 5px;
-        margin-bottom: 0;
-    }
-    
-    .logo-container img {
-        height: 40px;
-    }
-    
-    h1 {
-        font-size: 1.1rem;
-        margin-top: 5px;
-        font-weight: 600;
-    }
-    
-    header p {
-        font-size: 0.8rem;
-    }
-    
-    .menu-container {
-        border-radius: 4px;
-    }
-    
-    .menu-header {
-        padding: 8px 10px;
-        flex-direction: column;
-        gap: 10px;
-    }
-    
-    .menu-header h2 {
-        font-size: 1rem;
-    }
-    
-    .search-container {
-        width: 100%;
-    }
-    
-    .search-container input {
-        font-size: 0.95rem;
-        padding: 5px 10px;
-    }
-    
-    .menu-content {
-        padding: 8px 10px;
-        max-height: 50vh;
-    }
-    
-    .menu-section {
-        margin-bottom: 10px;
-        padding-bottom: 8px;
-    }
-    
-    .menu-section h3 {
-        font-size: 0.9rem;
-        margin-bottom: 6px;
-        gap: 6px;
-    }
-    
-    .menu-section > ul > li {
-        font-size: 0.8rem;
-        padding: 4px 0;
-    }
-    
-    .menu-section > ul > li::before {
-        left: -12px;
-        font-size: 0.8rem;
-    }
-    
-    .menu-section ul {
-        padding-left: 12px;
-    }
-    
-    .menu-section ul ul {
-        padding-left: 8px;
-        margin-top: 2px;
-    }
-    
-    .menu-section ul ul li {
-        font-size: 0.75rem;
-        padding: 2px 0;
-    }
-    
-    .menu-section ul ul li::before {
-        left: -10px;
-        font-size: 0.6rem;
-    }
-    
-    .menu-section h3 i {
-        font-size: 0.7rem;
-    }
-    
-    footer {
-        font-size: 0.75rem;
-        margin-top: 15px;
-        padding: 10px 0;
-    }
-}
-
-/* Landscape Mode for Small Devices */
-@media (max-width: 767px) and (orientation: landscape) {
-    .container {
-        margin: 8px 5px;
-        padding: 6px;
-    }
-    
-    header {
-        margin-bottom: 10px;
-    }
-    
-    .menu-content {
-        max-height: 45vh;
-    }
+@media (min-width: 1920px) {
+    .container { max-width: 1500px; }
+    .menu-content { column-count: 4; }
 }
