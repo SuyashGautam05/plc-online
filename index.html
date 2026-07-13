@@ -11,35 +11,27 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-
-    <nav class="topbar">
-        <div class="topbar-inner">
-            <div class="topbar-brand">
-                <img src="./assets/Scientech logo-2.png" alt="Scientech">
-                <span>PLC SimTel</span>
-            </div>
-        </div>
-    </nav>
-
-    <header class="hero">
-        <div class="hero-inner">
-            <span class="hero-eyebrow">Course Library</span>
-            <h1>Programmable Logic Controller</h1>
-            <p>17 modules covering industrial automation, PLC hardware, programming, SCADA, HMI and beyond.</p>
-
-            <div class="search-container">
-                <i class="fas fa-search"></i>
-                <input type="text" id="search" placeholder="Search topics — e.g. Ladder Diagram, VFD, Sensors...">
-            </div>
-        </div>
-    </header>
-
     <div class="container">
+        <header style="display: flex; margin-bottom: 20px;">
+            <div class="logo-container"  style="gap: clamp(15px, 9vw, 153px);">
+                <img style="height: 60px;" src="./assets/Scientech logo-2.png" alt="">
+                <h1>Programmable Logic Controller</h1>
+            </div>
+        </header>
+
         <main>
             <div class="menu-container">
+                <div class="menu-header">
+                    <h2>Course Content</h2>
+                    <div class="search-container">
+                        <input type="text" id="search" placeholder="Search topics...">
+                        <i class="fas fa-search"></i>
+                    </div>
+                </div>
+
                 <div class="menu-content">
                     <div class="menu-section">
-                        <h3><span class="section-title-text">1. Introduction to Industrial Automation</span></h3>
+                        <h3>1. Introduction to Industrial Automation</h3>
                         <ul>
                             <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Introduction to Industrial Automation/Definition_and_Scope_of_Industrial_Automation.html">Definition and Scope of Industrial Automation</a></li>
                             <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Introduction to Industrial Automation/Automation_Pyramid.html">Automation Pyramid</a></li>
@@ -50,7 +42,7 @@
                     </div>
 
                     <div class="menu-section">
-                        <h3><span class="section-title-text">2. Industrial Safety and Standards</span></h3>
+                        <h3>2. Industrial Safety and Standards</h3>
                         <ul>
                             <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Industrial Safety and Standards/Importance_of_Safety_in_Industrial_Automation.html">Importance of Safety in Industrial Automation</a></li>
                             <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Industrial Safety and Standards/Machine_Safety_Systems.html">Machine Safety Systems</a></li>
@@ -62,7 +54,7 @@
                     </div>
 
                     <div class="menu-section">
-                        <h3><span class="section-title-text">3. Basics of Electrical Engineering for Automation</span></h3>
+                        <h3>3. Basics of Electrical Engineering for Automation</h3>
                         <ul>
                             <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Basics of Electrical Engineering for Automation/Electrical_Quantities.html">Electrical Quantities</a></li>
                             <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Basics of Electrical Engineering for Automation/DC_and_AC_Circuits.html">DC Circuits and AC Circuits</a></li>
@@ -73,7 +65,7 @@
                     </div>
 
                     <div class="menu-section">
-                        <h3><span class="section-title-text">4. Industrial Electrical Components</span></h3>
+                        <h3>4. Industrial Electrical Components</h3>
                         <ul>
                             <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Industrial Electrical Components/Circuit_Breakers_and_Fuses.html">Circuit Breakers and Fuses</a></li>
                             <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Industrial Electrical Components/Power_Supplies.html">Power Supplies (SMPS, Linear)</a></li>
@@ -93,7 +85,7 @@
                     </div>
 
                     <div class="menu-section">
-                        <h3><span class="section-title-text">5. Transducers, Sensors and Transmitters</span></h3>
+                        <h3>5. Transducers, Sensors and Transmitters</h3>
                         <ul>
                             <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Transducers, Sensors and Transmitters/Definition_of_Transducers_Sensors_and_Transmitters.html">Definition of Transducers, Sensors and Transmitters</a></li>
                             <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Transducers, Sensors and Transmitters/Characteristics_and_Selection_Criteria.html">Characteristics and Selection Criteria</a></li>
@@ -109,7 +101,7 @@
                     </div>
 
                     <div class="menu-section">
-                        <h3><span class="section-title-text">6. Actuators</span></h3>
+                        <h3>6. Actuators</h3>
                         <ul>
                             <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Actuators/Introduction_and_Function_of_Actuators.html">Introduction and Function of Actuators</a></li>
                             <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Actuators/Classification_of_Actuators.html">Classification of Actuators</a></li>
@@ -129,7 +121,7 @@
                     </div>
 
                     <div class="menu-section">
-                        <h3><span class="section-title-text">7. Industrial Control Panels</span></h3>
+                        <h3>7. Industrial Control Panels</h3>
                         <ul>
                             <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Introduction to Control Panels/Introduction_to_Control_Panels.html">Introduction to Control Panels</a></li>
                             <li>Types of Control Panels
@@ -147,7 +139,7 @@
                     </div>
 
                     <div class="menu-section">
-                        <h3><span class="section-title-text">8. Introduction to PLC (Programmable Logic Controller)</span></h3>
+                        <h3>8. Introduction to PLC (Programmable Logic Controller)</h3>
                         <ul>
                             <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Introduction to PLC (Programmable Logic Controller)/Definition_and_Purpose_of_PLCs.html">Definition and Purpose of PLCs</a></li>
                             <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Introduction to PLC (Programmable Logic Controller)/Applications_of_PLCs_in_Industry.html">Applications of PLCs in Industry</a></li>
@@ -173,7 +165,7 @@
                     </div>
 
                     <div class="menu-section">
-                        <h3><span class="section-title-text">9. PLC Hardware and Architecture</span></h3>
+                        <h3>9. PLC Hardware and Architecture</h3>
                         <ul>
                             <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/PLC Hardware and Architecture/PLC_System_Architecture.html">PLC System Architecture</a></li>
                             <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/PLC Hardware and Architecture/Central_Processing_Unit.html">Central Processing Unit (CPU)</a></li>
@@ -187,7 +179,7 @@
                     </div>
 
                     <div class="menu-section">
-                        <h3><span class="section-title-text">10. PLC Programming Fundamentals</span></h3>
+                        <h3>10. PLC Programming Fundamentals</h3>
                         <ul>
                             <li>PLC Programming Standards
                                 <ul>
@@ -247,7 +239,7 @@
                     </div>
 
                     <div class="menu-section">
-                        <h3><span class="section-title-text">11. Human Machine Interface (HMI)</span></h3>
+                        <h3>11. Human Machine Interface (HMI)</h3>
                         <ul>
                             <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Human Machine Interface/Introduction_to_HMI.html">Introduction to HMI</a></li>
                             <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Human Machine Interface/HMI_System_Components.html">HMI System Components</a></li>
@@ -260,7 +252,7 @@
                     </div>
 
                     <div class="menu-section">
-                        <h3><span class="section-title-text">12. Supervisory Control and Data Acquisition (SCADA)</span></h3>
+                        <h3>12. Supervisory Control and Data Acquisition (SCADA)</h3>
                         <ul>
                             <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Supervisory_Control_and_Data_Acquisition/Introduction_to_SCADA_Systems.html">Introduction to SCADA Systems</a></li>
                             <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Supervisory_Control_and_Data_Acquisition/Purpose_and_Benefits_of_SCADA.html">Purpose and Benefits of SCADA</a></li>
@@ -273,7 +265,7 @@
                     </div>
 
                     <div class="menu-section">
-                        <h3><span class="section-title-text">13. Variable Frequency Drives (VFD)</span></h3>
+                        <h3>13. Variable Frequency Drives (VFD)</h3>
                         <ul>
                             <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Variable Frequency Drives/Introduction_to_Variable_Frequency_Drives.html">Introduction to Variable Frequency Drives</a></li>
                             <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Variable Frequency Drives/Construction_and_Operating_Principle_of_VFD.html">Construction and Operating Principle of VFD</a></li>
@@ -285,7 +277,7 @@
                     </div>
 
                     <div class="menu-section">
-                        <h3><span class="section-title-text">14. Distributed Control Systems (DCS)</span></h3>
+                        <h3>14. Distributed Control Systems (DCS)</h3>
                         <ul>
                             <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Distributed Control Systems/Introduction_to_Distributed_Control_Systems.html">Introduction to Distributed Control Systems</a></li>
                             <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Distributed Control Systems/DCS_Architecture_and_Components.html">DCS Architecture and Components</a></li>
@@ -296,7 +288,7 @@
                     </div>
 
                     <div class="menu-section">
-                        <h3><span class="section-title-text">15. Industrial Communication Networks</span></h3>
+                        <h3>15. Industrial Communication Networks</h3>
                         <ul>
                             <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Industrial Communication Networks/Introduction_to_Industrial_Communication.html">Introduction to Industrial Communication</a></li>
                             <li>Modbus
@@ -314,7 +306,7 @@
                     </div>
 
                     <div class="menu-section">
-                        <h3><span class="section-title-text">16. Advanced Automation & Industry 5.0</span></h3>
+                        <h3>16. Advanced Automation & Industry 5.0</h3>
                         <ul>
                             <li>Industry 5.0
                                 <ul>
@@ -327,7 +319,7 @@
                     </div>
 
                     <div class="menu-section">
-                        <h3><span class="section-title-text">17. Advanced Automation Technologies</span></h3>
+                        <h3>17. Advanced Automation Technologies</h3>
                         <ul>
                             <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Advanced Automation Technologies/Artificial_Intelligence_in_Industrial_Automation.html">Artificial Intelligence in Industrial Automation</a></li>
                             <li><a style="text-decoration: none; color: var(--text-color);" href="./pages/Advanced Automation Technologies/Industrial_Internet_of_Things_(IIoT).html">Industrial Internet of Things (IIoT)</a></li>
@@ -341,13 +333,8 @@
                 </div>
             </div>
         </main>
-
-        <footer>
-            &copy; <span id="year"></span> Scientech Technology Pvt. Ltd. — PLC SimTel Training Platform
-        </footer>
     </div>
 
     <script src="renderer.js"></script>
-    <script>document.getElementById('year').textContent = new Date().getFullYear();</script>
 </body>
 </html>
