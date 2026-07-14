@@ -722,6 +722,145 @@ footer a:hover { color: var(--red); }
     .hero { padding: 20px 5px 24px; }
     .stats-bar { gap: 12px; margin-bottom: 20px; }
 }
+
+/* ============================================================
+   ADDED — Topics popup (real lessons per section) + read tracking
+   ============================================================ */
+.progress-track {
+    height: 6px;
+    background: var(--secondary-color);
+    border-radius: var(--r-pill);
+    overflow: hidden;
+    margin-top: 10px;
+}
+.progress-fill {
+    height: 100%;
+    background: var(--red);
+    border-radius: var(--r-pill);
+    transition: width 0.3s var(--ease);
+}
+
+.topics-modal-overlay, .content-modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(15, 15, 18, 0.6);
+    z-index: 100000;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+}
+.topics-modal-overlay.open, .content-modal-overlay.open { display: flex; }
+.content-modal-overlay { z-index: 100010; }
+
+.topics-modal-box {
+    background: var(--white);
+    width: min(640px, 94vw);
+    max-height: 82vh;
+    border-radius: var(--r-2);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.35);
+    animation: revealUp 0.25s var(--ease) both;
+}
+.content-modal-box {
+    background: var(--white);
+    width: min(1100px, 95vw);
+    height: min(85vh, 900px);
+    border-radius: var(--r-2);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.35);
+    animation: revealUp 0.25s var(--ease) both;
+}
+.topics-modal-header, .content-modal-header {
+    background: var(--text-color);
+    color: var(--white);
+    padding: 14px 20px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+    gap: 12px;
+}
+.topics-modal-title, .content-modal-title {
+    font-weight: 700;
+    font-size: 1rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.modal-header-right { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
+.content-read-badge {
+    background: #16a34a;
+    color: #fff;
+    font-size: 0.7rem;
+    padding: 3px 9px;
+    border-radius: var(--r-pill);
+    display: none;
+    white-space: nowrap;
+}
+.content-read-badge.show { display: inline-block; }
+.modal-close-btn {
+    background: transparent;
+    border: 1px solid rgba(255,255,255,0.35);
+    color: rgba(255,255,255,0.85);
+    border-radius: 6px;
+    padding: 4px 12px;
+    cursor: pointer;
+    font-size: 0.82rem;
+    font-family: inherit;
+    transition: all 0.15s;
+    white-space: nowrap;
+}
+.modal-close-btn:hover { background: var(--red); border-color: var(--red); color: #fff; }
+
+.topics-modal-body { overflow-y: auto; padding: 10px 8px; }
+.topic-tree, .topic-children { list-style: none; }
+.topic-tree { padding: 6px; }
+.topic-children { display: none; padding-left: 18px; }
+.topic-tree li { margin: 2px 0; }
+.topic-group-toggle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.92rem;
+    color: var(--text-color);
+    transition: background 0.15s;
+}
+.topic-group-toggle:hover { background: var(--hover-color); }
+.topic-group-toggle i { font-size: 0.7rem; width: 12px; color: var(--accent-color); }
+.topic-link {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 10px;
+    border-radius: 8px;
+    color: var(--text-color);
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: background 0.15s;
+}
+.topic-link:hover { background: var(--red-soft); color: var(--red); }
+.topic-link i.fa-file-lines { color: var(--accent-color); font-size: 0.85em; }
+.topic-check-icon { display: none; color: #16a34a; margin-left: auto; font-size: 0.85em; }
+.topic-link.topic-read .topic-check-icon { display: inline-block; }
+
+.content-modal-body { flex: 1; position: relative; }
+.content-modal-body iframe { width: 100%; height: 100%; border: none; display: block; }
+.content-modal-loading {
+    position: absolute; inset: 0;
+    display: flex; align-items: center; justify-content: center;
+    color: var(--accent-color);
+    font-size: 0.9rem;
+    background: var(--white);
+}
     </style>
 </head>
 <body>
@@ -790,119 +929,449 @@ footer a:hover { color: var(--red); }
     <p>&copy; 2026 Scientech Instruments Pvt. Ltd. &mdash; PLC SimTel Course Library &middot; <a href="#">Terms</a> &middot; <a href="#">Privacy</a></p>
 </footer>
 
+<!-- ═══════ ADDED: Topics list popup (shows the real lessons for a section) ═══════ -->
+<div class="topics-modal-overlay" id="topicsModalOverlay">
+    <div class="topics-modal-box">
+        <div class="topics-modal-header">
+            <span class="topics-modal-title" id="topicsModalTitle">Section</span>
+            <button class="modal-close-btn" id="topicsModalClose">Close ✕</button>
+        </div>
+        <div class="topics-modal-body" id="topicsModalBody"></div>
+    </div>
+</div>
+
+<!-- ═══════ ADDED: Content popup (opens the actual lesson page + tracks reading) ═══════ -->
+<div class="content-modal-overlay" id="contentModalOverlay">
+    <div class="content-modal-box">
+        <div class="content-modal-header">
+            <span class="content-modal-title" id="contentModalTitle">Loading…</span>
+            <div class="modal-header-right">
+                <span class="content-read-badge" id="contentReadBadge">✓ Marked as read</span>
+                <button class="modal-close-btn" id="contentModalClose">Close ✕</button>
+            </div>
+        </div>
+        <div class="content-modal-body">
+            <div class="content-modal-loading" id="contentModalLoading">Loading topic…</div>
+            <iframe id="contentModalIframe" src="about:blank"></iframe>
+        </div>
+    </div>
+</div>
+
 <script>
-const courses = [
+// ============================================================
+//  Real course-content data (17 sections, actual ./pages/*.html
+//  lesson links). Replaces the old placeholder "courses" array.
+// ============================================================
+const cfg = window.SIMTEL_AUTH_CONFIG;
+
+const T = (title, href) => ({ title, href });      // leaf topic (real page)
+const G = (title, children) => ({ title, children }); // collapsible group
+
+const sections = [
     {
-        id: 1, title: "CODESYS 1: Introduction to PLC Programming",
-        category: "plc", categoryLabel: "PLC Programming", categoryIcon: "fa-microchip",
-        rating: 4.7, reviews: 12, lessons: 58, difficulty: "Beginner", certificate: true
+        id: 'sec-1', num: 1, title: 'Introduction to Industrial Automation',
+        category: 'fundamentals', categoryLabel: 'Fundamentals', categoryIcon: 'fa-industry',
+        topics: [
+            T('Definition and Scope of Industrial Automation', './pages/Introduction to Industrial Automation/Definition_and_Scope_of_Industrial_Automation.html'),
+            T('Automation Pyramid', './pages/Introduction to Industrial Automation/Automation_Pyramid.html'),
+            T('Industrial Automation Tools and Technologies', './pages/Introduction to Industrial Automation/Industrial_Automation_Tools_and_Technologies.html'),
+            T('Evolution of Industrial Automation', './pages/Introduction to Industrial Automation/Evolution_of_Industrial_Automation.html'),
+            T('Industrial Applications of Automation', './pages/Introduction to Industrial Automation/Industrial_Applications_of_Automation.html')
+        ]
     },
     {
-        id: 2, title: "CODESYS Virtual PLC",
-        category: "plc", categoryLabel: "PLC Programming", categoryIcon: "fa-microchip",
-        rating: 4.5, reviews: 8, lessons: 10, difficulty: "Advanced", certificate: true
+        id: 'sec-2', num: 2, title: 'Industrial Safety and Standards',
+        category: 'fundamentals', categoryLabel: 'Fundamentals', categoryIcon: 'fa-industry',
+        topics: [
+            T('Importance of Safety in Industrial Automation', './pages/Industrial Safety and Standards/Importance_of_Safety_in_Industrial_Automation.html'),
+            T('Machine Safety Systems', './pages/Industrial Safety and Standards/Machine_Safety_Systems.html'),
+            T('Emergency Stop (E-Stop) Systems', './pages/Industrial Safety and Standards/Emergency_Stop_Systems.html'),
+            T('Interlock and Safety Relay Systems', './pages/Industrial Safety and Standards/Interlock_and_Safety_Relay_Systems.html'),
+            T('International Standards and Regulations', './pages/Industrial Safety and Standards/International_Standards_and_Regulations.html'),
+            T('Safety Compliance in Industrial Systems', './pages/Industrial Safety and Standards/Safety_Compliance_in_Industrial_Systems.html')
+        ]
     },
     {
-        id: 3, title: "Structured Text (ST) Programming Masterclass",
-        category: "plc", categoryLabel: "PLC Programming", categoryIcon: "fa-microchip",
-        rating: 4.8, reviews: 19, lessons: 32, difficulty: "Intermediate", certificate: true
+        id: 'sec-3', num: 3, title: 'Basics of Electrical Engineering for Automation',
+        category: 'electrical', categoryLabel: 'Electrical & Sensors', categoryIcon: 'fa-bolt',
+        topics: [
+            T('Electrical Quantities', './pages/Basics of Electrical Engineering for Automation/Electrical_Quantities.html'),
+            T('DC Circuits and AC Circuits', './pages/Basics of Electrical Engineering for Automation/DC_and_AC_Circuits.html'),
+            T('Single-Phase and Three-Phase Systems', './pages/Basics of Electrical Engineering for Automation/Single-Phase_and_Three-Phase_Systems.html'),
+            T('Power Factor and Earthing Concepts', './pages/Basics of Electrical Engineering for Automation/Power_Factor_and_Earthing_Concepts.html'),
+            T('Electrical Symbols and Schematics', './pages/Basics of Electrical Engineering for Automation/Electrical_Symbols_and_Schematics.html')
+        ]
     },
     {
-        id: 4, title: "Ladder Logic Design Patterns",
-        category: "plc", categoryLabel: "PLC Programming", categoryIcon: "fa-microchip",
-        rating: 4.6, reviews: 15, lessons: 24, difficulty: "Intermediate", certificate: true
+        id: 'sec-4', num: 4, title: 'Industrial Electrical Components',
+        category: 'electrical', categoryLabel: 'Electrical & Sensors', categoryIcon: 'fa-bolt',
+        topics: [
+            T('Circuit Breakers and Fuses', './pages/Industrial Electrical Components/Circuit_Breakers_and_Fuses.html'),
+            T('Power Supplies (SMPS, Linear)', './pages/Industrial Electrical Components/Power_Supplies.html'),
+            T('Relays', './pages/Industrial Electrical Components/Relays.html'),
+            T('Contactors', './pages/Industrial Electrical Components/Contactors.html'),
+            G('Types of Switches', [
+                T('Pushbuttons', './pages/Industrial Electrical Components/push_button_switch.html'),
+                T('Toggle Switch', './pages/Industrial Electrical Components/toggle_switch.html'),
+                T('Rocker Switch', './pages/Industrial Electrical Components/rocker_switch.html'),
+                T('DIP Switch', './pages/Industrial Electrical Components/DIP_switch.html'),
+                T('Reed Switch', './pages/Industrial Electrical Components/Reed_switch.html'),
+                T('Limit Switch', './pages/Industrial Electrical Components/Limit_switch.html')
+            ])
+        ]
     },
     {
-        id: 5, title: "OT Cybersecurity and Network Design for Manufacturing with Moxa",
-        category: "networking", categoryLabel: "Industrial Networking", categoryIcon: "fa-network-wired",
-        rating: 4.9, reviews: 22, lessons: 18, difficulty: "Advanced", certificate: true
+        id: 'sec-5', num: 5, title: 'Transducers, Sensors and Transmitters',
+        category: 'electrical', categoryLabel: 'Electrical & Sensors', categoryIcon: 'fa-bolt',
+        topics: [
+            T('Definition of Transducers, Sensors and Transmitters', './pages/Transducers, Sensors and Transmitters/Definition_of_Transducers_Sensors_and_Transmitters.html'),
+            T('Characteristics and Selection Criteria', './pages/Transducers, Sensors and Transmitters/Characteristics_and_Selection_Criteria.html'),
+            T('Sinking (PNP) and Sourcing (NPN) Concept', './pages/Transducers, Sensors and Transmitters/Sinking_(PNP)_and_Sourcing_(NPN)_Concept.html'),
+            T('Types of Proximity Sensors', './pages/Transducers, Sensors and Transmitters/Types_of_Proximity_Sensors.html'),
+            T('Temperature Sensors and Temperature Transmitter', './pages/Transducers, Sensors and Transmitters/Temperature_Sensors_and_Temperature_Transmitter.html'),
+            T('Pressure Transmitter', './pages/Transducers, Sensors and Transmitters/Pressure_Transmitter.html'),
+            T('Level Transmitter', './pages/Transducers, Sensors and Transmitters/Level_Transmitter.html'),
+            T('Flow Transmitter', './pages/Transducers, Sensors and Transmitters/Flow_Transmitter.html'),
+            T('Position Sensor', './pages/Transducers, Sensors and Transmitters/Position_Sensor.html'),
+            T('Vision Sensor', './pages/Transducers, Sensors and Transmitters/Vision_Sensor.html')
+        ]
     },
     {
-        id: 6, title: "PROFINET & EtherNet/IP Configuration",
-        category: "networking", categoryLabel: "Industrial Networking", categoryIcon: "fa-network-wired",
-        rating: 4.7, reviews: 14, lessons: 22, difficulty: "Intermediate", certificate: true
+        id: 'sec-6', num: 6, title: 'Actuators',
+        category: 'electrical', categoryLabel: 'Electrical & Sensors', categoryIcon: 'fa-bolt',
+        topics: [
+            T('Introduction and Function of Actuators', './pages/Actuators/Introduction_and_Function_of_Actuators.html'),
+            T('Classification of Actuators', './pages/Actuators/Classification_of_Actuators.html'),
+            G('Electrical Actuators', [
+                T('AC Motors', './pages/Actuators/AC_Motors.html'),
+                T('DC Motors', './pages/Actuators/DC_Motors.html'),
+                T('Servo Motors', './pages/Actuators/Servo_Motors.html'),
+                T('Stepper Motors', './pages/Actuators/Stepper_Motors.html'),
+                T('Solenoids', './pages/Actuators/Solenoids.html'),
+                T('Linear Electric Actuators', './pages/Actuators/Linear_Electric_Actuator.html')
+            ]),
+            T('Pneumatic Actuators', './pages/Actuators/Pneumatic_Actuators.html'),
+            T('Hydraulic Actuators', './pages/Actuators/Hydraulic_Actuators.html')
+        ]
     },
     {
-        id: 7, title: "Modbus TCP/RTU Protocol Implementation",
-        category: "networking", categoryLabel: "Industrial Networking", categoryIcon: "fa-network-wired",
-        rating: 4.4, reviews: 9, lessons: 16, difficulty: "Beginner", certificate: true
+        id: 'sec-7', num: 7, title: 'Industrial Control Panels',
+        category: 'panels', categoryLabel: 'Control Panels', categoryIcon: 'fa-server',
+        topics: [
+            T('Introduction to Control Panels', './pages/Introduction to Control Panels/Introduction_to_Control_Panels.html'),
+            G('Types of Control Panels', [
+                T('PLC Panels', './pages/Introduction to Control Panels/PLC_Panels.html'),
+                T('MCC (Motor Control Center) Panels', './pages/Introduction to Control Panels/MCC_(Motor_Control_Center)_Panels.html'),
+                T('PCC (Power Control Center) Panels', './pages/Introduction to Control Panels/PCC_(Power_Control_Center)_Panels.html')
+            ]),
+            T('Panel Layout and Component Placement', './pages/Introduction to Control Panels/Panel_Layout_and_Component_Placement.html'),
+            T('Selection of Electrical Components', './pages/Introduction to Control Panels/Selection_of_Electrical_Components.html'),
+            T('Panel Cooling and Ventilation', './pages/Introduction to Control Panels/Panel_Cooling_and_Ventilation.html'),
+            T('Ingress Protection (IP Ratings)', './pages/Introduction to Control Panels/Ingress_Protection_(IP_Ratings).html')
+        ]
     },
     {
-        id: 8, title: "Ignition SCADA Platform Fundamentals",
-        category: "scada", categoryLabel: "SCADA & HMI", categoryIcon: "fa-display",
-        rating: 4.8, reviews: 17, lessons: 40, difficulty: "Beginner", certificate: true
+        id: 'sec-8', num: 8, title: 'Introduction to PLC (Programmable Logic Controller)',
+        category: 'plc', categoryLabel: 'PLC', categoryIcon: 'fa-microchip',
+        topics: [
+            T('Definition and Purpose of PLCs', './pages/Introduction to PLC (Programmable Logic Controller)/Definition_and_Purpose_of_PLCs.html'),
+            T('Applications of PLCs in Industry', './pages/Introduction to PLC (Programmable Logic Controller)/Applications_of_PLCs_in_Industry.html'),
+            G('Classification of PLCs', [
+                G('Based on Size', [
+                    T('Compact PLC', './pages/Introduction to PLC (Programmable Logic Controller)/compact_plc.html'),
+                    T('Modular PLC', './pages/Introduction to PLC (Programmable Logic Controller)/modular_plc.html'),
+                    T('Distributed PLC', './pages/Introduction to PLC (Programmable Logic Controller)/Distributed_PLC.html')
+                ]),
+                G('Based on Output', [
+                    T('Relay', './pages/Introduction to PLC (Programmable Logic Controller)/Relay.html'),
+                    T('Transistor', './pages/Introduction to PLC (Programmable Logic Controller)/Transistor.html'),
+                    T('SCR', './pages/Introduction to PLC (Programmable Logic Controller)/SCR.html')
+                ])
+            ])
+        ]
     },
     {
-        id: 9, title: "Advanced HMI Design with FactoryTalk View",
-        category: "scada", categoryLabel: "SCADA & HMI", categoryIcon: "fa-display",
-        rating: 4.6, reviews: 11, lessons: 28, difficulty: "Advanced", certificate: true
+        id: 'sec-9', num: 9, title: 'PLC Hardware and Architecture',
+        category: 'plc', categoryLabel: 'PLC', categoryIcon: 'fa-microchip',
+        topics: [
+            T('PLC System Architecture', './pages/PLC Hardware and Architecture/PLC_System_Architecture.html'),
+            T('Central Processing Unit (CPU)', './pages/PLC Hardware and Architecture/Central_Processing_Unit.html'),
+            T('Power Supply Units', './pages/PLC Hardware and Architecture/Power_Supply_Units.html'),
+            T('Digital Input Modules', './pages/PLC Hardware and Architecture/Digital_Input_Modules.html'),
+            T('Digital Output Modules', './pages/PLC Hardware and Architecture/Digital_Output_Modules.html'),
+            T('Analog Input Modules', './pages/PLC Hardware and Architecture/Analog_Input_Modules.html'),
+            T('Analog output Modules', './pages/PLC Hardware and Architecture/Analog_Output_Modules.html'),
+            T('Communication and Interface Modules', './pages/PLC Hardware and Architecture/Communication_and_Interface_Modules.html')
+        ]
     },
     {
-        id: 10, title: "PLC-Based Process Control Systems",
-        category: "automation", categoryLabel: "Industrial Automation", categoryIcon: "fa-gears",
-        rating: 4.5, reviews: 13, lessons: 20, difficulty: "Intermediate", certificate: true
+        id: 'sec-10', num: 10, title: 'PLC Programming Fundamentals',
+        category: 'plc', categoryLabel: 'PLC', categoryIcon: 'fa-microchip',
+        topics: [
+            G('PLC Programming Standards', [
+                G('IEC 61131-3 Programming Languages', [
+                    T('Ladder Diagram (LD)', './pages/PLC Programming Fundamentals/Ladder_Diagram_(LD).html'),
+                    T('Function Block Diagram (FBD)', './pages/PLC Programming Fundamentals/Function_Block_Diagram.html'),
+                    T('Structured Text (ST)', './pages/PLC Programming Fundamentals/Structured_Text.html'),
+                    T('Statement List (STL)', './pages/PLC Programming Fundamentals/Statement_List.html'),
+                    T('Sequential Function Chart (SFC)', './pages/PLC Programming Fundamentals/Sequential_Function_Chart.html')
+                ])
+            ]),
+            G('PLC Instructions and Programming Concepts', [
+                G('Logical Instructions', [
+                    T('NO and NC', './pages/PLC Programming Fundamentals/NO_and_NC.html'),
+                    T('Set and Reset', './pages/PLC Programming Fundamentals/Set_and_Reset.html')
+                ]),
+                G('Timers', [
+                    T('TON (On-Delay)', './pages/PLC Programming Fundamentals/TON.html'),
+                    T('TOFF (Off-Delay)', './pages/PLC Programming Fundamentals/TOFF.html'),
+                    T('RTO (Retentive Timer)', './pages/PLC Programming Fundamentals/RTO.html')
+                ]),
+                G('Counters', [
+                    T('CTU', './pages/PLC Programming Fundamentals/CTU.html'),
+                    T('CTD', './pages/PLC Programming Fundamentals/CTD.html'),
+                    T('CTUD', './pages/PLC Programming Fundamentals/CTUD.html')
+                ]),
+                T('Set and Reset Coils', './pages/PLC Programming Fundamentals/Set and Reset Coils.html'),
+                G('Comparison Instructions', [
+                    T('Equal (=)', './pages/PLC Programming Fundamentals/Equal.html'),
+                    T('Greater Than (>)', './pages/PLC Programming Fundamentals/Greater_Than.html'),
+                    T('Less Than (<)', './pages/PLC Programming Fundamentals/Less_Than.html')
+                ]),
+                T('Move and Arithmetic Instructions', './pages/PLC Programming Fundamentals/Move_and_Arithmetic_Instructions.html')
+            ]),
+            G('PLC Programming Software Tools', [
+                T('Siemens TIA Portal', './pages/PLC Programming Fundamentals/Siemens_TIA_Portal.html'),
+                T('WinProLadder', './pages/PLC Programming Fundamentals/WinProLadder.html'),
+                T('Connected Components Workbench (CCW)', './pages/PLC Programming Fundamentals/Connected_Components_Workbench.html'),
+                T('RSLogix Micro', './pages/PLC Programming Fundamentals/RSLogix_Micro.html')
+            ])
+        ]
     },
     {
-        id: 11, title: "Motion Control with Servo Drives",
-        category: "drives", categoryLabel: "Drives & Motion", categoryIcon: "fa-rotate",
-        rating: 4.7, reviews: 10, lessons: 18, difficulty: "Advanced", certificate: true
+        id: 'sec-11', num: 11, title: 'Human Machine Interface (HMI)',
+        category: 'hmi', categoryLabel: 'HMI', categoryIcon: 'fa-display',
+        topics: [
+            T('Introduction to HMI', './pages/Human Machine Interface/Introduction_to_HMI.html'),
+            T('HMI System Components', './pages/Human Machine Interface/HMI_System_Components.html'),
+            T('Functions and Importance of HMI', './pages/Human Machine Interface/Functions_and_Importance_of_HMI.html'),
+            T('Types of HMI Systems', './pages/Human Machine Interface/Types_of_HMI_Systems.html'),
+            T('HMI Design Principles', './pages/Human Machine Interface/HMI_Design_Principles.html'),
+            T('Overview of HMI Development Software', './pages/Human Machine Interface/Overview_of_HMI_Development_Software.html'),
+            T('Industrial Applications of HMI', './pages/Human Machine Interface/Industrial_Applications_of_HMI.html')
+        ]
     },
     {
-        id: 12, title: "Industrial Safety Systems (SIL & SIF)",
-        category: "safety", categoryLabel: "Functional Safety", categoryIcon: "fa-shield-halved",
-        rating: 4.8, reviews: 7, lessons: 24, difficulty: "Advanced", certificate: true
+        id: 'sec-12', num: 12, title: 'Supervisory Control and Data Acquisition (SCADA)',
+        category: 'scada', categoryLabel: 'SCADA', categoryIcon: 'fa-satellite-dish',
+        topics: [
+            T('Introduction to SCADA Systems', './pages/Supervisory_Control_and_Data_Acquisition/Introduction_to_SCADA_Systems.html'),
+            T('Purpose and Benefits of SCADA', './pages/Supervisory_Control_and_Data_Acquisition/Purpose_and_Benefits_of_SCADA.html'),
+            T('SCADA Architecture', './pages/Supervisory_Control_and_Data_Acquisition/SCADA_Architecture.html'),
+            T('SCADA System Components', './pages/Supervisory_Control_and_Data_Acquisition/SCADA_System_Components.html'),
+            T('Types of SCADA Software', './pages/Supervisory_Control_and_Data_Acquisition/Types_of_SCADA_Software.html'),
+            T('Key Functions of a SCADA system', './pages/Supervisory_Control_and_Data_Acquisition/Key_Functions_of_a_SCADA_system.html'),
+            T('Industrial Applications of SCADA', './pages/Supervisory_Control_and_Data_Acquisition/Industrial_Applications_of_SCADA.html')
+        ]
+    },
+    {
+        id: 'sec-13', num: 13, title: 'Variable Frequency Drives (VFD)',
+        category: 'drives', categoryLabel: 'Drives & Motion', categoryIcon: 'fa-rotate',
+        topics: [
+            T('Introduction to Variable Frequency Drives', './pages/Variable Frequency Drives/Introduction_to_Variable_Frequency_Drives.html'),
+            T('Construction and Operating Principle of VFD', './pages/Variable Frequency Drives/Construction_and_Operating_Principle_of_VFD.html'),
+            T('Speed Control of AC Motors Using VFD', './pages/Variable Frequency Drives/Speed_Control_of_AC_Motors_Using_VFD.html'),
+            T('V/f Control and Vector Control', './pages/Variable Frequency Drives/Control_and_Vector_Control.html'),
+            T('VFD Parameters and Settings', './pages/Variable Frequency Drives/VFD_Parameters_and_Settings.html'),
+            T('Industrial Applications of VFDs', './pages/Variable Frequency Drives/Industrial_Applications_of_VFDs.html')
+        ]
+    },
+    {
+        id: 'sec-14', num: 14, title: 'Distributed Control Systems (DCS)',
+        category: 'dcs', categoryLabel: 'DCS', categoryIcon: 'fa-diagram-project',
+        topics: [
+            T('Introduction to Distributed Control Systems', './pages/Distributed Control Systems/Introduction_to_Distributed_Control_Systems.html'),
+            T('DCS Architecture and Components', './pages/Distributed Control Systems/DCS_Architecture_and_Components.html'),
+            T('Comparison Between PLC and DCS', './pages/Distributed Control Systems/Comparison_Between_PLC_and_DCS.html'),
+            T('Advantages and Limitations of DCS', './pages/Distributed Control Systems/Advantages_and_Limitations_of_DCS.html'),
+            T('Industrial Applications of DCS', './pages/Distributed Control Systems/Industrial_Applications_of_DCS.html')
+        ]
+    },
+    {
+        id: 'sec-15', num: 15, title: 'Industrial Communication Networks',
+        category: 'networking', categoryLabel: 'Networking', categoryIcon: 'fa-network-wired',
+        topics: [
+            T('Introduction to Industrial Communication', './pages/Industrial Communication Networks/Introduction_to_Industrial_Communication.html'),
+            G('Modbus', [
+                T('RTU', './pages/Industrial Communication Networks/RTU.html'),
+                T('TCP/IP', './pages/Industrial Communication Networks/TCP-IP.html')
+            ]),
+            T('Profibus', './pages/Industrial Communication Networks/Profibus.html'),
+            T('Profinet', './pages/Industrial Communication Networks/Profinet.html'),
+            T('Ethernet/IP', './pages/Industrial Communication Networks/Ethernet-IP.html'),
+            T('CANopen', './pages/Industrial Communication Networks/CANopen.html'),
+            T('OPC UA', './pages/Industrial Communication Networks/OPC_UA.html')
+        ]
+    },
+    {
+        id: 'sec-16', num: 16, title: 'Advanced Automation & Industry 5.0',
+        category: 'advanced', categoryLabel: 'Advanced & Industry 5.0', categoryIcon: 'fa-robot',
+        topics: [
+            G('Industry 5.0', [
+                T('Concept and Definition of Industry 5.0', './pages/Advanced Automation & Industry 5.0/Concept_and_Definition_of_Industry_5.0.html'),
+                T('Human-Machine Collaboration', './pages/Advanced Automation & Industry 5.0/Human-Machine_Collaboration.html'),
+                T('Smart Sensors and Intelligent Actuators', './pages/Advanced Automation & Industry 5.0/Smart_Sensors_and_Intelligent_Actuators.html')
+            ])
+        ]
+    },
+    {
+        id: 'sec-17', num: 17, title: 'Advanced Automation Technologies',
+        category: 'advanced', categoryLabel: 'Advanced & Industry 5.0', categoryIcon: 'fa-robot',
+        topics: [
+            T('Artificial Intelligence in Industrial Automation', './pages/Advanced Automation Technologies/Artificial_Intelligence_in_Industrial_Automation.html'),
+            T('Industrial Internet of Things (IIoT)', './pages/Advanced Automation Technologies/Industrial_Internet_of_Things_(IIoT).html'),
+            T('Digital Twins', './pages/Advanced Automation Technologies/Digital_Twins.html'),
+            T('Collaborative Robots (Cobots)', './pages/Advanced Automation Technologies/Collaborative_Robots_(Cobots).html'),
+            T('Cybersecurity in Industrial Automation Systems', './pages/Advanced Automation Technologies/Cybersecurity_in_Industrial_Automation_Systems.html'),
+            T('AR and VR', './pages/Advanced Automation Technologies/AR_and_VR.html'),
+            T('Additive Manufacturing (AM)', './pages/Advanced Automation Technologies/Additive_Manufacturing_(AM).html')
+        ]
     }
 ];
 
-function renderStars(rating) {
-    let html = '<div class="stars">';
-    for (let i = 1; i <= 5; i++) {
-        if (i <= Math.floor(rating)) html += '<i class="fas fa-star"></i>';
-        else if (i - rating < 1) html += '<i class="fas fa-star-half-alt"></i>';
-        else html += '<i class="fas fa-star empty"></i>';
-    }
-    return html + '</div>';
+// ============================================================
+//  Reading-progress tracking (backed by MongoDB via auth-server)
+// ============================================================
+const readSet = new Set(); // set of topic hrefs the user has already read
+
+function authHeader() {
+    const token = localStorage.getItem(cfg.TOKEN_KEY);
+    return token ? { Authorization: `Bearer ${token}` } : null;
 }
 
-function diffClass(d) { return 'diff-' + d.toLowerCase(); }
-function diffIcon(d) { return d === 'Beginner' ? 'fa-seedling' : d === 'Intermediate' ? 'fa-fire' : 'fa-rocket'; }
+async function loadProgress() {
+    const auth = authHeader();
+    if (!auth) return;
+    try {
+        const res = await fetch(`${cfg.AUTH_SERVER_URL}/api/progress/my-progress`, { headers: auth });
+        const data = await res.json().catch(() => ({}));
+        if (data.success && Array.isArray(data.topics)) {
+            data.topics.forEach(t => readSet.add(t.topicId));
+        }
+    } catch (err) {
+        console.warn('Could not load reading progress:', err);
+    }
+}
 
-function renderCard(c) {
-    return `<article class="course-card" data-cat="${c.category}" data-title="${c.title.toLowerCase()}" data-diff="${c.difficulty.toLowerCase()}">
+async function markTopicRead(href, title, section) {
+    readSet.add(href);
+    const auth = authHeader();
+    if (!auth) return;
+    try {
+        await fetch(`${cfg.AUTH_SERVER_URL}/api/progress/mark-read`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', ...auth },
+            body: JSON.stringify({
+                topicId: href,
+                topicUrl: href,
+                topicTitle: title,
+                sectionTitle: section ? section.title : ''
+            })
+        });
+    } catch (err) {
+        console.warn('Could not save reading progress:', err);
+    }
+}
+
+// ============================================================
+//  Rendering helpers
+// ============================================================
+function escHtml(s) {
+    return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+}
+function escAttr(s) {
+    return escHtml(s).replace(/"/g, '&quot;');
+}
+
+function countLeaves(nodes) {
+    return nodes.reduce((n, item) => n + (item.children ? countLeaves(item.children) : 1), 0);
+}
+function countReadLeaves(nodes) {
+    return nodes.reduce((n, item) => {
+        if (item.children) return n + countReadLeaves(item.children);
+        return n + (readSet.has(item.href) ? 1 : 0);
+    }, 0);
+}
+
+function renderTopicNode(item) {
+    if (item.children) {
+        return `<li>
+            <div class="topic-group-toggle"><i class="fas fa-chevron-right"></i>${escHtml(item.title)}</div>
+            <ul class="topic-children">${item.children.map(renderTopicNode).join('')}</ul>
+        </li>`;
+    }
+    const read = readSet.has(item.href) ? ' topic-read' : '';
+    return `<li>
+        <a href="#" class="topic-link${read}" data-href="${escAttr(item.href)}" data-title="${escAttr(item.title)}">
+            <i class="fas fa-file-lines"></i><span>${escHtml(item.title)}</span>
+            <i class="fas fa-check topic-check-icon"></i>
+        </a>
+    </li>`;
+}
+function renderTopicTree(nodes) {
+    return `<ul class="topic-tree">${nodes.map(renderTopicNode).join('')}</ul>`;
+}
+
+function renderCard(s) {
+    const total = countLeaves(s.topics);
+    const read = countReadLeaves(s.topics);
+    const pct = total ? Math.round((read / total) * 100) : 0;
+    return `<article class="course-card" data-cat="${s.category}" data-title="${s.title.toLowerCase()}" data-section-id="${s.id}">
         <div class="card-body">
-            <div class="card-category"><i class="fas ${c.categoryIcon}"></i>${c.categoryLabel}</div>
-            <h3 class="card-title">${c.title}</h3>
-            <div class="card-rating">
-                ${renderStars(c.rating)}
-                <span class="rating-num">${c.rating}</span>
-                <span class="rating-count">(${c.reviews} reviews)</span>
-            </div>
+            <div class="card-category"><i class="fas ${s.categoryIcon}"></i>${s.categoryLabel}</div>
+            <h3 class="card-title">${s.num}. ${escHtml(s.title)}</h3>
             <div class="card-meta">
-                <span class="meta-pill"><i class="fas fa-play-circle"></i>${c.lessons} lessons</span>
-                <span class="meta-pill ${diffClass(c.difficulty)}"><i class="fas ${diffIcon(c.difficulty)}"></i>${c.difficulty}</span>
-                ${c.certificate ? '<span class="cert-badge"><i class="fas fa-certificate"></i> Certificate</span>' : ''}
+                <span class="meta-pill"><i class="fas fa-list"></i>${total} topics</span>
+                <span class="meta-pill read-pill"><i class="fas fa-check-circle"></i>${read}/${total} read</span>
             </div>
+            <div class="progress-track"><div class="progress-fill" style="width:${pct}%"></div></div>
         </div>
         <div class="card-footer">
-            <span class="card-footer-text"><i class="fas fa-clock"></i>Self-paced</span>
-            <span class="card-action">Start <i class="fas fa-arrow-right"></i></span>
+            <span class="card-footer-text"><i class="fas fa-book-open"></i>${pct}% complete</span>
+            <span class="card-action">View Topics <i class="fas fa-arrow-right"></i></span>
         </div>
     </article>`;
 }
 
+function updateCardProgress(sectionId) {
+    const section = sections.find(s => s.id === sectionId);
+    const card = document.querySelector(`.course-card[data-section-id="${sectionId}"]`);
+    if (!section || !card) return;
+    const total = countLeaves(section.topics);
+    const read = countReadLeaves(section.topics);
+    const pct = total ? Math.round((read / total) * 100) : 0;
+    card.querySelector('.read-pill').innerHTML = `<i class="fas fa-check-circle"></i>${read}/${total} read`;
+    card.querySelector('.progress-fill').style.width = pct + '%';
+    card.querySelector('.card-footer-text').innerHTML = `<i class="fas fa-book-open"></i>${pct}% complete`;
+}
+
 const categories = [
-    { key: 'all', label: 'All Courses' },
-    { key: 'plc', label: 'PLC Programming' },
-    { key: 'networking', label: 'Industrial Networking' },
-    { key: 'scada', label: 'SCADA & HMI' },
-    { key: 'automation', label: 'Industrial Automation' },
+    { key: 'all', label: 'All Sections' },
+    { key: 'fundamentals', label: 'Fundamentals' },
+    { key: 'electrical', label: 'Electrical & Sensors' },
+    { key: 'panels', label: 'Control Panels' },
+    { key: 'plc', label: 'PLC' },
+    { key: 'hmi', label: 'HMI' },
+    { key: 'scada', label: 'SCADA' },
     { key: 'drives', label: 'Drives & Motion' },
-    { key: 'safety', label: 'Functional Safety' }
+    { key: 'dcs', label: 'DCS' },
+    { key: 'networking', label: 'Networking' },
+    { key: 'advanced', label: 'Advanced & Industry 5.0' }
 ];
 
 function renderFilters() {
     document.getElementById('filterTabs').innerHTML = categories.map(cat => {
-        const count = cat.key === 'all' ? courses.length : courses.filter(c => c.category === cat.key).length;
+        const count = cat.key === 'all' ? sections.length : sections.filter(s => s.category === cat.key).length;
         return `<button class="filter-tab${cat.key === 'all' ? ' active' : ''}" data-filter="${cat.key}">${cat.label}<span class="filter-count">${count}</span></button>`;
     }).join('');
 }
@@ -911,16 +1380,15 @@ let activeFilter = 'all', searchQuery = '';
 
 function applyFilters() {
     const grid = document.getElementById('courseGrid');
-    const filtered = courses.filter(c => {
-        const matchCat = activeFilter === 'all' || c.category === activeFilter;
+    const filtered = sections.filter(s => {
+        const matchCat = activeFilter === 'all' || s.category === activeFilter;
         const matchSearch = searchQuery === '' ||
-            c.title.toLowerCase().includes(searchQuery) ||
-            c.categoryLabel.toLowerCase().includes(searchQuery) ||
-            c.difficulty.toLowerCase().includes(searchQuery);
+            s.title.toLowerCase().includes(searchQuery) ||
+            s.categoryLabel.toLowerCase().includes(searchQuery);
         return matchCat && matchSearch;
     });
     if (!filtered.length) {
-        grid.innerHTML = `<div class="no-results"><i class="fas fa-search"></i><h3>No courses found</h3><p>Try adjusting your search or filter.</p></div>`;
+        grid.innerHTML = `<div class="no-results"><i class="fas fa-search"></i><h3>No topics found</h3><p>Try adjusting your search or filter.</p></div>`;
         return;
     }
     grid.innerHTML = filtered.map(renderCard).join('');
@@ -940,8 +1408,91 @@ document.getElementById('search').addEventListener('input', e => {
     applyFilters();
 });
 
+// ============================================================
+//  Popup wiring: card → topics list → single topic (iframe)
+// ============================================================
+let currentSectionId = null;
+
+function openTopicsModal(section) {
+    currentSectionId = section.id;
+    document.getElementById('topicsModalTitle').textContent = `${section.num}. ${section.title}`;
+    document.getElementById('topicsModalBody').innerHTML = renderTopicTree(section.topics);
+    document.getElementById('topicsModalOverlay').classList.add('open');
+}
+function closeTopicsModal() {
+    document.getElementById('topicsModalOverlay').classList.remove('open');
+}
+
+function openContentModal(href, title, linkEl, section) {
+    const overlay = document.getElementById('contentModalOverlay');
+    const iframe = document.getElementById('contentModalIframe');
+    const titleEl = document.getElementById('contentModalTitle');
+    const loading = document.getElementById('contentModalLoading');
+    const badge = document.getElementById('contentReadBadge');
+
+    titleEl.textContent = title;
+    badge.classList.remove('show');
+    loading.style.display = 'flex';
+    iframe.src = encodeURI(href);
+    overlay.classList.add('open');
+    iframe.onload = () => { loading.style.display = 'none'; };
+
+    markTopicRead(href, title, section).then(() => {
+        badge.classList.add('show');
+        linkEl.classList.add('topic-read');
+        if (section) updateCardProgress(section.id);
+    });
+}
+function closeContentModal() {
+    document.getElementById('contentModalOverlay').classList.remove('open');
+    document.getElementById('contentModalIframe').src = 'about:blank';
+}
+
+document.getElementById('courseGrid').addEventListener('click', e => {
+    const card = e.target.closest('.course-card');
+    if (!card) return;
+    const section = sections.find(s => s.id === card.dataset.sectionId);
+    if (section) openTopicsModal(section);
+});
+
+document.getElementById('topicsModalBody').addEventListener('click', e => {
+    const toggle = e.target.closest('.topic-group-toggle');
+    if (toggle) {
+        const ul = toggle.nextElementSibling;
+        const icon = toggle.querySelector('i');
+        const willOpen = ul.style.display !== 'block';
+        ul.style.display = willOpen ? 'block' : 'none';
+        icon.classList.toggle('fa-chevron-right', !willOpen);
+        icon.classList.toggle('fa-chevron-down', willOpen);
+        return;
+    }
+    const link = e.target.closest('.topic-link');
+    if (link) {
+        e.preventDefault();
+        const section = sections.find(s => s.id === currentSectionId);
+        openContentModal(link.dataset.href, link.dataset.title, link, section);
+    }
+});
+
+document.getElementById('topicsModalClose').addEventListener('click', closeTopicsModal);
+document.getElementById('topicsModalOverlay').addEventListener('click', e => {
+    if (e.target.id === 'topicsModalOverlay') closeTopicsModal();
+});
+document.getElementById('contentModalClose').addEventListener('click', closeContentModal);
+document.getElementById('contentModalOverlay').addEventListener('click', e => {
+    if (e.target.id === 'contentModalOverlay') closeContentModal();
+});
+document.addEventListener('keydown', e => {
+    if (e.key !== 'Escape') return;
+    if (document.getElementById('contentModalOverlay').classList.contains('open')) closeContentModal();
+    else if (document.getElementById('topicsModalOverlay').classList.contains('open')) closeTopicsModal();
+});
+
+// ============================================================
+//  Boot: load progress first so cards render with correct counts
+// ============================================================
 renderFilters();
-applyFilters();
+loadProgress().finally(() => { applyFilters(); });
 </script>
 </body>
 </html>
