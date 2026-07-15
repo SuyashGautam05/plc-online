@@ -724,7 +724,7 @@ footer a:hover { color: var(--red); }
 }
 
 /* ============================================================
-   ADDED — Topics popup (real lessons per section) + read tracking
+   ADDED — Topics popup, roadmap map, and read-progress tracking
    ============================================================ */
 .progress-track {
     height: 6px;
@@ -740,7 +740,29 @@ footer a:hover { color: var(--red); }
     transition: width 0.3s var(--ease);
 }
 
-.topics-modal-overlay, .content-modal-overlay {
+/* roadmap trigger button, sits next to the filter tabs */
+.filter-section { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.filter-tabs { flex: 1; min-width: 0; }
+.roadmap-btn {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 18px;
+    margin: 20px 0 8px;
+    border-radius: var(--r-pill);
+    background: var(--text-color);
+    color: var(--white);
+    border: none;
+    font-family: inherit;
+    font-size: 0.82rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: background 0.2s var(--ease);
+}
+.roadmap-btn:hover { background: var(--red); }
+
+.topics-modal-overlay, .roadmap-modal-overlay {
     display: none;
     position: fixed;
     inset: 0;
@@ -750,13 +772,12 @@ footer a:hover { color: var(--red); }
     justify-content: center;
     padding: 24px;
 }
-.topics-modal-overlay.open, .content-modal-overlay.open { display: flex; }
-.content-modal-overlay { z-index: 100010; }
+.topics-modal-overlay.open, .roadmap-modal-overlay.open { display: flex; }
 
-.topics-modal-box {
+.topics-modal-box, .roadmap-modal-box {
     background: var(--white);
-    width: min(640px, 94vw);
-    max-height: 82vh;
+    width: min(680px, 94vw);
+    max-height: 84vh;
     border-radius: var(--r-2);
     overflow: hidden;
     display: flex;
@@ -764,18 +785,7 @@ footer a:hover { color: var(--red); }
     box-shadow: 0 20px 60px rgba(0,0,0,0.35);
     animation: revealUp 0.25s var(--ease) both;
 }
-.content-modal-box {
-    background: var(--white);
-    width: min(1100px, 95vw);
-    height: min(85vh, 900px);
-    border-radius: var(--r-2);
-    overflow: hidden;
-    display: flex;
-    flex-direction: column;
-    box-shadow: 0 20px 60px rgba(0,0,0,0.35);
-    animation: revealUp 0.25s var(--ease) both;
-}
-.topics-modal-header, .content-modal-header {
+.topics-modal-header, .roadmap-modal-header {
     background: var(--text-color);
     color: var(--white);
     padding: 14px 20px;
@@ -785,24 +795,13 @@ footer a:hover { color: var(--red); }
     flex-shrink: 0;
     gap: 12px;
 }
-.topics-modal-title, .content-modal-title {
+.topics-modal-title, .roadmap-modal-title {
     font-weight: 700;
     font-size: 1rem;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
 }
-.modal-header-right { display: flex; align-items: center; gap: 10px; flex-shrink: 0; }
-.content-read-badge {
-    background: #16a34a;
-    color: #fff;
-    font-size: 0.7rem;
-    padding: 3px 9px;
-    border-radius: var(--r-pill);
-    display: none;
-    white-space: nowrap;
-}
-.content-read-badge.show { display: inline-block; }
 .modal-close-btn {
     background: transparent;
     border: 1px solid rgba(255,255,255,0.35);
@@ -814,10 +813,12 @@ footer a:hover { color: var(--red); }
     font-family: inherit;
     transition: all 0.15s;
     white-space: nowrap;
+    flex-shrink: 0;
 }
 .modal-close-btn:hover { background: var(--red); border-color: var(--red); color: #fff; }
 
-.topics-modal-body { overflow-y: auto; padding: 10px 8px; }
+.topics-modal-body, .roadmap-modal-body { overflow-y: auto; padding: 10px 8px; }
+
 .topic-tree, .topic-children { list-style: none; }
 .topic-tree { padding: 6px; }
 .topic-children { display: none; padding-left: 18px; }
@@ -848,19 +849,42 @@ footer a:hover { color: var(--red); }
     transition: background 0.15s;
 }
 .topic-link:hover { background: var(--red-soft); color: var(--red); }
-.topic-link i.fa-file-lines { color: var(--accent-color); font-size: 0.85em; }
-.topic-check-icon { display: none; color: #16a34a; margin-left: auto; font-size: 0.85em; }
-.topic-link.topic-read .topic-check-icon { display: inline-block; }
+.topic-link i.fa-arrow-up-right-from-square, .topic-link i.fa-file-lines { color: var(--accent-color); font-size: 0.78em; }
+.topic-status-icon { margin-left: auto; font-size: 0.72rem; color: var(--accent-color); white-space: nowrap; }
+.topic-link.topic-read .topic-status-icon { color: #16a34a; }
+.topic-link.topic-read .topic-status-icon i { color: #16a34a; }
 
-.content-modal-body { flex: 1; position: relative; }
-.content-modal-body iframe { width: 100%; height: 100%; border: none; display: block; }
-.content-modal-loading {
-    position: absolute; inset: 0;
-    display: flex; align-items: center; justify-content: center;
-    color: var(--accent-color);
-    font-size: 0.9rem;
-    background: var(--white);
+/* ── Roadmap (learning path map) ── */
+.roadmap-modal-body { padding: 20px 16px; }
+.roadmap-node {
+    display: flex;
+    gap: 14px;
+    padding: 12px 10px;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: background 0.15s;
 }
+.roadmap-node:hover { background: var(--hover-color); }
+.roadmap-marker-col { display: flex; flex-direction: column; align-items: center; flex-shrink: 0; }
+.roadmap-marker {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: var(--secondary-color);
+    color: var(--text-color);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 0.82rem;
+    font-weight: 700;
+    border: 2px solid var(--border-color);
+}
+.roadmap-line { width: 2px; flex: 1; min-height: 14px; background: var(--border-color); margin: 4px 0; }
+.roadmap-node.complete .roadmap-marker { background: #16a34a; color: #fff; border-color: #16a34a; }
+.roadmap-node.progress .roadmap-marker { background: #f59e0b; color: #fff; border-color: #f59e0b; }
+.roadmap-info { flex: 1; padding-top: 2px; min-width: 0; }
+.roadmap-title { font-weight: 700; font-size: 0.92rem; margin-bottom: 4px; }
+.roadmap-sub { font-size: 0.78rem; color: var(--accent-color); margin-bottom: 6px; }
     </style>
 </head>
 <body>
@@ -917,6 +941,7 @@ footer a:hover { color: var(--red); }
 <!-- ═══════ FILTERS ═══════ -->
 <div class="filter-section">
     <div class="filter-tabs" id="filterTabs"></div>
+    <button class="roadmap-btn" id="openRoadmapBtn"><i class="fas fa-map-location-dot"></i> View Learning Roadmap</button>
 </div>
 
 <!-- ═══════ COURSE GRID ═══════ -->
@@ -929,7 +954,7 @@ footer a:hover { color: var(--red); }
     <p>&copy; 2026 Scientech Instruments Pvt. Ltd. &mdash; PLC SimTel Course Library &middot; <a href="#">Terms</a> &middot; <a href="#">Privacy</a></p>
 </footer>
 
-<!-- ═══════ ADDED: Topics list popup (shows the real lessons for a section) ═══════ -->
+<!-- ═══════ ADDED: Topics list popup (real lessons for a section) ═══════ -->
 <div class="topics-modal-overlay" id="topicsModalOverlay">
     <div class="topics-modal-box">
         <div class="topics-modal-header">
@@ -940,20 +965,14 @@ footer a:hover { color: var(--red); }
     </div>
 </div>
 
-<!-- ═══════ ADDED: Content popup (opens the actual lesson page + tracks reading) ═══════ -->
-<div class="content-modal-overlay" id="contentModalOverlay">
-    <div class="content-modal-box">
-        <div class="content-modal-header">
-            <span class="content-modal-title" id="contentModalTitle">Loading…</span>
-            <div class="modal-header-right">
-                <span class="content-read-badge" id="contentReadBadge">✓ Marked as read</span>
-                <button class="modal-close-btn" id="contentModalClose">Close ✕</button>
-            </div>
+<!-- ═══════ ADDED: Learning roadmap / progress map ═══════ -->
+<div class="roadmap-modal-overlay" id="roadmapModalOverlay">
+    <div class="roadmap-modal-box">
+        <div class="roadmap-modal-header">
+            <span class="roadmap-modal-title">🗺 Your Learning Roadmap</span>
+            <button class="modal-close-btn" id="roadmapModalClose">Close ✕</button>
         </div>
-        <div class="content-modal-body">
-            <div class="content-modal-loading" id="contentModalLoading">Loading topic…</div>
-            <iframe id="contentModalIframe" src="about:blank"></iframe>
-        </div>
+        <div class="roadmap-modal-body" id="roadmapModalBody"></div>
     </div>
 </div>
 
@@ -1240,9 +1259,18 @@ const sections = [
 ];
 
 // ============================================================
-//  Reading-progress tracking (backed by MongoDB via auth-server)
+//  Reading-progress tracking (backed by MongoDB via auth-server).
+//  A topic only becomes "read" once the tracker script on that
+//  page itself confirms it (scrolled to the end + stayed a few
+//  minutes) — this page just displays whatever the server has.
 // ============================================================
-const readSet = new Set(); // set of topic hrefs the user has already read
+const readSet = new Set(); // canonical topic ids (URL pathnames) already read
+
+// Resolve a relative "./pages/..." href to the same canonical id
+// the topic page itself will report (its window.location.pathname).
+function toTopicId(href) {
+    return new URL(href, window.location.href).pathname;
+}
 
 function authHeader() {
     const token = localStorage.getItem(cfg.TOKEN_KEY);
@@ -1256,30 +1284,11 @@ async function loadProgress() {
         const res = await fetch(`${cfg.AUTH_SERVER_URL}/api/progress/my-progress`, { headers: auth });
         const data = await res.json().catch(() => ({}));
         if (data.success && Array.isArray(data.topics)) {
+            readSet.clear();
             data.topics.forEach(t => readSet.add(t.topicId));
         }
     } catch (err) {
         console.warn('Could not load reading progress:', err);
-    }
-}
-
-async function markTopicRead(href, title, section) {
-    readSet.add(href);
-    const auth = authHeader();
-    if (!auth) return;
-    try {
-        await fetch(`${cfg.AUTH_SERVER_URL}/api/progress/mark-read`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json', ...auth },
-            body: JSON.stringify({
-                topicId: href,
-                topicUrl: href,
-                topicTitle: title,
-                sectionTitle: section ? section.title : ''
-            })
-        });
-    } catch (err) {
-        console.warn('Could not save reading progress:', err);
     }
 }
 
@@ -1299,7 +1308,7 @@ function countLeaves(nodes) {
 function countReadLeaves(nodes) {
     return nodes.reduce((n, item) => {
         if (item.children) return n + countReadLeaves(item.children);
-        return n + (readSet.has(item.href) ? 1 : 0);
+        return n + (readSet.has(toTopicId(item.href)) ? 1 : 0);
     }, 0);
 }
 
@@ -1310,11 +1319,11 @@ function renderTopicNode(item) {
             <ul class="topic-children">${item.children.map(renderTopicNode).join('')}</ul>
         </li>`;
     }
-    const read = readSet.has(item.href) ? ' topic-read' : '';
+    const isRead = readSet.has(toTopicId(item.href));
     return `<li>
-        <a href="#" class="topic-link${read}" data-href="${escAttr(item.href)}" data-title="${escAttr(item.title)}">
-            <i class="fas fa-file-lines"></i><span>${escHtml(item.title)}</span>
-            <i class="fas fa-check topic-check-icon"></i>
+        <a href="${escAttr(item.href)}" target="_blank" rel="noopener" class="topic-link${isRead ? ' topic-read' : ''}" data-href="${escAttr(item.href)}">
+            <i class="fas fa-arrow-up-right-from-square"></i><span>${escHtml(item.title)}</span>
+            <span class="topic-status-icon">${isRead ? '<i class="fas fa-check"></i> Read' : 'Not read yet'}</span>
         </a>
     </li>`;
 }
@@ -1341,18 +1350,6 @@ function renderCard(s) {
             <span class="card-action">View Topics <i class="fas fa-arrow-right"></i></span>
         </div>
     </article>`;
-}
-
-function updateCardProgress(sectionId) {
-    const section = sections.find(s => s.id === sectionId);
-    const card = document.querySelector(`.course-card[data-section-id="${sectionId}"]`);
-    if (!section || !card) return;
-    const total = countLeaves(section.topics);
-    const read = countReadLeaves(section.topics);
-    const pct = total ? Math.round((read / total) * 100) : 0;
-    card.querySelector('.read-pill').innerHTML = `<i class="fas fa-check-circle"></i>${read}/${total} read`;
-    card.querySelector('.progress-fill').style.width = pct + '%';
-    card.querySelector('.card-footer-text').innerHTML = `<i class="fas fa-book-open"></i>${pct}% complete`;
 }
 
 const categories = [
@@ -1409,12 +1406,20 @@ document.getElementById('search').addEventListener('input', e => {
 });
 
 // ============================================================
-//  Popup wiring: card → topics list → single topic (iframe)
+//  Card → Topics popup. Topic links open the REAL page in a new
+//  tab (full page, not a popup). Reading is marked by that page's
+//  own tracker script only after scroll-to-end + a few minutes'
+//  dwell time, so we just refresh from the server whenever this
+//  tab regains focus (i.e. when the user comes back from reading).
 // ============================================================
-let currentSectionId = null;
+document.getElementById('courseGrid').addEventListener('click', e => {
+    const card = e.target.closest('.course-card');
+    if (!card) return;
+    const section = sections.find(s => s.id === card.dataset.sectionId);
+    if (section) openTopicsModal(section);
+});
 
 function openTopicsModal(section) {
-    currentSectionId = section.id;
     document.getElementById('topicsModalTitle').textContent = `${section.num}. ${section.title}`;
     document.getElementById('topicsModalBody').innerHTML = renderTopicTree(section.topics);
     document.getElementById('topicsModalOverlay').classList.add('open');
@@ -1422,38 +1427,6 @@ function openTopicsModal(section) {
 function closeTopicsModal() {
     document.getElementById('topicsModalOverlay').classList.remove('open');
 }
-
-function openContentModal(href, title, linkEl, section) {
-    const overlay = document.getElementById('contentModalOverlay');
-    const iframe = document.getElementById('contentModalIframe');
-    const titleEl = document.getElementById('contentModalTitle');
-    const loading = document.getElementById('contentModalLoading');
-    const badge = document.getElementById('contentReadBadge');
-
-    titleEl.textContent = title;
-    badge.classList.remove('show');
-    loading.style.display = 'flex';
-    iframe.src = encodeURI(href);
-    overlay.classList.add('open');
-    iframe.onload = () => { loading.style.display = 'none'; };
-
-    markTopicRead(href, title, section).then(() => {
-        badge.classList.add('show');
-        linkEl.classList.add('topic-read');
-        if (section) updateCardProgress(section.id);
-    });
-}
-function closeContentModal() {
-    document.getElementById('contentModalOverlay').classList.remove('open');
-    document.getElementById('contentModalIframe').src = 'about:blank';
-}
-
-document.getElementById('courseGrid').addEventListener('click', e => {
-    const card = e.target.closest('.course-card');
-    if (!card) return;
-    const section = sections.find(s => s.id === card.dataset.sectionId);
-    if (section) openTopicsModal(section);
-});
 
 document.getElementById('topicsModalBody').addEventListener('click', e => {
     const toggle = e.target.closest('.topic-group-toggle');
@@ -1466,26 +1439,82 @@ document.getElementById('topicsModalBody').addEventListener('click', e => {
         icon.classList.toggle('fa-chevron-down', willOpen);
         return;
     }
-    const link = e.target.closest('.topic-link');
-    if (link) {
-        e.preventDefault();
-        const section = sections.find(s => s.id === currentSectionId);
-        openContentModal(link.dataset.href, link.dataset.title, link, section);
-    }
+    // topic-link is a real <a target="_blank">, so default navigation
+    // already opens the full page in a new tab — nothing to intercept.
 });
 
 document.getElementById('topicsModalClose').addEventListener('click', closeTopicsModal);
 document.getElementById('topicsModalOverlay').addEventListener('click', e => {
     if (e.target.id === 'topicsModalOverlay') closeTopicsModal();
 });
-document.getElementById('contentModalClose').addEventListener('click', closeContentModal);
-document.getElementById('contentModalOverlay').addEventListener('click', e => {
-    if (e.target.id === 'contentModalOverlay') closeContentModal();
+
+// Refresh read-state (and re-render whatever's open) whenever the
+// user comes back to this tab — e.g. after reading a topic elsewhere.
+document.addEventListener('visibilitychange', () => {
+    if (document.visibilityState !== 'visible') return;
+    loadProgress().then(() => {
+        applyFilters();
+        if (document.getElementById('topicsModalOverlay').classList.contains('open')) {
+            const openTitle = document.getElementById('topicsModalTitle').textContent;
+            const section = sections.find(s => `${s.num}. ${s.title}` === openTitle);
+            if (section) document.getElementById('topicsModalBody').innerHTML = renderTopicTree(section.topics);
+        }
+        if (document.getElementById('roadmapModalOverlay').classList.contains('open')) {
+            document.getElementById('roadmapModalBody').innerHTML = renderRoadmap();
+        }
+    });
 });
+
+// ============================================================
+//  Learning Roadmap — a visual progress map across all sections
+// ============================================================
+function renderRoadmap() {
+    return sections.map((s, idx) => {
+        const total = countLeaves(s.topics);
+        const read = countReadLeaves(s.topics);
+        const pct = total ? Math.round((read / total) * 100) : 0;
+        const state = pct === 100 ? 'complete' : pct > 0 ? 'progress' : 'todo';
+        const isLast = idx === sections.length - 1;
+        return `<div class="roadmap-node ${state}" data-section-id="${s.id}">
+            <div class="roadmap-marker-col">
+                <div class="roadmap-marker">${pct === 100 ? '<i class="fas fa-check"></i>' : s.num}</div>
+                ${isLast ? '' : '<div class="roadmap-line"></div>'}
+            </div>
+            <div class="roadmap-info">
+                <div class="roadmap-title">${s.num}. ${escHtml(s.title)}</div>
+                <div class="roadmap-sub">${read}/${total} topics read · ${pct}%</div>
+                <div class="progress-track"><div class="progress-fill" style="width:${pct}%"></div></div>
+            </div>
+        </div>`;
+    }).join('');
+}
+
+document.getElementById('openRoadmapBtn').addEventListener('click', () => {
+    document.getElementById('roadmapModalBody').innerHTML = renderRoadmap();
+    document.getElementById('roadmapModalOverlay').classList.add('open');
+});
+document.getElementById('roadmapModalClose').addEventListener('click', () => {
+    document.getElementById('roadmapModalOverlay').classList.remove('open');
+});
+document.getElementById('roadmapModalOverlay').addEventListener('click', e => {
+    if (e.target.id === 'roadmapModalOverlay') document.getElementById('roadmapModalOverlay').classList.remove('open');
+});
+document.getElementById('roadmapModalBody').addEventListener('click', e => {
+    const node = e.target.closest('.roadmap-node');
+    if (!node) return;
+    const section = sections.find(s => s.id === node.dataset.sectionId);
+    if (!section) return;
+    document.getElementById('roadmapModalOverlay').classList.remove('open');
+    openTopicsModal(section);
+});
+
 document.addEventListener('keydown', e => {
     if (e.key !== 'Escape') return;
-    if (document.getElementById('contentModalOverlay').classList.contains('open')) closeContentModal();
-    else if (document.getElementById('topicsModalOverlay').classList.contains('open')) closeTopicsModal();
+    if (document.getElementById('roadmapModalOverlay').classList.contains('open')) {
+        document.getElementById('roadmapModalOverlay').classList.remove('open');
+    } else if (document.getElementById('topicsModalOverlay').classList.contains('open')) {
+        closeTopicsModal();
+    }
 });
 
 // ============================================================

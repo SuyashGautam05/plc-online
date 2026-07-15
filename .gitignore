@@ -4,4 +4,5 @@ npm-debug.log
 # Ignore dist folder and file
 /dist
 fix_error
-index_backup_previous.html
+index_backup_old main.html
+index version 2.html
