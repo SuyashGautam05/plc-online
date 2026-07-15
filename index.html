@@ -1321,7 +1321,7 @@ function renderTopicNode(item) {
     }
     const isRead = readSet.has(toTopicId(item.href));
     return `<li>
-        <a href="${escAttr(item.href)}" target="_blank" rel="noopener" class="topic-link${isRead ? ' topic-read' : ''}" data-href="${escAttr(item.href)}">
+        <a href="${escAttr(item.href)}" class="topic-link${isRead ? ' topic-read' : ''}" data-href="${escAttr(item.href)}">
             <i class="fas fa-arrow-up-right-from-square"></i><span>${escHtml(item.title)}</span>
             <span class="topic-status-icon">${isRead ? '<i class="fas fa-check"></i> Read' : 'Not read yet'}</span>
         </a>
@@ -1439,8 +1439,10 @@ document.getElementById('topicsModalBody').addEventListener('click', e => {
         icon.classList.toggle('fa-chevron-down', willOpen);
         return;
     }
-    // topic-link is a real <a target="_blank">, so default navigation
-    // already opens the full page in a new tab — nothing to intercept.
+    // topic-link is a real <a> with no target, so default navigation
+    // already opens the page in this same tab — nothing to intercept.
+    // Progress picks back up automatically since loadProgress() runs
+    // again on boot whenever the user returns (e.g. hits Back).
 });
 
 document.getElementById('topicsModalClose').addEventListener('click', closeTopicsModal);
