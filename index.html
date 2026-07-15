@@ -161,9 +161,10 @@ body {
     background-image: url('./PLC 1.JPG');
     position: relative;
     z-index: 2;
-    max-width: 720px;
+    /* max-width: 720px; */
     margin: 0 auto;
     animation: revealUp 0.7s var(--ease) both;
+    top: -90px;
 }
 
 @keyframes revealUp {
@@ -909,11 +910,11 @@ footer a:hover { color: var(--red); }
 <!-- ═══════ HERO ═══════ -->
 <section class="hero">
     <div class="hero-inner">
-        <div class="hero-badge">2026 International Edition</div>
-        <h1>Master Industrial<br><span>Automation</span> Skills</h1>
-        <p>Hands-on PLC programming, SCADA design, OT cybersecurity, and motion control — built for engineers who build the future.</p>
+        <div class="hero-badge" style="display: none;">2026 International Edition</div>
+        <h1 style="display: none;">Master Industrial<br><span>Automation</span> Skills</h1>
+        <p style="display: none;">Hands-on PLC programming, SCADA design, OT cybersecurity, and motion control — built for engineers who build the future.</p>
 
-        <div class="stats-bar">
+        <div class="stats-bar" style="display: none;">
             <div class="stat-item">
                 <div class="stat-num">12</div>
                 <div class="stat-label">Courses</div>
