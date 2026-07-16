@@ -25,7 +25,7 @@
                 display: flex;
                 align-items: center;
                 gap: 10px;
-                background: #343a40;
+                background: #173681;
                 color: #fff;
                 padding: 6px 14px;
                 font-family: Georgia, serif;
