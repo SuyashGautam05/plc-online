@@ -270,6 +270,66 @@
 
         .table-wrap { overflow-x: auto; }
 
+        /* College groups */
+        .college-group {
+            border: 1px solid #e9ecef;
+            border-radius: 8px;
+            margin-bottom: 14px;
+            overflow: hidden;
+        }
+
+        .college-group:last-child { margin-bottom: 0; }
+
+        .college-group-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 11px 16px;
+            background: #f1f3f5;
+            cursor: pointer;
+            user-select: none;
+            transition: background 0.12s;
+        }
+
+        .college-group-header:hover { background: #e9ecef; }
+
+        .college-group-header .college-name {
+            font-weight: 700;
+            font-size: 0.92rem;
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .college-group-header .college-name i.fa-graduation-cap { color: #6c757d; }
+
+        .college-count {
+            background: #343a40;
+            color: #fff;
+            border-radius: 10px;
+            padding: 1px 9px;
+            font-size: 0.74rem;
+            font-weight: 700;
+        }
+
+        .college-group.unspecified .college-group-header { background: #fff3cd; }
+        .college-group.unspecified .college-count { background: #997404; }
+
+        .group-chevron { color: #6c757d; transition: transform 0.15s; }
+        .college-group.collapsed .group-chevron { transform: rotate(-90deg); }
+        .college-group.collapsed .college-group-body { display: none; }
+
+        .college-group-body .user-table { margin: 0; }
+        .college-group-body .user-table th { background: #fafbfc; }
+
+        .btn-edit-college {
+            background: #fff;
+            color: #495057;
+            border-color: #ced4da;
+        }
+        .btn-edit-college:hover { background: #6c757d; color: #fff; }
+
         @media (max-width: 600px) {
             .admin-body { padding: 16px 10px; }
             .create-form { flex-direction: column; }
@@ -296,6 +356,7 @@
         <div class="stat-card"><div class="stat-num" id="stat-active">–</div><div class="stat-label">Active</div></div>
         <div class="stat-card"><div class="stat-num" id="stat-pending">–</div><div class="stat-label">Pending Approval</div></div>
         <div class="stat-card"><div class="stat-num" id="stat-admins">–</div><div class="stat-label">Admins</div></div>
+        <div class="stat-card"><div class="stat-num" id="stat-colleges">–</div><div class="stat-label">Colleges</div></div>
     </div>
 
     <!-- Create User -->
@@ -310,6 +371,7 @@
                 <input type="text" id="c-name" placeholder="Full Name">
                 <input type="email" id="c-email" placeholder="Email Address">
                 <input type="password" id="c-password" placeholder="Password (min 6)">
+                <input type="text" id="c-college" placeholder="College / Institute">
                 <select id="c-role">
                     <option value="user">User</option>
                     <option value="admin">Admin</option>
@@ -321,33 +383,20 @@
         </div>
     </div>
 
-    <!-- User List -->
+    <!-- User List, grouped by college -->
     <div class="panel">
         <div class="panel-header">
-            <h2><i class="fas fa-users"></i> All Users</h2>
+            <h2><i class="fas fa-users"></i> All Users <span style="font-weight:400; color:#6c757d; font-size:0.8rem;">— grouped by college</span></h2>
             <div class="search-bar">
+                <button class="btn-sm" id="toggle-groups-btn" onclick="toggleAllGroups()" style="border:1px solid #dee2e6; background:#fff; color:#495057;">Collapse all</button>
                 <i class="fas fa-search" style="color:#6c757d;"></i>
-                <input type="text" id="user-search" placeholder="Filter users..." oninput="filterTable()">
+                <input type="text" id="user-search" placeholder="Filter name, email, college..." oninput="filterTable()">
             </div>
         </div>
         <div class="panel-body">
             <div class="alert error" id="list-error"></div>
-            <div class="table-wrap">
-                <table class="user-table">
-                    <thead>
-                        <tr>
-                            <th>Name</th>
-                            <th>Email</th>
-                            <th>Status</th>
-                            <th>Role</th>
-                            <th>Joined</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="user-tbody">
-                        <tr><td colspan="6" class="loading">Loading users...</td></tr>
-                    </tbody>
-                </table>
+            <div class="table-wrap" id="user-groups">
+                <div class="loading">Loading users...</div>
             </div>
         </div>
     </div>
@@ -385,7 +434,7 @@
             const data = await res.json();
             if (!data.success) throw new Error(data.message);
             allUsers = data.users;
-            renderTable(allUsers);
+            renderGroupedTable(allUsers);
             updateStats(allUsers);
         } catch (err) {
             document.getElementById('list-error').textContent = err.message;
@@ -398,58 +447,158 @@
         document.getElementById('stat-active').textContent = users.filter(u => u.isActive).length;
         document.getElementById('stat-pending').textContent = users.filter(u => !u.isActive).length;
         document.getElementById('stat-admins').textContent = users.filter(u => u.role === 'admin').length;
+        const collegeSet = new Set(users.filter(u => u.college && u.college.trim()).map(u => u.college.trim().toLowerCase()));
+        document.getElementById('stat-colleges').textContent = collegeSet.size;
     }
 
     function filterTable() {
         const q = document.getElementById('user-search').value.toLowerCase();
         const filtered = allUsers.filter(u =>
-            u.name.toLowerCase().includes(q) || u.email.toLowerCase().includes(q)
+            u.name.toLowerCase().includes(q) ||
+            u.email.toLowerCase().includes(q) ||
+            (u.college || '').toLowerCase().includes(q)
         );
-        renderTable(filtered);
+        renderGroupedTable(filtered);
     }
 
-    function renderTable(users) {
-        const tbody = document.getElementById('user-tbody');
+    // Groups users by college (case-insensitive key, original casing kept
+    // for display). Users with no college fall into an "Unspecified" bucket
+    // so legacy accounts are still visible and easy to find/fix.
+    function groupByCollege(users) {
+        const groups = {};
+        users.forEach(u => {
+            const raw = (u.college || '').trim();
+            const key = raw ? raw.toLowerCase() : '__unspecified__';
+            if (!groups[key]) groups[key] = { label: raw || 'Unspecified', users: [] };
+            groups[key].users.push(u);
+        });
+        return groups;
+    }
+
+    function renderGroupedTable(users) {
+        const container = document.getElementById('user-groups');
         if (users.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="6" class="loading">No users found.</td></tr>';
+            container.innerHTML = '<div class="loading">No users found.</div>';
             return;
         }
-        tbody.innerHTML = users.map(u => `
-            <tr id="row-${u._id}">
-                <td><strong>${escHtml(u.name)}</strong></td>
-                <td>${escHtml(u.email)}</td>
-                <td>
-                    <span class="badge ${u.isActive ? 'badge-active' : 'badge-inactive'}">
-                        ${u.isActive ? 'Active' : 'Pending'}
-                    </span>
-                </td>
-                <td>
-                    <span class="badge ${u.role === 'admin' ? 'badge-admin' : 'badge-user'}">
-                        ${u.role}
-                    </span>
-                </td>
-                <td>${new Date(u.createdAt).toLocaleDateString('en-IN')}</td>
-                <td>
-                    <div class="action-btns">
-                        ${u.isActive
-                            ? `<button class="btn-sm btn-deactivate" onclick="setActive('${u._id}', false)">Revoke</button>`
-                            : `<button class="btn-sm btn-activate" onclick="setActive('${u._id}', true)">Approve</button>`
-                        }
-                        ${u.role === 'admin'
-                            ? `<button class="btn-sm btn-remove-admin" onclick="setRole('${u._id}', 'user')">Remove Admin</button>`
-                            : `<button class="btn-sm btn-make-admin" onclick="setRole('${u._id}', 'admin')">Make Admin</button>`
-                        }
-                        <button class="btn-sm btn-delete" onclick="deleteUser('${u._id}', '${escHtml(u.name)}')">Delete</button>
+
+        const groups = groupByCollege(users);
+        const sortedKeys = Object.keys(groups).sort((a, b) => {
+            if (a === '__unspecified__') return 1;
+            if (b === '__unspecified__') return -1;
+            return groups[a].label.localeCompare(groups[b].label);
+        });
+
+        container.innerHTML = sortedKeys.map(key => {
+            const group = groups[key];
+            const isUnspecified = key === '__unspecified__';
+            const groupUsers = group.users.slice().sort((a, b) => a.name.localeCompare(b.name));
+            const groupId = 'grp-' + key.replace(/[^a-z0-9]/gi, '') || 'grp-unspecified';
+
+            return `
+                <div class="college-group${isUnspecified ? ' unspecified' : ''}" id="${groupId}">
+                    <div class="college-group-header" onclick="toggleGroup('${groupId}')">
+                        <span class="college-name">
+                            <i class="fas ${isUnspecified ? 'fa-question-circle' : 'fa-graduation-cap'}"></i>
+                            ${escHtml(group.label)}
+                        </span>
+                        <span class="college-count">${groupUsers.length}</span>
+                        <i class="fas fa-chevron-down group-chevron"></i>
                     </div>
-                </td>
-            </tr>
-        `).join('');
+                    <div class="college-group-body">
+                        <table class="user-table">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Email</th>
+                                    <th>Status</th>
+                                    <th>Role</th>
+                                    <th>Joined</th>
+                                    <th>Actions</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                ${groupUsers.map(u => `
+                                    <tr id="row-${u._id}">
+                                        <td><strong>${escHtml(u.name)}</strong></td>
+                                        <td>${escHtml(u.email)}</td>
+                                        <td>
+                                            <span class="badge ${u.isActive ? 'badge-active' : 'badge-inactive'}">
+                                                ${u.isActive ? 'Active' : 'Pending'}
+                                            </span>
+                                        </td>
+                                        <td>
+                                            <span class="badge ${u.role === 'admin' ? 'badge-admin' : 'badge-user'}">
+                                                ${u.role}
+                                            </span>
+                                        </td>
+                                        <td>${new Date(u.createdAt).toLocaleDateString('en-IN')}</td>
+                                        <td>
+                                            <div class="action-btns">
+                                                ${u.isActive
+                                                    ? `<button class="btn-sm btn-deactivate" onclick="setActive('${u._id}', false)">Revoke</button>`
+                                                    : `<button class="btn-sm btn-activate" onclick="setActive('${u._id}', true)">Approve</button>`
+                                                }
+                                                ${u.role === 'admin'
+                                                    ? `<button class="btn-sm btn-remove-admin" onclick="setRole('${u._id}', 'user')">Remove Admin</button>`
+                                                    : `<button class="btn-sm btn-make-admin" onclick="setRole('${u._id}', 'admin')">Make Admin</button>`
+                                                }
+                                                <button class="btn-sm btn-edit-college" onclick="editCollege('${u._id}', '${escHtml(u.name)}', '${escHtml(u.college || '')}')" title="Edit college"><i class="fas fa-pen"></i></button>
+                                                <button class="btn-sm btn-delete" onclick="deleteUser('${u._id}', '${escHtml(u.name)}')">Delete</button>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                `).join('')}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            `;
+        }).join('');
+    }
+
+    function toggleGroup(groupId) {
+        document.getElementById(groupId).classList.toggle('collapsed');
+    }
+
+    function toggleAllGroups() {
+        const btn = document.getElementById('toggle-groups-btn');
+        const groups = document.querySelectorAll('.college-group');
+        const shouldCollapse = btn.textContent.trim() === 'Collapse all';
+        groups.forEach(g => g.classList.toggle('collapsed', shouldCollapse));
+        btn.textContent = shouldCollapse ? 'Expand all' : 'Collapse all';
+    }
+
+    async function editCollege(id, name, currentCollege) {
+        const next = prompt(`Set college for "${name}":`, currentCollege || '');
+        if (next === null) return; // cancelled
+        const trimmed = next.trim();
+        if (trimmed.length < 2) {
+            alert('Please enter a valid college name (at least 2 characters).');
+            return;
+        }
+        try {
+            const res = await fetch(`${cfg.AUTH_SERVER_URL}/api/admin/users/${id}/college`, {
+                method: 'PUT',
+                headers: authHeaders(),
+                body: JSON.stringify({ college: trimmed })
+            });
+            const data = await res.json();
+            if (data.success) {
+                allUsers = allUsers.map(u => u._id === id ? { ...u, college: trimmed } : u);
+                renderGroupedTable(allUsers);
+                updateStats(allUsers);
+            } else {
+                alert(data.message || 'Could not update college.');
+            }
+        } catch { alert('Error updating college.'); }
     }
 
     async function createUser() {
         const name = document.getElementById('c-name').value.trim();
         const email = document.getElementById('c-email').value.trim();
         const password = document.getElementById('c-password').value;
+        const college = document.getElementById('c-college').value.trim();
         const role = document.getElementById('c-role').value;
 
         if (!name || !email || !password) {
@@ -461,7 +610,7 @@
             const res = await fetch(`${cfg.AUTH_SERVER_URL}/api/admin/users`, {
                 method: 'POST',
                 headers: authHeaders(),
-                body: JSON.stringify({ name, email, password, role })
+                body: JSON.stringify({ name, email, password, role, college })
             });
             const data = await res.json();
             if (data.success) {
@@ -469,6 +618,7 @@
                 document.getElementById('c-name').value = '';
                 document.getElementById('c-email').value = '';
                 document.getElementById('c-password').value = '';
+                document.getElementById('c-college').value = '';
                 loadUsers();
             } else {
                 showMsg('create-error', data.message, 'error');
@@ -487,7 +637,7 @@
             const data = await res.json();
             if (data.success) {
                 allUsers = allUsers.map(u => u._id === id ? { ...u, isActive: active } : u);
-                renderTable(allUsers);
+                renderGroupedTable(allUsers);
                 updateStats(allUsers);
             }
         } catch { alert('Error updating user.'); }
@@ -503,7 +653,7 @@
             const data = await res.json();
             if (data.success) {
                 allUsers = allUsers.map(u => u._id === id ? { ...u, role } : u);
-                renderTable(allUsers);
+                renderGroupedTable(allUsers);
                 updateStats(allUsers);
             }
         } catch { alert('Error updating role.'); }
@@ -518,7 +668,7 @@
             const data = await res.json();
             if (data.success) {
                 allUsers = allUsers.filter(u => u._id !== id);
-                renderTable(allUsers);
+                renderGroupedTable(allUsers);
                 updateStats(allUsers);
             }
         } catch { alert('Error deleting user.'); }

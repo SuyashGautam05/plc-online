@@ -141,6 +141,38 @@
         .form-panel { display: none; }
         .form-panel.active { display: block; }
 
+        .college-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 8px;
+        }
+
+        .college-chip {
+            background: #f1f3f5;
+            color: #495057;
+            border: 1px solid #dee2e6;
+            border-radius: 14px;
+            padding: 4px 12px;
+            font-size: 0.76rem;
+            font-family: inherit;
+            cursor: pointer;
+            transition: all 0.15s;
+            white-space: nowrap;
+        }
+
+        .college-chip:hover {
+            background: #343a40;
+            color: #fff;
+            border-color: #343a40;
+        }
+
+        .college-chip.selected {
+            background: #343a40;
+            color: #fff;
+            border-color: #343a40;
+        }
+
         .pending-note {
             font-size: 0.8rem;
             color: #6c757d;
@@ -202,6 +234,12 @@
                 <label>Password</label>
                 <input type="password" id="reg-password" placeholder="Min. 6 characters" autocomplete="new-password">
             </div>
+            <div class="form-group">
+                <label>College / Institute</label>
+                <input type="text" id="reg-college" placeholder="e.g. LNCT Group of Colleges, Bhopal" list="college-suggestions" autocomplete="organization">
+                <datalist id="college-suggestions"></datalist>
+                <div class="college-chips" id="college-chips"></div>
+            </div>
             <button class="btn" id="reg-btn" onclick="handleRegister()">Create Account</button>
             <p class="pending-note">
                 <i class="fas fa-info-circle"></i>
@@ -214,6 +252,50 @@
 
 <script>
     const cfg = window.SIMTEL_AUTH_CONFIG;
+
+    // Quick-pick chips for common colleges — clicking one fills the text
+    // input, but the field stays free-text so any institute can be entered.
+    const SUGGESTED_COLLEGES = [
+        'LNCT Group of Colleges, Bhopal',
+        'IET DAVV, Indore',
+        'SGSITS, Indore',
+        'MANIT Bhopal',
+        'RGPV Bhopal',
+        'Other'
+    ];
+
+    (function initCollegeChips() {
+        const chipRow = document.getElementById('college-chips');
+        const datalist = document.getElementById('college-suggestions');
+        const input = document.getElementById('reg-college');
+
+        SUGGESTED_COLLEGES.forEach(name => {
+            const opt = document.createElement('option');
+            opt.value = name;
+            datalist.appendChild(opt);
+
+            const chip = document.createElement('button');
+            chip.type = 'button';
+            chip.className = 'college-chip';
+            chip.textContent = name;
+            chip.addEventListener('click', () => {
+                if (name === 'Other') {
+                    input.value = '';
+                    input.focus();
+                } else {
+                    input.value = name;
+                }
+                document.querySelectorAll('.college-chip').forEach(c => c.classList.remove('selected'));
+                chip.classList.add('selected');
+            });
+            chipRow.appendChild(chip);
+        });
+
+        // Typing manually clears any "selected" chip highlight
+        input.addEventListener('input', () => {
+            document.querySelectorAll('.college-chip').forEach(c => c.classList.remove('selected'));
+        });
+    })();
 
     // If already logged in, redirect to main page
     const existingToken = localStorage.getItem(cfg.TOKEN_KEY);
@@ -284,13 +366,18 @@
         const name = document.getElementById('reg-name').value.trim();
         const email = document.getElementById('reg-email').value.trim();
         const password = document.getElementById('reg-password').value;
+        const college = document.getElementById('reg-college').value.trim();
         const btn = document.getElementById('reg-btn');
 
         hideMsg('reg-error');
         hideMsg('reg-success');
 
-        if (!name || !email || !password) {
-            showMsg('reg-error', 'All fields are required.', 'error');
+        if (!name || !email || !password || !college) {
+            showMsg('reg-error', 'All fields, including college, are required.', 'error');
+            return;
+        }
+        if (college.length < 2) {
+            showMsg('reg-error', 'Please enter a valid college/institute name.', 'error');
             return;
         }
 
@@ -301,7 +388,7 @@
             const res = await fetch(`${cfg.AUTH_SERVER_URL}/api/auth/register`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ name, email, password })
+                body: JSON.stringify({ name, email, password, college })
             });
             const data = await res.json();
 
@@ -311,6 +398,8 @@
                 document.getElementById('reg-name').value = '';
                 document.getElementById('reg-email').value = '';
                 document.getElementById('reg-password').value = '';
+                document.getElementById('reg-college').value = '';
+                document.querySelectorAll('.college-chip').forEach(c => c.classList.remove('selected'));
                 setTimeout(() => {
                     window.location.href = 'verify-otp.html?email=' + encodeURIComponent(registeredEmail);
                 }, 1200);
