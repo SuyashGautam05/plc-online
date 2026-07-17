@@ -1,0 +1,164 @@
+/* ============================================================
+   login.css — Shared auth-page styles
+   Used by: login.html (register/login), verify-otp.html
+   Matches the navy/gold Scientech palette
+   ============================================================ */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: Georgia, 'Times New Roman', Times, serif;
+    background: #f8f9fa;
+    color: #343a40;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+}
+
+.login-wrapper {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.login-card {
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 24px rgba(0, 0, 0, 0.10);
+    width: 100%;
+    max-width: 420px;
+    padding: 32px 32px 28px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.login-logo {
+    height: 90px;
+    margin-bottom: 8px;
+}
+
+.login-card h1 {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #173681;
+    text-align: center;
+    letter-spacing: 0.01em;
+    margin-bottom: 4px;
+}
+
+.login-card p {
+    text-align: center;
+    color: #666;
+}
+
+form {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+    margin-top: 12px;
+}
+
+form label {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+    font-size: 0.83rem;
+    color: #495057;
+    font-weight: 600;
+}
+
+form input {
+    width: 100%;
+    padding: 9px 12px;
+    border: 1px solid #dee2e6;
+    border-radius: 5px;
+    font-size: 0.95rem;
+    font-family: inherit;
+    color: #343a40;
+    background: #fff;
+    transition: border-color 0.15s, box-shadow 0.15s;
+}
+
+form input:focus {
+    outline: none;
+    border-color: #173681;
+    box-shadow: 0 0 0 3px rgba(23, 54, 129, 0.12);
+}
+
+/* OTP input gets extra emphasis: wide letter-spacing, centered */
+#otp {
+    text-align: center;
+    letter-spacing: 8px;
+    font-size: 1.2rem;
+    font-weight: 700;
+}
+
+form button[type="submit"] {
+    width: 100%;
+    padding: 10px;
+    background: #e1ac3d;
+    color: #fff;
+    border: none;
+    border-radius: 5px;
+    font-size: 1rem;
+    font-family: inherit;
+    font-weight: 600;
+    cursor: pointer;
+    margin-top: 4px;
+    transition: background 0.15s;
+}
+
+form button[type="submit"]:hover {
+    background: #816322;
+}
+
+form button[type="submit"]:disabled {
+    background: #adb5bd;
+    cursor: not-allowed;
+}
+
+.error {
+    font-size: 0.85rem;
+    color: #dc3545;
+    text-align: center;
+    min-height: 1.2em;
+}
+
+#resendLink {
+    color: #173681;
+    font-weight: 600;
+    text-decoration: none;
+}
+
+#resendLink:hover {
+    text-decoration: underline;
+}
+
+/* ── Small screens ── */
+@media (max-width: 480px) {
+    .login-card {
+        padding: 24px 20px 22px;
+    }
+
+    .login-logo {
+        height: 70px;
+    }
+
+    .login-card h1 {
+        font-size: 1.1rem;
+    }
+
+    #otp {
+        letter-spacing: 5px;
+        font-size: 1.05rem;
+    }
+}
