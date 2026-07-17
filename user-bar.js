@@ -25,14 +25,13 @@
                 display: flex;
                 align-items: center;
                 gap: 10px;
-                background: #173681;
+                background: #343a40;
                 color: #fff;
                 padding: 6px 14px;
                 font-family: Georgia, serif;
                 font-size: 0.82rem;
                 border-bottom-left-radius: 8px;
                 box-shadow: 0 2px 8px rgba(0,0,0,0.25);
-                border: 2px solid #fff;
             }
             #simtel-user-bar .simtel-user-name {
                 font-weight: 600;
@@ -49,6 +48,9 @@
             }
             #simtel-user-bar .simtel-user-role.admin {
                 background: #0d6efd;
+            }
+            #simtel-user-bar .simtel-user-role.superadmin {
+                background: #6f42c1;
             }
             #simtel-user-bar button {
                 background: transparent;
@@ -83,11 +85,13 @@
         const bar = document.createElement('div');
         bar.id = 'simtel-user-bar';
 
-        const roleBadge = user.role === 'admin'
-            ? `<span class="simtel-user-role admin">Admin</span>`
-            : `<span class="simtel-user-role">User</span>`;
+        const roleBadge = user.role === 'superadmin'
+            ? `<span class="simtel-user-role superadmin">Super Admin</span>`
+            : user.role === 'admin'
+                ? `<span class="simtel-user-role admin">College Admin</span>`
+                : `<span class="simtel-user-role">User</span>`;
 
-        const adminLink = user.role === 'admin'
+        const adminLink = (user.role === 'admin' || user.role === 'superadmin')
             ? `<a href="${window.location.origin + cfg.ADMIN_PAGE}" class="simtel-admin-link">⚙ Admin Panel</a>`
             : '';
 
