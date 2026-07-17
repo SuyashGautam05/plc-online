@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Panel – PLC SimTel</title>
+    <title>Admin Panel – PLC Simtel</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="./auth-config.js"></script>
     <script src="./auth-guard.js"></script>
@@ -18,7 +18,8 @@
         }
 
         .admin-header {
-            background: #343a40;
+            /* background: #343a40; */
+            background: #173681;
             color: #fff;
             padding: 14px 28px;
             display: flex;
@@ -149,7 +150,8 @@
         }
 
         .btn-primary {
-            background: #343a40;
+            /* background: #343a40; */
+            background: #e1ac3d;
             color: #fff;
             border: none;
             border-radius: 5px;
@@ -330,52 +332,6 @@
         }
         .btn-edit-college:hover { background: #6c757d; color: #fff; }
 
-        .btn-force-logout {
-            background: #fff3cd;
-            color: #664d03;
-            border-color: #ffe69c;
-        }
-        .btn-force-logout:hover { background: #ffc107; color: #212529; }
-
-        /* License panel */
-        .seat-bar-wrap {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            min-width: 140px;
-        }
-        .seat-bar-track {
-            flex: 1;
-            height: 7px;
-            background: #e9ecef;
-            border-radius: 4px;
-            overflow: hidden;
-        }
-        .seat-bar-fill {
-            height: 100%;
-            background: #198754;
-            border-radius: 4px;
-            transition: width 0.2s;
-        }
-        .seat-bar-fill.warn { background: #fd7e14; }
-        .seat-bar-fill.full { background: #dc3545; }
-        .seat-bar-label { font-size: 0.8rem; color: #495057; white-space: nowrap; font-weight: 600; }
-        .btn-edit-license { background: #fff; color: #495057; border-color: #ced4da; }
-        .btn-edit-license:hover { background: #6c757d; color: #fff; }
-
-        /* Online indicator + force-logout */
-        .online-dot {
-            display: inline-block;
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: #198754;
-            margin-right: 5px;
-            box-shadow: 0 0 0 2px rgba(25,135,84,0.15);
-        }
-        .btn-force-logout { background: #fff3cd; color: #664d03; border-color: #ffe69c; }
-        .btn-force-logout:hover { background: #ffc107; color: #332701; }
-
         @media (max-width: 600px) {
             .admin-body { padding: 16px 10px; }
             .create-form { flex-direction: column; }
@@ -387,7 +343,7 @@
 <body>
 
 <div class="admin-header">
-    <h1><i class="fas fa-shield-alt"></i> PLC SimTel — Admin Panel</h1>
+    <h1><i class="fas fa-shield-alt"></i> PLC Simulation — Admin Panel</h1>
     <div class="admin-header-right">
         <a href="/index.html"><i class="fas fa-arrow-left"></i> Back to App</a>
         <button onclick="logout()"><i class="fas fa-sign-out-alt"></i> Logout</button>
@@ -429,42 +385,6 @@
         </div>
     </div>
 
-    <!-- License Management -->
-    <div class="panel">
-        <div class="panel-header">
-            <h2><i class="fas fa-id-badge"></i> College Licenses</h2>
-            <span style="font-weight:400; color:#6c757d; font-size:0.78rem;">Cap how many users from a college can be logged in at once</span>
-        </div>
-        <div class="panel-body">
-            <div class="alert error" id="license-error"></div>
-            <div class="alert success" id="license-success"></div>
-            <div class="create-form" style="margin-bottom:16px;">
-                <input type="text" id="lic-name" placeholder="College / Company name">
-                <input type="number" id="lic-limit" placeholder="Seat limit" min="1" style="max-width:120px;">
-                <input type="email" id="lic-email" placeholder="Contact email (optional)">
-                <button class="btn-primary" onclick="createLicense()">
-                    <i class="fas fa-plus"></i> Add License
-                </button>
-            </div>
-            <div class="table-wrap">
-                <table class="user-table" id="license-table">
-                    <thead>
-                        <tr>
-                            <th>College</th>
-                            <th>Seats in use</th>
-                            <th>Registered users</th>
-                            <th>Contact</th>
-                            <th>Actions</th>
-                        </tr>
-                    </thead>
-                    <tbody id="license-tbody">
-                        <tr><td colspan="5" class="loading">Loading licenses...</td></tr>
-                    </tbody>
-                </table>
-            </div>
-        </div>
-    </div>
-
     <!-- User List, grouped by college -->
     <div class="panel">
         <div class="panel-header">
@@ -488,7 +408,6 @@
 <script>
     const cfg = window.SIMTEL_AUTH_CONFIG;
     let allUsers = [];
-    let allColleges = [];
 
     // Guard: only admin can access this page
     const userRaw = localStorage.getItem(cfg.USER_KEY);
@@ -523,28 +442,6 @@
             document.getElementById('list-error').textContent = err.message;
             document.getElementById('list-error').className = 'alert error show';
         }
-    }
-
-    async function loadLicenses() {
-        try {
-            const res = await fetch(`${cfg.AUTH_SERVER_URL}/api/admin/colleges`, { headers: authHeaders() });
-            const data = await res.json();
-            if (!data.success) throw new Error(data.message);
-            allColleges = data.colleges;
-            renderLicenseTable(allColleges);
-            // Seat-usage bars in the user groups depend on license data,
-            // so refresh that view now that we have it.
-            renderGroupedTable(allUsers);
-        } catch (err) {
-            document.getElementById('license-error').textContent = err.message;
-            document.getElementById('license-error').className = 'alert error show';
-        }
-    }
-
-    function findLicenseFor(collegeLabel) {
-        const key = (collegeLabel || '').trim().toLowerCase();
-        if (!key) return null;
-        return allColleges.find(c => c.nameKey === key) || null;
     }
 
     function updateStats(users) {
@@ -599,17 +496,6 @@
             const isUnspecified = key === '__unspecified__';
             const groupUsers = group.users.slice().sort((a, b) => a.name.localeCompare(b.name));
             const groupId = 'grp-' + key.replace(/[^a-z0-9]/gi, '') || 'grp-unspecified';
-            const license = isUnspecified ? null : findLicenseFor(group.label);
-
-            const seatBar = license ? (() => {
-                const pct = Math.min(100, Math.round((license.activeCount / license.licenseLimit) * 100));
-                const cls = license.activeCount >= license.licenseLimit ? 'full' : (pct >= 75 ? 'warn' : '');
-                return `
-                    <div class="seat-bar-wrap" title="Active logins vs licensed seats">
-                        <div class="seat-bar-track"><div class="seat-bar-fill ${cls}" style="width:${pct}%"></div></div>
-                        <span class="seat-bar-label">${license.activeCount}/${license.licenseLimit} seats</span>
-                    </div>`;
-            })() : '';
 
             return `
                 <div class="college-group${isUnspecified ? ' unspecified' : ''}" id="${groupId}">
@@ -618,7 +504,6 @@
                             <i class="fas ${isUnspecified ? 'fa-question-circle' : 'fa-graduation-cap'}"></i>
                             ${escHtml(group.label)}
                         </span>
-                        ${seatBar}
                         <span class="college-count">${groupUsers.length}</span>
                         <i class="fas fa-chevron-down group-chevron"></i>
                     </div>
@@ -635,11 +520,9 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                ${groupUsers.map(u => {
-                                    const isOnline = u.activeSession && u.activeSession.expiresAt && new Date(u.activeSession.expiresAt) > new Date();
-                                    return `
+                                ${groupUsers.map(u => `
                                     <tr id="row-${u._id}">
-                                        <td><strong>${isOnline ? '<span class="online-dot" title="Currently logged in"></span>' : ''}${escHtml(u.name)}</strong></td>
+                                        <td><strong>${escHtml(u.name)}</strong></td>
                                         <td>${escHtml(u.email)}</td>
                                         <td>
                                             <span class="badge ${u.isActive ? 'badge-active' : 'badge-inactive'}">
@@ -663,12 +546,11 @@
                                                     : `<button class="btn-sm btn-make-admin" onclick="setRole('${u._id}', 'admin')">Make Admin</button>`
                                                 }
                                                 <button class="btn-sm btn-edit-college" onclick="editCollege('${u._id}', '${escHtml(u.name)}', '${escHtml(u.college || '')}')" title="Edit college"><i class="fas fa-pen"></i></button>
-                                                ${isOnline ? `<button class="btn-sm btn-force-logout" onclick="forceLogout('${u._id}', '${escHtml(u.name)}')" title="End their session now">Force Logout</button>` : ''}
                                                 <button class="btn-sm btn-delete" onclick="deleteUser('${u._id}', '${escHtml(u.name)}')">Delete</button>
                                             </div>
                                         </td>
                                     </tr>
-                                `;}).join('')}
+                                `).join('')}
                             </tbody>
                         </table>
                     </div>
@@ -714,124 +596,6 @@
         } catch { alert('Error updating college.'); }
     }
 
-    async function forceLogout(id, name) {
-        if (!confirm(`End ${name}'s current session and free up their seat?`)) return;
-        try {
-            const res = await fetch(`${cfg.AUTH_SERVER_URL}/api/admin/users/${id}/force-logout`, {
-                method: 'PUT', headers: authHeaders()
-            });
-            const data = await res.json();
-            if (data.success) {
-                loadUsers();
-                loadLicenses();
-            } else {
-                alert(data.message || 'Could not log the user out.');
-            }
-        } catch { alert('Error forcing logout.'); }
-    }
-
-    // ── License management ──────────────────────────────────────
-
-    function renderLicenseTable(colleges) {
-        const tbody = document.getElementById('license-tbody');
-        if (colleges.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="5" class="loading">No licenses yet. Add one above for any college you\'ve sold a fixed number of seats to.</td></tr>';
-            return;
-        }
-        tbody.innerHTML = colleges.map(c => {
-            const pct = Math.min(100, Math.round((c.activeCount / c.licenseLimit) * 100));
-            const cls = c.activeCount >= c.licenseLimit ? 'full' : (pct >= 75 ? 'warn' : '');
-            return `
-                <tr>
-                    <td><strong>${escHtml(c.name)}</strong></td>
-                    <td>
-                        <div class="seat-bar-wrap">
-                            <div class="seat-bar-track"><div class="seat-bar-fill ${cls}" style="width:${pct}%"></div></div>
-                            <span class="seat-bar-label">${c.activeCount}/${c.licenseLimit}</span>
-                        </div>
-                    </td>
-                    <td>${c.registeredUsers}</td>
-                    <td>${c.contactEmail ? escHtml(c.contactEmail) : '<span style="color:#adb5bd;">—</span>'}</td>
-                    <td>
-                        <div class="action-btns">
-                            <button class="btn-sm btn-edit-license" onclick="editLicense('${c._id}', '${escHtml(c.name)}', ${c.licenseLimit})"><i class="fas fa-pen"></i> Edit limit</button>
-                            <button class="btn-sm btn-delete" onclick="deleteLicense('${c._id}', '${escHtml(c.name)}')">Remove</button>
-                        </div>
-                    </td>
-                </tr>
-            `;
-        }).join('');
-    }
-
-    async function createLicense() {
-        const name = document.getElementById('lic-name').value.trim();
-        const licenseLimit = document.getElementById('lic-limit').value;
-        const contactEmail = document.getElementById('lic-email').value.trim();
-
-        if (!name || !licenseLimit) {
-            showMsg('license-error', 'College name and seat limit are required.', 'error');
-            return;
-        }
-
-        try {
-            const res = await fetch(`${cfg.AUTH_SERVER_URL}/api/admin/colleges`, {
-                method: 'POST',
-                headers: authHeaders(),
-                body: JSON.stringify({ name, licenseLimit, contactEmail })
-            });
-            const data = await res.json();
-            if (data.success) {
-                showMsg('license-success', data.message, 'success');
-                document.getElementById('lic-name').value = '';
-                document.getElementById('lic-limit').value = '';
-                document.getElementById('lic-email').value = '';
-                loadLicenses();
-            } else {
-                showMsg('license-error', data.message, 'error');
-            }
-        } catch { showMsg('license-error', 'Server error. Try again.', 'error'); }
-    }
-
-    async function editLicense(id, name, currentLimit) {
-        const next = prompt(`New seat limit for "${name}" (currently ${currentLimit}):`, currentLimit);
-        if (next === null) return;
-        const limit = parseInt(next, 10);
-        if (!Number.isInteger(limit) || limit < 1) {
-            alert('Please enter a whole number of at least 1.');
-            return;
-        }
-        try {
-            const res = await fetch(`${cfg.AUTH_SERVER_URL}/api/admin/colleges/${id}`, {
-                method: 'PUT',
-                headers: authHeaders(),
-                body: JSON.stringify({ licenseLimit: limit })
-            });
-            const data = await res.json();
-            if (data.success) {
-                showMsg('license-success', data.message, 'success');
-                loadLicenses();
-                loadUsers();
-            } else {
-                showMsg('license-error', data.message, 'error');
-            }
-        } catch { showMsg('license-error', 'Error updating license.', 'error'); }
-    }
-
-    async function deleteLicense(id, name) {
-        if (!confirm(`Remove the license for "${name}"? Their users will become unrestricted (unlimited concurrent logins).`)) return;
-        try {
-            const res = await fetch(`${cfg.AUTH_SERVER_URL}/api/admin/colleges/${id}`, {
-                method: 'DELETE', headers: authHeaders()
-            });
-            const data = await res.json();
-            if (data.success) {
-                loadLicenses();
-            } else {
-                showMsg('license-error', data.message, 'error');
-            }
-        } catch { showMsg('license-error', 'Error removing license.', 'error'); }
-    }
-
     async function createUser() {
         const name = document.getElementById('c-name').value.trim();
         const email = document.getElementById('c-email').value.trim();
@@ -874,17 +638,9 @@
             });
             const data = await res.json();
             if (data.success) {
-                if (!active) {
-                    // Deactivating can also release a license seat server-side
-                    // (if the user was mid-session), so do a full reload rather
-                    // than a local patch to keep the seat bars accurate.
-                    loadUsers();
-                    loadLicenses();
-                } else {
-                    allUsers = allUsers.map(u => u._id === id ? { ...u, isActive: active } : u);
-                    renderGroupedTable(allUsers);
-                    updateStats(allUsers);
-                }
+                allUsers = allUsers.map(u => u._id === id ? { ...u, isActive: active } : u);
+                renderGroupedTable(allUsers);
+                updateStats(allUsers);
             }
         } catch { alert('Error updating user.'); }
     }
@@ -916,7 +672,6 @@
                 allUsers = allUsers.filter(u => u._id !== id);
                 renderGroupedTable(allUsers);
                 updateStats(allUsers);
-                loadLicenses();
             }
         } catch { alert('Error deleting user.'); }
     }
@@ -932,7 +687,6 @@
     }
 
     loadUsers();
-    loadLicenses();
 </script>
 </body>
 </html>
