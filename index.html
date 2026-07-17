@@ -749,71 +749,31 @@ footer a:hover { color: var(--red); }
     transition: width 0.3s var(--ease);
 }
 
+/* roadmap trigger button, sits next to the filter tabs */
 .filter-section { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
 .filter-tabs { flex: 1; min-width: 0; }
-
-/* ── Overall progress bar + roadmap button, sits right below the navbar ── */
-.overall-progress-section {
-    max-width: var(--max-w);
-    margin: 0 auto;
-    padding: 18px var(--pad);
-    display: flex;
-    align-items: center;
-    gap: 24px;
-    background: var(--white);
-    border-bottom: 1px solid var(--border-color);
-}
-.overall-progress-inner { flex: 1; min-width: 0; }
-.overall-progress-top {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    margin-bottom: 8px;
-}
-.overall-progress-label {
-    font-size: 0.85rem;
-    font-weight: 700;
-    color: var(--text-color);
-    display: flex;
-    align-items: center;
-    gap: 7px;
-}
-.overall-progress-label i { color: var(--red); }
-.overall-progress-percent {
-    font-size: 0.9rem;
-    font-weight: 800;
-    color: var(--red);
-}
-.overall-progress-sub {
-    font-size: 0.75rem;
-    color: var(--accent-color);
-    margin-top: 6px;
-}
-
-/* roadmap trigger button, sits alongside the overall progress bar */
 .roadmap-btn {
     flex-shrink: 0;
     display: inline-flex;
     align-items: center;
     gap: 8px;
-    padding: 10px 20px;
+    padding: 9px 18px;
+    margin: 20px 0 8px;
     border-radius: var(--r-pill);
+    /* background: var(--text-color); */
     background: #173681;
     color: var(--white);
-    border: 2px solid #173681;
+    border: none;
     font-family: inherit;
     font-size: 0.82rem;
     font-weight: 700;
     cursor: pointer;
-    white-space: nowrap;
-    transition: background 0.2s var(--ease), border-color 0.2s var(--ease);
+    transition: background 0.2s var(--ease);
+    margin-right: 402px;
+    margin-top: 4px;
+    border: 2px solid #fff
 }
-.roadmap-btn:hover { background: var(--red); border-color: var(--red); }
-
-@media (max-width: 767px) {
-    .overall-progress-section { flex-direction: column; align-items: stretch; gap: 14px; padding: 14px var(--pad); }
-    .roadmap-btn { justify-content: center; }
-}
+.roadmap-btn:hover { background: var(--red); }
 
 .topics-modal-overlay, .roadmap-modal-overlay {
     display: none;
@@ -960,6 +920,7 @@ footer a:hover { color: var(--red); }
             
         </a>
         <h3 style="color: #ffffff;">Programmable Logic Controller</h3>
+        <button class="roadmap-btn" id="openRoadmapBtn"><i class="fas fa-map-location-dot"></i> View Learning Roadmap</button>
         <div class="topbar-nav" style="display: none;">
             <a href="#" class="active">Courses</a>
             <a href="#">Labs</a>
@@ -968,21 +929,6 @@ footer a:hover { color: var(--red); }
         </div>
     </div>
 </nav>
-
-<!-- ═══════ OVERALL PROGRESS ═══════ -->
-<section class="overall-progress-section">
-    <div class="overall-progress-inner">
-        <div class="overall-progress-top">
-            <span class="overall-progress-label"><i class="fas fa-chart-line"></i> Course Progress</span>
-            <span class="overall-progress-percent" id="overallProgressPercent">0%</span>
-        </div>
-        <div class="progress-track">
-            <div class="progress-fill" id="overallProgressFill" style="width:0%"></div>
-        </div>
-        <div class="overall-progress-sub" id="overallProgressSub">0 of 0 topics read</div>
-    </div>
-    <button class="roadmap-btn" id="openRoadmapBtn"><i class="fas fa-map-location-dot"></i> View Learning Roadmap</button>
-</section>
 
 <!-- ═══════ HERO ═══════ -->
 <section class="hero">
@@ -1430,15 +1376,6 @@ function renderCard(s) {
     </article>`;
 }
 
-function renderOverallProgress() {
-    const total = sections.reduce((n, s) => n + countLeaves(s.topics), 0);
-    const read = sections.reduce((n, s) => n + countReadLeaves(s.topics), 0);
-    const pct = total ? Math.round((read / total) * 100) : 0;
-    document.getElementById('overallProgressFill').style.width = pct + '%';
-    document.getElementById('overallProgressPercent').textContent = pct + '%';
-    document.getElementById('overallProgressSub').textContent = `${read} of ${total} topics read`;
-}
-
 const categories = [
     { key: 'all', label: 'All Sections' },
     { key: 'fundamentals', label: 'Fundamentals' },
@@ -1543,7 +1480,6 @@ document.addEventListener('visibilitychange', () => {
     if (document.visibilityState !== 'visible') return;
     loadProgress().then(() => {
         applyFilters();
-        renderOverallProgress();
         if (document.getElementById('topicsModalOverlay').classList.contains('open')) {
             const openTitle = document.getElementById('topicsModalTitle').textContent;
             const section = sections.find(s => `${s.num}. ${s.title}` === openTitle);
@@ -1611,7 +1547,7 @@ document.addEventListener('keydown', e => {
 //  Boot: load progress first so cards render with correct counts
 // ============================================================
 renderFilters();
-loadProgress().finally(() => { applyFilters(); renderOverallProgress(); });
+loadProgress().finally(() => { applyFilters(); });
 </script>
 </body>
 </html>
