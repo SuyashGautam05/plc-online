@@ -420,7 +420,7 @@
                 <input type="text" id="c-name" placeholder="Full Name">
                 <input type="email" id="c-email" placeholder="Email Address">
                 <input type="password" id="c-password" placeholder="Password (min 6)">
-                <input type="text" id="c-college" placeholder="College / Institute">
+                <input type="text" id="c-college" placeholder="College / Institute (required)">
                 <select id="c-role">
                     <option value="user">User</option>
                     <option value="admin">College Admin</option>
@@ -871,6 +871,10 @@
 
         if (!name || !email || !password) {
             showMsg('create-error', 'All fields are required.', 'error');
+            return;
+        }
+        if (isSuperAdmin && college.length < 2) {
+            showMsg('create-error', 'A college name is required.', 'error');
             return;
         }
 
