@@ -25,13 +25,14 @@
                 display: flex;
                 align-items: center;
                 gap: 10px;
-                background: #343a40;
+                background: #173681;
                 color: #fff;
                 padding: 6px 14px;
                 font-family: Georgia, serif;
                 font-size: 0.82rem;
                 border-bottom-left-radius: 8px;
                 box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+                border: 2px solid #ffffff;
             }
             #simtel-user-bar .simtel-user-name {
                 font-weight: 600;
