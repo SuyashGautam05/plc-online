@@ -12,6 +12,11 @@
     const cfg = window.SIMTEL_AUTH_CONFIG;
     if (!cfg) { console.error('auth-config.js not loaded'); return; }
 
+    // How often to silently re-check the session while the page stays open.
+    // This is what catches an admin force-logout, a deactivation, or a
+    // license-seat eviction promptly instead of only on next navigation.
+    const POLL_INTERVAL_MS = 90 * 1000;
+
     // Hide body until verified (prevents flash of content)
     document.documentElement.style.visibility = 'hidden';
 
@@ -23,9 +28,7 @@
     }
 
     try {
-        const res = await fetch(`${cfg.AUTH_SERVER_URL}/api/auth/verify`, {
-            headers: { Authorization: `Bearer ${token}` }
-        });
+        const res = await checkSession(token);
 
         if (!res.ok) {
             const data = await res.json().catch(() => ({}));
@@ -48,10 +51,42 @@
         // Show the page
         document.documentElement.style.visibility = 'visible';
 
+        startPolling();
+
     } catch (err) {
         // Network error — allow access with cached token (offline tolerance)
         console.warn('Auth server unreachable, using cached session');
         document.documentElement.style.visibility = 'visible';
+        startPolling();
+    }
+
+    function checkSession(currentToken) {
+        return fetch(`${cfg.AUTH_SERVER_URL}/api/auth/verify`, {
+            headers: { Authorization: `Bearer ${currentToken}` }
+        });
+    }
+
+    function startPolling() {
+        setInterval(async () => {
+            const currentToken = localStorage.getItem(cfg.TOKEN_KEY);
+            if (!currentToken) return; // already logged out some other way
+
+            try {
+                const res = await checkSession(currentToken);
+                if (!res.ok) {
+                    const data = await res.json().catch(() => ({}));
+                    clearSession();
+                    alert(data.message || 'You have been logged out.');
+                    redirectToLogin(data.message || 'Session invalidated');
+                }
+                // On success we don't need to do anything - staying logged in
+                // is the default state. We intentionally don't re-write
+                // localStorage user info on every poll to avoid unnecessary writes.
+            } catch {
+                // Network hiccup - don't log the user out over a blip, just
+                // skip this cycle and try again next interval.
+            }
+        }, POLL_INTERVAL_MS);
     }
 
     function redirectToLogin(reason) {
