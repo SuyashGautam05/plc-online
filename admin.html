@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Panel – PLC Simulation Software</title>
+    <title>Admin Panel – PLC SimTel</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="./auth-config.js"></script>
     <script src="./auth-guard.js"></script>
@@ -18,8 +18,7 @@
         }
 
         .admin-header {
-            /* background: #343a40; */
-            background: #173681;
+            background: #343a40;
             color: #fff;
             padding: 14px 28px;
             display: flex;
@@ -150,8 +149,7 @@
         }
 
         .btn-primary {
-            /* background: #343a40; */
-            background: #e1ac3d;
+            background: #343a40;
             color: #fff;
             border: none;
             border-radius: 5px;
@@ -390,7 +388,7 @@
 <body>
 
 <div class="admin-header">
-    <h1><i class="fas fa-shield-alt"></i> PLC Simulation Software — Admin Panel</h1>
+    <h1><i class="fas fa-shield-alt"></i> PLC SimTel — Admin Panel</h1>
     <p id="admin-scope-subtitle" style="margin:0; font-size:0.8rem; color:#adb5bd;"></p>
     <div class="admin-header-right">
         <a href="/index.html"><i class="fas fa-arrow-left"></i> Back to App</a>
@@ -423,10 +421,11 @@
                 <input type="email" id="c-email" placeholder="Email Address">
                 <input type="password" id="c-password" placeholder="Password (min 6)">
                 <input type="text" id="c-college" placeholder="College / Institute (required)">
-                <select id="c-role">
+                <select id="c-role" onchange="document.getElementById('c-max-students').style.display = this.value === 'admin' ? '' : 'none';">
                     <option value="user">User</option>
                     <option value="admin">College Admin</option>
                 </select>
+                <input type="number" id="c-max-students" placeholder="Student limit" min="1" style="display:none; max-width:130px;">
                 <button class="btn-primary" onclick="createUser()">
                     <i class="fas fa-plus"></i> Create &amp; Activate
                 </button>
@@ -550,9 +549,27 @@
             allUsers = data.users;
             renderGroupedTable(allUsers);
             updateStats(allUsers);
+            if (!isSuperAdmin) updateQuotaNote();
         } catch (err) {
             document.getElementById('list-error').textContent = err.message;
             document.getElementById('list-error').className = 'alert error show';
+        }
+    }
+
+    // Shows the college admin their own "X of Y students added" usage,
+    // since their own quota (set by the superadmin) isn't otherwise visible
+    // anywhere in their view.
+    function updateQuotaNote() {
+        const note = document.getElementById('create-college-note');
+        const limit = currentUser.maxStudents;
+        const used = allUsers.length; // their GET is already scoped to just their own students
+        const collegeName = escHtml(currentUser.college || 'your college');
+
+        if (limit === null || limit === undefined) {
+            note.innerHTML = `<i class="fas fa-info-circle"></i> This student will be added to <strong>${collegeName}</strong>. You have <strong>no limit</strong> set on student accounts.`;
+        } else {
+            const atLimit = used >= limit;
+            note.innerHTML = `<i class="fas fa-info-circle"></i> This student will be added to <strong>${collegeName}</strong>. You've used <strong>${used} of ${limit}</strong> student slots${atLimit ? ' - <span style="color:#b02a37;">limit reached, contact the super admin to add more</span>' : ''}.`;
         }
     }
 
@@ -683,6 +700,11 @@
                                             <span class="badge ${u.role === 'superadmin' ? 'badge-superadmin' : u.role === 'admin' ? 'badge-admin' : 'badge-user'}">
                                                 ${u.role === 'superadmin' ? 'Super Admin' : u.role === 'admin' ? 'College Admin' : 'user'}
                                             </span>
+                                            ${u.role === 'admin' ? `<div style="font-size:0.72rem; color:#6c757d; margin-top:3px;">${
+                                                u.maxStudents === null || u.maxStudents === undefined
+                                                    ? 'Unlimited students'
+                                                    : `${allUsers.filter(x => x.role === 'user' && x.collegeKey === u.collegeKey).length} / ${u.maxStudents} students`
+                                            }</div>` : ''}
                                         </td>
                                         <td>${new Date(u.createdAt).toLocaleDateString('en-IN')}</td>
                                         <td>
@@ -696,6 +718,7 @@
                                                         ? `<button class="btn-sm btn-remove-admin" onclick="setRole('${u._id}', '${escHtml(u.name)}', 'user')">Remove Admin</button>`
                                                         : `<button class="btn-sm btn-make-admin" onclick="setRole('${u._id}', '${escHtml(u.name)}', 'admin', '${escHtml(u.college || '')}')">Make Admin</button>`
                                                 ) : ''}
+                                                ${(isSuperAdmin && u.role === 'admin') ? `<button class="btn-sm btn-edit-college" onclick="editMaxStudents('${u._id}', '${escHtml(u.name)}', ${u.maxStudents === null || u.maxStudents === undefined ? 'null' : u.maxStudents})" title="Edit student limit"><i class="fas fa-users-cog"></i> Limit</button>` : ''}
                                                 ${isSuperAdmin ? `<button class="btn-sm btn-edit-college" onclick="editCollege('${u._id}', '${escHtml(u.name)}', '${escHtml(u.college || '')}')" title="Edit college"><i class="fas fa-pen"></i></button>` : ''}
                                                 ${isOnline ? `<button class="btn-sm btn-force-logout" onclick="forceLogout('${u._id}', '${escHtml(u.name)}')" title="End their session now">Force Logout</button>` : ''}
                                                 ${u.role !== 'superadmin' ? `<button class="btn-sm btn-delete" onclick="deleteUser('${u._id}', '${escHtml(u.name)}')">Delete</button>` : ''}
@@ -872,6 +895,7 @@
         const password = document.getElementById('c-password').value;
         const college = document.getElementById('c-college').value.trim();
         const role = document.getElementById('c-role').value;
+        const maxStudentsInput = document.getElementById('c-max-students').value;
 
         if (!name || !email || !password) {
             showMsg('create-error', 'All fields are required.', 'error');
@@ -881,12 +905,20 @@
             showMsg('create-error', 'A college name is required.', 'error');
             return;
         }
+        let maxStudents;
+        if (isSuperAdmin && role === 'admin') {
+            maxStudents = parseInt(maxStudentsInput, 10);
+            if (!Number.isInteger(maxStudents) || maxStudents < 1) {
+                showMsg('create-error', 'Enter a student limit (whole number, at least 1) for this college admin.', 'error');
+                return;
+            }
+        }
 
         try {
             const res = await fetch(`${cfg.AUTH_SERVER_URL}/api/admin/users`, {
                 method: 'POST',
                 headers: authHeaders(),
-                body: JSON.stringify({ name, email, password, role, college })
+                body: JSON.stringify({ name, email, password, role, college, maxStudents })
             });
             const data = await res.json();
             if (data.success) {
@@ -895,6 +927,7 @@
                 document.getElementById('c-email').value = '';
                 document.getElementById('c-password').value = '';
                 document.getElementById('c-college').value = isSuperAdmin ? '' : (currentUser.college || '');
+                document.getElementById('c-max-students').value = '';
                 loadUsers();
             } else {
                 showMsg('create-error', data.message, 'error');
@@ -928,7 +961,7 @@
     }
 
     async function setRole(id, name, role, currentCollege) {
-        let college;
+        let college, maxStudents;
         if (role === 'admin') {
             college = prompt(`Which college should "${name}" administer?`, currentCollege || '');
             if (college === null) return; // cancelled
@@ -936,20 +969,51 @@
                 alert('Please enter a valid college name (at least 2 characters).');
                 return;
             }
+
+            const quotaInput = prompt(`How many students can "${name}" create/manage?`, '20');
+            if (quotaInput === null) return; // cancelled
+            maxStudents = parseInt(quotaInput, 10);
+            if (!Number.isInteger(maxStudents) || maxStudents < 1) {
+                alert('Please enter a whole number of at least 1.');
+                return;
+            }
         }
         try {
             const res = await fetch(`${cfg.AUTH_SERVER_URL}/api/admin/users/${id}/role`, {
                 method: 'PUT',
                 headers: authHeaders(),
-                body: JSON.stringify({ role, college })
+                body: JSON.stringify({ role, college, maxStudents })
             });
             const data = await res.json();
             if (data.success) {
-                loadUsers(); // college may have changed too, so do a full reload
+                loadUsers(); // college/quota may have changed too, so do a full reload
             } else {
                 alert(data.message || 'Could not update role.');
             }
         } catch { alert('Error updating role.'); }
+    }
+
+    async function editMaxStudents(id, name, currentLimit) {
+        const input = prompt(`Change student limit for "${name}":`, currentLimit ?? '20');
+        if (input === null) return; // cancelled
+        const quota = parseInt(input, 10);
+        if (!Number.isInteger(quota) || quota < 0) {
+            alert('Please enter a whole number (0 or more).');
+            return;
+        }
+        try {
+            const res = await fetch(`${cfg.AUTH_SERVER_URL}/api/admin/users/${id}/max-students`, {
+                method: 'PUT',
+                headers: authHeaders(),
+                body: JSON.stringify({ maxStudents: quota })
+            });
+            const data = await res.json();
+            if (data.success) {
+                loadUsers();
+            } else {
+                alert(data.message || 'Could not update the student limit.');
+            }
+        } catch { alert('Error updating student limit.'); }
     }
 
     async function deleteUser(id, name) {
