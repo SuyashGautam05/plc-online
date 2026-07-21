@@ -29,15 +29,19 @@
         }
 
         .auth-card-header {
-            background: #343a40;
+            /* background: #343a40; */
+            background: #173681;
             color: #fff;
-            padding: 28px 32px 22px;
+            padding: 12px 24px 12px;
+            /* padding: 28px 32px 22px; */
             text-align: center;
         }
 
         .auth-card-header img {
-            height: 48px;
-            margin-bottom: 10px;
+            /* height: 48px; */
+            height: 100px;
+            /* margin-bottom: 10px; */
+            margin-bottom: -19px;
         }
 
         .auth-card-header h1 {
@@ -111,7 +115,8 @@
         .btn {
             width: 100%;
             padding: 10px;
-            background: #343a40;
+            /* background: #343a40; */
+            background: #e1ac3d;
             color: #fff;
             border: none;
             border-radius: 5px;
@@ -191,7 +196,7 @@
     <div class="auth-card-header">
         <img src="./assets/Scientech logo-2.png" alt="Scientech" onerror="this.style.display='none'">
         <h1>PLC SimTel</h1>
-        <p>Programmable Logic Controller Training</p>
+        <!-- <p>Programmable Logic Controller Training</p> -->
     </div>
 
     <div class="auth-tabs">
@@ -237,8 +242,8 @@
             <div class="form-group">
                 <label>College / Institute</label>
                 <input type="text" id="reg-college" placeholder="e.g. LNCT Group of Colleges, Bhopal" list="college-suggestions" autocomplete="organization">
-                <datalist id="college-suggestions"></datalist>
-                <div class="college-chips" id="college-chips"></div>
+                <datalist style="display: none;" id="college-suggestions"></datalist>
+                <div style="display: none;" class="college-chips" id="college-chips"></div>
             </div>
             <button class="btn" id="reg-btn" onclick="handleRegister()">Create Account</button>
             <p class="pending-note">
