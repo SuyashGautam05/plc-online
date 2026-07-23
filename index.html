@@ -413,21 +413,21 @@ body {
 
 .course-card:hover::before { opacity: 1; }
 
-/* Per-category top stripe */
+/* Per-category top stripe — same color for every section */
 .course-card[data-cat="plc"]::before        { background: var(--cat-amber); }
-.course-card[data-cat="networking"]::before  { background: var(--cat-blue); }
-.course-card[data-cat="scada"]::before       { background: var(--cat-teal); }
-.course-card[data-cat="automation"]::before  { background: var(--cat-purple); }
-.course-card[data-cat="safety"]::before      { background: var(--red); }
-.course-card[data-cat="drives"]::before      { background: var(--cat-orange); }
+.course-card[data-cat="networking"]::before  { background: var(--cat-amber); }
+.course-card[data-cat="scada"]::before       { background: var(--cat-amber); }
+.course-card[data-cat="automation"]::before  { background: var(--cat-amber); }
+.course-card[data-cat="safety"]::before      { background: var(--cat-amber); }
+.course-card[data-cat="drives"]::before      { background: var(--cat-amber); }
 
-/* Per-category hover shadow tint */
+/* Per-category hover shadow tint — same color for every section */
 .course-card[data-cat="plc"]:hover        { box-shadow: 0 8px 30px rgba(217, 119, 6, 0.12); }
-.course-card[data-cat="networking"]:hover  { box-shadow: 0 8px 30px rgba(37, 99, 235, 0.12); }
-.course-card[data-cat="scada"]:hover       { box-shadow: 0 8px 30px rgba(13, 148, 136, 0.12); }
-.course-card[data-cat="automation"]:hover  { box-shadow: 0 8px 30px rgba(124, 58, 237, 0.12); }
-.course-card[data-cat="safety"]:hover      { box-shadow: 0 8px 30px rgba(220, 53, 69, 0.12); }
-.course-card[data-cat="drives"]:hover      { box-shadow: 0 8px 30px rgba(234, 88, 12, 0.12); }
+.course-card[data-cat="networking"]:hover  { box-shadow: 0 8px 30px rgba(217, 119, 6, 0.12); }
+.course-card[data-cat="scada"]:hover       { box-shadow: 0 8px 30px rgba(217, 119, 6, 0.12); }
+.course-card[data-cat="automation"]:hover  { box-shadow: 0 8px 30px rgba(217, 119, 6, 0.12); }
+.course-card[data-cat="safety"]:hover      { box-shadow: 0 8px 30px rgba(217, 119, 6, 0.12); }
+.course-card[data-cat="drives"]:hover      { box-shadow: 0 8px 30px rgba(217, 119, 6, 0.12); }
 
 /* Stagger */
 .course-card:nth-child(1)  { animation-delay: 0.03s; }
@@ -465,11 +465,11 @@ body {
 .card-category i { font-size: 0.62rem; }
 
 .course-card[data-cat="plc"] .card-category        { color: var(--cat-amber); }
-.course-card[data-cat="networking"] .card-category  { color: var(--cat-blue); }
-.course-card[data-cat="scada"] .card-category       { color: var(--cat-teal); }
-.course-card[data-cat="automation"] .card-category  { color: var(--cat-purple); }
-.course-card[data-cat="safety"] .card-category      { color: var(--red); }
-.course-card[data-cat="drives"] .card-category      { color: var(--cat-orange); }
+.course-card[data-cat="networking"] .card-category  { color: var(--cat-amber); }
+.course-card[data-cat="scada"] .card-category       { color: var(--cat-amber); }
+.course-card[data-cat="automation"] .card-category  { color: var(--cat-amber); }
+.course-card[data-cat="safety"] .card-category      { color: var(--cat-amber); }
+.course-card[data-cat="drives"] .card-category      { color: var(--cat-amber); }
 
 .card-title {
     font-size: 1rem;
