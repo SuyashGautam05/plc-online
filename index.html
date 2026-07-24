@@ -935,6 +935,19 @@ footer a:hover { color: var(--red); }
 .roadmap-info { flex: 1; padding-top: 2px; min-width: 0; }
 .roadmap-title { font-weight: 700; font-size: 0.92rem; margin-bottom: 4px; }
 .roadmap-sub { font-size: 0.78rem; color: var(--accent-color); margin-bottom: 6px; }
+.activity-list { display: grid; gap: 8px; padding: 8px; }
+.activity-item { display: flex; align-items: center; gap: 10px; padding: 12px; border: 1px solid var(--border-color); border-radius: 8px; background: #fff; }
+.activity-item i { color: var(--red); width: 18px; text-align: center; }
+.activity-item-content { flex: 1; min-width: 0; }
+.activity-item-title { font-size: 0.88rem; font-weight: 700; color: var(--text-color); }
+.activity-item-sub { font-size: 0.75rem; color: var(--accent-color); margin-top: 2px; }
+.activity-item button { border: 1px solid var(--border-color); border-radius: 5px; padding: 7px 10px; background: #fff; color: var(--text-color); cursor: pointer; font: inherit; font-size: 0.76rem; white-space: nowrap; }
+.activity-action, .topic-activity-btn { border: 1px solid var(--border-color); border-radius: 5px; padding: 7px 10px; background: #fff; color: var(--text-color); cursor: pointer; font: inherit; font-size: 0.76rem; text-decoration: none; white-space: nowrap; }
+.topic-activity-btn { margin: 3px 0 3px 28px; }
+.activity-action:hover, .topic-activity-btn:hover { background: var(--red-soft); color: var(--red); }
+.activity-item button:hover, .activity-item.completed button { background: #198754; border-color: #198754; color: #fff; }
+.activity-item.completed { border-color: #a3cfbb; background: #f0faf4; }
+.activity-empty { padding: 18px; text-align: center; color: var(--accent-color); font-size: 0.85rem; }
     </style>
 </head>
 <body>
@@ -1028,6 +1041,16 @@ footer a:hover { color: var(--red); }
             <button class="modal-close-btn" id="topicsModalClose">Close ✕</button>
         </div>
         <div class="topics-modal-body" id="topicsModalBody"></div>
+    </div>
+</div>
+
+<div class="topics-modal-overlay" id="activityModalOverlay">
+    <div class="topics-modal-box">
+        <div class="topics-modal-header">
+            <span class="topics-modal-title" id="activityModalTitle">Activities</span>
+            <button class="modal-close-btn" id="activityModalClose">Close ✕</button>
+        </div>
+        <div class="topics-modal-body" id="activityModalBody"></div>
     </div>
 </div>
 
@@ -1331,11 +1354,32 @@ const sections = [
 //  minutes) — this page just displays whatever the server has.
 // ============================================================
 const readSet = new Set(); // canonical topic ids (URL pathnames) already read
+const completedSet = new Set();
+const mcqData = {};
+
+// Simulation pages are deliberately listed here so the index can expose them
+// without trying to crawl the static site in the browser.
+const simulations = {
+    'sec-4': [{ title: 'Contactor simulation', href: './pages/Industrial Electrical Components/contactor_sim.html' }, { title: 'Relay simulation', href: './pages/Industrial Electrical Components/relay_sim.html' }, { title: 'Reed switch simulation', href: './pages/Industrial Electrical Components/Reed_Switch_Simulation.html' }],
+    'sec-5': [{ title: 'Proximity sensor simulation', href: './pages/Transducers, Sensors and Transmitters/Proximity_sensor_simulation.html' }, { title: 'Level sensor simulation', href: './pages/Transducers, Sensors and Transmitters/level_sensor_simulation.html' }, { title: 'Pressure sensor simulation', href: './pages/Transducers, Sensors and Transmitters/Pressure_Sensor_Simulation.html' }, { title: 'Temperature sensor simulation', href: './pages/Transducers, Sensors and Transmitters/Temperature_Sensor_Simulation.html' }],
+    'sec-6': [{ title: 'AC motor simulation', href: './pages/Actuators/AC_simulations/index.html' }, { title: 'DC motor simulation', href: './pages/Actuators/DC_simulations/index.html' }, { title: 'Pneumatic actuator simulation', href: './pages/Actuators/pneumatic_simulation.html' }, { title: 'Hydraulic actuator simulation', href: './pages/Actuators/Hydraulic_plc_simulation.html' }],
+    'sec-10': [{ title: 'Ladder programming simulation', href: './pages/PLC Programming Fundamentals/ladder_programming_simulation.html' }],
+    'sec-15': [{ title: 'CAN simulation', href: './pages/Industrial Communication Networks/CAN_simulations/index.html' }],
+    'sec-13': [{ title: 'VFD simulation', href: './pages/Variable Frequency Drives/VFD_simulations/index.html' }]
+};
 
 // Resolve a relative "./pages/..." href to the same canonical id
 // the topic page itself will report (its window.location.pathname).
 function toTopicId(href) {
     return new URL(href, window.location.href).pathname;
+}
+
+function toMcqKey(href) {
+    return decodeURIComponent(toTopicId(href).replace(/^.*\/pages\//, ''));
+}
+
+function activityId(href, type) {
+    return `${toTopicId(href)}#${type}`;
 }
 
 function authHeader() {
@@ -1351,10 +1395,40 @@ async function loadProgress() {
         const data = await res.json().catch(() => ({}));
         if (data.success && Array.isArray(data.topics)) {
             readSet.clear();
-            data.topics.forEach(t => readSet.add(t.topicId));
+            completedSet.clear();
+            data.topics.forEach(t => {
+                const type = t.itemType || 'lesson';
+                if (type === 'lesson' || !t.itemType) readSet.add(t.topicId);
+                if (t.completed !== false) completedSet.add(t.topicId);
+            });
         }
     } catch (err) {
         console.warn('Could not load reading progress:', err);
+    }
+}
+
+async function loadMcqs() {
+    try {
+        const res = await fetch('./pages/mcq-data.json');
+        if (res.ok) Object.assign(mcqData, await res.json());
+    } catch (err) {
+        console.warn('Could not load MCQ data:', err);
+    }
+}
+
+async function markCompleted(href, type, title, sectionTitle) {
+    const id = activityId(href, type);
+    completedSet.add(id);
+    const auth = authHeader();
+    if (!auth) return;
+    try {
+        await fetch(`${cfg.AUTH_SERVER_URL}/api/progress/mark-read`, {
+            method: 'POST',
+            headers: { ...auth, 'Content-Type': 'application/json' },
+            body: JSON.stringify({ topicId: id, topicUrl: toTopicId(href), topicTitle: title, sectionTitle, itemType: type, completed: true })
+        });
+    } catch (err) {
+        console.warn('Could not save activity progress:', err);
     }
 }
 
@@ -1386,11 +1460,13 @@ function renderTopicNode(item) {
         </li>`;
     }
     const isRead = readSet.has(toTopicId(item.href));
+    const hasMcq = Boolean(mcqData[toMcqKey(item.href)]);
     return `<li>
         <a href="${escAttr(item.href)}" class="topic-link${isRead ? ' topic-read' : ''}" data-href="${escAttr(item.href)}">
             <i class="fas fa-arrow-up-right-from-square"></i><span>${escHtml(item.title)}</span>
             <span class="topic-status-icon">${isRead ? '<i class="fas fa-check"></i> Read' : 'Not read yet'}</span>
         </a>
+        ${hasMcq ? `<button class="topic-activity-btn" data-activity="mcq" data-href="${escAttr(item.href)}" data-title="${escAttr(item.title)}"><i class="fas fa-circle-question"></i> MCQ</button>` : ''}
     </li>`;
 }
 function renderTopicTree(nodes) {
@@ -1413,7 +1489,8 @@ function renderCard(s) {
         </div>
         <div class="card-footer">
             <span class="card-footer-text"><i class="fas fa-book-open"></i>${pct}% complete</span>
-            <span class="card-action">View Topics <i class="fas fa-arrow-right"></i></span>
+            <span class="card-action" data-open-topics>View Topics <i class="fas fa-arrow-right"></i></span>
+            <span class="card-action" data-open-activities>Activities <i class="fas fa-flask"></i></span>
         </div>
     </article>`;
 }
@@ -1491,7 +1568,9 @@ document.getElementById('courseGrid').addEventListener('click', e => {
     const card = e.target.closest('.course-card');
     if (!card) return;
     const section = sections.find(s => s.id === card.dataset.sectionId);
-    if (section) openTopicsModal(section);
+    if (!section) return;
+    if (e.target.closest('[data-open-activities]')) openActivityModal(section);
+    else openTopicsModal(section);
 });
 
 function openTopicsModal(section) {
@@ -1499,11 +1578,40 @@ function openTopicsModal(section) {
     document.getElementById('topicsModalBody').innerHTML = renderTopicTree(section.topics);
     document.getElementById('topicsModalOverlay').classList.add('open');
 }
+
+function renderActivities(section) {
+    const items = [];
+    const walk = nodes => nodes.forEach(item => item.children ? walk(item.children) : mcqData[toMcqKey(item.href)] && items.push({ type: 'mcq', title: `${item.title} MCQ`, href: item.href, icon: 'fa-circle-question' }));
+    walk(section.topics);
+    (simulations[section.id] || []).forEach(item => items.push({ ...item, type: 'simulation', icon: 'fa-flask' }));
+    if (!items.length) return '<div class="activity-empty">No MCQs or simulations are available for this section yet.</div>';
+    return `<div class="activity-list">${items.map(item => {
+        const done = completedSet.has(activityId(item.href, item.type));
+        return `<div class="activity-item${done ? ' completed' : ''}">
+            <i class="fas ${item.icon}"></i><div class="activity-item-content"><div class="activity-item-title">${escHtml(item.title)}</div><div class="activity-item-sub">${done ? 'Completed' : item.type === 'mcq' ? 'Answer every question correctly' : 'Open the simulation, then confirm completion'}</div></div>
+            ${item.type === 'mcq' ? `<button data-activity="mcq" data-href="${escAttr(item.href)}" data-title="${escAttr(item.title)}">${done ? 'Completed' : 'Start MCQ'}</button>` : `<a class="activity-action" href="${escAttr(item.href)}" target="_blank" rel="noopener" data-simulation-href="${escAttr(item.href)}" data-title="${escAttr(item.title)}">Open</a><button data-activity="simulation" data-href="${escAttr(item.href)}" data-title="${escAttr(item.title)}">${done ? 'Completed' : 'Mark complete'}</button>`}
+        </div>`;
+    }).join('')}</div>`;
+}
+
+function openActivityModal(section) {
+    document.getElementById('activityModalTitle').textContent = `${section.num}. ${section.title} Activities`;
+    document.getElementById('activityModalBody').innerHTML = renderActivities(section);
+    document.getElementById('activityModalOverlay').classList.add('open');
+}
 function closeTopicsModal() {
     document.getElementById('topicsModalOverlay').classList.remove('open');
 }
 
 document.getElementById('topicsModalBody').addEventListener('click', e => {
+    const activity = e.target.closest('[data-activity="mcq"]');
+    if (activity) {
+        e.preventDefault();
+        const key = toMcqKey(activity.dataset.href);
+        const page = mcqData[key];
+        if (page) startMcq(page, activity.dataset.href, activity.dataset.title);
+        return;
+    }
     const toggle = e.target.closest('.topic-group-toggle');
     if (toggle) {
         const ul = toggle.nextElementSibling;
@@ -1519,6 +1627,38 @@ document.getElementById('topicsModalBody').addEventListener('click', e => {
     // Progress picks back up automatically since loadProgress() runs
     // again on boot whenever the user returns (e.g. hits Back).
 });
+
+document.getElementById('activityModalBody').addEventListener('click', e => {
+    const button = e.target.closest('button[data-activity]');
+    if (!button) return;
+    const section = sections.find(s => document.getElementById('activityModalTitle').textContent.startsWith(`${s.num}.`));
+    if (!section) return;
+    if (button.dataset.activity === 'mcq') {
+        const page = mcqData[toMcqKey(button.dataset.href)];
+        if (page) startMcq(page, button.dataset.href, button.dataset.title);
+    } else {
+        markCompleted(button.dataset.href, 'simulation', button.dataset.title, section.title).then(() => {
+            document.getElementById('activityModalBody').innerHTML = renderActivities(section);
+        });
+    }
+});
+
+document.getElementById('activityModalClose').addEventListener('click', () => document.getElementById('activityModalOverlay').classList.remove('open'));
+document.getElementById('activityModalOverlay').addEventListener('click', e => { if (e.target.id === 'activityModalOverlay') e.target.classList.remove('open'); });
+
+function startMcq(page, href, title) {
+    const answers = page.questions.map(() => null);
+    const body = document.getElementById('activityModalBody');
+    body.innerHTML = `<div class="activity-list"><div class="activity-item-title">${escHtml(page.title || title)}</div>${page.questions.map((q, index) => `<label class="mcq-index-question">${index + 1}. ${escHtml(q.question)}<select data-mcq-index="${index}"><option value="">Choose an answer</option>${q.options.map((option, optionIndex) => `<option value="${optionIndex}">${escHtml(option)}</option>`).join('')}</select></label>`).join('')}<button id="submitIndexMcq">Submit answers</button></div>`;
+    document.getElementById('submitIndexMcq').addEventListener('click', async () => {
+        body.querySelectorAll('[data-mcq-index]').forEach(select => answers[Number(select.dataset.mcqIndex)] = Number(select.value));
+        const complete = answers.every((answer, index) => answer !== null && answer === page.questions[index].correct);
+        if (!complete) { alert('Please answer every question correctly to complete this MCQ.'); return; }
+        const section = sections.find(s => s.topics.some(item => item.href === href || item.children?.some(child => child.href === href)));
+        await markCompleted(href, 'mcq', title, section?.title || '');
+        body.innerHTML = '<div class="activity-empty">MCQ completed. Your progress has been saved.</div>';
+    });
+}
 
 document.getElementById('topicsModalClose').addEventListener('click', closeTopicsModal);
 document.getElementById('topicsModalOverlay').addEventListener('click', e => {
@@ -1592,6 +1732,8 @@ document.addEventListener('keydown', e => {
         document.getElementById('roadmapModalOverlay').classList.remove('open');
     } else if (document.getElementById('topicsModalOverlay').classList.contains('open')) {
         closeTopicsModal();
+    } else if (document.getElementById('activityModalOverlay').classList.contains('open')) {
+        document.getElementById('activityModalOverlay').classList.remove('open');
     }
 });
 
@@ -1599,7 +1741,7 @@ document.addEventListener('keydown', e => {
 //  Boot: load progress first so cards render with correct counts
 // ============================================================
 renderFilters();
-loadProgress().finally(() => { applyFilters(); renderOverallProgress(); });
+Promise.all([loadProgress(), loadMcqs()]).finally(() => { applyFilters(); renderOverallProgress(); });
 </script>
 </body>
 </html>
