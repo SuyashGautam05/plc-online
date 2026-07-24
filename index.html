@@ -942,9 +942,6 @@ footer a:hover { color: var(--red); }
 .activity-item-title { font-size: 0.88rem; font-weight: 700; color: var(--text-color); }
 .activity-item-sub { font-size: 0.75rem; color: var(--accent-color); margin-top: 2px; }
 .activity-item button { border: 1px solid var(--border-color); border-radius: 5px; padding: 7px 10px; background: #fff; color: var(--text-color); cursor: pointer; font: inherit; font-size: 0.76rem; white-space: nowrap; }
-.activity-action, .topic-activity-btn { border: 1px solid var(--border-color); border-radius: 5px; padding: 7px 10px; background: #fff; color: var(--text-color); cursor: pointer; font: inherit; font-size: 0.76rem; text-decoration: none; white-space: nowrap; }
-.topic-activity-btn { margin: 3px 0 3px 28px; }
-.activity-action:hover, .topic-activity-btn:hover { background: var(--red-soft); color: var(--red); }
 .activity-item button:hover, .activity-item.completed button { background: #198754; border-color: #198754; color: #fff; }
 .activity-item.completed { border-color: #a3cfbb; background: #f0faf4; }
 .activity-empty { padding: 18px; text-align: center; color: var(--accent-color); font-size: 0.85rem; }
@@ -1488,8 +1485,7 @@ function renderCard(s) {
         </div>
         <div class="card-footer">
             <span class="card-footer-text"><i class="fas fa-book-open"></i>${pct}% complete</span>
-            <span class="card-action" data-open-topics>View Topics <i class="fas fa-arrow-right"></i></span>
-            <span class="card-action" data-open-activities>Activities <i class="fas fa-flask"></i></span>
+            <span class="card-action">View Topics <i class="fas fa-arrow-right"></i></span>
         </div>
     </article>`;
 }
@@ -1567,9 +1563,7 @@ document.getElementById('courseGrid').addEventListener('click', e => {
     const card = e.target.closest('.course-card');
     if (!card) return;
     const section = sections.find(s => s.id === card.dataset.sectionId);
-    if (!section) return;
-    if (e.target.closest('[data-open-activities]')) openActivityModal(section);
-    else openTopicsModal(section);
+    if (section) openTopicsModal(section);
 });
 
 function openTopicsModal(section) {
