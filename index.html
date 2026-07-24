@@ -1360,11 +1360,10 @@ const mcqData = {};
 // Simulation pages are deliberately listed here so the index can expose them
 // without trying to crawl the static site in the browser.
 const simulations = {
-    'sec-4': [{ title: 'Contactor simulation', href: './pages/Industrial Electrical Components/contactor_sim.html' }, { title: 'Relay simulation', href: './pages/Industrial Electrical Components/relay_sim.html' }, { title: 'Reed switch simulation', href: './pages/Industrial Electrical Components/Reed_Switch_Simulation.html' }],
-    'sec-5': [{ title: 'Proximity sensor simulation', href: './pages/Transducers, Sensors and Transmitters/Proximity_sensor_simulation.html' }, { title: 'Level sensor simulation', href: './pages/Transducers, Sensors and Transmitters/level_sensor_simulation.html' }, { title: 'Pressure sensor simulation', href: './pages/Transducers, Sensors and Transmitters/Pressure_Sensor_Simulation.html' }, { title: 'Temperature sensor simulation', href: './pages/Transducers, Sensors and Transmitters/Temperature_Sensor_Simulation.html' }],
-    'sec-6': [{ title: 'AC motor simulation', href: './pages/Actuators/AC_simulations/index.html' }, { title: 'DC motor simulation', href: './pages/Actuators/DC_simulations/index.html' }, { title: 'Pneumatic actuator simulation', href: './pages/Actuators/pneumatic_simulation.html' }, { title: 'Hydraulic actuator simulation', href: './pages/Actuators/Hydraulic_plc_simulation.html' }],
-    'sec-10': [{ title: 'Ladder programming simulation', href: './pages/PLC Programming Fundamentals/ladder_programming_simulation.html' }],
-    'sec-15': [{ title: 'CAN simulation', href: './pages/Industrial Communication Networks/CAN_simulations/index.html' }],
+    'sec-5': [{ title: 'Pneumatic actuator simulation', href: './pages/Actuators/pneumatic_simulation.html' }, { title: 'Hydraulic actuator simulation', href: './pages/Actuators/Hydraulic_plc_simulation.html' }],
+    'sec-6': [{ title: 'Ladder programming simulation', href: './pages/PLC Programming Fundamentals/ladder_programming_simulation.html' }],
+    'sec-8': [{ title: 'Contactor simulation', href: './pages/Industrial Electrical Components/contactor_sim.html' }, { title: 'Relay simulation', href: './pages/Industrial Electrical Components/relay_sim.html' }, { title: 'Reed switch simulation', href: './pages/Industrial Electrical Components/Reed_Switch_Simulation.html' }],
+    'sec-10': [{ title: 'Proximity sensor simulation', href: './pages/Transducers, Sensors and Transmitters/Proximity_sensor_simulation.html' }, { title: 'Level sensor simulation', href: './pages/Transducers, Sensors and Transmitters/level_sensor_simulation.html' }, { title: 'Pressure sensor simulation', href: './pages/Transducers, Sensors and Transmitters/Pressure_Sensor_Simulation.html' }, { title: 'Temperature sensor simulation', href: './pages/Transducers, Sensors and Transmitters/Temperature_Sensor_Simulation.html' }],
     'sec-13': [{ title: 'VFD simulation', href: './pages/Variable Frequency Drives/VFD_simulations/index.html' }]
 };
 
@@ -1652,7 +1651,7 @@ function startMcq(page, href, title) {
     body.innerHTML = `<div class="activity-list"><div class="activity-item-title">${escHtml(page.title || title)}</div>${page.questions.map((q, index) => `<label class="mcq-index-question">${index + 1}. ${escHtml(q.question)}<select data-mcq-index="${index}"><option value="">Choose an answer</option>${q.options.map((option, optionIndex) => `<option value="${optionIndex}">${escHtml(option)}</option>`).join('')}</select></label>`).join('')}<button id="submitIndexMcq">Submit answers</button></div>`;
     document.getElementById('submitIndexMcq').addEventListener('click', async () => {
         body.querySelectorAll('[data-mcq-index]').forEach(select => answers[Number(select.dataset.mcqIndex)] = Number(select.value));
-        const complete = answers.every((answer, index) => answer !== null && answer === page.questions[index].correct);
+        const complete = answers.every((answer, index) => answer === page.questions[index].correct);
         if (!complete) { alert('Please answer every question correctly to complete this MCQ.'); return; }
         const section = sections.find(s => s.topics.some(item => item.href === href || item.children?.some(child => child.href === href)));
         await markCompleted(href, 'mcq', title, section?.title || '');

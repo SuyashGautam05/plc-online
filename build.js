@@ -11,7 +11,6 @@ const INCLUDE = [
     'auth-config.js',
     'auth-guard.js',
     'user-bar.js',
-    'topic-read-tracker.js',
     'mcq_with_explation.json',
     'assets',
     'pages',
@@ -36,12 +35,7 @@ function copyItem(srcPath, destPath) {
             copyItem(path.join(srcPath, child), path.join(destPath, child));
         }
     } else {
-        let content = fs.readFileSync(srcPath);
-        const isLessonPage = path.dirname(srcPath).startsWith(path.join(SRC, 'pages')) && path.extname(srcPath).toLowerCase() === '.html';
-        if (isLessonPage && !content.toString().includes('topic-read-tracker.js')) {
-            content = Buffer.from(content.toString().replace('</head>', '    <script src="/auth-config.js"></script>\n    <script src="/topic-read-tracker.js"></script>\n</head>'));
-        }
-        fs.writeFileSync(destPath, content);
+        fs.cpSync(srcPath, destPath);
     }
 }
 
