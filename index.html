@@ -402,32 +402,21 @@ body {
     top: 0; left: 0; right: 0;
     height: 3px;
     opacity: 0.8;
+    background: var(--cat-amber);
     transition: opacity 0.3s var(--ease), height 0.3s var(--ease);
 }
 
 .course-card:hover {
     transform: translateY(-4px);
     border-color: rgba(0, 0, 0, 0.12);
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+    box-shadow: 0 8px 30px rgba(217, 119, 6, 0.12);
 }
 
 .course-card:hover::before { opacity: 1; }
 
-/* Per-category top stripe — same color for every section */
-.course-card[data-cat="plc"]::before        { background: var(--cat-amber); }
-.course-card[data-cat="networking"]::before  { background: var(--cat-amber); }
-.course-card[data-cat="scada"]::before       { background: var(--cat-amber); }
-.course-card[data-cat="automation"]::before  { background: var(--cat-amber); }
-.course-card[data-cat="safety"]::before      { background: var(--cat-amber); }
-.course-card[data-cat="drives"]::before      { background: var(--cat-amber); }
-
-/* Per-category hover shadow tint — same color for every section */
-.course-card[data-cat="plc"]:hover        { box-shadow: 0 8px 30px rgba(217, 119, 6, 0.12); }
-.course-card[data-cat="networking"]:hover  { box-shadow: 0 8px 30px rgba(217, 119, 6, 0.12); }
-.course-card[data-cat="scada"]:hover       { box-shadow: 0 8px 30px rgba(217, 119, 6, 0.12); }
-.course-card[data-cat="automation"]:hover  { box-shadow: 0 8px 30px rgba(217, 119, 6, 0.12); }
-.course-card[data-cat="safety"]:hover      { box-shadow: 0 8px 30px rgba(217, 119, 6, 0.12); }
-.course-card[data-cat="drives"]:hover      { box-shadow: 0 8px 30px rgba(217, 119, 6, 0.12); }
+/* Every category uses the same top stripe + hover tint (set on the base
+   .course-card rules above) - no per-category color overrides anymore, so
+   a category never accidentally ends up with no stripe at all. */
 
 /* Stagger */
 .course-card:nth-child(1)  { animation-delay: 0.03s; }
@@ -460,16 +449,10 @@ body {
     text-transform: uppercase;
     letter-spacing: 0.08em;
     margin-bottom: 12px;
+    color: var(--cat-amber);
 }
 
 .card-category i { font-size: 0.62rem; }
-
-.course-card[data-cat="plc"] .card-category        { color: var(--cat-amber); }
-.course-card[data-cat="networking"] .card-category  { color: var(--cat-amber); }
-.course-card[data-cat="scada"] .card-category       { color: var(--cat-amber); }
-.course-card[data-cat="automation"] .card-category  { color: var(--cat-amber); }
-.course-card[data-cat="safety"] .card-category      { color: var(--cat-amber); }
-.course-card[data-cat="drives"] .card-category      { color: var(--cat-amber); }
 
 .card-title {
     font-size: 1rem;
