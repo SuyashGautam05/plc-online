@@ -20,8 +20,19 @@
     const BOTTOM_THRESHOLD_PX = 48;     // how close to the very bottom counts as "reached the end"
     const BADGE_TICK_MS = 1000;         // how often the countdown badge updates
 
-    const topicId = window.location.pathname;   // canonical id — must match index.html's toTopicId()
+    const topicId = canonicalPathId(window.location.pathname);   // canonical id — must match index.html's toTopicId()
     const topicTitle = document.title || topicId;
+
+    // Percent-encoded pathnames (e.g. spaces as %20) can end up encoded
+    // slightly differently depending on how they were produced - decoding
+    // to a plain, human-readable string removes that entire class of
+    // mismatch so this always matches what index.html computes for the
+    // same page. Falls back to the raw path if decoding ever throws (a
+    // malformed %-sequence), rather than crashing the tracker.
+    function canonicalPathId(pathname) {
+        try { return decodeURIComponent(pathname); }
+        catch { return pathname; }
+    }
 
     let reachedBottom = false;
     let bottomReachedAt = null;

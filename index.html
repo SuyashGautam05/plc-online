@@ -502,6 +502,11 @@ body {
 
 .meta-pill i { font-size: 0.65rem; color: var(--accent-color); }
 
+.meta-pill.mcq-pill { background: rgba(37, 99, 235, 0.08); color: var(--cat-blue); border-color: rgba(37, 99, 235, 0.18); }
+.meta-pill.mcq-pill i { color: var(--cat-blue); }
+.meta-pill.sim-pill { background: rgba(13, 148, 136, 0.08); color: var(--cat-teal); border-color: rgba(13, 148, 136, 0.18); }
+.meta-pill.sim-pill i { color: var(--cat-teal); }
+
 /* Difficulty badges */
 .diff-beginner {
     color: var(--cat-green) !important;
@@ -907,6 +912,36 @@ footer a:hover { color: var(--red); }
 .topic-link.topic-read .topic-status-icon { color: #16a34a; }
 .topic-link.topic-read .topic-status-icon i { color: #16a34a; }
 
+.topic-badges {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+    padding: 0 10px 8px 34px; /* aligns under the topic title, past the link icon */
+}
+.topic-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
+    padding: 2px 8px;
+    border-radius: var(--r-pill);
+    font-size: 0.68rem;
+    font-weight: 600;
+    text-decoration: none;
+    border: 1px solid transparent;
+}
+.topic-badge-mcq {
+    background: rgba(37, 99, 235, 0.08);
+    color: var(--cat-blue);
+    border-color: rgba(37, 99, 235, 0.18);
+}
+.topic-badge-sim {
+    background: rgba(13, 148, 136, 0.08);
+    color: var(--cat-teal);
+    border-color: rgba(13, 148, 136, 0.18);
+    cursor: pointer;
+}
+.topic-badge-sim:hover { background: rgba(13, 148, 136, 0.16); }
+
 /* ── Roadmap (learning path map) ── */
 .roadmap-modal-body { padding: 20px 16px; }
 .roadmap-node {
@@ -1052,7 +1087,7 @@ footer a:hover { color: var(--red); }
 // ============================================================
 const cfg = window.SIMTEL_AUTH_CONFIG;
 
-const T = (title, href) => ({ title, href });      // leaf topic (real page)
+const T = (title, href, simHref) => ({ title, href, simHref });      // leaf topic (real page), simHref optional
 const G = (title, children) => ({ title, children }); // collapsible group
 
 const sections = [
@@ -1096,14 +1131,14 @@ const sections = [
         topics: [
             T('Circuit Breakers and Fuses', './pages/Industrial Electrical Components/Circuit_Breakers_and_Fuses.html'),
             T('Power Supplies (SMPS, Linear)', './pages/Industrial Electrical Components/Power_Supplies.html'),
-            T('Relays', './pages/Industrial Electrical Components/Relays.html'),
-            T('Contactors', './pages/Industrial Electrical Components/Contactors.html'),
+            T('Relays', './pages/Industrial Electrical Components/Relays.html', './pages/Industrial Electrical Components/relay_sim.html'),
+            T('Contactors', './pages/Industrial Electrical Components/Contactors.html', './pages/Industrial Electrical Components/contactor_sim.html'),
             G('Types of Switches', [
                 T('Pushbuttons', './pages/Industrial Electrical Components/push_button_switch.html'),
                 T('Toggle Switch', './pages/Industrial Electrical Components/toggle_switch.html'),
                 T('Rocker Switch', './pages/Industrial Electrical Components/rocker_switch.html'),
                 T('DIP Switch', './pages/Industrial Electrical Components/DIP_switch.html'),
-                T('Reed Switch', './pages/Industrial Electrical Components/Reed_switch.html'),
+                T('Reed Switch', './pages/Industrial Electrical Components/Reed_switch.html', './pages/Industrial Electrical Components/Reed_Switch_Simulation.html'),
                 T('Limit Switch', './pages/Industrial Electrical Components/Limit_switch.html')
             ])
         ]
@@ -1115,10 +1150,10 @@ const sections = [
             T('Definition of Transducers, Sensors and Transmitters', './pages/Transducers, Sensors and Transmitters/Definition_of_Transducers_Sensors_and_Transmitters.html'),
             T('Characteristics and Selection Criteria', './pages/Transducers, Sensors and Transmitters/Characteristics_and_Selection_Criteria.html'),
             T('Sinking (PNP) and Sourcing (NPN) Concept', './pages/Transducers, Sensors and Transmitters/Sinking_(PNP)_and_Sourcing_(NPN)_Concept.html'),
-            T('Types of Proximity Sensors', './pages/Transducers, Sensors and Transmitters/Types_of_Proximity_Sensors.html'),
-            T('Temperature Sensors and Temperature Transmitter', './pages/Transducers, Sensors and Transmitters/Temperature_Sensors_and_Temperature_Transmitter.html'),
-            T('Pressure Transmitter', './pages/Transducers, Sensors and Transmitters/Pressure_Transmitter.html'),
-            T('Level Transmitter', './pages/Transducers, Sensors and Transmitters/Level_Transmitter.html'),
+            T('Types of Proximity Sensors', './pages/Transducers, Sensors and Transmitters/Types_of_Proximity_Sensors.html', './pages/Transducers, Sensors and Transmitters/Proximity_sensor_simulation.html'),
+            T('Temperature Sensors and Temperature Transmitter', './pages/Transducers, Sensors and Transmitters/Temperature_Sensors_and_Temperature_Transmitter.html', './pages/Transducers, Sensors and Transmitters/Temperature_Sensor_Simulation.html'),
+            T('Pressure Transmitter', './pages/Transducers, Sensors and Transmitters/Pressure_Transmitter.html', './pages/Transducers, Sensors and Transmitters/Pressure_Sensor_Simulation.html'),
+            T('Level Transmitter', './pages/Transducers, Sensors and Transmitters/Level_Transmitter.html', './pages/Transducers, Sensors and Transmitters/level_sensor_simulation.html'),
             T('Flow Transmitter', './pages/Transducers, Sensors and Transmitters/Flow_Transmitter.html'),
             T('Position Sensor', './pages/Transducers, Sensors and Transmitters/Position_Sensor.html'),
             T('Vision Sensor', './pages/Transducers, Sensors and Transmitters/Vision_Sensor.html')
@@ -1131,15 +1166,15 @@ const sections = [
             T('Introduction and Function of Actuators', './pages/Actuators/Introduction_and_Function_of_Actuators.html'),
             T('Classification of Actuators', './pages/Actuators/Classification_of_Actuators.html'),
             G('Electrical Actuators', [
-                T('AC Motors', './pages/Actuators/AC_Motors.html'),
-                T('DC Motors', './pages/Actuators/DC_Motors.html'),
+                T('AC Motors', './pages/Actuators/AC_Motors.html', './pages/Actuators/AC_simulations/index.html'),
+                T('DC Motors', './pages/Actuators/DC_Motors.html', './pages/Actuators/DC_simulations/index.html'),
                 T('Servo Motors', './pages/Actuators/Servo_Motors.html'),
                 T('Stepper Motors', './pages/Actuators/Stepper_Motors.html'),
                 T('Solenoids', './pages/Actuators/Solenoids.html'),
                 T('Linear Electric Actuators', './pages/Actuators/Linear_Electric_Actuator.html')
             ]),
-            T('Pneumatic Actuators', './pages/Actuators/Pneumatic_Actuators.html'),
-            T('Hydraulic Actuators', './pages/Actuators/Hydraulic_Actuators.html')
+            T('Pneumatic Actuators', './pages/Actuators/Pneumatic_Actuators.html', './pages/Actuators/pneumatic_simulation.html'),
+            T('Hydraulic Actuators', './pages/Actuators/Hydraulic_Actuators.html', './pages/Actuators/Hydraulic_plc_simulation.html')
         ]
     },
     {
@@ -1198,7 +1233,7 @@ const sections = [
         topics: [
             G('PLC Programming Standards', [
                 G('IEC 61131-3 Programming Languages', [
-                    T('Ladder Diagram (LD)', './pages/PLC Programming Fundamentals/Ladder_Diagram_(LD).html'),
+                    T('Ladder Diagram (LD)', './pages/PLC Programming Fundamentals/Ladder_Diagram_(LD).html', './pages/PLC Programming Fundamentals/ladder_programming_simulation.html'),
                     T('Function Block Diagram (FBD)', './pages/PLC Programming Fundamentals/Function_Block_Diagram.html'),
                     T('Structured Text (ST)', './pages/PLC Programming Fundamentals/Structured_Text.html'),
                     T('Statement List (STL)', './pages/PLC Programming Fundamentals/Statement_List.html'),
@@ -1266,7 +1301,7 @@ const sections = [
         id: 'sec-13', num: 13, title: 'Variable Frequency Drives (VFD)',
         category: 'drives', categoryLabel: 'Drives & Motion', categoryIcon: 'fa-rotate',
         topics: [
-            T('Introduction to Variable Frequency Drives', './pages/Variable Frequency Drives/Introduction_to_Variable_Frequency_Drives.html'),
+            T('Introduction to Variable Frequency Drives', './pages/Variable Frequency Drives/Introduction_to_Variable_Frequency_Drives.html', './pages/Variable Frequency Drives/VFD_simulations/index.html'),
             T('Construction and Operating Principle of VFD', './pages/Variable Frequency Drives/Construction_and_Operating_Principle_of_VFD.html'),
             T('Speed Control of AC Motors Using VFD', './pages/Variable Frequency Drives/Speed_Control_of_AC_Motors_Using_VFD.html'),
             T('V/f Control and Vector Control', './pages/Variable Frequency Drives/Control_and_Vector_Control.html'),
@@ -1297,7 +1332,7 @@ const sections = [
             T('Profibus', './pages/Industrial Communication Networks/Profibus.html'),
             T('Profinet', './pages/Industrial Communication Networks/Profinet.html'),
             T('Ethernet/IP', './pages/Industrial Communication Networks/Ethernet-IP.html'),
-            T('CANopen', './pages/Industrial Communication Networks/CANopen.html'),
+            T('CANopen', './pages/Industrial Communication Networks/CANopen.html', './pages/Industrial Communication Networks/CAN_simulations/index.html'),
             T('OPC UA', './pages/Industrial Communication Networks/OPC_UA.html')
         ]
     },
@@ -1334,11 +1369,35 @@ const sections = [
 //  minutes) — this page just displays whatever the server has.
 // ============================================================
 const readSet = new Set(); // canonical topic ids (URL pathnames) already read
+const mcqTopics = new Set(); // mcq-data.json keys - which topics have practice questions
+
+// mcq-data.json is keyed by the path relative to /pages/, e.g.
+// "Introduction to Industrial Automation/Definition_and_Scope_of_Industrial_Automation.html"
+// - exactly a topic's href with the leading "./pages/" stripped off.
+function mcqKeyFromHref(href) {
+    return href.replace(/^\.\/pages\//, '');
+}
+
+async function loadMcqIndex() {
+    try {
+        const res = await fetch('./pages/mcq-data.json');
+        if (!res.ok) return;
+        const data = await res.json();
+        Object.keys(data).forEach(k => mcqTopics.add(k));
+    } catch (err) {
+        console.warn('Could not load MCQ index:', err);
+    }
+}
 
 // Resolve a relative "./pages/..." href to the same canonical id
 // the topic page itself will report (its window.location.pathname).
+// Decoded (not percent-encoded) so this always matches
+// topic-read-tracker.js's canonicalPathId() for the same page, regardless
+// of how each side's encoding happened to come out.
 function toTopicId(href) {
-    return new URL(href, window.location.href).pathname;
+    const pathname = new URL(href, window.location.href).pathname;
+    try { return decodeURIComponent(pathname); }
+    catch { return pathname; }
 }
 
 function authHeader() {
@@ -1354,7 +1413,14 @@ async function loadProgress() {
         const data = await res.json().catch(() => ({}));
         if (data.success && Array.isArray(data.topics)) {
             readSet.clear();
-            data.topics.forEach(t => readSet.add(t.topicId));
+            data.topics.forEach(t => {
+                readSet.add(t.topicId);
+                // Backward-compat: older records may have been saved with a
+                // percent-encoded pathname (e.g. %20 for spaces) before this
+                // was switched to always store the decoded form. Adding both
+                // means previously-read topics don't suddenly look unread.
+                try { readSet.add(decodeURIComponent(t.topicId)); } catch { /* already plain, or malformed - ignore */ }
+            });
         }
     } catch (err) {
         console.warn('Could not load reading progress:', err);
@@ -1380,6 +1446,18 @@ function countReadLeaves(nodes) {
         return n + (readSet.has(toTopicId(item.href)) ? 1 : 0);
     }, 0);
 }
+function countMcqLeaves(nodes) {
+    return nodes.reduce((n, item) => {
+        if (item.children) return n + countMcqLeaves(item.children);
+        return n + (mcqTopics.has(mcqKeyFromHref(item.href)) ? 1 : 0);
+    }, 0);
+}
+function countSimLeaves(nodes) {
+    return nodes.reduce((n, item) => {
+        if (item.children) return n + countSimLeaves(item.children);
+        return n + (item.simHref ? 1 : 0);
+    }, 0);
+}
 
 function renderTopicNode(item) {
     if (item.children) {
@@ -1389,11 +1467,25 @@ function renderTopicNode(item) {
         </li>`;
     }
     const isRead = readSet.has(toTopicId(item.href));
+    const hasMcq = mcqTopics.has(mcqKeyFromHref(item.href));
+
+    // Simulation link is a sibling of the main topic <a>, not nested inside
+    // it (anchors can't nest) - stopPropagation keeps a click on it from
+    // also triggering the topic-link's own navigation underneath it.
+    const badges = [];
+    if (hasMcq) {
+        badges.push(`<span class="topic-badge topic-badge-mcq" title="Practice questions available"><i class="fas fa-list-check"></i> MCQs</span>`);
+    }
+    if (item.simHref) {
+        badges.push(`<a href="${escAttr(item.simHref)}" class="topic-badge topic-badge-sim" title="Open interactive simulation" onclick="event.stopPropagation()"><i class="fas fa-flask"></i> Simulation</a>`);
+    }
+
     return `<li>
         <a href="${escAttr(item.href)}" class="topic-link${isRead ? ' topic-read' : ''}" data-href="${escAttr(item.href)}">
             <i class="fas fa-arrow-up-right-from-square"></i><span>${escHtml(item.title)}</span>
             <span class="topic-status-icon">${isRead ? '<i class="fas fa-check"></i> Read' : 'Not read yet'}</span>
         </a>
+        ${badges.length ? `<div class="topic-badges">${badges.join('')}</div>` : ''}
     </li>`;
 }
 function renderTopicTree(nodes) {
@@ -1403,6 +1495,8 @@ function renderTopicTree(nodes) {
 function renderCard(s) {
     const total = countLeaves(s.topics);
     const read = countReadLeaves(s.topics);
+    const mcqCount = countMcqLeaves(s.topics);
+    const simCount = countSimLeaves(s.topics);
     const pct = total ? Math.round((read / total) * 100) : 0;
     return `<article class="course-card" data-cat="${s.category}" data-title="${s.title.toLowerCase()}" data-section-id="${s.id}">
         <div class="card-body">
@@ -1411,6 +1505,8 @@ function renderCard(s) {
             <div class="card-meta">
                 <span class="meta-pill"><i class="fas fa-list"></i>${total} topics</span>
                 <span class="meta-pill read-pill"><i class="fas fa-check-circle"></i>${read}/${total} read</span>
+                ${mcqCount ? `<span class="meta-pill mcq-pill"><i class="fas fa-list-check"></i>${mcqCount} MCQ${mcqCount > 1 ? 's' : ''}</span>` : ''}
+                ${simCount ? `<span class="meta-pill sim-pill"><i class="fas fa-flask"></i>${simCount} Simulation${simCount > 1 ? 's' : ''}</span>` : ''}
             </div>
             <div class="progress-track"><div class="progress-fill" style="width:${pct}%"></div></div>
         </div>
@@ -1599,10 +1695,10 @@ document.addEventListener('keydown', e => {
 });
 
 // ============================================================
-//  Boot: load progress first so cards render with correct counts
+//  Boot: load progress + MCQ index first so cards render with correct counts
 // ============================================================
 renderFilters();
-loadProgress().finally(() => { applyFilters(); renderOverallProgress(); });
+Promise.all([loadProgress(), loadMcqIndex()]).finally(() => { applyFilters(); renderOverallProgress(); });
 </script>
 </body>
 </html>
