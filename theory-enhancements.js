@@ -1,18 +1,17 @@
 // ============================================================
 //  theory-enhancements.js  —  OPTIONAL, add to topic lesson pages.
 //
-//  This is what turns the page from "one long scroll of text"
-//  into: a hero band, distinct chunked sections, and a real
-//  in-flow sidebar (progress ring + table of contents). All of
-//  it is generated from the existing markup - no per-page HTML
-//  changes needed, just this one script tag near the end of
-//  <body>, after mcq-handler.js:
+//  Restructures the page into a hero + chunked sections + sidebar,
+//  and adds: dark mode toggle, image lightbox, per-section
+//  copy-link + reading-time badges, a mobile TOC bottom sheet, and
+//  small toast notifications (link copied / topic marked as read).
 //
+//  Add ONE tag near the end of <body>, after mcq-handler.js:
 //  <script src="/theory-enhancements.js"></script>
 //
-//  Pure vanilla JS, no external library/CDN. If .theory-section
-//  or .content-wrapper aren't found, it no-ops safely - fine to
-//  roll out to some pages before others.
+//  Pure vanilla JS, no external library/CDN. Every piece checks
+//  for what it needs and no-ops if it's missing, so it's safe to
+//  roll out incrementally across pages.
 // ============================================================
 (function () {
     const wrapper = document.querySelector('.content-wrapper');
@@ -21,23 +20,66 @@
 
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
+    initThemeToggle();
+
     const sections = wrapIntoSections(theory);
     const wordCount = theory.textContent.trim().split(/\s+/).length;
     const minutes = Math.max(1, Math.round(wordCount / 200)); // ~200 wpm
 
     buildHero(wrapper, sections.length, minutes);
+    decorateHeadings(sections);
 
     if (sections.length >= 2) {
         buildSidebar(wrapper, theory, sections, minutes);
         wrapper.classList.add('has-sidebar');
+        buildMobileToc(sections);
     }
 
     initProgressBar();
+    initImageLightbox();
     if (!prefersReducedMotion) initScrollReveal(sections);
+    listenForReadCelebration();
+
+    // ── Dark mode toggle, injected next to the logo ──────────
+    function initThemeToggle() {
+        const header = document.querySelector('header');
+        const logoContainer = document.querySelector('.logo-container');
+        if (!header || !logoContainer) return;
+
+        const row = document.createElement('div');
+        row.className = 'header-row';
+        header.insertBefore(row, logoContainer);
+        row.appendChild(logoContainer); // moves it, doesn't duplicate
+
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.className = 'theme-toggle-btn';
+        btn.setAttribute('aria-label', 'Toggle dark mode');
+        row.appendChild(btn);
+
+        const apply = theme => {
+            if (theme === 'dark') {
+                document.documentElement.setAttribute('data-theme', 'dark');
+                btn.innerHTML = '<i class="fas fa-sun"></i>';
+            } else {
+                document.documentElement.removeAttribute('data-theme');
+                btn.innerHTML = '<i class="fas fa-moon"></i>';
+            }
+        };
+
+        apply(localStorage.getItem('simtel-theme') || 'light');
+
+        btn.addEventListener('click', () => {
+            const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
+            const next = isDark ? 'light' : 'dark';
+            apply(next);
+            localStorage.setItem('simtel-theme', next);
+        });
+    }
 
     // ── Wrap each h2 + everything until the next h2 into a
-    // <section class="lesson-section"> - this is what makes the
-    // page read as distinct chunks instead of one continuous flow. ──
+    // <section class="lesson-section"> so the page reads as
+    // distinct chunks instead of one continuous flow. ──
     function wrapIntoSections(theoryEl) {
         const children = Array.from(theoryEl.children);
         const frag = document.createDocumentFragment();
@@ -60,7 +102,6 @@
 
         theoryEl.appendChild(frag);
 
-        // Give each section's heading a stable id for anchors/TOC.
         madeSections.forEach((sec, i) => {
             const h2 = sec.querySelector('h2');
             if (h2 && !h2.id) h2.id = 'section-' + (i + 1);
@@ -87,6 +128,35 @@
         wrapperEl.insertBefore(hero, wrapperEl.firstChild);
     }
 
+    // ── Per-section reading time + copy-link button on each h2 ──
+    function decorateHeadings(sectionEls) {
+        sectionEls.forEach(sec => {
+            const h2 = sec.querySelector('h2');
+            if (!h2) return;
+
+            const words = sec.textContent.trim().split(/\s+/).length;
+            const mins = Math.max(1, Math.round(words / 200));
+
+            const actions = document.createElement('span');
+            actions.className = 'h2-actions';
+            actions.innerHTML = `
+                <span class="section-time-badge">${mins} min</span>
+                <button type="button" class="section-link-btn" aria-label="Copy link to this section"><i class="fas fa-link"></i></button>
+            `;
+            h2.appendChild(actions);
+
+            actions.querySelector('.section-link-btn').addEventListener('click', e => {
+                e.stopPropagation();
+                const url = location.origin + location.pathname + '#' + h2.id;
+                if (navigator.clipboard) {
+                    navigator.clipboard.writeText(url)
+                        .then(() => showToast('Link copied!', 'fa-check'))
+                        .catch(() => {});
+                }
+            });
+        });
+    }
+
     // ── Sidebar: progress ring + TOC + back-to-top, sticky in-flow ──
     function buildSidebar(wrapperEl, theoryEl, sectionEls, readMinutes) {
         const aside = document.createElement('aside');
@@ -94,11 +164,7 @@
 
         const tocLinks = sectionEls.map(sec => {
             const h2 = sec.querySelector('h2');
-            if (!h2) return '';
-            // Read the heading's own text, skipping the numbered badge
-            // (which is CSS ::before content, not real text - safe).
-            const label = h2.textContent.trim();
-            return `<a href="#${h2.id}" data-target="${h2.id}">${escapeHtml(label)}</a>`;
+            return h2 ? `<a href="#${h2.id}" data-target="${h2.id}">${escapeHtml(h2.textContent.trim())}</a>` : '';
         }).join('');
 
         aside.innerHTML = `
@@ -136,6 +202,48 @@
         });
 
         initActiveHeadingTracking(sectionEls);
+    }
+
+    // ── Mobile bottom-sheet TOC - the in-flow sidebar drops below
+    // the content on narrow screens, which loses its use as a
+    // mid-read navigation aid; this keeps section-jumping reachable
+    // via a small floating button instead. ──
+    function buildMobileToc(sectionEls) {
+        const btn = document.createElement('button');
+        btn.type = 'button';
+        btn.id = 'mobile-toc-btn';
+        btn.innerHTML = '<i class="fas fa-list"></i>';
+        btn.setAttribute('aria-label', 'Table of contents');
+        document.body.appendChild(btn);
+
+        const overlay = document.createElement('div');
+        overlay.id = 'mobile-toc-overlay';
+        document.body.appendChild(overlay);
+
+        const sheet = document.createElement('div');
+        sheet.id = 'mobile-toc-sheet';
+        sheet.innerHTML = `
+            <div class="mobile-toc-handle"></div>
+            <div class="mobile-toc-title">On this page</div>
+            <nav>${sectionEls.map(sec => {
+                const h2 = sec.querySelector('h2');
+                return h2 ? `<a href="#${h2.id}" data-target="${h2.id}">${escapeHtml(h2.textContent.trim())}</a>` : '';
+            }).join('')}</nav>
+        `;
+        document.body.appendChild(sheet);
+
+        const open = () => { sheet.classList.add('open'); overlay.classList.add('open'); };
+        const close = () => { sheet.classList.remove('open'); overlay.classList.remove('open'); };
+
+        btn.addEventListener('click', open);
+        overlay.addEventListener('click', close);
+        sheet.addEventListener('click', e => {
+            const a = e.target.closest('a');
+            if (!a) return;
+            e.preventDefault();
+            close();
+            setTimeout(() => document.getElementById(a.dataset.target)?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 280);
+        });
     }
 
     // ── Reading progress bar + sidebar progress ring, driven by scroll ──
@@ -193,6 +301,58 @@
         }, { threshold: 0.08, rootMargin: '0px 0px -60px 0px' });
 
         sectionEls.forEach(el => observer.observe(el));
+    }
+
+    // ── Click any diagram to view it larger ──
+    function initImageLightbox() {
+        const images = theory.querySelectorAll('img');
+        if (!images.length) return;
+
+        const overlay = document.createElement('div');
+        overlay.id = 'img-lightbox';
+        overlay.innerHTML = `
+            <button type="button" id="img-lightbox-close" aria-label="Close"><i class="fas fa-times"></i></button>
+            <img id="img-lightbox-img" src="" alt="">
+        `;
+        document.body.appendChild(overlay);
+
+        const imgEl = overlay.querySelector('#img-lightbox-img');
+
+        images.forEach(img => {
+            img.addEventListener('click', () => {
+                imgEl.src = img.currentSrc || img.src;
+                imgEl.alt = img.alt || '';
+                overlay.classList.add('open');
+            });
+        });
+
+        const close = () => overlay.classList.remove('open');
+        overlay.addEventListener('click', e => { if (e.target === overlay) close(); });
+        overlay.querySelector('#img-lightbox-close').addEventListener('click', close);
+        document.addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
+    }
+
+    // ── Small toast helper, reused for copy-link + read celebration ──
+    function showToast(message, icon) {
+        let toast = document.getElementById('simtel-toast');
+        if (!toast) {
+            toast = document.createElement('div');
+            toast.id = 'simtel-toast';
+            document.body.appendChild(toast);
+        }
+        toast.innerHTML = `<i class="fas ${icon || 'fa-check'}"></i> ${escapeHtml(message)}`;
+        toast.classList.add('show');
+        clearTimeout(toast._hideTimer);
+        toast._hideTimer = setTimeout(() => toast.classList.remove('show'), 2600);
+    }
+
+    // ── topic-read-tracker.js dispatches this once the dwell timer
+    // completes and the topic is actually marked read - show a
+    // small celebratory toast rather than a silent background save. ──
+    function listenForReadCelebration() {
+        window.addEventListener('simtel:topic-marked-read', () => {
+            showToast("Nice! Marked as read.", 'fa-circle-check');
+        });
     }
 
     function escapeHtml(s) {
