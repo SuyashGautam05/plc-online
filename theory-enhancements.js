@@ -1,295 +1,124 @@
 // ============================================================
-//  theory-enhancements.js  —  OPTIONAL, add to topic lesson pages.
+//  theory-enhancements.js  —  OPTIONAL, add to topic lesson pages
+//  for a reading progress bar, auto table-of-contents, gentle
+//  scroll-reveal animations, and a reading-time badge.
 //
-//  Restructures the page into a hero + chunked sections + sidebar,
-//  and adds: dark mode toggle, image lightbox, per-section
-//  copy-link + reading-time badges, a mobile TOC bottom sheet, and
-//  small toast notifications (link copied / topic marked as read).
+//  Pure vanilla JS, no external library, no CDN dependency. Works
+//  generically off the existing markup (.theory-section, h2/h3,
+//  p/ul/ol/table/img) - no changes needed to any topic page's
+//  content itself.
 //
-//  Add ONE tag near the end of <body>, after mcq-handler.js:
+//  Add ONE tag near the end of <body>, after the theory-section
+//  content exists in the DOM (same place mcq-handler.js is loaded):
+//
 //  <script src="/theory-enhancements.js"></script>
 //
-//  Pure vanilla JS, no external library/CDN. Every piece checks
-//  for what it needs and no-ops if it's missing, so it's safe to
-//  roll out incrementally across pages.
+//  Safe to add to some pages and not others - the CSS rules it
+//  relies on (in defination.css) are inert if this script is
+//  absent, and this script no-ops gracefully if .theory-section
+//  isn't found.
 // ============================================================
 (function () {
-    const wrapper = document.querySelector('.content-wrapper');
     const theory = document.querySelector('.theory-section');
-    if (!wrapper || !theory) return;
+    if (!theory) return;
 
     const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    initThemeToggle();
-
-    const sections = wrapIntoSections(theory);
-    const wordCount = theory.textContent.trim().split(/\s+/).length;
-    const minutes = Math.max(1, Math.round(wordCount / 200)); // ~200 wpm
-
-    buildHero(wrapper, sections.length, minutes);
-    decorateHeadings(sections);
-
-    if (sections.length >= 2) {
-        buildSidebar(wrapper, theory, sections, minutes);
-        wrapper.classList.add('has-sidebar');
-        buildMobileToc(sections);
-    }
-
     initProgressBar();
-    initImageLightbox();
-    if (!prefersReducedMotion) initScrollReveal(sections);
-    listenForReadCelebration();
+    initReadingTimeBadge();
+    const headings = initTableOfContents();
+    if (!prefersReducedMotion) initScrollReveal();
+    if (headings.length) initActiveHeadingTracking(headings);
 
-    // ── Dark mode toggle, injected next to the logo ──────────
-    function initThemeToggle() {
-        const header = document.querySelector('header');
-        const logoContainer = document.querySelector('.logo-container');
-        if (!header || !logoContainer) return;
-
-        const row = document.createElement('div');
-        row.className = 'header-row';
-        header.insertBefore(row, logoContainer);
-        row.appendChild(logoContainer); // moves it, doesn't duplicate
-
-        const btn = document.createElement('button');
-        btn.type = 'button';
-        btn.className = 'theme-toggle-btn';
-        btn.setAttribute('aria-label', 'Toggle dark mode');
-        row.appendChild(btn);
-
-        const apply = theme => {
-            if (theme === 'dark') {
-                document.documentElement.setAttribute('data-theme', 'dark');
-                btn.innerHTML = '<i class="fas fa-sun"></i>';
-            } else {
-                document.documentElement.removeAttribute('data-theme');
-                btn.innerHTML = '<i class="fas fa-moon"></i>';
-            }
-        };
-
-        apply(localStorage.getItem('simtel-theme') || 'light');
-
-        btn.addEventListener('click', () => {
-            const isDark = document.documentElement.getAttribute('data-theme') === 'dark';
-            const next = isDark ? 'light' : 'dark';
-            apply(next);
-            localStorage.setItem('simtel-theme', next);
-        });
-    }
-
-    // ── Wrap each h2 + everything until the next h2 into a
-    // <section class="lesson-section"> so the page reads as
-    // distinct chunks instead of one continuous flow. ──
-    function wrapIntoSections(theoryEl) {
-        const children = Array.from(theoryEl.children);
-        const frag = document.createDocumentFragment();
-        const madeSections = [];
-        let current = null;
-
-        children.forEach(el => {
-            if (el.tagName === 'H2') {
-                current = document.createElement('section');
-                current.className = 'lesson-section';
-                frag.appendChild(current);
-                madeSections.push(current);
-            }
-            if (current) {
-                current.appendChild(el); // moves el out of theoryEl automatically
-            } else {
-                frag.appendChild(el); // lead content before the first h2
-            }
-        });
-
-        theoryEl.appendChild(frag);
-
-        madeSections.forEach((sec, i) => {
-            const h2 = sec.querySelector('h2');
-            if (h2 && !h2.id) h2.id = 'section-' + (i + 1);
-        });
-
-        return madeSections;
-    }
-
-    // ── Hero band: eyebrow + cloned title + meta chips ──
-    function buildHero(wrapperEl, sectionCount, readMinutes) {
-        const h1 = document.querySelector('header h1');
-        const title = h1 ? h1.textContent.trim() : document.title;
-
-        const hero = document.createElement('div');
-        hero.className = 'lesson-hero';
-        hero.innerHTML = `
-            <span class="lesson-eyebrow"><i class="fas fa-graduation-cap"></i> Lesson</span>
-            <h2 class="lesson-hero-title">${escapeHtml(title)}</h2>
-            <div class="lesson-meta">
-                <span class="meta-chip"><i class="fas fa-clock"></i> ${readMinutes} min read</span>
-                ${sectionCount ? `<span class="meta-chip"><i class="fas fa-layer-group"></i> ${sectionCount} section${sectionCount > 1 ? 's' : ''}</span>` : ''}
-            </div>
-        `;
-        wrapperEl.insertBefore(hero, wrapperEl.firstChild);
-    }
-
-    // ── Per-section reading time + copy-link button on each h2 ──
-    function decorateHeadings(sectionEls) {
-        sectionEls.forEach(sec => {
-            const h2 = sec.querySelector('h2');
-            if (!h2) return;
-
-            const words = sec.textContent.trim().split(/\s+/).length;
-            const mins = Math.max(1, Math.round(words / 200));
-
-            const actions = document.createElement('span');
-            actions.className = 'h2-actions';
-            actions.innerHTML = `
-                <span class="section-time-badge">${mins} min</span>
-                <button type="button" class="section-link-btn" aria-label="Copy link to this section"><i class="fas fa-link"></i></button>
-            `;
-            h2.appendChild(actions);
-
-            actions.querySelector('.section-link-btn').addEventListener('click', e => {
-                e.stopPropagation();
-                const url = location.origin + location.pathname + '#' + h2.id;
-                if (navigator.clipboard) {
-                    navigator.clipboard.writeText(url)
-                        .then(() => showToast('Link copied!', 'fa-check'))
-                        .catch(() => {});
-                }
-            });
-        });
-    }
-
-    // ── Sidebar: progress ring + TOC + back-to-top, sticky in-flow ──
-    function buildSidebar(wrapperEl, theoryEl, sectionEls, readMinutes) {
-        const aside = document.createElement('aside');
-        aside.id = 'lesson-sidebar';
-
-        const tocLinks = sectionEls.map(sec => {
-            const h2 = sec.querySelector('h2');
-            return h2 ? `<a href="#${h2.id}" data-target="${h2.id}">${escapeHtml(h2.textContent.trim())}</a>` : '';
-        }).join('');
-
-        aside.innerHTML = `
-            <div class="sidebar-block">
-                <div class="sidebar-title">Your progress</div>
-                <div class="progress-ring-wrap">
-                    <div class="progress-ring" id="sidebar-progress-ring">
-                        <div class="progress-ring-inner" id="sidebar-progress-pct">0%</div>
-                    </div>
-                    <div class="progress-ring-label">~${readMinutes} min read<br><strong>${sectionEls.length}</strong> section${sectionEls.length > 1 ? 's' : ''}</div>
-                </div>
-            </div>
-            <div class="sidebar-block">
-                <div class="sidebar-title">On this page</div>
-                <nav id="toc-list">${tocLinks}</nav>
-            </div>
-            <div class="sidebar-block">
-                <button type="button" class="back-to-top-btn" id="back-to-top-btn">
-                    <i class="fas fa-arrow-up"></i> Back to top
-                </button>
-            </div>
-        `;
-
-        theoryEl.insertAdjacentElement('afterend', aside);
-
-        aside.querySelector('#toc-list').addEventListener('click', e => {
-            const a = e.target.closest('a');
-            if (!a) return;
-            e.preventDefault();
-            document.getElementById(a.dataset.target)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        });
-
-        aside.querySelector('#back-to-top-btn').addEventListener('click', () => {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        });
-
-        initActiveHeadingTracking(sectionEls);
-    }
-
-    // ── Mobile bottom-sheet TOC - the in-flow sidebar drops below
-    // the content on narrow screens, which loses its use as a
-    // mid-read navigation aid; this keeps section-jumping reachable
-    // via a small floating button instead. ──
-    function buildMobileToc(sectionEls) {
-        const btn = document.createElement('button');
-        btn.type = 'button';
-        btn.id = 'mobile-toc-btn';
-        btn.innerHTML = '<i class="fas fa-list"></i>';
-        btn.setAttribute('aria-label', 'Table of contents');
-        document.body.appendChild(btn);
-
-        const overlay = document.createElement('div');
-        overlay.id = 'mobile-toc-overlay';
-        document.body.appendChild(overlay);
-
-        const sheet = document.createElement('div');
-        sheet.id = 'mobile-toc-sheet';
-        sheet.innerHTML = `
-            <div class="mobile-toc-handle"></div>
-            <div class="mobile-toc-title">On this page</div>
-            <nav>${sectionEls.map(sec => {
-                const h2 = sec.querySelector('h2');
-                return h2 ? `<a href="#${h2.id}" data-target="${h2.id}">${escapeHtml(h2.textContent.trim())}</a>` : '';
-            }).join('')}</nav>
-        `;
-        document.body.appendChild(sheet);
-
-        const open = () => { sheet.classList.add('open'); overlay.classList.add('open'); };
-        const close = () => { sheet.classList.remove('open'); overlay.classList.remove('open'); };
-
-        btn.addEventListener('click', open);
-        overlay.addEventListener('click', close);
-        sheet.addEventListener('click', e => {
-            const a = e.target.closest('a');
-            if (!a) return;
-            e.preventDefault();
-            close();
-            setTimeout(() => document.getElementById(a.dataset.target)?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 280);
-        });
-    }
-
-    // ── Reading progress bar + sidebar progress ring, driven by scroll ──
+    // ── Reading progress bar ──────────────────────────────
     function initProgressBar() {
         const bar = document.createElement('div');
         bar.id = 'reading-progress-bar';
         document.body.appendChild(bar);
 
-        const ring = document.getElementById('sidebar-progress-ring');
-        const pctLabel = document.getElementById('sidebar-progress-pct');
-
         const update = () => {
             const scrollTop = window.scrollY;
             const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-            const pct = docHeight > 0 ? Math.min(100, Math.round((scrollTop / docHeight) * 100)) : 0;
+            const pct = docHeight > 0 ? Math.min(100, (scrollTop / docHeight) * 100) : 0;
             bar.style.width = pct + '%';
-            if (ring) ring.style.setProperty('--pct', pct);
-            if (pctLabel) pctLabel.textContent = pct + '%';
         };
         update();
         window.addEventListener('scroll', update, { passive: true });
         window.addEventListener('resize', update);
     }
 
+    // ── Estimated reading time, inserted right after <h1> ──
+    function initReadingTimeBadge() {
+        const h1 = document.querySelector('header h1');
+        if (!h1) return;
+
+        const words = theory.innerText.trim().split(/\s+/).length;
+        const minutes = Math.max(1, Math.round(words / 200)); // ~200 wpm
+
+        const badge = document.createElement('div');
+        badge.className = 'reading-time-badge';
+        badge.innerHTML = `<i class="fas fa-clock"></i> ${minutes} min read`;
+        h1.insertAdjacentElement('afterend', badge);
+    }
+
+    // ── Auto table of contents from h2s (falls back to h2+h3) ──
+    function initTableOfContents() {
+        const headings = Array.from(theory.querySelectorAll('h2'));
+        if (headings.length < 3) return []; // not worth a TOC for a short page
+
+        headings.forEach((h, i) => {
+            if (!h.id) h.id = 'section-' + (i + 1);
+        });
+
+        const panel = document.createElement('nav');
+        panel.id = 'toc-panel';
+        panel.innerHTML = `
+            <div class="toc-title"><i class="fas fa-list"></i> On this page</div>
+            ${headings.map(h => `<a href="#${h.id}" data-target="${h.id}">${h.textContent.trim()}</a>`).join('')}
+        `;
+        document.body.appendChild(panel);
+
+        // Reveal the panel once the reader has scrolled past the intro,
+        // rather than showing it immediately (keeps first impression clean).
+        const onScroll = () => {
+            panel.classList.toggle('visible', window.scrollY > 300);
+        };
+        onScroll();
+        window.addEventListener('scroll', onScroll, { passive: true });
+
+        panel.addEventListener('click', e => {
+            const a = e.target.closest('a');
+            if (!a) return;
+            e.preventDefault();
+            document.getElementById(a.dataset.target)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        });
+
+        return headings;
+    }
+
     // ── Highlight the current section's TOC entry while scrolling ──
-    function initActiveHeadingTracking(sectionEls) {
-        const links = document.querySelectorAll('#toc-list a');
+    function initActiveHeadingTracking(headings) {
+        const links = document.querySelectorAll('#toc-panel a');
         if (!links.length) return;
 
         const observer = new IntersectionObserver(entries => {
             entries.forEach(entry => {
                 if (!entry.isIntersecting) return;
-                const h2 = entry.target.querySelector('h2');
-                if (!h2) return;
                 links.forEach(l => l.classList.remove('active'));
-                document.querySelector(`#toc-list a[data-target="${h2.id}"]`)?.classList.add('active');
+                const active = document.querySelector(`#toc-panel a[data-target="${entry.target.id}"]`);
+                if (active) active.classList.add('active');
             });
         }, { rootMargin: '-15% 0px -70% 0px' });
 
-        sectionEls.forEach(sec => observer.observe(sec));
+        headings.forEach(h => observer.observe(h));
     }
 
-    // ── Gentle fade-up as each section enters the viewport ──
-    function initScrollReveal(sectionEls) {
-        if (!sectionEls.length) return;
-        sectionEls.forEach(el => el.classList.add('reveal-on-scroll'));
+    // ── Gentle fade-up as content enters the viewport ──────
+    function initScrollReveal() {
+        const targets = theory.querySelectorAll(':scope > h2, :scope > h3, :scope > p, :scope > ul, :scope > ol, :scope > img, :scope > table, :scope > .comparison-table, :scope > .info-box, :scope > .note-box, :scope > .warn-box');
+        if (!targets.length) return;
+
+        targets.forEach(el => el.classList.add('reveal-on-scroll'));
 
         const observer = new IntersectionObserver(entries => {
             entries.forEach(entry => {
@@ -298,64 +127,8 @@
                     observer.unobserve(entry.target);
                 }
             });
-        }, { threshold: 0.08, rootMargin: '0px 0px -60px 0px' });
+        }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
 
-        sectionEls.forEach(el => observer.observe(el));
-    }
-
-    // ── Click any diagram to view it larger ──
-    function initImageLightbox() {
-        const images = theory.querySelectorAll('img');
-        if (!images.length) return;
-
-        const overlay = document.createElement('div');
-        overlay.id = 'img-lightbox';
-        overlay.innerHTML = `
-            <button type="button" id="img-lightbox-close" aria-label="Close"><i class="fas fa-times"></i></button>
-            <img id="img-lightbox-img" src="" alt="">
-        `;
-        document.body.appendChild(overlay);
-
-        const imgEl = overlay.querySelector('#img-lightbox-img');
-
-        images.forEach(img => {
-            img.addEventListener('click', () => {
-                imgEl.src = img.currentSrc || img.src;
-                imgEl.alt = img.alt || '';
-                overlay.classList.add('open');
-            });
-        });
-
-        const close = () => overlay.classList.remove('open');
-        overlay.addEventListener('click', e => { if (e.target === overlay) close(); });
-        overlay.querySelector('#img-lightbox-close').addEventListener('click', close);
-        document.addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
-    }
-
-    // ── Small toast helper, reused for copy-link + read celebration ──
-    function showToast(message, icon) {
-        let toast = document.getElementById('simtel-toast');
-        if (!toast) {
-            toast = document.createElement('div');
-            toast.id = 'simtel-toast';
-            document.body.appendChild(toast);
-        }
-        toast.innerHTML = `<i class="fas ${icon || 'fa-check'}"></i> ${escapeHtml(message)}`;
-        toast.classList.add('show');
-        clearTimeout(toast._hideTimer);
-        toast._hideTimer = setTimeout(() => toast.classList.remove('show'), 2600);
-    }
-
-    // ── topic-read-tracker.js dispatches this once the dwell timer
-    // completes and the topic is actually marked read - show a
-    // small celebratory toast rather than a silent background save. ──
-    function listenForReadCelebration() {
-        window.addEventListener('simtel:topic-marked-read', () => {
-            showToast("Nice! Marked as read.", 'fa-circle-check');
-        });
-    }
-
-    function escapeHtml(s) {
-        return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+        targets.forEach(el => observer.observe(el));
     }
 })();

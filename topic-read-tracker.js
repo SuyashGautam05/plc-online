@@ -110,10 +110,6 @@
         if (tickHandle) clearTimeout(tickHandle);
         setBadge('Marked as read ✓', '#16a34a');
 
-        // Let any listener (e.g. theory-enhancements.js's celebration
-        // toast) know, without this file needing to know who's listening.
-        window.dispatchEvent(new CustomEvent('simtel:topic-marked-read'));
-
         const token = localStorage.getItem(cfg.TOKEN_KEY);
         if (!token) return; // not logged in — nothing to save
 
