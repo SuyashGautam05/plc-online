@@ -30,9 +30,7 @@
     decorateHeadings(sections);
 
     if (sections.length >= 2) {
-        buildSidebar(wrapper, theory, sections, minutes);
-        wrapper.classList.add('has-sidebar');
-        buildMobileToc(sections);
+        buildTocDrawer(sections, minutes);
     }
 
     initProgressBar();
@@ -118,11 +116,13 @@
         const hero = document.createElement('div');
         hero.className = 'lesson-hero';
         hero.innerHTML = `
-            <span class="lesson-eyebrow"><i class="fas fa-graduation-cap"></i> Lesson</span>
-            <h2 class="lesson-hero-title">${escapeHtml(title)}</h2>
-            <div class="lesson-meta">
-                <span class="meta-chip"><i class="fas fa-clock"></i> ${readMinutes} min read</span>
-                ${sectionCount ? `<span class="meta-chip"><i class="fas fa-layer-group"></i> ${sectionCount} section${sectionCount > 1 ? 's' : ''}</span>` : ''}
+            <div class="lesson-hero-inner">
+                <span class="lesson-eyebrow"><i class="fas fa-graduation-cap"></i> Lesson</span>
+                <h2 class="lesson-hero-title">${escapeHtml(title)}</h2>
+                <div class="lesson-meta">
+                    <span class="meta-chip"><i class="fas fa-clock"></i> ${readMinutes} min read</span>
+                    ${sectionCount ? `<span class="meta-chip"><i class="fas fa-layer-group"></i> ${sectionCount} section${sectionCount > 1 ? 's' : ''}</span>` : ''}
+                </div>
             </div>
         `;
         wrapperEl.insertBefore(hero, wrapperEl.firstChild);
@@ -158,16 +158,35 @@
     }
 
     // ── Sidebar: progress ring + TOC + back-to-top, sticky in-flow ──
-    function buildSidebar(wrapperEl, theoryEl, sectionEls, readMinutes) {
-        const aside = document.createElement('aside');
-        aside.id = 'lesson-sidebar';
+    // ── Table of contents: a toggle button fixed on the left edge
+    // opens a slide-in drawer (progress ring + section links). Same
+    // implementation serves desktop and mobile - no separate sidebar
+    // column and no separate mobile sheet to keep in sync. ──
+    function buildTocDrawer(sectionEls, readMinutes) {
+        const toggleBtn = document.createElement('button');
+        toggleBtn.type = 'button';
+        toggleBtn.id = 'toc-toggle-btn';
+        toggleBtn.innerHTML = '<i class="fas fa-list"></i>';
+        toggleBtn.setAttribute('aria-label', 'Table of contents');
+        toggleBtn.setAttribute('aria-expanded', 'false');
+        document.body.appendChild(toggleBtn);
+
+        const overlay = document.createElement('div');
+        overlay.id = 'toc-drawer-overlay';
+        document.body.appendChild(overlay);
 
         const tocLinks = sectionEls.map(sec => {
             const h2 = sec.querySelector('h2');
             return h2 ? `<a href="#${h2.id}" data-target="${h2.id}">${escapeHtml(h2.textContent.trim())}</a>` : '';
         }).join('');
 
-        aside.innerHTML = `
+        const drawer = document.createElement('div');
+        drawer.id = 'toc-drawer';
+        drawer.innerHTML = `
+            <div class="toc-drawer-header">
+                <span class="toc-drawer-title"><i class="fas fa-list"></i> Contents</span>
+                <button type="button" class="toc-drawer-close" aria-label="Close"><i class="fas fa-times"></i></button>
+            </div>
             <div class="sidebar-block">
                 <div class="sidebar-title">Your progress</div>
                 <div class="progress-ring-wrap">
@@ -187,63 +206,42 @@
                 </button>
             </div>
         `;
+        document.body.appendChild(drawer);
 
-        theoryEl.insertAdjacentElement('afterend', aside);
+        const open = () => {
+            drawer.classList.add('open');
+            overlay.classList.add('open');
+            toggleBtn.classList.add('active');
+            toggleBtn.setAttribute('aria-expanded', 'true');
+        };
+        const close = () => {
+            drawer.classList.remove('open');
+            overlay.classList.remove('open');
+            toggleBtn.classList.remove('active');
+            toggleBtn.setAttribute('aria-expanded', 'false');
+        };
 
-        aside.querySelector('#toc-list').addEventListener('click', e => {
-            const a = e.target.closest('a');
-            if (!a) return;
-            e.preventDefault();
-            document.getElementById(a.dataset.target)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        toggleBtn.addEventListener('click', () => {
+            drawer.classList.contains('open') ? close() : open();
         });
-
-        aside.querySelector('#back-to-top-btn').addEventListener('click', () => {
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        });
-
-        initActiveHeadingTracking(sectionEls);
-    }
-
-    // ── Mobile bottom-sheet TOC - the in-flow sidebar drops below
-    // the content on narrow screens, which loses its use as a
-    // mid-read navigation aid; this keeps section-jumping reachable
-    // via a small floating button instead. ──
-    function buildMobileToc(sectionEls) {
-        const btn = document.createElement('button');
-        btn.type = 'button';
-        btn.id = 'mobile-toc-btn';
-        btn.innerHTML = '<i class="fas fa-list"></i>';
-        btn.setAttribute('aria-label', 'Table of contents');
-        document.body.appendChild(btn);
-
-        const overlay = document.createElement('div');
-        overlay.id = 'mobile-toc-overlay';
-        document.body.appendChild(overlay);
-
-        const sheet = document.createElement('div');
-        sheet.id = 'mobile-toc-sheet';
-        sheet.innerHTML = `
-            <div class="mobile-toc-handle"></div>
-            <div class="mobile-toc-title">On this page</div>
-            <nav>${sectionEls.map(sec => {
-                const h2 = sec.querySelector('h2');
-                return h2 ? `<a href="#${h2.id}" data-target="${h2.id}">${escapeHtml(h2.textContent.trim())}</a>` : '';
-            }).join('')}</nav>
-        `;
-        document.body.appendChild(sheet);
-
-        const open = () => { sheet.classList.add('open'); overlay.classList.add('open'); };
-        const close = () => { sheet.classList.remove('open'); overlay.classList.remove('open'); };
-
-        btn.addEventListener('click', open);
         overlay.addEventListener('click', close);
-        sheet.addEventListener('click', e => {
+        drawer.querySelector('.toc-drawer-close').addEventListener('click', close);
+        document.addEventListener('keydown', e => { if (e.key === 'Escape') close(); });
+
+        drawer.querySelector('#toc-list').addEventListener('click', e => {
             const a = e.target.closest('a');
             if (!a) return;
             e.preventDefault();
             close();
             setTimeout(() => document.getElementById(a.dataset.target)?.scrollIntoView({ behavior: 'smooth', block: 'start' }), 280);
         });
+
+        drawer.querySelector('#back-to-top-btn').addEventListener('click', () => {
+            close();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        });
+
+        initActiveHeadingTracking(sectionEls);
     }
 
     // ── Reading progress bar + sidebar progress ring, driven by scroll ──
