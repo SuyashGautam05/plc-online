@@ -53,8 +53,8 @@
             pointer-events: none; user-select: none;
         `;
         el.innerHTML = `
-            <span id="simtel-read-tracker-dot" style="width:8px;height:8px;border-radius:50%;background:#dc3545;flex-shrink:0;"></span>
-            <span id="simtel-read-tracker-text">Not marked as read</span>
+            <span id="simtel-read-tracker-dot" style="width:8px;height:8px;border-radius:50%;background:#6c757d;flex-shrink:0;"></span>
+            <span id="simtel-read-tracker-text">Checking status…</span>
         `;
         document.body.appendChild(el);
     }
@@ -132,8 +132,45 @@
         }
     }
 
-    document.addEventListener('DOMContentLoaded', () => {
+    // Checks whether THIS topic is already marked read for the logged-in
+    // user, before starting the scroll/dwell tracking from scratch. Without
+    // this, revisiting an already-read page always showed "Not marked as
+    // read" and made you wait through the dwell timer again, even though
+    // the server already had it recorded - the tracker never looked.
+    async function checkAlreadyRead() {
+        const token = localStorage.getItem(cfg.TOKEN_KEY);
+        if (!token) return false; // not logged in - nothing to check
+
+        try {
+            const res = await fetch(`${cfg.AUTH_SERVER_URL}/api/progress/my-progress`, {
+                headers: { Authorization: `Bearer ${token}` }
+            });
+            const data = await res.json().catch(() => ({}));
+            if (!data.success || !Array.isArray(data.topics)) return false;
+
+            return data.topics.some(t => {
+                // Compare canonically, same as index.html's toTopicId() -
+                // a record saved before the decode fix may still be
+                // percent-encoded, so check both forms.
+                if (t.topicId === topicId) return true;
+                try { return decodeURIComponent(t.topicId) === topicId; }
+                catch { return false; }
+            });
+        } catch (err) {
+            console.warn('Could not check existing reading progress:', err);
+            return false; // fall back to normal tracking rather than blocking
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', async () => {
         injectBadge();
+
+        const alreadyRead = await checkAlreadyRead();
+        if (alreadyRead) {
+            marked = true;
+            setBadge('Marked as read ✓', '#16a34a');
+            return; // no need to track scroll/dwell for something already read
+        }
 
         // Short pages with no real scrollbar: treat "at the bottom" as
         // already true, but the dwell timer still has to run its course.
