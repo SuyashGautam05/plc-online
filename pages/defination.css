@@ -78,7 +78,7 @@ body {
 ::-webkit-scrollbar-thumb { background: var(--border-color); border-radius: var(--r-pill); border: 3px solid var(--primary-color); }
 ::-webkit-scrollbar-thumb:hover { background: var(--accent-color); }
 
-img { max-width: 100%; height: auto; display: block; }
+img { width: 100%; height: auto; display: block; }
 
 /* Wide - this is the "use complete space" change. 1100px -> 1400px. */
 .container {
