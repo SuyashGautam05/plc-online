@@ -385,8 +385,9 @@ main { width: 100%; }
 .theory-section {
     background: transparent;
     padding: 0 var(--pad-x) clamp(24px, 4.5vw, 60px);
-    width: 960px;
-    margin: 0 auto;
+    /* width: 960px; */
+    width: 1012px;
+    /* margin: 0 auto; */
     counter-reset: section-counter;
 }
 
@@ -573,7 +574,7 @@ main { width: 100%; }
     box-shadow: var(--shadow);
     margin: 22px 0 30px;
     /* max-width: 640px; */
-    width: 1295px;
+    width: 1220px;
     transition: transform 0.3s var(--ease), box-shadow 0.3s var(--ease);
     padding: 30px;
     height: 672px;
