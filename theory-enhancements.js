@@ -53,6 +53,7 @@
         btn.type = 'button';
         btn.className = 'theme-toggle-btn';
         btn.setAttribute('aria-label', 'Toggle dark mode');
+        btn.style.display = 'none';
         row.appendChild(btn);
 
         const apply = theme => {
