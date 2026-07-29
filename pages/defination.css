@@ -348,6 +348,28 @@ main { width: 100%; }
 .progress-ring-label { font-size: 0.82rem; color: var(--accent-color); line-height: 1.5; }
 .progress-ring-label strong { color: var(--text-color); }
 
+/* Actual read-tracked status (from topic-read-tracker.js), distinct
+   from the scroll-position ring above - a page can be fully scrolled
+   without being "read" yet (dwell timer still running), or already
+   marked read on a fresh visit before any scrolling happens. */
+.read-status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 8px 14px;
+    border-radius: var(--r-pill);
+    font-size: 0.82rem;
+    font-weight: 700;
+    background: var(--secondary-color);
+    color: var(--accent-color);
+    transition: all 0.25s var(--ease);
+}
+.read-status-badge.is-read {
+    background: rgba(22, 163, 74, 0.14);
+    color: #16a34a;
+}
+.read-status-badge i { font-size: 0.9rem; }
+
 #toc-list a {
     display: block;
     padding: 7px 0 7px 12px;

@@ -197,6 +197,12 @@
                 </div>
             </div>
             <div class="sidebar-block">
+                <div class="sidebar-title">Read status</div>
+                <div class="read-status-badge" id="read-status-badge">
+                    <i class="fas fa-circle-notch"></i> Not read yet
+                </div>
+            </div>
+            <div class="sidebar-block">
                 <div class="sidebar-title">On this page</div>
                 <nav id="toc-list">${tocLinks}</nav>
             </div>
@@ -344,13 +350,27 @@
         toast._hideTimer = setTimeout(() => toast.classList.remove('show'), 2600);
     }
 
-    // ── topic-read-tracker.js dispatches this once the dwell timer
-    // completes and the topic is actually marked read - show a
-    // small celebratory toast rather than a silent background save. ──
+    // ── topic-read-tracker.js dispatches 'simtel:topic-marked-read' both
+    // when the dwell timer just completed (fresh:true) AND when a page
+    // that was already read gets reloaded (fresh:false) - either way, sync
+    // the drawer's read-status badge. Only show the celebration toast for
+    // a genuinely new completion, not every time an already-read page loads. ──
     function listenForReadCelebration() {
-        window.addEventListener('simtel:topic-marked-read', () => {
-            showToast("Nice! Marked as read.", 'fa-circle-check');
+        window.addEventListener('simtel:topic-marked-read', e => {
+            setReadStatusBadge(true);
+            if (e.detail && e.detail.fresh) {
+                showToast("Nice! Marked as read.", 'fa-circle-check');
+            }
         });
+    }
+
+    function setReadStatusBadge(isRead) {
+        const badge = document.getElementById('read-status-badge');
+        if (!badge) return;
+        badge.classList.toggle('is-read', isRead);
+        badge.innerHTML = isRead
+            ? '<i class="fas fa-check-circle"></i> Marked as read'
+            : '<i class="fas fa-circle-notch"></i> Not read yet';
     }
 
     function escapeHtml(s) {

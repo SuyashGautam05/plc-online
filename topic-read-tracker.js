@@ -110,9 +110,10 @@
         if (tickHandle) clearTimeout(tickHandle);
         setBadge('Marked as read ✓', '#16a34a');
 
-        // Let any listener (e.g. theory-enhancements.js's celebration
-        // toast) know, without this file needing to know who's listening.
-        window.dispatchEvent(new CustomEvent('simtel:topic-marked-read'));
+        // Let any listener (e.g. theory-enhancements.js's TOC drawer /
+        // celebration toast) know, without this file needing to know who's
+        // listening. fresh:true = just now completed the dwell timer.
+        window.dispatchEvent(new CustomEvent('simtel:topic-marked-read', { detail: { fresh: true } }));
 
         const token = localStorage.getItem(cfg.TOKEN_KEY);
         if (!token) return; // not logged in — nothing to save
@@ -169,6 +170,7 @@
         if (alreadyRead) {
             marked = true;
             setBadge('Marked as read ✓', '#16a34a');
+            window.dispatchEvent(new CustomEvent('simtel:topic-marked-read', { detail: { fresh: false } }));
             return; // no need to track scroll/dwell for something already read
         }
 
