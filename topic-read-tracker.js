@@ -45,7 +45,7 @@
         el.id = 'simtel-read-tracker-badge';
         el.style.cssText = `
             position: fixed; bottom: 18px; right: 18px; z-index: 999998;
-            display: flex; align-items: center; gap: 8px;
+            display: none; align-items: center; gap: 8px;
             background: #343a40; color: #fff;
             font-family: Georgia, 'Times New Roman', serif;
             font-size: 0.78rem; padding: 8px 14px; border-radius: 20px;

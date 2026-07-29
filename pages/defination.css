@@ -183,16 +183,19 @@ main { width: 100%; }
 .lesson-hero {
     background: linear-gradient(120deg, var(--red-soft) 0%, var(--amber-soft) 100%);
     border-bottom: 1px solid var(--border-color);
-    padding: clamp(32px, 5vw, 52px) var(--pad-x);
+    /* padding: clamp(32px, 5vw, 52px) var(--pad-x); */
+    padding: 30px;
 }
 
 .lesson-hero-inner {
-    max-width: 880px;
-    margin: 0 auto;
+    /* max-width: 880px; */
+    width: 1100px;
+    /* margin: 0 auto; */
 }
 
 .lesson-eyebrow {
-    display: inline-flex;
+    /* display: inline-flex; */
+    display: none;
     align-items: center;
     gap: 8px;
     background: var(--white);
