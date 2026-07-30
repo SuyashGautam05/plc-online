@@ -460,6 +460,7 @@ main { width: 100%;
     padding-right: var(--pad-x);
     border-radius: var(--r-2);
     border-bottom: none;
+    width: 1280px;
 }
 
 .theory-section h2 {
@@ -543,7 +544,7 @@ main { width: 100%;
     color: var(--body-text);
     margin-bottom: 16px;
     line-height: 1.85;
-    max-width: 74ch;
+    max-width: 94ch;
 }
 
 .theory-section ul, .theory-section ol {
