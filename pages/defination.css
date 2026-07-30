@@ -29,17 +29,6 @@
 
     /* Shared so the hero/theory/section padding always line up */
     --pad-x: clamp(24px, 4.5vw, 64px);
-
-    /* Same as index.html's topbar padding, exactly - used only for the
-       header so its left/right whitespace matches index.html pixel for
-       pixel, independent of --pad-x (which is wider, for body content). */
-    --pad: clamp(16px, 3vw, 36px);
-
-    /* .container's own horizontal padding - shared with the header's
-       negative margin below so the header can bleed edge-to-edge
-       regardless of viewport width, without the two values drifting
-       out of sync. */
-    --container-pad: clamp(16px, 3vw, 32px);
 }
 
 /* Dark mode - toggled via [data-theme="dark"] on <html> by
@@ -93,7 +82,7 @@ img { width: 100%; height: auto; display: block; }
 .container {
     max-width: 1400px;
     margin: 0 auto;
-    padding: 0 var(--container-pad) clamp(50px, 6vw, 80px);
+    padding: 0 clamp(16px, 3vw, 32px) clamp(50px, 6vw, 80px);
     width: 100%;
 }
 
@@ -108,8 +97,8 @@ header {
     z-index: 100;
     background: #173681;
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
-    padding: 0 var(--pad);
-    margin: 0 calc(-1 * var(--container-pad)) clamp(24px, 4vw, 36px);
+    padding: 0 var(--pad-x);
+    margin: 0 calc(-1 * var(--pad-x)) clamp(24px, 4vw, 36px);
 }
 
 .logo-container {
