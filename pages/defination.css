@@ -105,7 +105,8 @@ header {
 .logo-container {
     display: flex;
     align-items: center;
-    gap: 11px;
+    /* gap: 11px; */
+    gap: 321px;
     max-width: 1400px;
     margin: 0 auto;
     height: 62px;
