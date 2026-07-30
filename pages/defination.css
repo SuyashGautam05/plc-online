@@ -81,7 +81,7 @@ img { width: 100%; height: auto; display: block; }
 /* Wide - this is the "use complete space" change. 1100px -> 1400px. */
 .container {
     max-width: 1400px;
-    margin: 0 auto;
+    /* margin: 0 auto; */
     padding: 0 clamp(16px, 3vw, 32px) clamp(50px, 6vw, 80px);
     width: 100%;
 }
