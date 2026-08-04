@@ -92,9 +92,14 @@ document.addEventListener('DOMContentLoaded', () => {
   const knob = document.getElementById('knob');
   let isDragging = false;
   let startY = 0;
-  let tireRotation = 0;
   let currentRotation = 0;
-  const tire = document.getElementById('tire');
+  const motorRotor = document.getElementById('motorRotor');
+  const motorVideoWrap = document.getElementById('motorVideoWrap');
+  let motorVideoReady = false;
+  let userScrubbingMotor = false;
+  let motorScrubStartX = 0;
+  let motorScrubStartTime = 0;
+  motorRotor.addEventListener('loadedmetadata', () => { motorVideoReady = true; });
   const toggle = document.getElementById('toggle');
   const dirToggle = document.getElementById('toggle1');
   const pwmContainers = [
@@ -149,9 +154,74 @@ otherContainers.forEach(container => {
     return Math.abs(knobPercentage) * maxRotationSpeed / 100;
   }
 
-  function animateTire(timestamp) {
+  // Drives the 3D cutaway motor video: play/pause + speed based on signed RPM.
+  // Reverse direction is shown by mirroring the clip (native reverse playback
+  // isn't reliably supported across browsers).
+  function updateMotorVideoPlayback(signedSpeed) {
+    if (!motorVideoReady) return;
+    const speedMagnitude = Math.abs(signedSpeed);
+    const isReverse = signedSpeed < 0;
+    motorRotor.style.transform = isReverse ? 'scaleX(-1)' : 'scaleX(1)';
+
+    if (speedMagnitude < 1) {
+      if (!motorRotor.paused) motorRotor.pause();
+      return;
+    }
+
+    const normalized = Math.min(speedMagnitude / maxRotationSpeed, 1);
+    motorRotor.playbackRate = 0.2 + normalized * 2.3; // 0.2x idle .. 2.5x full speed
+
+    if (motorRotor.paused) {
+      motorRotor.play().catch(() => {});
+    }
+  }
+
+  // Let the user grab the motor video and manually spin/scrub through it,
+  // whether the simulation is running or not.
+  function bindMotorDragInteraction() {
+    const getX = e => (e.touches ? e.touches[0].clientX : e.clientX);
+
+    function startScrub(e) {
+      if (!motorVideoReady || !motorRotor.duration) return;
+      userScrubbingMotor = true;
+      motorRotor.pause();
+      motorScrubStartX = getX(e);
+      motorScrubStartTime = motorRotor.currentTime;
+      document.body.style.userSelect = 'none';
+    }
+
+    function moveScrub(e) {
+      if (!userScrubbingMotor) return;
+      const dur = motorRotor.duration || 0;
+      if (!dur) return;
+      const dx = getX(e) - motorScrubStartX;
+      const pxPerLoop = 300; // drag this many px for one full clip loop
+      let newTime = motorScrubStartTime + (dx / pxPerLoop) * dur;
+      newTime = ((newTime % dur) + dur) % dur;
+      motorRotor.currentTime = newTime;
+      e.preventDefault();
+    }
+
+    function endScrub() {
+      if (!userScrubbingMotor) return;
+      userScrubbingMotor = false;
+      document.body.style.userSelect = '';
+      // Resume the simulation-driven spin if the motor should still be running
+      updateMotorVideoPlayback(currentRotationSpeed);
+    }
+
+    motorVideoWrap.addEventListener('mousedown', startScrub);
+    document.addEventListener('mousemove', moveScrub);
+    document.addEventListener('mouseup', endScrub);
+
+    motorVideoWrap.addEventListener('touchstart', startScrub, { passive: true });
+    document.addEventListener('touchmove', moveScrub, { passive: false });
+    document.addEventListener('touchend', endScrub);
+  }
+  bindMotorDragInteraction();
+
+  function animateMotor(timestamp) {
     let shouldAnimate = isPowerOn && motorToggle;
-    const degreesPerRPM = 6;
 
     // targetSpeed is signed: positive=forward, negative=reverse
     const targetSpeed = shouldAnimate
@@ -164,14 +234,14 @@ otherContainers.forEach(container => {
       currentRotationSpeed = Math.max(currentRotationSpeed - decelerationRate, targetSpeed);
     }
 
-    // Tire visual uses signed speed directly (no separate directionMultiplier needed)
-    const degreesPerFrame = currentRotationSpeed * degreesPerRPM / 60;
-    tireRotation += degreesPerFrame;
-    tire.style.transform = `rotate(${tireRotation}deg)`;
+    // Motor video plays/spins according to signed speed; user-drag scrubbing takes priority
+    if (!userScrubbingMotor) {
+      updateMotorVideoPlayback(currentRotationSpeed);
+    }
 
     const stillMoving = Math.abs(currentRotationSpeed) > 0.01;
     if (stillMoving || shouldAnimate) {
-      animationFrameId = requestAnimationFrame(animateTire);
+      animationFrameId = requestAnimationFrame(animateMotor);
     } else {
       currentRotationSpeed = 0;
       cancelAnimationFrame(animationFrameId);
@@ -269,7 +339,7 @@ otherContainers.forEach(container => {
       const knobValue = (currentRotation + 90) / 180;
       knobAbsolutePercentage = knobValue * 100;
       speedPercentage = knobAbsolutePercentage * directionMultiplier;
-      animateTire();
+      animateMotor();
     } else {
       speedPercentage = 0;
       knobAbsolutePercentage = 0;
@@ -286,7 +356,7 @@ otherContainers.forEach(container => {
     if (motorToggle && isPowerOn) {
       knobAbsolutePercentage = (currentRotation + 90) / 180 * 100;
       speedPercentage = knobAbsolutePercentage * directionMultiplier;
-      animateTire();
+      animateMotor();
     } else {
       speedPercentage = 0;
     }
@@ -301,10 +371,10 @@ otherContainers.forEach(container => {
     // Update signed speedPercentage for labels/charts
     speedPercentage = knobAbsolutePercentage * directionMultiplier;
 
-    // If motor is running, just let animateTire ramp through 0 to the new target
+    // If motor is running, just let animateMotor ramp through 0 to the new target
     // (do NOT reset currentRotationSpeed — that's what creates the smooth 0-crossing)
     if (isPowerOn && motorToggle && !animationFrameId) {
-      animateTire();
+      animateMotor();
     }
 
     updateStats();

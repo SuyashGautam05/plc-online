@@ -205,9 +205,25 @@
   /* margin: 0 0 10px 0; */
 }
 
-.tire-img{
-  width: 85%;
-  margin: 0 0 10px 0;
+.motor-video-wrap{
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  cursor: grab;
+  touch-action: none;
+}
+
+.motor-video-wrap:active{
+  cursor: grabbing;
+}
+
+.motor-rotor-video{
+  width: 92%;
+  border-radius: 14px;
+  border: 2px solid #000;
+  background: #ddd;
+  box-shadow: 4px 2px 7px rgba(0,0,0,0.25);
+  pointer-events: none; /* dragging is handled on the wrapper */
 }
 
 #motor-box {
@@ -241,13 +257,13 @@
   margin: 0;
 }
 
-@keyframes rotateTire {
+@keyframes rotateMotor {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }
 
 .rotating {
-  animation: rotateTire 1s linear infinite;
+  animation: rotateMotor 1s linear infinite;
 }
 
 #circuitMotor {
@@ -362,4 +378,3 @@
   justify-content: space-between;
   margin-top: 65px;
 }
-

@@ -322,7 +322,11 @@ header {
           </div> -->
         </div>
         <div id="motor-box">
-          <img src="img/tire.png" id="tire" class="tire-img">
+          <div class="motor-video-wrap" id="motorVideoWrap" title="Drag to rotate the motor view">
+            <video id="motorRotor" class="motor-rotor-video" muted loop playsinline preload="auto" poster="img/motor-rotor-poster.jpg">
+              <source src="img/motor-rotor.mp4" type="video/mp4">
+            </video>
+          </div>
           <div style="margin-right: -150px;" class="rpm-container">
             <p id="rpm">0 RPM</p>
           </div>
