@@ -92,9 +92,9 @@ document.addEventListener('DOMContentLoaded', () => {
   const knob = document.getElementById('knob');
   let isDragging = false;
   let startY = 0;
-  let tireRotation = 0;
+  let rotorRotation = 0;
   let currentRotation = 0;
-  const tire = document.getElementById('tire');
+  const motorRotor = document.getElementById('motorRotor');
   const toggle = document.getElementById('toggle');
   const dirToggle = document.getElementById('toggle1');
   const pwmContainers = [
@@ -149,7 +149,7 @@ otherContainers.forEach(container => {
     return Math.abs(knobPercentage) * maxRotationSpeed / 100;
   }
 
-  function animateTire(timestamp) {
+  function animateMotor(timestamp) {
     let shouldAnimate = isPowerOn && motorToggle;
     const degreesPerRPM = 6;
 
@@ -164,14 +164,14 @@ otherContainers.forEach(container => {
       currentRotationSpeed = Math.max(currentRotationSpeed - decelerationRate, targetSpeed);
     }
 
-    // Tire visual uses signed speed directly (no separate directionMultiplier needed)
+    // Motor rotor visual uses signed speed directly (no separate directionMultiplier needed)
     const degreesPerFrame = currentRotationSpeed * degreesPerRPM / 60;
-    tireRotation += degreesPerFrame;
-    tire.style.transform = `rotate(${tireRotation}deg)`;
+    rotorRotation += degreesPerFrame;
+    motorRotor.style.transform = `rotate(${rotorRotation}deg)`;
 
     const stillMoving = Math.abs(currentRotationSpeed) > 0.01;
     if (stillMoving || shouldAnimate) {
-      animationFrameId = requestAnimationFrame(animateTire);
+      animationFrameId = requestAnimationFrame(animateMotor);
     } else {
       currentRotationSpeed = 0;
       cancelAnimationFrame(animationFrameId);
@@ -269,7 +269,7 @@ otherContainers.forEach(container => {
       const knobValue = (currentRotation + 90) / 180;
       knobAbsolutePercentage = knobValue * 100;
       speedPercentage = knobAbsolutePercentage * directionMultiplier;
-      animateTire();
+      animateMotor();
     } else {
       speedPercentage = 0;
       knobAbsolutePercentage = 0;
@@ -286,7 +286,7 @@ otherContainers.forEach(container => {
     if (motorToggle && isPowerOn) {
       knobAbsolutePercentage = (currentRotation + 90) / 180 * 100;
       speedPercentage = knobAbsolutePercentage * directionMultiplier;
-      animateTire();
+      animateMotor();
     } else {
       speedPercentage = 0;
     }
@@ -301,10 +301,10 @@ otherContainers.forEach(container => {
     // Update signed speedPercentage for labels/charts
     speedPercentage = knobAbsolutePercentage * directionMultiplier;
 
-    // If motor is running, just let animateTire ramp through 0 to the new target
+    // If motor is running, just let animateMotor ramp through 0 to the new target
     // (do NOT reset currentRotationSpeed — that's what creates the smooth 0-crossing)
     if (isPowerOn && motorToggle && !animationFrameId) {
-      animateTire();
+      animateMotor();
     }
 
     updateStats();

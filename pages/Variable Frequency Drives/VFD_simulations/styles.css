@@ -205,8 +205,8 @@
   /* margin: 0 0 10px 0; */
 }
 
-.tire-img{
-  width: 85%;
+.motor-rotor-img{
+  width: 75%;
   margin: 0 0 10px 0;
 }
 
@@ -241,13 +241,13 @@
   margin: 0;
 }
 
-@keyframes rotateTire {
+@keyframes rotateMotor {
   from { transform: rotate(0deg); }
   to { transform: rotate(360deg); }
 }
 
 .rotating {
-  animation: rotateTire 1s linear infinite;
+  animation: rotateMotor 1s linear infinite;
 }
 
 #circuitMotor {
@@ -362,4 +362,3 @@
   justify-content: space-between;
   margin-top: 65px;
 }
-
