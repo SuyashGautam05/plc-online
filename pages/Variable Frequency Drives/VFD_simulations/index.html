@@ -29,15 +29,40 @@
   }
 }
 
+/* This is a fixed 1920x1080 design, scaled down/up to fit whatever
+   viewport it's actually shown in. It used to scale purely by width
+   (scale(100vw / 1920)), which ignores height entirely - on any
+   window whose aspect ratio isn't exactly 16:9, the bottom of the
+   layout would overflow past 100vh and silently get clipped by
+   overflow:hidden (motor/RPM boxes cut off at the bottom, etc).
+   Centering via the fixed box + negative margins, with the actual
+   scale factor set by JS (fitToViewport() below) using
+   min(width ratio, height ratio) - same idea as object-fit:contain -
+   guarantees the whole design is always visible, letterboxed if
+   needed, never cropped. */
+html {
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+  background: #0e2461; /* letterbox color when the aspect ratio doesn't match exactly */
+}
+
 body {
   font-family: Georgia, 'Times New Roman', Times, serif;
   margin: 0;
   display: flex;
   flex-direction: column;
-  height: 100vh; /* Ensure full height */
+  width: 1920px;
+  height: 1080px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  margin-top: -540px;  /* half of 1080 - keeps the box centered regardless of scale */
+  margin-left: -960px; /* half of 1920 */
   overflow: hidden;
   user-select: none;
-  transform: scale(calc(100vw / 1920))
+  transform-origin: center center;
+  /* transform: scale(...) is set by fitToViewport() in a script below */
 }
 header {
   display: flex;
@@ -231,6 +256,21 @@ header {
         </style>
 </head>
 <body>
+<script>
+    // Fit the fixed 1920x1080 design into whatever viewport it's actually
+    // shown in - min() of the width and height ratios means the WHOLE
+    // design always fits (letterboxed via html's background if the aspect
+    // ratio doesn't match), instead of the old width-only scale that let
+    // the bottom of the layout overflow past the viewport and get clipped.
+    (function () {
+        function fitToViewport() {
+            const scale = Math.min(window.innerWidth / 1920, window.innerHeight / 1080);
+            document.body.style.transform = 'scale(' + scale + ')';
+        }
+        fitToViewport();
+        window.addEventListener('resize', fitToViewport);
+    })();
+</script>
  <header>
             <div class="left-header">
                 <img id="header-logo" src="../../../assets/Scientech logo-2.png" alt="Logo" />
