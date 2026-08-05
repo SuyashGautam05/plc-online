@@ -21,12 +21,7 @@ let directionToggle = true;
 let directionMultiplier = 1;  // 1 = forward, -1 = reverse
 let smoothedRpm = 0;
 let knobAbsolutePercentage = 50; // always 0–100, direction-independent
-
-// Motor-shaft sheen animation tuning (maps simulated RPM -> sweep speed)
-const SHAFT_IDLE_RPM = 5;        // |RPM| below this reads as stationary
-const SHAFT_ANIM_MIN_S = 0.08;   // fastest sheen-sweep loop (seconds) — top speed
-const SHAFT_ANIM_MAX_S = 2.2;    // slowest visible sheen-sweep loop (seconds) — near idle
-const SHAFT_ANIM_SCALE = 210;    // rpm*seconds constant — tune this if the spin feels too fast/slow
+let shaftRotation = 0;
 
 function drawLines() {
   let powerButton = document.getElementById('powerButton').getBoundingClientRect();
@@ -99,7 +94,7 @@ document.addEventListener('DOMContentLoaded', () => {
   let isDragging = false;
   let startY = 0;
   let currentRotation = 0;
-  const motorShaftSheen = document.getElementById('motorShaftSheen');
+  const motorShaftCoupling = document.getElementById('motorShaftCoupling');
   const toggle = document.getElementById('toggle');
   const dirToggle = document.getElementById('toggle1');
   const pwmContainers = [
@@ -154,30 +149,12 @@ otherContainers.forEach(container => {
     return Math.abs(knobPercentage) * maxRotationSpeed / 100;
   }
 
-  // Drives the motor-shaft "sheen" overlay: play/pause + sweep speed +
-  // direction, based on the signed simulated RPM. The shaft photo itself
-  // never physically rotates (a flat photo rotated in-plane would just
-  // swing, not spin) — the animated light/dark band instead mimics the
-  // specular highlight sweep of a real rotating cylinder viewed side-on.
-  function updateMotorShaft(signedRpm) {
-    const magnitude = Math.abs(signedRpm);
-
-    if (magnitude < SHAFT_IDLE_RPM) {
-      motorShaftSheen.style.animationPlayState = 'paused';
-      return;
-    }
-
-    motorShaftSheen.classList.toggle('reverse', signedRpm < 0);
-    const durationS = Math.min(
-      SHAFT_ANIM_MAX_S,
-      Math.max(SHAFT_ANIM_MIN_S, SHAFT_ANIM_SCALE / magnitude)
-    );
-    motorShaftSheen.style.animationDuration = `${durationS.toFixed(3)}s`;
-    motorShaftSheen.style.animationPlayState = 'running';
-  }
-
+  // Front-view coupling: this view looks straight down the rotation axis,
+  // so — unlike the old side-on shaft photo — a plain CSS rotate is
+  // physically correct here, not just a visual approximation.
   function animateMotor(timestamp) {
     let shouldAnimate = isPowerOn && motorToggle;
+    const degreesPerRPM = 6;
 
     // targetSpeed is signed: positive=forward, negative=reverse
     const targetSpeed = shouldAnimate
@@ -190,7 +167,9 @@ otherContainers.forEach(container => {
       currentRotationSpeed = Math.max(currentRotationSpeed - decelerationRate, targetSpeed);
     }
 
-    updateMotorShaft(currentRotationSpeed);
+    const degreesPerFrame = currentRotationSpeed * degreesPerRPM / 60;
+    shaftRotation += degreesPerFrame;
+    motorShaftCoupling.style.transform = `translate(-50%, -50%) rotate(${shaftRotation}deg)`;
 
     const stillMoving = Math.abs(currentRotationSpeed) > 0.01;
     if (stillMoving || shouldAnimate) {

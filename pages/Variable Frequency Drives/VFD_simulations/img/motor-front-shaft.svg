@@ -1,0 +1,12 @@
+<svg viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="couplingGrad" cx="35%" cy="30%" r="75%">
+      <stop offset="0%" stop-color="#f2f3f6"/>
+      <stop offset="60%" stop-color="#c7cad4"/>
+      <stop offset="100%" stop-color="#9a9eae"/>
+    </radialGradient>
+  </defs>
+  <circle cx="30" cy="30" r="26" fill="#7d8094"/>
+  <path d="M 30.00,6.00 L 34.40,13.58 L 42.00,9.22 L 42.02,17.98 L 50.78,18.00 L 46.42,25.60 L 54.00,30.00 L 46.42,34.40 L 50.78,42.00 L 42.02,42.02 L 42.00,50.78 L 34.40,46.42 L 30.00,54.00 L 25.60,46.42 L 18.00,50.78 L 17.98,42.02 L 9.22,42.00 L 13.58,34.40 L 6.00,30.00 L 13.58,25.60 L 9.22,18.00 L 17.98,17.98 L 18.00,9.22 L 25.60,13.58 Z" fill="url(#couplingGrad)" stroke="#5a5d6c" stroke-width="1.5"/>
+  <circle cx="30" cy="30" r="7" fill="#5a5d6c"/>
+</svg>

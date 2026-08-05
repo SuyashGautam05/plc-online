@@ -43,20 +43,20 @@ header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background-color: #fff;
-  color: black;
-  /* padding: 10px; */
-  border-top: 1px solid #dee2e6;
-  border-bottom: 1px solid #dee2e6;
+  background: linear-gradient(90deg, #173681 0%, #0e2461 100%);
+  color: #ffffff;
+  box-shadow: 0 4px 14px rgba(14, 36, 97, 0.35);
+  border-top: none;
+  border-bottom: none;
 }
 
 .left-header {
-  background: #f8f9fa;
+  background: rgba(255, 255, 255, 0.94);
   display: flex;
   align-items: center;
-  padding: 10px;
-  border-right: 1px solid #000; /* Right border for company name */
-  margin-left: 50px /* Right border for company name */
+  padding: 8px 16px;
+  border-radius: 10px;
+  margin: 10px 0 10px 50px;
 }
 
 #header-logo, #header-title, #header-company {
@@ -66,7 +66,7 @@ header {
 }
 
 #header-logo {
-  height: 52px;   
+  height: 44px;
   object-fit: contain;
   margin-left: -20px; /* Pushes all other elements to the right */
 }
@@ -76,6 +76,8 @@ header {
   text-align: center;
   margin-left: 20px; /* Space between border and title */
   font-size: 1.5vw;
+  color: #ffffff;
+  letter-spacing: 0.5px;
 }
 
 #header-company {
@@ -217,7 +219,7 @@ header {
   display: flex;
   flex: 1; /* Take up remaining height */
   overflow: hidden;
-  background: #c9c9c9;
+  background: #eef1f7;
   justify-content: space-between;
 }
 
@@ -229,7 +231,7 @@ header {
         </style>
 </head>
 <body>
- <header style="background: #f8f9fa;">
+ <header>
             <div class="left-header">
                 <img id="header-logo" src="../../../assets/Scientech logo-2.png" alt="Logo" />
             </div>
@@ -323,11 +325,8 @@ header {
         </div>
         <div id="motor-box">
           <div class="motor-assembly" id="motorAssembly">
-            <img src="img/motor-body.png" class="motor-body-img" alt="Induction motor">
-            <div class="motor-shaft-track" id="motorShaftTrack">
-              <div class="motor-shaft-img"></div>
-              <div class="motor-shaft-sheen" id="motorShaftSheen"></div>
-            </div>
+            <img src="img/motor-front-body.svg" class="motor-body-img" alt="Induction motor">
+            <img src="img/motor-front-shaft.svg" class="motor-shaft-coupling" id="motorShaftCoupling" alt="Motor shaft coupling">
           </div>
           <div style="margin-right: -150px;" class="rpm-container">
             <p id="rpm">0 RPM</p>

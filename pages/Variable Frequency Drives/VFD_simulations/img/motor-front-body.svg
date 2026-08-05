@@ -1,0 +1,43 @@
+<svg viewBox="0 0 400 420" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="casingGrad" cx="38%" cy="34%" r="75%">
+      <stop offset="0%" stop-color="#4a5bd6"/>
+      <stop offset="55%" stop-color="#2e3ec2"/>
+      <stop offset="85%" stop-color="#1c2896"/>
+      <stop offset="100%" stop-color="#141f77"/>
+    </radialGradient>
+    <linearGradient id="boxGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#3446c4"/>
+      <stop offset="100%" stop-color="#1b2790"/>
+    </linearGradient>
+    <linearGradient id="hoseGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#dfe1e6"/>
+      <stop offset="100%" stop-color="#b7bac4"/>
+    </linearGradient>
+  </defs>
+
+  <ellipse cx="200" cy="392" rx="150" ry="14" fill="#000000" opacity="0.12"/>
+
+  <path d="M 60,150 C 5,170 5,260 60,285" fill="none" stroke="url(#hoseGrad)" stroke-width="14" stroke-linecap="round"/>
+  <path d="M 60,150 C 5,170 5,260 60,285" fill="none" stroke="#8d90a0" stroke-width="14" stroke-linecap="round" stroke-dasharray="2 6" opacity="0.5"/>
+
+  <path d="M 150,45 L 260,45 L 285,95 L 285,120 L 125,120 L 125,95 Z" fill="url(#boxGrad)" stroke="#10164f" stroke-width="2"/>
+  <rect x="150" y="45" width="110" height="10" fill="#5c6bd8" opacity="0.6"/>
+  <circle cx="272" cy="112" r="4" fill="#8fd6ff"/>
+
+  <circle cx="200" cy="210" r="150" fill="url(#casingGrad)" stroke="#10164f" stroke-width="4"/>
+  <circle cx="200" cy="210" r="140" fill="none" stroke="#0e1450" stroke-width="1.5" opacity="0.5"/>
+
+  <circle cx="89.1" cy="146.0" r="9" fill="#c9ccd6" stroke="#20233a" stroke-width="2"/>
+  <circle cx="89.1" cy="146.0" r="3.4" fill="#5c6070"/>
+  <circle cx="310.9" cy="146.0" r="9" fill="#c9ccd6" stroke="#20233a" stroke-width="2"/>
+  <circle cx="310.9" cy="146.0" r="3.4" fill="#5c6070"/>
+  <circle cx="200.0" cy="338.0" r="9" fill="#c9ccd6" stroke="#20233a" stroke-width="2"/>
+  <circle cx="200.0" cy="338.0" r="3.4" fill="#5c6070"/>
+  
+
+  <rect x="150" y="354" width="40" height="16" rx="3" fill="#232c8a" stroke="#10164f" stroke-width="2"/>
+  <rect x="215" y="354" width="40" height="16" rx="3" fill="#232c8a" stroke="#10164f" stroke-width="2"/>
+
+  <circle cx="200" cy="210" r="34" fill="#0e1450" opacity="0.35"/>
+</svg>

@@ -24,7 +24,7 @@
   display: flex;
   flex: 1; /* Take up remaining height */
   overflow: hidden;
-  background: #c9c9c9;
+  background: #eef1f7;
 }
 
 #left-column {
@@ -46,8 +46,9 @@
   justify-content: space-around;
   align-items: center;
   padding: 20px;
-  border: 2px solid #000;
+  border: 1px solid #d7dce8;
   border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(23, 54, 129, 0.08);
   height: 15%;
   margin: 50px 0 20px 0px;
   width: 165px;
@@ -61,8 +62,9 @@
   align-items: center;
   justify-content: space-around;
   padding: 15px;
-  border: 2px solid #000;
+  border: 1px solid #d7dce8;
   border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(23, 54, 129, 0.08);
   height: 50%;
   margin: 5px 0px;
   width: 215px;
@@ -75,11 +77,12 @@
 }
 
 .percetangeBox{
-  border: 2px solid #000;
+  border: 1px solid #d7dce8;
   padding: 10px;
   border-radius: 6px;
   width: 65px;
   text-align: center;
+  box-shadow: 0 2px 8px rgba(23, 54, 129, 0.06);
 }
 
 #knobPercentage{
@@ -117,8 +120,9 @@
   align-items: center;
   justify-content: space-around;
   background-color: white;
-  border: 2px solid #000;
+  border: 1px solid #d7dce8;
   border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(23, 54, 129, 0.06);
   width: 195px;
   height: 55px;
   margin-top: 15px;
@@ -130,8 +134,9 @@
   align-items: center;
   justify-content: space-around;
   background-color: white;
-  border: 2px solid #000;
+  border: 1px solid #d7dce8;
   border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(23, 54, 129, 0.06);
   width: 195px;
   height: 55px;
 }
@@ -139,7 +144,7 @@
 
 #switchCircuit-box{
   background-color: white;
-  border: 2px solid #000;
+  border: 1px solid #d7dce8;
   border-radius: 12px;
   padding: 10px;
   margin: 10px 0 0 0;
@@ -168,7 +173,7 @@
   top: 10%;
   left: 8%;
   background-color: white;
-  border: 2px solid #000;
+  border: 1px solid #d7dce8;
   border-radius: 12px;
   padding: 10px;
   margin: 22px 0;
@@ -186,11 +191,12 @@
   top: 69%;
   left: 114%;
   background-color: white;
-  border: 2px solid #000;
+  border: 1px solid #d7dce8;
   border-radius: 5px;
   padding: 10px;
   margin: 20px 0;
   color: black;
+  box-shadow: 0 2px 8px rgba(23, 54, 129, 0.08);
   z-index: 1;
 }
 
@@ -200,79 +206,42 @@
   bottom: -5px;
   left: 32px;
   border-radius: 30px;
-  border: 2px solid black;
+  border: 1px solid #d7dce8;
+  box-shadow: 0 2px 10px rgba(23, 54, 129, 0.08);
   /* width: 165px; */
   /* margin: 0 0 10px 0; */
 }
 
-/* ============ MOTOR SHAFT WIDGET ============
-   Fixed motor body photo + a separate shaft photo positioned at the
-   bearing flange. The shaft itself never physically rotates in 2D (that
-   would just make it swing, not spin) — instead an "overlay sheen" band
-   of light/dark stripes animates across it, the way a specular highlight
-   sweeps around a real rotating cylinder viewed from the side. Speed and
-   direction are driven live by the simulated motor RPM. */
+/* ============ MOTOR SHAFT WIDGET (front view) ============
+   Original illustration (not the reference video's footage) showing the
+   motor's front/shaft-end face. Since this view looks straight down the
+   rotation axis, the center coupling can genuinely spin with a plain CSS
+   rotate — no sheen-sweep trick needed here, unlike a side-on shaft.
+   Speed and direction are driven live by the simulated motor RPM. */
 .motor-assembly {
   position: relative;
-  width: 92%;
-  margin: 0 0 10px 46px; /* shaft protrudes left, so nudge the whole block right */
-  aspect-ratio: 2608 / 2318; /* matches the trimmed motor photo */
+  width: 78%;
+  margin: 0 auto 10px;
+  aspect-ratio: 400 / 420; /* matches the motor-front-body.svg viewBox */
 }
 .motor-body-img {
   position: absolute;
   inset: 0;
   width: 100%;
   height: 100%;
-  object-fit: contain;
-  z-index: 2;
+  z-index: 1;
   pointer-events: none;
 }
-.motor-shaft-track {
+.motor-shaft-coupling {
   position: absolute;
-  left: -4.6%;
-  top: 40.3%;
-  width: 22%;
-  height: 11.7%;
-  z-index: 1;
-  overflow: hidden;
-  border-radius: 999px;
-  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.18) inset, 1px 1px 2px rgba(0, 0, 0, 0.25);
-}
-.motor-shaft-img {
-  position: absolute;
-  inset: 0;
-  background-image: url('img/motor-shaft.png');
-  background-repeat: repeat-x;
-  background-size: auto 100%;
-}
-.motor-shaft-sheen {
-  position: absolute;
-  inset: 0;
-  background: repeating-linear-gradient(
-    to bottom,
-    rgba(255, 255, 255, 0.6) 0%,
-    rgba(255, 255, 255, 0.6) 10%,
-    rgba(255, 255, 255, 0.05) 24%,
-    rgba(10, 10, 10, 0.35) 44%,
-    rgba(10, 10, 10, 0.35) 56%,
-    rgba(255, 255, 255, 0.05) 76%,
-    rgba(255, 255, 255, 0.6) 100%
-  );
-  background-size: 100% 200%;
-  mix-blend-mode: overlay;
-  animation: shaftSpin 1.2s linear infinite;
-  animation-play-state: paused;
-}
-@keyframes shaftSpin {
-  from { background-position-y: 0%; }
-  to   { background-position-y: 200%; }
-}
-@keyframes shaftSpinReverse {
-  from { background-position-y: 200%; }
-  to   { background-position-y: 0%; }
-}
-.motor-shaft-sheen.reverse {
-  animation-name: shaftSpinReverse;
+  width: 17%;
+  aspect-ratio: 1 / 1;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%) rotate(0deg);
+  z-index: 2;
+  pointer-events: none;
+  will-change: transform;
 }
 
 #motor-box {
@@ -282,8 +251,9 @@
   padding: 20px;
   flex-direction: column;
   background-color: white;
-  border: 2px solid #000;
+  border: 1px solid #d7dce8;
   border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(23, 54, 129, 0.08);
   justify-content: space-around;
   align-items: center;
 }
@@ -295,11 +265,12 @@
 }
 
 .rpm-container{
-  border: 2px solid #000;
+  border: 1px solid #d7dce8;
   padding: 10px;
   border-radius: 6px;
   width: 100px;
   text-align: center;
+  box-shadow: 0 2px 8px rgba(23, 54, 129, 0.06);
 }
 
 #rpm{
@@ -312,7 +283,7 @@
   display: flex;
   flex-direction: column;
   background-color: white;
-  border: 2px solid #000;
+  border: 1px solid #d7dce8;
   border-radius: 12px;
   width: 205px;
   height: 205px;
@@ -350,8 +321,9 @@
 #chart-section {
   display: flex;
   background-color: white;
-  border: 2px solid #000;
+  border: 1px solid #d7dce8;
   border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(23, 54, 129, 0.08);
   padding: 15px;
   width: 1000px;
   height: 100%;
@@ -362,11 +334,16 @@
   position: absolute;
   border: 0;
   padding: 5px 10px;
-  background: #007BFF;
+  background: #173681;
   color: white;
   border-radius: 5px;
   margin-top: -5px;
   cursor: pointer;
+  transition: filter 0.15s ease;
+}
+
+#graphSwitch:hover {
+  filter: brightness(1.1);
 }
 
 .light-img {
