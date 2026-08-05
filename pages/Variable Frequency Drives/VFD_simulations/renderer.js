@@ -22,6 +22,12 @@ let directionMultiplier = 1;  // 1 = forward, -1 = reverse
 let smoothedRpm = 0;
 let knobAbsolutePercentage = 50; // always 0–100, direction-independent
 
+// Motor-shaft sheen animation tuning (maps simulated RPM -> sweep speed)
+const SHAFT_IDLE_RPM = 5;        // |RPM| below this reads as stationary
+const SHAFT_ANIM_MIN_S = 0.08;   // fastest sheen-sweep loop (seconds) — top speed
+const SHAFT_ANIM_MAX_S = 2.2;    // slowest visible sheen-sweep loop (seconds) — near idle
+const SHAFT_ANIM_SCALE = 210;    // rpm*seconds constant — tune this if the spin feels too fast/slow
+
 function drawLines() {
   let powerButton = document.getElementById('powerButton').getBoundingClientRect();
   let smps =  document.getElementById('speedControl').getBoundingClientRect();
@@ -92,9 +98,8 @@ document.addEventListener('DOMContentLoaded', () => {
   const knob = document.getElementById('knob');
   let isDragging = false;
   let startY = 0;
-  let tireRotation = 0;
   let currentRotation = 0;
-  const tire = document.getElementById('tire');
+  const motorShaftSheen = document.getElementById('motorShaftSheen');
   const toggle = document.getElementById('toggle');
   const dirToggle = document.getElementById('toggle1');
   const pwmContainers = [
@@ -149,9 +154,30 @@ otherContainers.forEach(container => {
     return Math.abs(knobPercentage) * maxRotationSpeed / 100;
   }
 
-  function animateTire(timestamp) {
+  // Drives the motor-shaft "sheen" overlay: play/pause + sweep speed +
+  // direction, based on the signed simulated RPM. The shaft photo itself
+  // never physically rotates (a flat photo rotated in-plane would just
+  // swing, not spin) — the animated light/dark band instead mimics the
+  // specular highlight sweep of a real rotating cylinder viewed side-on.
+  function updateMotorShaft(signedRpm) {
+    const magnitude = Math.abs(signedRpm);
+
+    if (magnitude < SHAFT_IDLE_RPM) {
+      motorShaftSheen.style.animationPlayState = 'paused';
+      return;
+    }
+
+    motorShaftSheen.classList.toggle('reverse', signedRpm < 0);
+    const durationS = Math.min(
+      SHAFT_ANIM_MAX_S,
+      Math.max(SHAFT_ANIM_MIN_S, SHAFT_ANIM_SCALE / magnitude)
+    );
+    motorShaftSheen.style.animationDuration = `${durationS.toFixed(3)}s`;
+    motorShaftSheen.style.animationPlayState = 'running';
+  }
+
+  function animateMotor(timestamp) {
     let shouldAnimate = isPowerOn && motorToggle;
-    const degreesPerRPM = 6;
 
     // targetSpeed is signed: positive=forward, negative=reverse
     const targetSpeed = shouldAnimate
@@ -164,14 +190,11 @@ otherContainers.forEach(container => {
       currentRotationSpeed = Math.max(currentRotationSpeed - decelerationRate, targetSpeed);
     }
 
-    // Tire visual uses signed speed directly (no separate directionMultiplier needed)
-    const degreesPerFrame = currentRotationSpeed * degreesPerRPM / 60;
-    tireRotation += degreesPerFrame;
-    tire.style.transform = `rotate(${tireRotation}deg)`;
+    updateMotorShaft(currentRotationSpeed);
 
     const stillMoving = Math.abs(currentRotationSpeed) > 0.01;
     if (stillMoving || shouldAnimate) {
-      animationFrameId = requestAnimationFrame(animateTire);
+      animationFrameId = requestAnimationFrame(animateMotor);
     } else {
       currentRotationSpeed = 0;
       cancelAnimationFrame(animationFrameId);
@@ -269,7 +292,7 @@ otherContainers.forEach(container => {
       const knobValue = (currentRotation + 90) / 180;
       knobAbsolutePercentage = knobValue * 100;
       speedPercentage = knobAbsolutePercentage * directionMultiplier;
-      animateTire();
+      animateMotor();
     } else {
       speedPercentage = 0;
       knobAbsolutePercentage = 0;
@@ -286,7 +309,7 @@ otherContainers.forEach(container => {
     if (motorToggle && isPowerOn) {
       knobAbsolutePercentage = (currentRotation + 90) / 180 * 100;
       speedPercentage = knobAbsolutePercentage * directionMultiplier;
-      animateTire();
+      animateMotor();
     } else {
       speedPercentage = 0;
     }
@@ -301,10 +324,10 @@ otherContainers.forEach(container => {
     // Update signed speedPercentage for labels/charts
     speedPercentage = knobAbsolutePercentage * directionMultiplier;
 
-    // If motor is running, just let animateTire ramp through 0 to the new target
+    // If motor is running, just let animateMotor ramp through 0 to the new target
     // (do NOT reset currentRotationSpeed — that's what creates the smooth 0-crossing)
     if (isPowerOn && motorToggle && !animationFrameId) {
-      animateTire();
+      animateMotor();
     }
 
     updateStats();

@@ -205,9 +205,74 @@
   /* margin: 0 0 10px 0; */
 }
 
-.tire-img{
-  width: 85%;
-  margin: 0 0 10px 0;
+/* ============ MOTOR SHAFT WIDGET ============
+   Fixed motor body photo + a separate shaft photo positioned at the
+   bearing flange. The shaft itself never physically rotates in 2D (that
+   would just make it swing, not spin) — instead an "overlay sheen" band
+   of light/dark stripes animates across it, the way a specular highlight
+   sweeps around a real rotating cylinder viewed from the side. Speed and
+   direction are driven live by the simulated motor RPM. */
+.motor-assembly {
+  position: relative;
+  width: 92%;
+  margin: 0 0 10px 46px; /* shaft protrudes left, so nudge the whole block right */
+  aspect-ratio: 2608 / 2318; /* matches the trimmed motor photo */
+}
+.motor-body-img {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  z-index: 2;
+  pointer-events: none;
+}
+.motor-shaft-track {
+  position: absolute;
+  left: -4.6%;
+  top: 40.3%;
+  width: 22%;
+  height: 11.7%;
+  z-index: 1;
+  overflow: hidden;
+  border-radius: 999px;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.18) inset, 1px 1px 2px rgba(0, 0, 0, 0.25);
+}
+.motor-shaft-img {
+  position: absolute;
+  inset: 0;
+  background-image: url('img/motor-shaft.png');
+  background-repeat: repeat-x;
+  background-size: auto 100%;
+}
+.motor-shaft-sheen {
+  position: absolute;
+  inset: 0;
+  background: repeating-linear-gradient(
+    to bottom,
+    rgba(255, 255, 255, 0.6) 0%,
+    rgba(255, 255, 255, 0.6) 10%,
+    rgba(255, 255, 255, 0.05) 24%,
+    rgba(10, 10, 10, 0.35) 44%,
+    rgba(10, 10, 10, 0.35) 56%,
+    rgba(255, 255, 255, 0.05) 76%,
+    rgba(255, 255, 255, 0.6) 100%
+  );
+  background-size: 100% 200%;
+  mix-blend-mode: overlay;
+  animation: shaftSpin 1.2s linear infinite;
+  animation-play-state: paused;
+}
+@keyframes shaftSpin {
+  from { background-position-y: 0%; }
+  to   { background-position-y: 200%; }
+}
+@keyframes shaftSpinReverse {
+  from { background-position-y: 200%; }
+  to   { background-position-y: 0%; }
+}
+.motor-shaft-sheen.reverse {
+  animation-name: shaftSpinReverse;
 }
 
 #motor-box {
@@ -241,14 +306,7 @@
   margin: 0;
 }
 
-@keyframes rotateTire {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
-}
 
-.rotating {
-  animation: rotateTire 1s linear infinite;
-}
 
 #circuitMotor {
   display: flex;
@@ -362,4 +420,3 @@
   justify-content: space-between;
   margin-top: 65px;
 }
-
