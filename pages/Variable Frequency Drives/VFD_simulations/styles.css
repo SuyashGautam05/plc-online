@@ -31,6 +31,7 @@
   padding: 0;
   display: flex;
   flex-direction: column;
+  min-width: 0;
   margin: 10px 25px;
   margin-right: 0;
   height: 100%; /* fills #app's actual height - was 90vh, which is relative to the real browser window, not this fixed-canvas design, and could leave gaps or overflow depending on the window size */
@@ -165,6 +166,7 @@
 
 .circuit-container{
   width: 70%;
+  min-width: 0;
   position: relative;
 }
 
@@ -247,6 +249,7 @@
 #motor-box {
   display: flex;
   width: 30%;
+  min-width: 0;
   height: 90%;
   padding: 20px;
   flex-direction: column;
@@ -298,9 +301,10 @@
   padding: 0;
   display: flex;
   flex-direction: column;
-  height: 100%; /* fills #app's actual height - was 82.5vh, same viewport-relative mismatch as #left-column */
+  flex: 1;       /* fills the space remaining after #left-column, not literally 100% of the row (which, alongside a sibling also taking space, was the actual cause of the horizontal overflow/cut-off) */
+  min-width: 0;  /* lets it actually shrink to fit instead of being blocked by its children's natural size */
+  height: 100%;
   margin: 10px 10px 10px 0;
-  width: 100%;
   gap: 25px;
   justify-content: space-between;
   align-items: end;
@@ -376,8 +380,18 @@
 
 #voltage-chart-container, #current-chart-container, #power-chart-container, #pwm-chart-container1, #pwm-chart-container2, #pwm-chart-container3 {
   width: 33%;
+  min-width: 0;
   height: 100%;
   flex: 2;
+}
+
+/* Chart.js canvases otherwise carry their own intrinsic pixel
+   width/height attributes and won't shrink with a narrower
+   container on their own - this is what pushed the 3rd chart (and
+   the motor image further along the row) off the right edge. */
+.chart-container canvas {
+  max-width: 100%;
+  box-sizing: border-box;
 }
 
 #load-section{
