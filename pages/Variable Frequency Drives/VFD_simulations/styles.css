@@ -31,10 +31,9 @@
   padding: 0;
   display: flex;
   flex-direction: column;
-  min-width: 0;
   margin: 10px 25px;
   margin-right: 0;
-  height: 100%; /* fills #app's actual height - was 90vh, which is relative to the real browser window, not this fixed-canvas design, and could leave gaps or overflow depending on the window size */
+  height: 90vh;
   justify-content: space-around;
   align-items: center;
   z-index: 1;
@@ -90,12 +89,8 @@
   margin: 0;
 }
 
-.knob-slider {
-  width: 165px;
-  height: 8px;
-  margin: 10px 0;
-  accent-color: #173681; /* matches the header/graphSwitch blue used elsewhere */
-  cursor: pointer;
+.knob-img {
+  width: 105px;
 }
 
 #center-column div p{
@@ -166,15 +161,10 @@
   width: 100%;
   gap: 50px;
   display: flex;
-  flex: 1;       /* takes whatever height remains after #chart-section, instead of being sized purely by content (which could overflow the column) */
-  min-height: 0; /* lets it actually shrink to fit instead of being blocked by its children's natural size */
 }
 
 .circuit-container{
   width: 70%;
-  min-width: 0;
-  min-height: 0;
-  overflow: hidden; /* safety net - contains locally instead of pushing the page's bottom off-screen if anything is still oversized */
   position: relative;
 }
 
@@ -213,13 +203,13 @@
 .motor-img{
   position: absolute;
   width: 100%;
-  height: 100%; /* was auto (intrinsic aspect ratio) - if the image is naturally tall relative to its container, that let it overflow past the bottom with nothing to stop it */
-  object-fit: contain; /* scales the image to fit within the bounded box above, preserving its own aspect ratio, instead of stretching or overflowing */
   bottom: -5px;
   left: 32px;
   border-radius: 30px;
   border: 1px solid #d7dce8;
   box-shadow: 0 2px 10px rgba(23, 54, 129, 0.08);
+  /* width: 165px; */
+  /* margin: 0 0 10px 0; */
 }
 
 /* ============ MOTOR SHAFT WIDGET (front view) ============
@@ -231,7 +221,6 @@
 .motor-assembly {
   position: relative;
   width: 78%;
-  max-height: 60%; /* caps it so a wide #motor-box can't drive the aspect-ratio height taller than what's actually available, pushing the RPM box/label below the fold */
   margin: 0 auto 10px;
   aspect-ratio: 400 / 420; /* matches the motor-front-body.svg viewBox */
 }
@@ -258,10 +247,7 @@
 #motor-box {
   display: flex;
   width: 30%;
-  min-width: 0;
   height: 90%;
-  min-height: 0;
-  overflow: hidden; /* safety net - contains locally instead of pushing the page's bottom off-screen if anything is still oversized */
   padding: 20px;
   flex-direction: column;
   background-color: white;
@@ -312,12 +298,9 @@
   padding: 0;
   display: flex;
   flex-direction: column;
-  flex: 1;       /* fills the space remaining after #left-column, not literally 100% of the row (which, alongside a sibling also taking space, was the actual cause of the horizontal overflow/cut-off) */
-  min-width: 0;  /* lets it actually shrink to fit instead of being blocked by its children's natural size */
-  min-height: 0;
-  overflow: hidden; /* final safety net for the whole column */
-  height: 100%;
+  height: 82.5vh;
   margin: 10px 10px 10px 0;
+  width: 100%;
   gap: 25px;
   justify-content: space-between;
   align-items: end;
@@ -337,14 +320,13 @@
 
 #chart-section {
   display: flex;
-  gap: 14px;
   background-color: white;
   border: 1px solid #d7dce8;
   border-radius: 12px;
   box-shadow: 0 2px 10px rgba(23, 54, 129, 0.08);
   padding: 15px;
-  width: 100%; /* was a fixed 1000px, which left empty space on wider windows */
-  flex: 0 0 auto; /* was height:100%, which - alongside .bottom-row as a sibling in this flex column - was the actual cause of the vertical overflow (same bug pattern as #right-column's old width:100%, just rotated 90°). This lets it size to its natural content height instead of fighting .bottom-row for all the space. */
+  width: 1000px;
+  height: 100%;
 
 }
 
@@ -393,18 +375,8 @@
 
 #voltage-chart-container, #current-chart-container, #power-chart-container, #pwm-chart-container1, #pwm-chart-container2, #pwm-chart-container3 {
   width: 33%;
-  min-width: 0;
   height: 100%;
   flex: 2;
-}
-
-/* Chart.js canvases otherwise carry their own intrinsic pixel
-   width/height attributes and won't shrink with a narrower
-   container on their own - this is what pushed the 3rd chart (and
-   the motor image further along the row) off the right edge. */
-.chart-container canvas {
-  max-width: 100%;
-  box-sizing: border-box;
 }
 
 #load-section{

@@ -91,6 +91,9 @@ document.addEventListener('DOMContentLoaded', () => {
 
   let isPowerOn = false;
   const knob = document.getElementById('knob');
+  let isDragging = false;
+  let startY = 0;
+  let currentRotation = 0;
   const motorShaftCoupling = document.getElementById('motorShaftCoupling');
   const toggle = document.getElementById('toggle');
   const dirToggle = document.getElementById('toggle1');
@@ -135,6 +138,11 @@ otherContainers.forEach(container => {
     }
 }
 
+
+  function getRotationDegrees(yMove) {
+    const degreesPerPixel = 180 / 100;
+    return yMove * degreesPerPixel;
+  }
 
   function calculateRPM(knobPercentage) {
     // Always use absolute (0–100) knob value for speed magnitude
@@ -218,9 +226,10 @@ otherContainers.forEach(container => {
     if (el) el.innerText = `${currentAmpere.toFixed(2)}A`;
   }
 
-  function updateKnob(percent) {
-    percent = Math.max(0, Math.min(100, percent));
-    knobAbsolutePercentage = percent;  // always 0–100
+  function updateKnob(value) {
+    value = Math.max(-90, Math.min(90, value));
+    knob.style.transform = `rotate(${value}deg)`;
+    knobAbsolutePercentage = (value + 90) / 180 * 100;  // always 0–100
     speedPercentage = knobAbsolutePercentage * directionMultiplier; // signed for charts/labels
     console.log(`Knob value: ${speedPercentage.toFixed(2)}%`);
     updateStats();
@@ -259,7 +268,8 @@ otherContainers.forEach(container => {
     motorImg.src = isPowerOn ? 'img/VFD_Power_On.JPG' : 'img/VFD_1.jpg';
   
     if (isPowerOn) {
-      knobAbsolutePercentage = parseFloat(knob.value);
+      const knobValue = (currentRotation + 90) / 180;
+      knobAbsolutePercentage = knobValue * 100;
       speedPercentage = knobAbsolutePercentage * directionMultiplier;
       animateMotor();
     } else {
@@ -276,7 +286,7 @@ otherContainers.forEach(container => {
     motorToggle = toggleRotation === 0;
     toggle.style.transform = `rotate(${toggleRotation}deg)`;
     if (motorToggle && isPowerOn) {
-      knobAbsolutePercentage = parseFloat(knob.value);
+      knobAbsolutePercentage = (currentRotation + 90) / 180 * 100;
       speedPercentage = knobAbsolutePercentage * directionMultiplier;
       animateMotor();
     } else {
@@ -316,8 +326,30 @@ otherContainers.forEach(container => {
     });
   });
 
-  knob.addEventListener('input', event => {
-    updateKnob(parseFloat(event.target.value));
+  knob.addEventListener('mousedown', event => {
+    isDragging = true;
+    startY = event.clientY;
+    document.body.style.userSelect = 'none';
+    event.preventDefault();
+  });
+
+  document.addEventListener('mousemove', event => {
+    if (isDragging) {
+      const deltaY = event.clientY - startY;
+      const newRotation = currentRotation - getRotationDegrees(deltaY);
+      updateKnob(newRotation);
+    }
+  });
+
+  document.addEventListener('mouseup', event => {
+    if (isDragging) {
+      const deltaY = event.clientY - startY;
+      currentRotation -= getRotationDegrees(deltaY);
+      currentRotation = Math.max(-90, Math.min(90, currentRotation));
+      updateKnob(currentRotation);
+      isDragging = false;
+      document.body.style.userSelect = '';
+    }
   });
 
   calculateComparatorOutput(50);
@@ -523,10 +555,10 @@ otherContainers.forEach(container => {
 
   powerButton.addEventListener('click', togglePower);
   window.addEventListener('load', () => {
-    knob.value = 50;
+    currentRotation = 0; 
     knobAbsolutePercentage = 50;
-    speedPercentage = 50;
-    updateKnob(50);
+    speedPercentage = 50; 
+    updateKnob(currentRotation);
   });
   drawLines();
   updateStats();
