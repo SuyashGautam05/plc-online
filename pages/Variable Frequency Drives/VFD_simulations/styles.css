@@ -165,10 +165,12 @@
   width: 100%;
   gap: 50px;
   display: flex;
+  align-items: flex-start; /* was the default (stretch) - that's what coupled circuit-container's height to motor-box's, so a margin-top on motor-box shifted circuit-container along with it */
 }
 
 .circuit-container{
   width: 70%;
+  height: 90%; /* explicit and independent now, instead of stretching to match motor-box - matches motor-box's own height so the two stay aligned without being coupled */
   position: relative;
 }
 
