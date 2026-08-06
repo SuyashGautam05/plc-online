@@ -91,9 +91,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
   let isPowerOn = false;
   const knob = document.getElementById('knob');
-  let isDragging = false;
-  let startY = 0;
-  let currentRotation = 0;
   const motorShaftCoupling = document.getElementById('motorShaftCoupling');
   const toggle = document.getElementById('toggle');
   const dirToggle = document.getElementById('toggle1');
@@ -137,12 +134,6 @@ otherContainers.forEach(container => {
         comparatorData3.push(stepValue3);
     }
 }
-
-
-  function getRotationDegrees(yMove) {
-    const degreesPerPixel = 180 / 100;
-    return yMove * degreesPerPixel;
-  }
 
   function calculateRPM(knobPercentage) {
     // Always use absolute (0–100) knob value for speed magnitude
@@ -226,10 +217,13 @@ otherContainers.forEach(container => {
     if (el) el.innerText = `${currentAmpere.toFixed(2)}A`;
   }
 
-  function updateKnob(value) {
-    value = Math.max(-90, Math.min(90, value));
-    knob.style.transform = `rotate(${value}deg)`;
-    knobAbsolutePercentage = (value + 90) / 180 * 100;  // always 0–100
+  // Now driven directly by the slider's 0–100 value (previously took a
+  // -90..90 rotation angle derived from mouse-drag math and applied it as
+  // a CSS transform:rotate on the knob image). Everything downstream -
+  // RPM, comparator/PWM charts, voltage/current labels - is unchanged.
+  function updateKnob(percent) {
+    percent = Math.max(0, Math.min(100, percent));
+    knobAbsolutePercentage = percent;  // always 0–100
     speedPercentage = knobAbsolutePercentage * directionMultiplier; // signed for charts/labels
     console.log(`Knob value: ${speedPercentage.toFixed(2)}%`);
     updateStats();
@@ -268,8 +262,7 @@ otherContainers.forEach(container => {
     motorImg.src = isPowerOn ? 'img/VFD_Power_On.JPG' : 'img/VFD_1.jpg';
   
     if (isPowerOn) {
-      const knobValue = (currentRotation + 90) / 180;
-      knobAbsolutePercentage = knobValue * 100;
+      knobAbsolutePercentage = parseFloat(knob.value);
       speedPercentage = knobAbsolutePercentage * directionMultiplier;
       animateMotor();
     } else {
@@ -286,7 +279,7 @@ otherContainers.forEach(container => {
     motorToggle = toggleRotation === 0;
     toggle.style.transform = `rotate(${toggleRotation}deg)`;
     if (motorToggle && isPowerOn) {
-      knobAbsolutePercentage = (currentRotation + 90) / 180 * 100;
+      knobAbsolutePercentage = parseFloat(knob.value);
       speedPercentage = knobAbsolutePercentage * directionMultiplier;
       animateMotor();
     } else {
@@ -326,30 +319,11 @@ otherContainers.forEach(container => {
     });
   });
 
-  knob.addEventListener('mousedown', event => {
-    isDragging = true;
-    startY = event.clientY;
-    document.body.style.userSelect = 'none';
-    event.preventDefault();
-  });
-
-  document.addEventListener('mousemove', event => {
-    if (isDragging) {
-      const deltaY = event.clientY - startY;
-      const newRotation = currentRotation - getRotationDegrees(deltaY);
-      updateKnob(newRotation);
-    }
-  });
-
-  document.addEventListener('mouseup', event => {
-    if (isDragging) {
-      const deltaY = event.clientY - startY;
-      currentRotation -= getRotationDegrees(deltaY);
-      currentRotation = Math.max(-90, Math.min(90, currentRotation));
-      updateKnob(currentRotation);
-      isDragging = false;
-      document.body.style.userSelect = '';
-    }
+  // Native slider input - replaces the old mousedown/mousemove/mouseup
+  // rotation-drag mechanism entirely. Dragging the thumb, clicking the
+  // track, keyboard arrows, and touch all work for free via the browser.
+  knob.addEventListener('input', event => {
+    updateKnob(parseFloat(event.target.value));
   });
 
   calculateComparatorOutput(50);
@@ -555,10 +529,10 @@ otherContainers.forEach(container => {
 
   powerButton.addEventListener('click', togglePower);
   window.addEventListener('load', () => {
-    currentRotation = 0; 
+    knob.value = 50;
     knobAbsolutePercentage = 50;
-    speedPercentage = 50; 
-    updateKnob(currentRotation);
+    speedPercentage = 50;
+    updateKnob(50);
   });
   drawLines();
   updateStats();
