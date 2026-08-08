@@ -11,15 +11,18 @@
   :root {
     --primary-color: #f8f9fa;
     --secondary-color: #e9ecef;
-    --text-color: #343a40;
+    --text-color: #262a30;
     --accent-color: #6c757d;
-    --border-color: #dee2e6;
+    --border-color: #e4e7eb;
     --hover-color: #f1f3f5;
     --shadow: 0 2px 10px rgba(0,0,0,0.1);
-    --red: #c0392b;
-    --blue: #2980b9;
-    --mag-red: #e74c3c;
-    --mag-blue: #3498db;
+    --red: #dc3545;       /* was #c0392b - now matches the site's actual red */
+    --gold: #d97706;      /* site's amber accent - used below for "activated/energized" states instead of dull grey */
+    --gold-soft: rgba(217, 119, 6, 0.14);
+    --red-soft: rgba(220, 53, 69, 0.14);
+    --blue: #173681;      /* site's navy, was a mismatched #2980b9 */
+    --mag-red: #dc3545;   /* matches --red - magnet S pole */
+    --mag-blue: #2563eb;  /* magnet N pole - kept distinct from navy so it doesn't blend into the header */
   }
 
   * { margin:0; padding:0; box-sizing:border-box; }
@@ -74,8 +77,8 @@
   }
   .status-item { display:flex; align-items:center; gap:6px; font-size:clamp(0.68rem,1vw,0.8rem); color:var(--text-color); }
   .dot { width:11px; height:11px; border-radius:50%; background:var(--border-color); border:1px solid var(--accent-color); transition:all .3s; }
-  .dot.power   { background:var(--text-color); }
-  .dot.on      { background:var(--text-color); box-shadow:0 0 6px rgba(52,58,64,.4); }
+  .dot.power   { background:var(--gold); }
+  .dot.on      { background:var(--gold); box-shadow:0 0 6px rgba(217,119,6,.45); }
   .dot.blink   { background:var(--accent-color); animation:blink .8s infinite; }
   @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.25} }
 
@@ -160,7 +163,7 @@
     color:white; font-weight:900; font-size:0.85rem; letter-spacing:1px;
     font-family:Arial,sans-serif;
   }
-  .moving-magnet.activated { box-shadow:0 0 14px rgba(52,58,64,.4), 0 0 24px rgba(52,152,219,.3); }
+  .moving-magnet.activated { box-shadow:0 0 14px rgba(217,119,6,.45), 0 0 24px rgba(37,99,235,.3); }
 
   /* Magnetic field arcs */
   .field-svg {
@@ -181,7 +184,7 @@
     background:var(--secondary-color); color:var(--text-color); transition:all .2s;
   }
   .ctrl-btn:hover { background:var(--hover-color); transform:translateY(-1px); box-shadow:var(--shadow); }
-  .ctrl-btn.active-btn { background:var(--text-color); color:var(--primary-color); border-color:var(--text-color); }
+  .ctrl-btn.active-btn { background:var(--red); color:white; border-color:var(--red); }
   .speed-row { display:flex; align-items:center; gap:8px; font-size:.72rem; color:var(--accent-color); margin-top:7px; font-weight:bold; }
   .speed-row input[type=range] { max-width:110px; accent-color:var(--accent-color); }
 
@@ -199,10 +202,16 @@
     background: var(--accent-color);
     transition:width .1s, background .3s;
   }
-  .dist-bar-fill.near { background: var(--text-color); }
+  .dist-bar-fill.near { background: var(--gold); }
 
   /* ===== RIGHT THEORY PANEL ===== */
-  .image-section { position:sticky; top:18px; height:fit-content; }
+  /* defination.css hides .image-section site-wide with !important
+     (it's used elsewhere for a simple topic illustration image that's
+     no longer shown) - this page reuses that same class name for the
+     entire right-side theory panel, which is a different thing and
+     needs to stay visible. This override needs matching !important +
+     later source order to win, both of which are true here. */
+  .image-section { position:sticky; top:18px; height:fit-content; display:block !important; }
   .theory-section {
     background:white; border-radius:clamp(8px,1.5vw,18px);
     box-shadow:var(--shadow); padding:clamp(14px,2vw,26px);
@@ -221,14 +230,14 @@
     display:flex; align-items:center; gap:11px;
     margin-bottom:13px; transition:all .3s;
   }
-  .ind-box.active { background:var(--hover-color); border-color:var(--accent-color); box-shadow:var(--shadow); }
+  .ind-box.active { background:var(--gold-soft); border-color:var(--gold); box-shadow:0 0 0 1px var(--gold-soft), var(--shadow); }
   .big-bulb {
     width:42px; height:42px; border-radius:50%;
     background:var(--border-color); border:2px solid var(--accent-color);
     display:flex; align-items:center; justify-content:center;
     font-size:1.25rem; transition:all .3s; flex-shrink:0; opacity:.32;
   }
-  .big-bulb.on { background:var(--secondary-color); border-color:var(--text-color); box-shadow:0 0 10px rgba(52,58,64,.2); opacity:1; }
+  .big-bulb.on { background:var(--gold-soft); border-color:var(--gold); box-shadow:0 0 10px rgba(217,119,6,.35); opacity:1; }
   .s-title { font-size:.82rem; color:var(--text-color); font-weight:bold; margin-bottom:2px; }
   .s-desc  { font-size:.7rem; color:var(--accent-color); line-height:1.4; }
 
@@ -238,21 +247,21 @@
     border-radius:10px; padding:12px; margin-bottom:13px; transition:all .3s;
     overflow:hidden;
   }
-  .diagram-wrap.active { background:var(--hover-color); border-color:var(--accent-color); box-shadow:var(--shadow); }
+  .diagram-wrap.active { background:var(--gold-soft); border-color:var(--gold); box-shadow:0 0 0 1px var(--gold-soft), var(--shadow); }
   .diagram-label { font-size:.65rem; color:var(--accent-color); letter-spacing:1px; text-transform:uppercase; margin-bottom:8px; font-family:Georgia,serif; }
 
   .diag-svg { width:100%; height:auto; display:block; }
 
   .dr  { stroke:var(--border-color); fill:none; }
-  .dr.a{ stroke:var(--text-color);   fill:none; }
+  .dr.a{ stroke:var(--gold);   fill:none; }
   .df  { fill:none; }
-  .df.a{ fill:rgba(52,58,64,.07); }
+  .df.a{ fill:var(--gold-soft); }
   .dt  { fill:var(--accent-color); font-family:Georgia,serif; }
-  .dt.a{ fill:var(--text-color);   font-family:Georgia,serif; font-weight:bold; }
+  .dt.a{ fill:var(--gold);   font-family:Georgia,serif; font-weight:bold; }
   .db  { stroke:var(--border-color); fill:var(--primary-color); }
-  .db.a{ stroke:var(--text-color);   fill:var(--hover-color); }
+  .db.a{ stroke:var(--gold);   fill:var(--gold-soft); }
   .dc  { stroke:var(--border-color); fill:var(--primary-color); }
-  .dc.a{ stroke:var(--text-color);   fill:var(--hover-color); }
+  .dc.a{ stroke:var(--gold);   fill:var(--gold-soft); }
 
   /* Reed switch symbol in SVG diagram */
   .reed-sym-open  { opacity:1; transition:opacity 0.3s; }
@@ -628,19 +637,19 @@
     document.getElementById('dTxt').textContent = on ? 'ACTIVATED!' : 'Switch Open';
     document.getElementById('oDot').className   = 'dot' + (on ? ' on'   : '');
     document.getElementById('switchStateTxt').textContent = on ? 'Contacts: CLOSED ✓' : 'Contacts: OPEN';
-    document.getElementById('switchStateTxt').style.color = on ? 'var(--text-color)' : 'var(--accent-color)';
+    document.getElementById('switchStateTxt').style.color = on ? 'var(--gold)' : 'var(--accent-color)';
 
     // Wiring diagram SVG — signal wire
-    document.getElementById('wSig').setAttribute('stroke', on ? '#343a40' : '#dee2e6');
+    document.getElementById('wSig').setAttribute('stroke', on ? '#d97706' : '#dee2e6');
     document.getElementById('wSig').setAttribute('stroke-dasharray', on ? '0' : '7,3');
 
     // Indicator bulb in wiring diagram
-    document.getElementById('iSVG').setAttribute('stroke', on ? '#343a40' : '#dee2e6');
-    document.getElementById('iInner').setAttribute('fill', on ? '#f1f3f5' : '#f8f9fa');
+    document.getElementById('iSVG').setAttribute('stroke', on ? '#d97706' : '#dee2e6');
+    document.getElementById('iInner').setAttribute('fill', on ? '#fdf3e7' : '#f8f9fa');
     document.getElementById('bulbSVG').setAttribute('opacity', on ? '1' : '.28');
 
     // Reed switch symbol in wiring diagram
-    document.getElementById('reedGlassWire').setAttribute('stroke', on ? '#343a40' : '#dee2e6');
+    document.getElementById('reedGlassWire').setAttribute('stroke', on ? '#d97706' : '#dee2e6');
     document.getElementById('reedOpen').style.opacity   = on ? '0' : '1';
     document.getElementById('reedClosed').style.opacity = on ? '1' : '0';
 
@@ -652,7 +661,7 @@
     document.getElementById('cLeft').className  = 'contact-left '  + (on ? 'closed' : 'open');
     document.getElementById('cRight').className = 'contact-right ' + (on ? 'closed' : 'open');
     document.getElementById('reedLabel').textContent = on ? 'Reed Switch — Contacts CLOSED ✓' : 'Reed Switch — Contacts OPEN';
-    document.getElementById('reedLabel').style.color = on ? 'var(--text-color)' : 'var(--accent-color)';
+    document.getElementById('reedLabel').style.color = on ? 'var(--gold)' : 'var(--accent-color)';
 
     // Reed glass highlight
     document.getElementById('reedGlass').style.borderColor = on ? 'rgba(52,152,219,0.7)' : 'rgba(100,180,170,0.8)';
