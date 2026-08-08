@@ -33,19 +33,11 @@
     overflow-x: hidden;
   }
 
-  header {
-    text-align: center;
-    padding: clamp(8px,1vw,18px) clamp(14px,2vw,32px);
-    border-bottom: 1px solid var(--border-color);
-    margin-bottom: clamp(15px,2vw,26px);
-    background-color: var(--primary-color);
-    box-shadow: var(--shadow);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  header h1 { font-size: clamp(1rem,2.5vw,1.45rem); font-weight:700; color:var(--text-color); }
-  header p  { font-size: clamp(0.72rem,1.4vw,0.9rem); color:var(--accent-color); margin-top:3px; }
+  /* header/h1 intentionally NOT overridden here - the shared
+     defination.css navy header (same one every topic page uses,
+     including contactor_sim.html) applies instead. This page used to
+     define its own light-grey header here, which is what made it
+     look washed out compared to contactor_sim.html. */
 
   .content-wrapper {
     display: grid;
