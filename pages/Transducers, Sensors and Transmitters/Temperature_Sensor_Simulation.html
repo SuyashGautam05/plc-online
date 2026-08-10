@@ -156,21 +156,51 @@ canvas{display:block;width:100%}
 .alm-dot{width:7px;height:7px;border-radius:50%;flex-shrink:0;margin-top:3px}
 .alm-time{font-family:var(--mono);font-size:10px;color:var(--text3);white-space:nowrap;min-width:52px}
 .alm-msg{color:var(--text);flex:1;line-height:1.4}
+
+/* ── Header override: compact logo + wordmark, dead-center title
+   (matches the reference "Types of Proximity Sensors" header) ── */
+header.site-header{
+  position:sticky;top:0;z-index:200;
+  background:#173681;
+  height:62px;
+  padding:0;
+  margin:0;
+  width:100%;
+  box-shadow:0 1px 3px rgba(0,0,0,.15);
+}
+header.site-header .header-inner{
+  position:relative;
+  height:100%;
+  width:100%;
+  display:flex;
+  align-items:center;
+  padding:0 24px;
+  box-sizing:border-box;
+}
+header.site-header .logo-container{
+  display:flex;align-items:center;gap:10px;
+  height:auto;max-width:none;margin:0;
+}
+header.site-header .logo-container img{height:32px;width:auto;margin-top:0;object-fit:contain}
+header.site-header .brand-text{color:#e8ebf6;font-size:19px;font-weight:500;letter-spacing:.2px}
+header.site-header .header-title{
+  position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);
+  max-width:calc(100% - 260px);
+  color:#fff;font-size:17px;font-weight:700;letter-spacing:-.01em;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  margin:0;
+}
 </style>
 </head>
 <body>
 
-    <header style="margin-bottom: 0px;" class="site-header">
-      <div class="logo-container" style="margin-bottom: 0px;gap: clamp(15px, 8vw, 153px);">
-        <img style="margin-left: -2pc" src="../../assets/Scientech logo-2.png" alt="Scientech Logo" />
-        <h1 style="margin-left: 2px;margin-right: -8pc;">
-          Temperature Sensors and Temperature Transmitter
-        </h1>
-        <div class="button-container" style="margin-bottom: 0px" >
-                  <a href="./Temperature_Sensors_and_Temperature_Transmitter.html" class="back-button" style="margin-left: 105px;">
-                      <i class="fas fa-arrow-left"></i><img style="height: 30px;width: 30px;" src="./left-arrow.png" alt=""> Back to Course
-                  </a>
+    <header class="site-header">
+      <div class="header-inner">
+        <div class="logo-container">
+          <img src="../../assets/Scientech logo-2.png" alt="Scientech Logo" />
+          <span class="brand-text">Scientech</span>
         </div>
+        <h1 class="header-title">Temperature Sensors and Temperature Transmitter</h1>
       </div>
     </header>
 
