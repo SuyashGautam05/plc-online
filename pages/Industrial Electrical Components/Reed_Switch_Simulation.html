@@ -50,7 +50,7 @@
     align-items: flex-start;
   }
 
-  .sim-panel { display:flex; flex-direction:column; gap:14px; }
+  .sim-panel { display:flex; flex-direction:column; gap:14px;margin-top: 8px; }
 
   .card {
     background: white;
@@ -215,7 +215,10 @@
   .theory-section {
     background:white; border-radius:clamp(8px,1.5vw,18px);
     box-shadow:var(--shadow); padding:clamp(14px,2vw,26px);
-    max-height:calc(100vh - 110px); overflow-y:auto;
+    /* max-height:calc(100vh - 110px); */
+    max-height:calc(100vh - -19px);
+     overflow-y:auto;
+    width: 478px;
   }
   .theory-section::-webkit-scrollbar { width:6px; }
   .theory-section::-webkit-scrollbar-track { background:var(--secondary-color); border-radius:10px; }
@@ -307,7 +310,7 @@
       </div>
     </header>
 
-<div class="content-wrapper">
+<div style="width: 100%;" class="content-wrapper">
 
   <!-- ===== LEFT: SIMULATION ===== -->
   <div class="sim-panel">
