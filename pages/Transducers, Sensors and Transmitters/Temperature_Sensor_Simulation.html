@@ -12,7 +12,7 @@
 :root {
   --bg:#eef0f4;--panel:#fff;--panel2:#f6f7f9;--border:#dde1e8;--border2:#eaecf0;
   --text:#1c1f26;--text2:#5a6070;--text3:#9aa0ae;
-  --blue:#dc3545;--blue2:#c82333;--blue-light:rgba(220,53,69,.08);
+  --blue:#2563eb;--blue2:#1d4ed8;--blue-light:#eff6ff;
   --green:#16a34a;--green-light:#f0fdf4;
   --red:#dc2626;--red-light:#fef2f2;
   --orange:#ea580c;--orange-light:#fff7ed;
@@ -25,12 +25,12 @@
 body{font-family:var(--sans);background:var(--bg);color:var(--text);min-height:100vh;font-size:14px}
 
 /* ── TOP NAV TABS ── */
-.topbar{background:#173681;height:50px;display:flex;align-items:center;padding:0 20px;gap:16px;position:sticky;top:0;z-index:200;box-shadow:0 2px 8px rgba(0,0,0,.2)}
-.logo{font-family:var(--mono);font-size:16px;color:#fff;letter-spacing:2px}.logo span{color:#fbbf24}
+.topbar{background:var(--text);height:50px;display:flex;align-items:center;padding:0 20px;gap:16px;position:sticky;top:0;z-index:200;box-shadow:0 2px 8px rgba(0,0,0,.2)}
+.logo{font-family:var(--mono);font-size:16px;color:#fff;letter-spacing:2px}.logo span{color:#60a5fa}
 .tabs{display:flex;gap:4px;margin-left:auto}
 .tab-btn{padding:8px 20px;border-radius:6px;border:none;font-family:var(--sans);font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;color:#9ca3af;background:transparent;letter-spacing:.3px}
 .tab-btn:hover{color:#fff;background:rgba(255,255,255,.1)}
-.tab-btn.active{color:#fff;background:var(--blue);box-shadow:0 2px 8px rgba(220,53,69,.4)}
+.tab-btn.active{color:#fff;background:var(--blue);box-shadow:0 2px 8px rgba(37,99,235,.4)}
 
 /* ── SECTIONS ── */
 .section{display:none;padding:24px;max-width:1362px;margin:0 auto}
@@ -96,13 +96,13 @@ body{font-family:var(--sans);background:var(--bg);color:var(--text);min-height:1
 input[type=range]{flex:1;accent-color:var(--blue);cursor:pointer}
 input[type=range]:disabled{cursor:not-allowed;accent-color:#9ca3af}
 .sl-val{font-family:var(--mono);font-size:12px;color:var(--blue);min-width:40px;text-align:right;font-weight:bold}
-.vout-panel{background:linear-gradient(135deg,#173681 0%,#0e2461 100%);border-radius:var(--radius);padding:16px;color:#fff;margin-top:4px}
-.vout-title{font-family:var(--mono);font-size:10px;letter-spacing:2px;color:#fbbf24;text-transform:uppercase;margin-bottom:12px}
+.vout-panel{background:linear-gradient(135deg,#1e3a5f 0%,#0f2340 100%);border-radius:var(--radius);padding:16px;color:#fff;margin-top:4px}
+.vout-title{font-family:var(--mono);font-size:10px;letter-spacing:2px;color:#93c5fd;text-transform:uppercase;margin-bottom:12px}
 .vout-row{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;padding-bottom:8px;border-bottom:1px solid rgba(255,255,255,.08)}
 .vout-row:last-child{border-bottom:none;margin-bottom:0;padding-bottom:0}
 .vout-lbl{font-size:12px;color:#93c5fd;font-family:var(--mono)}
 .vout-val{font-family:var(--mono);font-size:15px;font-weight:bold;color:#fff}
-.vout-main{font-family:var(--mono);font-size:32px;font-weight:bold;color:#fbbf24;text-align:center;margin:12px 0 4px}
+.vout-main{font-family:var(--mono);font-size:32px;font-weight:bold;color:#60a5fa;text-align:center;margin:12px 0 4px}
 .vout-unit{font-size:13px;color:#93c5fd;text-align:center;font-family:var(--mono)}
 @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.4;transform:scale(.8)}}
 canvas{display:block;width:100%}
@@ -160,12 +160,14 @@ canvas{display:block;width:100%}
 </head>
 <body>
 
-    <header class="site-header">
-      <div class="logo-container">
-        <img src="../../assets/Scientech logo-2.png" alt="Scientech Logo" />
-        <h1>Temperature Sensors and Temperature Transmitter</h1>
-        <div class="button-container">
-                  <a href="./Temperature_Sensors_and_Temperature_Transmitter.html" class="back-button">
+    <header style="margin-bottom: 0px;" class="site-header">
+      <div class="logo-container" style="margin-bottom: 0px;gap: clamp(15px, 8vw, 153px);">
+        <img style="margin-left: -2pc" src="../../assets/Scientech logo-2.png" alt="Scientech Logo" />
+        <h1 style="margin-left: 2px;margin-right: -8pc;">
+          Temperature Sensors and Temperature Transmitter
+        </h1>
+        <div class="button-container" style="margin-bottom: 0px" >
+                  <a href="./Temperature_Sensors_and_Temperature_Transmitter.html" class="back-button" style="margin-left: 105px;">
                       <i class="fas fa-arrow-left"></i><img style="height: 30px;width: 30px;" src="./left-arrow.png" alt=""> Back to Course
                   </a>
         </div>
@@ -183,12 +185,16 @@ canvas{display:block;width:100%}
 
 <!-- ══════════════ THEORY SECTION ══════════════ -->
 <div id="sec-theory" class="section active">
+  <!-- <div class="page-title">RTD Temperature Sensor</div> -->
+  <!-- <div class="page-sub">RESISTANCE TEMPERATURE DETECTOR — THEORY & PRINCIPLES</div> -->
+
   <div style="background:var(--panel);border:1px solid var(--border);border-radius:var(--radius);padding:16px 20px;margin:18px 0;border-left:4px solid var(--blue)">
     <strong style="font-size:15px;color:var(--blue)">What is an RTD?</strong>
     <p style="margin-top:8px;line-height:1.8;color:var(--text2)">An <strong>RTD (Resistance Temperature Detector)</strong> is a temperature sensor that measures temperature by correlating the resistance of a metal with temperature. The basic principle is that the <strong>electrical resistance of metals increases with temperature</strong>.</p>
   </div>
 
   <div class="theory-grid">
+    <!-- Card 1: Materials -->
     <div class="theory-card">
       <div class="tc-head blue">📦 Materials & Types</div>
       <div class="tc-body">
@@ -211,6 +217,7 @@ canvas{display:block;width:100%}
       </div>
     </div>
 
+    <!-- Card 2: Working Principle -->
     <div class="theory-card">
       <div class="tc-head green">⚡ Working Principle</div>
       <div class="tc-body">
@@ -238,6 +245,7 @@ canvas{display:block;width:100%}
       </div>
     </div>
 
+    <!-- Card 3: Characteristics -->
     <div class="theory-card">
       <div class="tc-head orange">📊 Characteristics of RTD</div>
       <div class="tc-body">
@@ -258,6 +266,7 @@ canvas{display:block;width:100%}
       </div>
     </div>
 
+    <!-- Card 4: Voltage Divider -->
     <div class="theory-card">
       <div class="tc-head dark">🔌 Voltage Divider Concept</div>
       <div class="tc-body">
@@ -277,6 +286,7 @@ canvas{display:block;width:100%}
       </div>
     </div>
 
+    <!-- Card 5: Example Calculation (full width) -->
     <div class="theory-card" style="grid-column:1/-1">
       <div class="tc-head blue">🧮 Example Calculation</div>
       <div class="tc-body" style="display:grid;grid-template-columns:1fr 1fr;gap:24px">
@@ -316,6 +326,7 @@ canvas{display:block;width:100%}
   <div class="page-sub">PT100 · VOLTAGE DIVIDER · LIVE GRAPH</div>
 
   <div class="sim-layout">
+    <!-- LEFT: Controls -->
     <div class="sim-left">
 
       <div class="widget">
@@ -331,12 +342,13 @@ canvas{display:block;width:100%}
             <button class="mode-btn" id="mSine"   onclick="setMode('sine')">〜 Sine</button>
             <button class="mode-btn" id="mFault"  onclick="setMode('fault')">⚠ Fault</button>
           </div>
-          <div id="modeDesc" style="background:var(--blue-light);color:var(--blue);border:1px solid rgba(220,53,69,.2);border-radius:7px;padding:7px 10px;font-size:12px">
+          <div id="modeDesc" style="background:var(--blue-light);color:var(--blue);border:1px solid rgba(37,99,235,.2);border-radius:7px;padding:7px 10px;font-size:12px">
             Use the slider below to manually set RTD temperature.
           </div>
         </div>
       </div>
 
+      <!-- Single RTD Card -->
       <div class="widget">
         <div class="widget-head"><span class="widget-title">RTD Sensor</span></div>
         <div class="widget-body" style="padding:0">
@@ -360,6 +372,7 @@ canvas{display:block;width:100%}
         </div>
       </div>
 
+      <!-- Setpoints -->
       <div class="widget">
         <div class="widget-head"><span class="widget-title">Setpoints</span></div>
         <div class="widget-body">
@@ -380,18 +393,23 @@ canvas{display:block;width:100%}
 
     </div>
 
+    <!-- RIGHT: Charts + Circuit + Vout -->
     <div class="sim-right">
 
+      <!-- Voltage Divider Circuit + Vout -->
       <div class="widget">
         <div class="widget-head">
           <span class="widget-title">Voltage Divider Circuit</span>
           <span style="font-family:var(--mono);font-size:10px;color:var(--text3)">R₁ = 1000Ω · Vs = 5V</span>
         </div>
         <div class="widget-body" style="display:grid;grid-template-columns:160px 1fr;gap:20px;align-items:center">
+          <!-- Circuit diagram -->
           <div style="text-align:center">
             <img style="width: 10pc;" src="../../assets/RTD_Simulation.png" alt="">
+            
           </div>
 
+          <!-- Live calculations -->
           <div class="vout-panel">
             <div class="vout-title">Live Calculation</div>
             <div class="vout-row">
@@ -423,6 +441,7 @@ canvas{display:block;width:100%}
         </div>
       </div>
 
+      <!-- Temperature Trend Graph -->
       <div class="widget">
         <div class="widget-head">
           <span class="widget-title">Temperature Trend (RTD-101)</span>
@@ -433,6 +452,7 @@ canvas{display:block;width:100%}
         </div>
       </div>
 
+      <!-- RTD Resistance vs Temperature Graph -->
       <div class="widget">
         <div class="widget-head">
           <span class="widget-title">RTD Resistance vs Temperature (Pt100)</span>
@@ -442,6 +462,7 @@ canvas{display:block;width:100%}
         </div>
       </div>
 
+      <!-- Alarm Log -->
       <div class="widget">
         <div class="widget-head">
           <span class="widget-title">Alarm Log</span>
@@ -459,6 +480,9 @@ canvas{display:block;width:100%}
 
 <!-- ══════════════ QUIZ SECTION ══════════════ -->
 <div id="sec-quiz" class="section">
+  <!-- <div class="page-title">Knowledge Check</div> -->
+  <!-- <div class="page-sub">RTD TEMPERATURE SENSOR — QUIZ</div> -->
+
   <div class="quiz-wrap">
     <div class="quiz-score-bar">
       <div>
@@ -479,6 +503,7 @@ canvas{display:block;width:100%}
 </div>
 
 <script>
+// ══════════════ GLOBALS ══════════════
 let running = false;
 let interval = null;
 let temp = 65;
@@ -491,6 +516,7 @@ const VS = 5;
 const R0 = 100;
 const ALPHA = 0.00385;
 
+// ── Tab switch ──
 function showTab(name) {
   document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
   document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
@@ -499,6 +525,7 @@ function showTab(name) {
   if(name==='simulation') drawRTDCurve();
 }
 
+// ── PLC Controls ──
 function plcRun() {
   running = true;
   document.getElementById('btnRun').disabled = true;
@@ -557,6 +584,7 @@ function updateDisplay() {
   const Rrtd = calcRrtd(T);
   const Vout = calcVout(T);
 
+  // RTD card
   const isFault = T < -200 || T > 850;
   const isAlarm = T >= +document.getElementById('spHi').value;
   const isWarn  = T >= +document.getElementById('spWarn').value;
@@ -579,19 +607,23 @@ function updateDisplay() {
   document.getElementById('sl1').value = Math.max(0,Math.min(200,T));
   document.getElementById('slv1').textContent = T.toFixed(1)+'°C';
 
+  // Vout panel
   document.getElementById('vc-temp').textContent = isFault ? 'FAULT' : T.toFixed(1)+' °C';
   document.getElementById('vc-rrtd').textContent = isFault ? '---' : Rrtd.toFixed(1)+' Ω';
   document.getElementById('vc-vout').textContent = isFault ? '---' : Vout.toFixed(3)+' V';
 
+  // Alarms
   if(isAlarm && running) addAlarm('red', `RTD-101 HIGH ALARM: ${T.toFixed(1)}°C ≥ ${document.getElementById('spHi').value}°C`);
   else if(isWarn && running) addAlarm('orange', `RTD-101 WARNING: ${T.toFixed(1)}°C ≥ ${document.getElementById('spWarn').value}°C`);
 
+  // Trend
   trendData.push(T);
   voutData.push(Vout);
   if(trendData.length>MAX_POINTS){trendData.shift();voutData.shift();}
   drawTrend();
 }
 
+// ── Trend Canvas ──
 function drawTrend() {
   const canvas = document.getElementById('trendCanvas');
   const ctx = canvas.getContext('2d');
@@ -600,6 +632,7 @@ function drawTrend() {
   ctx.clearRect(0,0,W,H);
   ctx.fillStyle='#f9fafb';ctx.fillRect(0,0,W,H);
 
+  // Grid
   ctx.strokeStyle='#e5e7eb';ctx.lineWidth=1;
   for(let i=0;i<=4;i++){
     const y=H-20-(H-30)*i/4;
@@ -610,7 +643,8 @@ function drawTrend() {
 
   if(trendData.length < 2) return;
 
-  ctx.strokeStyle='#dc3545';ctx.lineWidth=2;ctx.lineJoin='round';
+  // Temperature line
+  ctx.strokeStyle='#3b82f6';ctx.lineWidth=2;ctx.lineJoin='round';
   ctx.beginPath();
   trendData.forEach((v,i)=>{
     const x=40+(W-48)*i/(MAX_POINTS-1);
@@ -619,6 +653,7 @@ function drawTrend() {
   });
   ctx.stroke();
 
+  // Vout line (scaled)
   ctx.strokeStyle='#16a34a';ctx.lineWidth=1.5;ctx.setLineDash([4,3]);
   ctx.beginPath();
   voutData.forEach((v,i)=>{
@@ -629,10 +664,12 @@ function drawTrend() {
   ctx.stroke();
   ctx.setLineDash([]);
 
+  // Legend
   ctx.font='9px Share Tech Mono';
-  ctx.fillStyle='#dc3545';ctx.fillText('─ Temp (°C)',45,12);
+  ctx.fillStyle='#3b82f6';ctx.fillText('─ Temp (°C)',45,12);
   ctx.fillStyle='#16a34a';ctx.fillText('─ V_out×40 (V)',145,12);
 
+  // Alarm lines
   const hiSP = +document.getElementById('spHi').value;
   const warnSP = +document.getElementById('spWarn').value;
   ctx.lineWidth=1;ctx.setLineDash([5,3]);
@@ -643,6 +680,7 @@ function drawTrend() {
   ctx.setLineDash([]);
 }
 
+// ── RTD Curve Canvas ──
 function drawRTDCurve() {
   const canvas = document.getElementById('rtdCurveCanvas');
   if(!canvas) return;
@@ -656,6 +694,7 @@ function drawRTDCurve() {
   const toX=t=>40+(W-50)*(t-minT)/(maxT-minT);
   const toY=r=>H-20-(H-30)*(r-minR)/(maxR-minR);
 
+  // Grid
   ctx.strokeStyle='#e5e7eb';ctx.lineWidth=1;ctx.font='9px Share Tech Mono';ctx.fillStyle='#9ca3af';
   [-50,-25,0,25,50,75,100,125,150,175,200].forEach(t=>{
     const x=toX(t);
@@ -668,7 +707,8 @@ function drawRTDCurve() {
     ctx.fillText(r+'Ω',2,y+3);
   });
 
-  ctx.strokeStyle='#dc3545';ctx.lineWidth=2.5;ctx.lineJoin='round';
+  // Curve
+  ctx.strokeStyle='#3b82f6';ctx.lineWidth=2.5;ctx.lineJoin='round';
   ctx.beginPath();
   for(let t=minT;t<=maxT;t+=2){
     const r=calcRrtd(t);
@@ -677,20 +717,23 @@ function drawRTDCurve() {
   }
   ctx.stroke();
 
+  // Current temp dot
   if(temp>=-50 && temp<=200){
     const cx=toX(temp), cy=toY(calcRrtd(temp));
-    ctx.fillStyle='#fbbf24';
+    ctx.fillStyle='#ef4444';
     ctx.beginPath();ctx.arc(cx,cy,5,0,Math.PI*2);ctx.fill();
     ctx.fillStyle='#1c1f26';ctx.font='bold 10px Share Tech Mono';
     ctx.fillText(`${temp.toFixed(0)}°C → ${calcRrtd(temp).toFixed(1)}Ω`,cx+8,cy-5);
   }
 
+  // Axes labels
   ctx.fillStyle='#6b7280';ctx.font='10px Share Tech Mono';
   ctx.fillText('Temperature (°C)',W/2-40,H-1);
   ctx.save();ctx.translate(12,H/2);ctx.rotate(-Math.PI/2);
   ctx.fillText('Resistance (Ω)',0,0);ctx.restore();
 }
 
+// ── Mode ──
 function setMode(m) {
   mode = m;
   ['manual','ramp','sine','fault'].forEach(id=>{
@@ -707,6 +750,7 @@ function setMode(m) {
   document.getElementById('sl1').disabled = (m !== 'manual') && running;
 }
 
+// ── Alarm log ──
 const alarms = [];
 function addAlarm(c, msg) {
   const now=new Date();
@@ -724,7 +768,9 @@ function addAlarm(c, msg) {
   document.getElementById('almCount').textContent=cnt>0?`${cnt} ACTIVE`:'';
 }
 
+// Init: draw RTD curve on load
 setTimeout(drawRTDCurve, 200);
+// Also update vout display on load
 updateDisplayStatic();
 function updateDisplayStatic(){
   const Rrtd = calcRrtd(65);
@@ -734,6 +780,7 @@ function updateDisplayStatic(){
   document.getElementById('vc-vout').textContent = Vout.toFixed(3)+' V';
 }
 
+// ══════════════ QUIZ ══════════════
 const questions = [
   {
     q: "What does RTD stand for?",
@@ -807,11 +854,12 @@ function buildQuiz() {
 }
 
 function selectAnswer(qi, optIdx) {
-  if(answers[qi] !== null) return;
+  if(answers[qi] !== null) return; // already answered
   answers[qi] = optIdx;
   const correct = questions[qi].ans === optIdx;
   if(correct) score++;
 
+  // Style options
   for(let j=0;j<questions[qi].opts.length;j++){
     const el=document.getElementById(`opt${qi}_${j}`);
     const oi=document.getElementById(`oi${qi}_${j}`);
