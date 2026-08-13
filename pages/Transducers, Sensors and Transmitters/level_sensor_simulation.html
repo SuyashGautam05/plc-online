@@ -18,10 +18,12 @@
   --shadow: 0 2px 10px rgba(0,0,0,0.1);
   --green: #28a745;
   --red: #dc3545;
-  --blue: #007bff;
+  --blue: #dc3545;
   --yellow: #ffc107;
   --orange: #fd7e14;
-  --cyan: #17a2b8;
+  --cyan: #dc3545;
+  --navy: #173681;
+  --gold: #e1ac3d;
   --water-top: rgba(30,144,255,0.85);
   --water-mid: rgba(0,105,217,0.75);
   --water-bot: rgba(0,70,160,0.9);
@@ -37,28 +39,52 @@ body {
   overflow-x: hidden;
 }
 
-header {
-  background: linear-gradient(135deg, #1a3a5c 0%, #2c5f8a 100%);
-  color: white;
-  padding: 18px 30px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+/* ======= HEADER =======
+   Fully self-contained here - not relying on defination.css for
+   anything, so this header always renders correctly regardless of
+   that shared file's state. Matches Pressure_Sensor_Simulation.html. */
+header.site-header {
   position: sticky;
   top: 0;
   z-index: 100;
+  background: #173681;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+  padding: 0 24px;
+  width: 100%;
 }
-
-header h1 { font-size: 1.4rem; font-weight: 700; color: white; letter-spacing: 1px; }
-header .subtitle { font-size: 0.8rem; color: #aecde6; margin-top: 2px; }
+header.site-header .logo-container {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  max-width: 1400px;
+  margin: 0 auto;
+  height: 62px;
+}
+header.site-header .logo-container img {
+  height: 40px;
+  width: auto;
+  object-fit: contain;
+}
+header.site-header h1 {
+  flex: 1 1 auto;
+  min-width: 0;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+header.site-header .button-container { flex-shrink: 0; }
+header.site-header .back-button { display: none !important; }
 
 .status-badge {
   display: flex; align-items: center; gap: 8px;
-  background: rgb(195 189 189 / 30%);
-  padding: 6px 14px; border-radius: 20px; font-size: 0.85rem; color: rgb(0, 0, 0);    height: 36px;
-    margin-top: 8px;
-    margin-left: 430px;
+  background: rgba(255, 255, 255, 0.9);
+  padding: 6px 14px; border-radius: 20px; font-size: 0.85rem;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  margin-left: auto;
 }
 
 .status-dot {
@@ -72,27 +98,42 @@ header .subtitle { font-size: 0.8rem; color: #aecde6; margin-top: 2px; }
   50% { box-shadow: 0 0 0 6px rgba(40,167,69,0); }
 }
 
+/* ======= TABS =======
+   Gold bar with navy pill buttons - matches
+   Pressure_Sensor_Simulation.html. */
 .tabs {
-  display: flex; background: white;
+  display: flex;
+  align-items: center;
+  background: linear-gradient(135deg, #e1ac3d 0%, #c9922a 100%);
   border-bottom: 2px solid var(--border-color);
-  padding: 0 20px;  gap: 0;
+  padding: 12px 20px;
+  gap: 10px;
   box-shadow: var(--shadow);
-  width: 96%;
-  gap: 32px;
-  margin-left: 30px;
-  margin-top: 26px;
 }
 
 .tab-btn {
-  padding: 14px 22px; border: none; background: none;
-  font-family: Georgia, serif; font-size: 0.9rem;
-  color: var(--accent-color); cursor: pointer;
-  border-bottom: 3px solid transparent;
-  margin-bottom: -2px; transition: all 0.3s;
-  white-space: nowrap; font-weight: 600;
+  padding: 10px 22px;
+  border: none;
+  border-radius: 999px;
+  background: rgba(23, 54, 129, 0.55);
+  font-family: Georgia, serif;
+  font-size: 0.9rem;
+  color: #ffffff;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  white-space: nowrap;
+  font-weight: 700;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.12);
 }
-.tab-btn.active { color: var(--blue); border-bottom-color: var(--blue); }
-.tab-btn:hover:not(.active) { color: var(--text-color); background: var(--hover-color); }
+.tab-btn.active {
+  background: #173681;
+  box-shadow: 0 4px 14px rgba(23, 54, 129, 0.5);
+}
+.tab-btn:hover:not(.active) {
+  background: rgba(23, 54, 129, 0.8);
+  color: #ffffff;
+  transform: translateY(-1px);
+}
 
 .tab-content { display: none; padding: 24px; }
 .tab-content.active { display: block; }
@@ -103,7 +144,7 @@ header .subtitle { font-size: 0.8rem; color: #aecde6; margin-top: 2px; }
 }
 .card h2 {
   font-size: 1.2rem; margin-bottom: 16px; color: var(--text-color);
-  border-left: 4px solid var(--cyan); padding-left: 12px;
+  border-left: 4px solid var(--gold); padding-left: 12px;
 }
 .card h3 { font-size: 1rem; margin-bottom: 10px; color: var(--text-color); }
 .card p, .card li { font-size: 0.92rem; line-height: 1.7; color: var(--accent-color); margin-bottom: 8px; }
@@ -346,39 +387,39 @@ header .subtitle { font-size: 0.8rem; color: #aecde6; margin-top: 2px; }
 
 input[type="range"] {
   width: 100%; height: 8px; -webkit-appearance: none;
-  background: linear-gradient(to right, #0066cc 0%, #00aaff 50%, #17a2b8 100%);
+  background: linear-gradient(to right, #173681 0%, #e1ac3d 100%);
   border-radius: 4px; outline: none; cursor: pointer;
 }
 input[type="range"]::-webkit-slider-thumb {
   -webkit-appearance: none;
   width: 22px; height: 22px; border-radius: 50%;
-  background: white; border: 3px solid var(--cyan);
+  background: white; border: 3px solid var(--navy);
   cursor: pointer; box-shadow: 0 2px 6px rgba(0,0,0,0.3);
   transition: transform 0.2s;
 }
 input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.2); }
-.slider-val { text-align: center; font-size: 1rem; font-weight: 700; color: var(--cyan); margin-top: 6px; }
+.slider-val { text-align: center; font-size: 1rem; font-weight: 700; color: var(--navy); margin-top: 6px; }
 
 /* === BUTTONS === */
 .btn { padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; font-size: 0.9rem; font-family: Georgia, serif; font-weight: 700; transition: all 0.3s; }
 .btn-primary { background: var(--blue); color: white; }
-.btn-primary:hover { background: #0056b3; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(0,123,255,0.4); }
+.btn-primary:hover { background: #c82333; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(220,53,69,0.4); }
 .btn-success { background: var(--green); color: white; }
 .btn-success:hover { background: #218838; transform: translateY(-1px); }
 .btn-danger { background: var(--red); color: white; }
 .btn-danger:hover { background: #c82333; transform: translateY(-1px); }
 .btn-warning { background: var(--yellow); color: #333; }
 .btn-warning:hover { background: #e0a800; transform: translateY(-1px); }
-.btn-cyan { background: var(--cyan); color: white; }
-.btn-cyan:hover { background: #138496; transform: translateY(-1px); }
+.btn-cyan { background: var(--navy); color: white; }
+.btn-cyan:hover { background: #0e2461; transform: translateY(-1px); }
 .btn-group { display: flex; gap: 10px; flex-wrap: wrap; }
 
 /* === FORMULA BOX === */
 .formula-box {
-  background: #eef4ff; border: 1px solid #b8d0ff;
+  background: rgba(23, 54, 129, 0.05); border: 1px solid rgba(23, 54, 129, 0.18);
   border-radius: 10px; padding: 16px; margin-bottom: 12px;
 }
-.formula-title { font-size: 0.78rem; font-weight: 700; color: var(--cyan); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+.formula-title { font-size: 0.78rem; font-weight: 700; color: var(--gold); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
 .formula-math {
   font-family: 'Courier New', monospace; font-size: 0.92rem; color: #1a2a4a;
   background: white; padding: 10px; border-radius: 6px; border: 1px solid #dde; margin-bottom: 6px; word-break: break-word;
@@ -395,7 +436,7 @@ input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.2); }
 }
 .alarm-panel.show { display: flex; }
 .alarm-panel.critical { background: #f8d7da; border-color: var(--red); animation: flashBg2 0.5s infinite; }
-.alarm-panel.low { background: #d1ecf1; border-color: var(--cyan); animation: flashBg3 1.2s infinite; }
+.alarm-panel.low { background: #d1ecf1; border-color: var(--navy); animation: flashBg3 1.2s infinite; }
 .alarm-panel.low.show { display: flex; }
 
 @keyframes flashBg { 0%,100% { background: #fff3cd; } 50% { background: #ffeaa7; } }
@@ -419,7 +460,7 @@ input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.2); }
 .info-card {
   background: white; border-radius: 12px;
   box-shadow: var(--shadow); padding: 20px;
-  border-top: 4px solid var(--cyan);
+  border-top: 4px solid var(--navy);
 }
 .info-card h3 { font-size: 1rem; margin-bottom: 12px; color: var(--text-color); }
 .info-card p, .info-card li { font-size: 0.88rem; line-height: 1.7; color: var(--accent-color); }
@@ -436,16 +477,16 @@ input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.2); }
   border-radius: 8px; font-size: 0.95rem; font-family: monospace;
   color: var(--text-color); outline: none; transition: border-color 0.3s;
 }
-.input-group input:focus { border-color: var(--cyan); }
+.input-group input:focus { border-color: var(--navy); }
 
 /* === MCQ === */
 .mcq-container { max-width: 1000px; margin: 0 auto; }
 .mcq-question {
   background: white; border-radius: 12px; padding: 20px;
   margin-bottom: 20px; box-shadow: var(--shadow);
-  border-left: 4px solid var(--cyan);
+  border-left: 4px solid var(--navy);
 }
-.question-num { font-size: 0.75rem; color: var(--cyan); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+.question-num { font-size: 0.75rem; color: var(--gold); font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
 .question-text { font-size: 1rem; font-weight: 700; margin-bottom: 14px; color: var(--text-color); line-height: 1.5; }
 .options { display: flex; flex-direction: column; gap: 10px; }
 .option {
@@ -453,18 +494,18 @@ input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.2); }
   padding: 12px 16px; border: 2px solid var(--border-color);
   border-radius: 8px; cursor: pointer; transition: all 0.3s; background: white;
 }
-.option:hover { background: var(--hover-color); border-color: var(--cyan); }
+.option:hover { background: var(--hover-color); border-color: var(--navy); }
 .option.correct { background: #d4edda; border-color: var(--green); }
 .option.wrong { background: #f8d7da; border-color: var(--red); }
 .option input { cursor: pointer; }
 .option-label { font-size: 0.92rem; color: var(--text-color); cursor: pointer; }
 .check-btn {
   margin-top: 12px; padding: 8px 20px;
-  background: var(--cyan); color: white;
+  background: var(--navy); color: white;
   border: none; border-radius: 6px; cursor: pointer;
   font-size: 0.85rem; font-family: Georgia, serif; font-weight: 700; transition: all 0.3s;
 }
-.check-btn:hover { background: #138496; }
+.check-btn:hover { background: #0e2461; }
 .feedback {
   margin-top: 10px; padding: 10px 14px; border-radius: 6px;
   font-size: 0.88rem; display: none; line-height: 1.5;
@@ -473,12 +514,12 @@ input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.2); }
 .feedback.wrong { background: #f8d7da; color: #721c24; display: block; }
 
 .score-board {
-  background: linear-gradient(135deg, #17a2b8 0%, #0f6e7e 100%);
+  background: linear-gradient(135deg, #173681 0%, #0e2461 100%);
   color: white; border-radius: 12px; padding: 20px;
   text-align: center; margin-bottom: 24px;
 }
 .score-board h3 { font-size: 1rem; opacity: 0.9; }
-.score-val { font-size: 2.5rem; font-weight: 900; margin: 8px 0; }
+.score-val { font-size: 2.5rem; font-weight: 900; margin: 8px 0; color: var(--gold); }
 
 /* === SCENARIO === */
 .scenario-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(160px,1fr)); gap: 12px; margin-bottom: 20px; }
@@ -490,8 +531,8 @@ input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.2); }
   color: var(--text-color); line-height: 1.4;
 }
 .scenario-btn:hover {
-  background: var(--cyan); color: white; border-color: var(--cyan);
-  transform: translateY(-2px); box-shadow: 0 4px 12px rgba(23,162,184,0.35);
+  background: var(--navy); color: white; border-color: var(--navy);
+  transform: translateY(-2px); box-shadow: 0 4px 12px rgba(23,54,129,0.35);
 }
 
 /* === LOG TABLE === */
@@ -534,16 +575,16 @@ input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.2); }
 </head>
 <body>
 
-<header style="background: #f8f9fa;">
-  <div style="display:flex;align-items:center;gap:16px;">
-    <img style="height: 70px;margin-right: 184px;" src="../../assets/Scientech logo-2.png" alt="">
-    <h1 style="color: black;">Level Sensor Simulation</h1>
-  </div>
-  <div>
-     <a href="./Level_Transmitter.html" class="back-button">
-                    <i class="fas fa-arrow-left"></i><img style="height: 29px;" src="./left-arrow.png" alt=""> Back to Course
-                </a>
-  </div>
+<header class="site-header">
+    <div class="logo-container">
+        <img src="../../assets/Scientech logo-2.png" alt="Scientech Logo">
+        <h1>Level Sensor Simulation</h1>
+        <div class="button-container">
+            <a href="./Level_Transmitter.html" class="back-button">
+                <i class="fas fa-arrow-left"></i><img style="height: 29px;" src="./left-arrow.png" alt=""> Back to Course
+            </a>
+        </div>
+    </div>
 </header>
 
 <!-- TABS -->
@@ -619,10 +660,6 @@ input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.2); }
         </div>
 
         <div style="text-align:center;font-size:0.78rem;color:#888;">Capacitive Level Transmitter<br><small style="color:#aaa">Range: 0–250 mm | Output: 4–20 mA</small></div>
-
-        <!-- mA meter arc display -->
-        <!-- <canvas id="maCanvas" width="180" height="130"></canvas> -->
-        <!-- <div style="font-size:0.78rem;color:#888;text-align:center;">4–20 mA Signal</div> -->
       </div>
 
       <!-- Digital PLC display -->
@@ -667,7 +704,7 @@ input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.2); }
             <div class="tank-assembly">
 
               <div style="text-align:center;margin-bottom:6px;">
-                <div style="display:inline-block;background:#2c5f8a;color:white;padding:4px 12px;border-radius:4px;font-size:0.7rem;font-family:monospace;font-weight:700;">CAPACITIVE TRANSMITTER</div>
+                <div style="display:inline-block;background:#173681;color:white;padding:4px 12px;border-radius:4px;font-size:0.7rem;font-family:monospace;font-weight:700;">CAPACITIVE TRANSMITTER</div>
               </div>
 
               <!-- Probe -->
@@ -737,15 +774,15 @@ input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.2); }
             <div style="margin-bottom:14px;">
               <div style="font-size:0.78rem;color:#888;margin-bottom:4px;">Fill Level</div>
               <div style="background:#e9ecef;border-radius:10px;overflow:hidden;height:18px;position:relative;">
-                <div id="fillBar" style="height:100%;background:linear-gradient(to right,#0066cc,#17a2b8);border-radius:10px;transition:width 0.5s;width:0%;"></div>
+                <div id="fillBar" style="height:100%;background:linear-gradient(to right,#173681,#e1ac3d);border-radius:10px;transition:width 0.5s;width:0%;"></div>
                 <div id="fillBarPct" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:0.72rem;font-weight:700;color:white;mix-blend-mode:difference;">0%</div>
               </div>
             </div>
 
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;">
-              <div style="background:#eef4ff;border-radius:8px;padding:10px;text-align:center;">
+              <div style="background:rgba(23,54,129,0.06);border-radius:8px;padding:10px;text-align:center;">
                 <div style="font-size:0.68rem;color:#888;margin-bottom:3px;">Signal Span</div>
-                <div style="font-size:0.95rem;font-weight:700;color:var(--cyan);">4 – 20 mA</div>
+                <div style="font-size:0.95rem;font-weight:700;color:var(--navy);">4 – 20 mA</div>
               </div>
               <div style="background:#e8f8f5;border-radius:8px;padding:10px;text-align:center;">
                 <div style="font-size:0.68rem;color:#888;margin-bottom:3px;">Level Range</div>
@@ -877,7 +914,7 @@ input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.2); }
 <div class="tab-content" id="tab-theory">
   <div class="theory-grid">
 
-    <div class="info-card" style="border-top-color:#17a2b8;">
+    <div class="info-card" style="border-top-color:#173681;">
       <h3>What is a Capacitive Level Sensor?</h3>
       <p>A capacitive level sensor measures the dielectric change between two conductive plates (electrodes) as liquid rises between them. Since water has a dielectric constant (ε ≈ 80) much higher than air (ε ≈ 1), the capacitance changes linearly with the liquid level.</p>
       <p>The transmitter converts this capacitance change into a standardized <strong>4–20 mA</strong> signal that the PLC can process and display.</p>
@@ -900,7 +937,7 @@ input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.2); }
       <p>As water rises between the probe and vessel wall, ε increases dramatically (from ~1 to ~80), causing <strong>capacitance to rise proportionally</strong>. The transmitter electronics convert this change to 4–20 mA.</p>
     </div>
 
-    <div class="info-card" style="border-top-color:#fd7e14;">
+    <div class="info-card" style="border-top-color:#e1ac3d;">
       <h3>Level Measurement Formulas</h3>
       <div style="background:#f8f9fa;border-radius:8px;padding:12px;margin-top:8px;">
         <div style="font-family:monospace;font-size:0.9rem;line-height:2;">
@@ -925,7 +962,7 @@ input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.2); }
       </ul>
     </div>
 
-    <div class="info-card" style="border-top-color:#6f42c1;">
+    <div class="info-card" style="border-top-color:#173681;">
       <h3>Hydrostatic Pressure — P = ρgh</h3>
       <p>Every column of liquid exerts pressure at its base due to gravity:</p>
       <ul>
@@ -976,7 +1013,7 @@ input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.2); }
 
       <!-- mA → Level -->
       <div class="card" style="margin:0;border:2px solid #b8d0ff;">
-        <h3 style="color:var(--cyan);margin-bottom:16px;">🔵 Current → Level</h3>
+        <h3 style="color:var(--navy);margin-bottom:16px;">🔵 Current → Level</h3>
         <div class="input-group" style="margin-bottom:14px;">
           <label>Input Current (mA) — range: 4 to 20</label>
           <input type="number" id="calc-ma-in" min="4" max="20" value="4" step="0.01" oninput="calcFromMA()" placeholder="Enter 4–20 mA">
@@ -987,9 +1024,9 @@ input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.2); }
           <div class="formula-result" id="calc-ma-result">L = (4−4)×15.625 = 0.00 mm</div>
         </div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:12px;">
-          <div style="text-align:center;background:#eef4ff;padding:10px;border-radius:8px;">
+          <div style="text-align:center;background:rgba(23,54,129,0.06);padding:10px;border-radius:8px;">
             <div style="font-size:0.68rem;color:#888;margin-bottom:3px;">Level (mm)</div>
-            <div style="font-size:1.1rem;font-weight:700;color:var(--cyan);" id="o-mm-ma">0.00 mm</div>
+            <div style="font-size:1.1rem;font-weight:700;color:var(--navy);" id="o-mm-ma">0.00 mm</div>
           </div>
           <div style="text-align:center;background:#f0fff4;padding:10px;border-radius:8px;">
             <div style="font-size:0.68rem;color:#888;margin-bottom:3px;">Level (m)</div>
@@ -1023,9 +1060,9 @@ input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.2); }
             <div style="font-size:0.68rem;color:#888;margin-bottom:3px;">Current (mA)</div>
             <div style="font-size:1.1rem;font-weight:700;color:var(--green);" id="o-ma-mm">4.00 mA</div>
           </div>
-          <div style="text-align:center;background:#eef4ff;padding:10px;border-radius:8px;">
+          <div style="text-align:center;background:rgba(23,54,129,0.06);padding:10px;border-radius:8px;">
             <div style="font-size:0.68rem;color:#888;margin-bottom:3px;">Hydrostatic (Pa)</div>
-            <div style="font-size:1.1rem;font-weight:700;color:var(--cyan);" id="o-pa-mm">0.00 Pa</div>
+            <div style="font-size:1.1rem;font-weight:700;color:var(--navy);" id="o-pa-mm">0.00 Pa</div>
           </div>
           <div style="text-align:center;background:#fff8e7;padding:10px;border-radius:8px;">
             <div style="font-size:0.68rem;color:#888;margin-bottom:3px;">Level (m)</div>
@@ -1173,33 +1210,25 @@ function drawMAGauge(mA) {
   if (!canvas) return;
   const ctx = canvas.getContext('2d');
   const W = canvas.width, H = canvas.height;
-  // Centre low enough that the bottom gap is visible, high enough top fits
   const cx = W / 2, cy = H - 15;
   const R = 68;
   ctx.clearRect(0, 0, W, H);
 
-  // Standard speedometer: start bottom-left (225°), sweep 270° clockwise to bottom-right (135° = -45°)
-  // In canvas: 0° = right, clockwise positive
-  // 225° = Math.PI * 1.25  →  bottom-left  ✅
-  // 270° span clockwise    →  ends at -45° = Math.PI * 1.25 + Math.PI * 1.5 = Math.PI * 2.75
-  const startA = Math.PI * 1.25;  // 225° — bottom-left (4 mA)
-  const span   = Math.PI * 1.5;   // 270° clockwise sweep
-  const endA   = -Math.PI * 0.25; // -45° = 315° — bottom-right (20 mA)
+  const startA = Math.PI * 1.25;
+  const span   = Math.PI * 1.5;
+  const endA   = -Math.PI * 0.25;
 
-  // Background track
   ctx.beginPath();
   ctx.arc(cx, cy, R, startA, endA, false);
   ctx.strokeStyle = '#2a2a2a';
   ctx.lineWidth = 14;
   ctx.stroke();
 
-  // Coloured fill arc
   const frac = Math.max(0, Math.min(1, (mA - 4) / 16));
   const fillEnd = startA + frac * span;
   const grad = ctx.createLinearGradient(cx - R, cy, cx + R, cy);
-  grad.addColorStop(0, '#0066cc');
-  grad.addColorStop(0.5, '#00aaff');
-  grad.addColorStop(1, '#17d4e8');
+  grad.addColorStop(0, '#173681');
+  grad.addColorStop(1, '#e1ac3d');
   ctx.beginPath();
   ctx.arc(cx, cy, R, startA, fillEnd, false);
   ctx.strokeStyle = grad;
@@ -1207,7 +1236,6 @@ function drawMAGauge(mA) {
   ctx.lineCap = 'round';
   ctx.stroke();
 
-  // Tick marks
   for (let i = 0; i <= 8; i++) {
     const a = startA + (i / 8) * span;
     ctx.beginPath();
@@ -1218,7 +1246,6 @@ function drawMAGauge(mA) {
     ctx.stroke();
   }
 
-  // Labels
   const labels = ['4mA', '8', '12', '16', '20mA'];
   ctx.fillStyle = 'rgba(255,255,255,0.7)';
   ctx.font = '9px monospace';
@@ -1230,13 +1257,11 @@ function drawMAGauge(mA) {
     ctx.fillText(labels[i], cx + Math.cos(a) * lr, cy + Math.sin(a) * lr);
   }
 
-  // Centre value text
   ctx.fillStyle = '#00d4ff';
   ctx.font = 'bold 13px monospace';
   ctx.textAlign = 'center';
   ctx.fillText(mA.toFixed(2) + ' mA', cx, cy - 20);
 
-  // Needle
   const needleA = startA + frac * span;
   ctx.save();
   ctx.translate(cx, cy);
@@ -1250,16 +1275,12 @@ function drawMAGauge(mA) {
   ctx.fill();
   ctx.restore();
 
-  // Centre dot
   ctx.beginPath();
   ctx.arc(cx, cy, 5, 0, Math.PI * 2);
   ctx.fillStyle = '#555';
   ctx.fill();
 }
 
-// =====================================================
-// HELPER: safe getElementById
-// =====================================================
 function safeSet(id, prop, val) {
   const el = document.getElementById(id);
   if (!el) return;
@@ -1269,9 +1290,6 @@ function safeSet(id, prop, val) {
   else el.style[prop] = val;
 }
 
-// =====================================================
-// UPDATE SIMULATION
-// =====================================================
 function updateSimulation(val) {
   currentLevel = parseFloat(val);
 
@@ -1286,10 +1304,8 @@ function updateSimulation(val) {
 
   drawMAGauge(mA);
 
-  // Vertical bar gauge
   safeSet('gaugeBar', 'height', pct + '%');
 
-  // Determine status
   let statusText, statusClass;
   if (currentLevel >= spHH) {
     statusText = 'OVERFLOW!'; statusClass = 'display-value danger';
@@ -1307,7 +1323,6 @@ function updateSimulation(val) {
     : currentLevel >= spH || (currentLevel < spL && currentLevel > 0) ? 'display-value warning'
     : 'display-value normal';
 
-  // Digital display updates (null-safe)
   const dispMm = document.getElementById('disp-mm');
   const dispMa = document.getElementById('disp-ma');
   const statusEl = document.getElementById('disp-status');
@@ -1319,7 +1334,6 @@ function updateSimulation(val) {
   safeSet('disp-pct', 'textContent', pct.toFixed(2) + '%');
   if (statusEl) { statusEl.textContent = statusText; statusEl.className = statusClass; }
 
-  // *** FIX 1: Null-safe system status dot ***
   const statusDot = document.getElementById('sysStatusDot');
   const statusTextEl = document.getElementById('sysStatusText');
   if (statusDot && statusTextEl) {
@@ -1327,7 +1341,7 @@ function updateSimulation(val) {
       statusDot.style.background = '#dc3545';
       statusTextEl.textContent = 'OVERFLOW ALARM';
     } else if (currentLevel >= spH || (currentLevel < spL && currentLevel > 0)) {
-      statusDot.style.background = '#ffc107';
+      statusDot.style.background = '#e1ac3d';
       statusTextEl.textContent = 'Alarm Active';
     } else {
       statusDot.style.background = '#28a745';
@@ -1335,7 +1349,6 @@ function updateSimulation(val) {
     }
   }
 
-  // Alarms
   const alarmLow = document.getElementById('alarmLow');
   const alarmHigh = document.getElementById('alarmHigh');
   const alarmCritical = document.getElementById('alarmCritical');
@@ -1343,7 +1356,6 @@ function updateSimulation(val) {
   if (alarmHigh) alarmHigh.className = 'alarm-panel' + (currentLevel >= spH && currentLevel < spHH ? ' show' : '');
   if (alarmCritical) alarmCritical.className = 'alarm-panel critical' + (currentLevel >= spHH ? ' show' : '');
 
-  // Water fill animation
   const waterFill = document.getElementById('waterFill');
   const levelLine = document.getElementById('levelLine');
   const fillBar = document.getElementById('fillBar');
@@ -1363,14 +1375,12 @@ function updateSimulation(val) {
   if (fillBar) fillBar.style.width = pct + '%';
   if (fillBarPct) fillBarPct.textContent = pct.toFixed(1) + '%';
 
-  // Hydrostatic arrow
   const hydroBar = document.getElementById('hydroBar');
   const hydroLabel = document.getElementById('hydroLabel');
   const hydroH = Math.min(120, (currentLevel / 250) * 120);
   if (hydroBar) hydroBar.style.height = hydroH + 'px';
   if (hydroLabel) hydroLabel.textContent = 'P=' + Pa.toFixed(0) + 'Pa';
 
-  // Capacitor dielectric visualization
   const waterFrac = currentLevel / 250;
   const epsilonEff = 1 + waterFrac * 79;
   safeSet('epsilonVal', 'textContent', epsilonEff.toFixed(0));
@@ -1381,10 +1391,8 @@ function updateSimulation(val) {
     diBlock.innerHTML = `<div>ε≈${epsilonEff.toFixed(0)}<br>${waterFrac > 0.5 ? 'Water' : waterFrac > 0.1 ? 'Mix' : 'Air'}</div>`;
   }
 
-  // Update particles
   updateParticles(currentLevel);
 
-  // Live formulas
   safeSet('fwd-result', 'textContent', `L = (${mA.toFixed(3)}−4)×15.625 = ${currentLevel.toFixed(2)} mm`);
   safeSet('rev-result', 'textContent', `mA = 4+(${currentLevel.toFixed(1)}/250)×16 = ${mA.toFixed(3)} mA`);
   safeSet('hydro-result', 'textContent', `P = 1000×9.81×${m.toFixed(4)} = ${Pa.toFixed(2)} Pa`);
@@ -1393,9 +1401,6 @@ function updateSimulation(val) {
   logReading(currentLevel, mA, m, Pa, pct);
 }
 
-// =====================================================
-// PARTICLES
-// =====================================================
 function updateParticles(level) {
   const layer = document.getElementById('particlesLayer');
   if (!layer) return;
@@ -1418,9 +1423,6 @@ function updateParticles(level) {
   }
 }
 
-// =====================================================
-// LOG
-// =====================================================
 let lastLogTime = 0;
 function logReading(mm, mA, m, Pa, pct) {
   const now = Date.now();
@@ -1464,9 +1466,6 @@ function exportLog() {
   URL.revokeObjectURL(url);
 }
 
-// =====================================================
-// AUTO FILL / DRAIN
-// =====================================================
 function stopAuto() { if (autoInterval) { clearInterval(autoInterval); autoInterval = null; } }
 
 function startFill() {
@@ -1503,9 +1502,6 @@ function updateSetpoints() {
   updateSimulation(currentLevel);
 }
 
-// =====================================================
-// SCENARIOS
-// =====================================================
 const scenarios = {
   fill: {
     title: '🚿 Tank Filling',
@@ -1610,7 +1606,6 @@ const scenarios = {
   }
 };
 
-// *** FIX 2: Find Scenarios tab button safely by onclick attribute ***
 function runScenario(key) {
   stopAuto();
   const sc = scenarios[key];
@@ -1641,7 +1636,6 @@ function runScenario(key) {
     }
   });
 
-  // *** FIX 2: Find the scenarios tab button safely by checking onclick attribute ***
   const allBtns = document.querySelectorAll('.tab-btn');
   let scenBtn = null;
   allBtns.forEach(b => {
@@ -1650,9 +1644,6 @@ function runScenario(key) {
   showTab('scenarios', scenBtn);
 }
 
-// =====================================================
-// CALCULATOR
-// =====================================================
 function calcFromMA() {
   const mA = parseFloat(document.getElementById('calc-ma-in').value) || 4;
   const mm = Math.max(0, (mA - 4) * 15.625);
@@ -1703,9 +1694,6 @@ function buildCalcTable() {
   }).join('');
 }
 
-// =====================================================
-// MCQ
-// =====================================================
 const questions = [
   {
     q: "A capacitive level transmitter outputs 12 mA for a 0–250 mm range. What is the water level?",
@@ -1855,9 +1843,6 @@ function showAllAnswers() {
   updateScore();
 }
 
-// =====================================================
-// INIT
-// =====================================================
 window.onload = () => {
   drawMAGauge(4);
   updateSimulation(0);
