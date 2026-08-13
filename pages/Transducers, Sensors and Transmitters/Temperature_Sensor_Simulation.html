@@ -25,12 +25,12 @@
 body{font-family:var(--sans);background:var(--bg);color:var(--text);min-height:100vh;font-size:14px}
 
 /* ── TOP NAV TABS ── */
-.topbar{background:var(--text);height:50px;display:flex;align-items:center;padding:0 20px;gap:16px;position:sticky;top:0;z-index:200;box-shadow:0 2px 8px rgba(0,0,0,.2)}
+.topbar{background:#e1ac3d;height:50px;display:flex;align-items:center;padding:0 20px;gap:16px;position:sticky;top:0;z-index:200;box-shadow:0 2px 8px rgba(0,0,0,.2)}
 .logo{font-family:var(--mono);font-size:16px;color:#fff;letter-spacing:2px}.logo span{color:#60a5fa}
 .tabs{display:flex;gap:454px;margin-left:28px}
-.tab-btn{padding:8px 20px;border-radius:6px;border:none;font-family:var(--sans);font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;color:#9ca3af;background:transparent;letter-spacing:.3px}
-.tab-btn:hover{color:#fff;background:rgba(255,255,255,.1)}
-.tab-btn.active{color:#fff;background:var(--blue);box-shadow:0 2px 8px rgba(37,99,235,.4)}
+.tab-btn{padding:8px 20px;border-radius:6px;border:none;font-family:var(--sans);font-size:13px;font-weight:600;cursor:pointer;transition:all .2s;color:#ffffff;background:#173681;letter-spacing:.3px}
+.tab-btn:hover{color:#fff;background:#0f3ba5}
+.tab-btn.active{color:#fff;background:#0f3ba5;box-shadow:0 2px 8px rgba(37,99,235,.4)}
 
 /* ── SECTIONS ── */
 .section{display:none;padding:24px;max-width:1362px;margin:0 auto}
@@ -207,9 +207,9 @@ header.site-header .header-title{
 <div class="topbar">
   <!-- <div class="logo"><span>RTD Temperature Sensor</span></div> -->
   <div class="tabs">
-    <button class="tab-btn active" onclick="showTab('theory')">📖 Theory</button>
-    <button class="tab-btn" onclick="showTab('simulation')">⚙️ Simulation</button>
-    <button class="tab-btn" onclick="showTab('quiz')">🧠 Quiz</button>
+    <button class="tab-btn active" onclick="showTab('theory')">Theory</button>
+    <button class="tab-btn" onclick="showTab('simulation')">Simulation</button>
+    <button class="tab-btn" onclick="showTab('quiz')">Quiz</button>
   </div>
 </div>
 
