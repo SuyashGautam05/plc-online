@@ -71,9 +71,10 @@
 
   .card-title {
     font-size: clamp(0.72rem,1.1vw,0.88rem);
-    font-weight:700; color:var(--accent-color);
-    letter-spacing:1px; text-transform:uppercase;
-    border-bottom:1px solid var(--border-color);
+    font-weight:700; color:#173681;
+    letter-spacing:1px; 
+    /* text-transform:uppercase; */
+    border-bottom:1px solid #e1ac3d;
     padding-bottom:7px; margin-bottom:11px;
   }
 
@@ -116,7 +117,7 @@
     transition:border-left-width .4s, border-left-color .4s; z-index:1;
   }
    /* .det-arc.on { border-left:76px solid rgba(108,117,125,.14); } */
-  .det-arc.on { border-left:76px solid var(--gold-soft); }
+  .det-arc.on { border-left:76px solid #e1ac3d; }
   .moving-obj {
     position:absolute; top:50%; transform:translateY(-50%);
     width:44px; height:44px;
@@ -164,8 +165,8 @@
   .theory-section::-webkit-scrollbar { width:6px; }
   .theory-section::-webkit-scrollbar-track { background:var(--secondary-color); border-radius:10px; }
   .theory-section::-webkit-scrollbar-thumb { background:var(--accent-color); border-radius:10px; }
-  .theory-section h2 { font-size:clamp(1rem,1.8vw,1.25rem); color:var(--text-color); margin-bottom:clamp(9px,1.4vw,16px); border-bottom:2px solid var(--secondary-color); padding-bottom:clamp(7px,1vw,12px); }
-  .theory-section h3 { font-size:clamp(.86rem,1.3vw,.98rem); color:var(--text-color); margin-top:clamp(11px,1.6vw,16px); margin-bottom:clamp(5px,.9vw,8px); }
+  .theory-section h2 { font-size:clamp(1rem,1.8vw,1.25rem); color:#173681; margin-bottom:clamp(9px,1.4vw,16px); border-bottom:2px solid #e1ac3d; padding-bottom:clamp(7px,1vw,12px); }
+  .theory-section h3 { font-size:clamp(.86rem,1.3vw,.98rem); color:#173681; margin-top:clamp(11px,1.6vw,16px); margin-bottom:clamp(5px,.9vw,8px);    border-bottom: 2px solid #e1ac3d; }
   .theory-section p  { font-size:clamp(.72rem,1vw,.85rem); color:var(--text-color); margin-bottom:clamp(9px,1.4vw,13px); text-align:justify; line-height:1.7; }
 
   /* Indicator status */
@@ -183,8 +184,8 @@
     font-size:1.25rem; transition:all .3s; flex-shrink:0; opacity:.32;
   }
   .big-bulb.on { background:var(--gold-soft); border-color:var(--gold); box-shadow:0 0 10px rgba(225,172,61,.4); opacity:1; }
-  .s-title { font-size:.82rem; color:var(--text-color); font-weight:bold; margin-bottom:2px; }
-  .s-desc  { font-size:.7rem; color:var(--accent-color); line-height:1.4; }
+  .s-title { font-size:.82rem; color:#173681; font-weight:bold; margin-bottom:2px; }
+  .s-desc  { font-size:.7rem; color:#173681; line-height:1.4; }
 
   /* ============================================================
      DIAGRAM — matches hand-drawn image exactly
@@ -197,13 +198,13 @@
     overflow:hidden;
   }
   .diagram-wrap.active { background:var(--gold-soft); border-color:var(--gold); box-shadow:0 0 0 1px var(--gold-soft), var(--shadow); }
-  .diagram-label { font-size:.65rem; color:var(--accent-color); letter-spacing:1px; text-transform:uppercase; margin-bottom:8px; font-family:'Poppins', sans-serif; }
+  .diagram-label { font-size:.65rem; color:#173681; letter-spacing:1px; text-transform:uppercase; margin-bottom:8px; font-family:'Poppins', sans-serif; }
 
   /* The big combined SVG diagram */
   .diag-svg { width:100%; height:auto; display:block; }
 
   /* SVG element colour classes — default = muted, active = text-color */
-  .dr  { stroke:var(--border-color); fill:none; }          /* dim rail/wire */
+  .dr  { stroke:#173681; fill:none; }          /* dim rail/wire */
   .dr.a{ stroke:var(--gold);   fill:none; }          /* active */
   .df  { fill:none; }
   .df.a{ fill:var(--gold-soft); }
