@@ -89,7 +89,7 @@
         background: #e1ac3d;
         border-bottom: 2px solid var(--border-color);
         padding: 12px 20px;
-        gap: 65px;
+        gap: 130px;
         box-shadow: var(--shadow);
         /* margin-top: -36px; */
       }
@@ -209,7 +209,8 @@
       .gauge-label {
         text-align: center;
         font-size: 0.85rem;
-        color: var(--accent-color);
+        /* color: var(--accent-color); */
+        color: #173681;
         font-weight: 600;
       }
 
@@ -503,7 +504,8 @@
       /* ======= FORMULA PANEL ======= */
       .formula-box {
         background: #f0f4ff;
-        border: 1px solid #c5d5ff;
+        /* border: 1px solid #c5d5ff; */
+        border: 1px solid #173681;
         border-radius: 10px;
         padding: 16px;
         margin-bottom: 12px;
@@ -512,8 +514,9 @@
       .formula-title {
         font-size: 0.8rem;
         font-weight: 700;
-        color: var(--blue);
-        text-transform: uppercase;
+        /* color: var(--blue); */
+        color: #e1ac3d;
+        /* text-transform: uppercase; */
         letter-spacing: 0.5px;
         margin-bottom: 8px;
       }
@@ -993,10 +996,10 @@
       </button>
       <button class="tab-btn" onclick="showTab('mcq')">Quiz</button>
       <button class="tab-btn" onclick="showTab('datalog')">Data Log</button>
-      <div class="status-badge">
+      <!-- <div class="status-badge">
           <div class="status-dot" id="sysStatusDot"></div>
           <span style="color: #173681;font-size: 15px;font-weight:700;" id="sysStatusText">System Online</span>
-      </div>
+      </div> -->
     </div>
 
     <!-- ===========================
@@ -1030,7 +1033,7 @@
           <div class="gauge-wrapper">
             <canvas id="gaugeCanvas" width="260" height="260"></canvas>
             <div class="gauge-label">
-              Bourdon Tube Pressure Gauge<br /><small style="color: #aaa"
+              Bourdon Tube Pressure Gauge<br /><small style="color: #e1ac3d"
                 >Range: 0 – 150 psi</small
               >
             </div>
@@ -1224,7 +1227,7 @@
               <div style="flex: 1; min-width: 180px">
                 <div style="margin-bottom: 12px">
                   <div
-                    style="font-size: 0.78rem; color: #888; margin-bottom: 4px"
+                    style="font-size: 0.78rem;font-weight: 600; color: #173681; margin-bottom: 4px"
                   >
                     Fill Pressure
                   </div>
@@ -1276,7 +1279,7 @@
                       text-align: center;
                     "
                   >
-                    <div style="font-size: 0.7rem; color: #888">
+                    <div style="font-size: 0.7rem; color: #173681">
                       Signal Range
                     </div>
                     <div
@@ -1297,7 +1300,7 @@
                       text-align: center;
                     "
                   >
-                    <div style="font-size: 0.7rem; color: #888">
+                    <div style="font-size: 0.7rem; color: #173681">
                       Press. Range
                     </div>
                     <div
