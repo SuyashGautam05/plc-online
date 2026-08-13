@@ -11,11 +11,17 @@
   :root {
     --primary-color: #f8f9fa;
     --secondary-color: #e9ecef;
-    --text-color: #343a40;
+    --text-color: #262a30;
     --accent-color: #6c757d;
-    --border-color: #dee2e6;
+    --border-color: #e4e7eb;
     --hover-color: #f1f3f5;
     --shadow: 0 2px 10px rgba(0,0,0,0.1);
+    --navy: #173681;
+    --gold: #e1ac3d;
+    --gold-soft: rgba(225, 172, 61, 0.16);
+    --white: #ffffff;
+    --red: #dc3545;
+    --red-soft: rgba(220, 53, 69, 0.14);
   }
 
   * { margin:0; padding:0; box-sizing:border-box; }
@@ -29,16 +35,16 @@
     overflow-x: hidden;
   }
 
-  header {
-    text-align: center;
-    padding: clamp(8px,1vw,20px) 0;
-    border-bottom: 1px solid var(--border-color);
-    margin-bottom: clamp(15px,2vw,28px);
-    background-color: var(--primary-color);
-    box-shadow: var(--shadow);
-  }
-  header h1 { font-size: clamp(1rem,2.5vw,1.5rem); font-weight:700; color:var(--text-color); }
-  header p  { font-size: clamp(0.72rem,1.4vw,0.9rem); color:var(--accent-color); margin-top:4px; }
+  /* The shared defination.css header is currently broken in two spots
+     (header has width:116% causing horizontal overflow, and
+     .logo-container has gap:321px pushing the title off-screen).
+     Rather than edit that shared file, this page overrides just
+     those two properties locally so the header renders correctly
+     here regardless. Everything else about the header (navy
+     background, logo sizing, title styling) comes from
+     defination.css untouched. */
+  header { width: auto !important; }
+  .logo-container { gap: 11px !important; }
 
   .content-wrapper {
     display: grid;
@@ -75,8 +81,8 @@
   }
   .status-item { display:flex; align-items:center; gap:6px; font-size:clamp(0.68rem,1vw,0.8rem); color:var(--text-color); }
   .dot { width:11px; height:11px; border-radius:50%; background:var(--border-color); border:1px solid var(--accent-color); transition:all .3s; }
-  .dot.power   { background:var(--text-color); }
-  .dot.on      { background:var(--text-color); box-shadow:0 0 6px rgba(52,58,64,.4); }
+  .dot.power   { background:var(--gold); }
+  .dot.on      { background:var(--gold); box-shadow:0 0 6px rgba(225,172,61,.5); }
   .dot.blink   { background:var(--accent-color); animation:blink .8s infinite; }
   @keyframes blink { 0%,100%{opacity:1} 50%{opacity:.25} }
 
@@ -105,7 +111,7 @@
     transition:border-left-width .4s, border-left-color .4s; z-index:1;
   }
    /* .det-arc.on { border-left:76px solid rgba(108,117,125,.14); } */
-  .det-arc.on { border-left:76px solid #6c757d; }
+  .det-arc.on { border-left:76px solid var(--gold-soft); }
   .moving-obj {
     position:absolute; top:50%; transform:translateY(-50%);
     width:44px; height:44px;
@@ -115,7 +121,7 @@
     background:var(--secondary-color); border:2px solid var(--accent-color); border-radius:5px;
   }
   .moving-obj.non-metal { border-radius:50%; background:var(--hover-color); }
-  .moving-obj.detected  { border-color:var(--text-color); box-shadow:0 0 10px rgba(52,58,64,.25); }
+  .moving-obj.detected  { border-color:var(--gold); box-shadow:0 0 10px rgba(225,172,61,.45); }
   .track-hints { display:flex; justify-content:space-between; font-size:.81rem; color:var(--accent-color); margin-top:4px; font-weight: bold; }
 
   /* Controls */
@@ -127,19 +133,23 @@
     font-family:Georgia,serif; transition:all .2s;
   }
   .obj-btn:hover { background:var(--hover-color); border-color:var(--accent-color); }
-  .obj-btn.active { border-color:var(--text-color); color:var(--text-color); background:var(--secondary-color); font-weight:700; }
+  .obj-btn.active { border-color:var(--red); color:var(--red); background:var(--red-soft); font-weight:700; }
   .ctrl-btn {
     padding:5px 13px; border:1px solid var(--border-color); border-radius:6px;
     cursor:pointer; font-size:.75rem; font-family:Georgia,serif; font-weight:600;
     background:var(--secondary-color); color:var(--text-color); transition:all .2s;
   }
   .ctrl-btn:hover { background:var(--hover-color); transform:translateY(-1px); box-shadow:var(--shadow); }
-  .ctrl-btn.active-btn { background:var(--text-color); color:var(--primary-color); border-color:var(--text-color); }
+  .ctrl-btn.active-btn { background:var(--red); color:var(--white); border-color:var(--red); }
   .speed-row { display:flex; align-items:center; gap:8px; font-size:.72rem; color:var(--accent-color); margin-top:7px; font-weight: bold; }
   .speed-row input[type=range] { max-width:110px; accent-color:var(--accent-color); }
 
   /* ===== RIGHT THEORY PANEL ===== */
-  .image-section { position:sticky; top:18px; height:fit-content; }
+  /* defination.css hides .image-section site-wide with !important
+     (used elsewhere for a simple topic illustration image) - this
+     page reuses that class name for the entire right-side theory
+     panel, which needs to stay visible. */
+  .image-section { position:sticky; top:18px; height:fit-content; display:block !important; }
   .theory-section {
     background:white; border-radius:clamp(8px,1.5vw,18px);
     box-shadow:var(--shadow); padding:clamp(14px,2vw,26px);
@@ -159,14 +169,14 @@
     display:flex; align-items:center; gap:11px;
     margin-bottom:13px; transition:all .3s;
   }
-  .ind-box.active { background:var(--hover-color); border-color:var(--accent-color); box-shadow:var(--shadow); }
+  .ind-box.active { background:var(--gold-soft); border-color:var(--gold); box-shadow:0 0 0 1px var(--gold-soft), var(--shadow); }
   .big-bulb {
     width:42px; height:42px; border-radius:50%;
     background:var(--border-color); border:2px solid var(--accent-color);
     display:flex; align-items:center; justify-content:center;
     font-size:1.25rem; transition:all .3s; flex-shrink:0; opacity:.32;
   }
-  .big-bulb.on { background:var(--secondary-color); border-color:var(--text-color); box-shadow:0 0 10px rgba(52,58,64,.2); opacity:1; }
+  .big-bulb.on { background:var(--gold-soft); border-color:var(--gold); box-shadow:0 0 10px rgba(225,172,61,.4); opacity:1; }
   .s-title { font-size:.82rem; color:var(--text-color); font-weight:bold; margin-bottom:2px; }
   .s-desc  { font-size:.7rem; color:var(--accent-color); line-height:1.4; }
 
@@ -180,7 +190,7 @@
     border-radius:10px; padding:12px; margin-bottom:13px; transition:all .3s;
     overflow:hidden;
   }
-  .diagram-wrap.active { background:var(--hover-color); border-color:var(--accent-color); box-shadow:var(--shadow); }
+  .diagram-wrap.active { background:var(--gold-soft); border-color:var(--gold); box-shadow:0 0 0 1px var(--gold-soft), var(--shadow); }
   .diagram-label { font-size:.65rem; color:var(--accent-color); letter-spacing:1px; text-transform:uppercase; margin-bottom:8px; font-family:Georgia,serif; }
 
   /* The big combined SVG diagram */
@@ -188,15 +198,15 @@
 
   /* SVG element colour classes — default = muted, active = text-color */
   .dr  { stroke:var(--border-color); fill:none; }          /* dim rail/wire */
-  .dr.a{ stroke:var(--text-color);   fill:none; }          /* active */
+  .dr.a{ stroke:var(--gold);   fill:none; }          /* active */
   .df  { fill:none; }
-  .df.a{ fill:rgba(52,58,64,.07); }
+  .df.a{ fill:var(--gold-soft); }
   .dt  { fill:var(--accent-color); font-family:Georgia,serif; }
-  .dt.a{ fill:var(--text-color);   font-family:Georgia,serif; font-weight:bold; }
+  .dt.a{ fill:var(--gold);   font-family:Georgia,serif; font-weight:bold; }
   .db  { stroke:var(--border-color); fill:var(--primary-color); }   /* box dim */
-  .db.a{ stroke:var(--text-color);   fill:var(--hover-color); }     /* box active */
+  .db.a{ stroke:var(--gold);   fill:var(--gold-soft); }     /* box active */
   .dc  { stroke:var(--border-color); fill:var(--primary-color); }   /* circle dim */
-  .dc.a{ stroke:var(--text-color);   fill:var(--hover-color); }     /* circle active */
+  .dc.a{ stroke:var(--gold);   fill:var(--gold-soft); }     /* circle active */
 
   @media (max-width:850px) {
     .content-wrapper { grid-template-columns:1fr; }
@@ -206,15 +216,15 @@
 </style>
 </head>
 <body>
-<header style="display: flex; margin-bottom: 15px">
+<header class="site-header">
             <div class="logo-container">
                 <img src="../../assets/Scientech logo-2.png" alt="Scientech Logo">
                 <h1>Capacitive Proximity Sensor</h1>
-            </div>
-            <div class="button-container" style="margin-left: 25pc;">
-                <a href="./Types_of_Proximity_Sensors.html" class="back-button" style="margin-left: -41px;">
-                    <i class="fas fa-arrow-left"></i> <img style="width: 27px;" src="./left-arrow.png" alt="">Back to Course
-                </a>
+                <div class="button-container">
+                    <a href="./Types_of_Proximity_Sensors.html" class="back-button">
+                        <i class="fas fa-arrow-left"></i> <img style="width: 27px;" src="./left-arrow.png" alt="">Back to Course
+                    </a>
+                </div>
             </div>
         </header>
 
@@ -499,14 +509,14 @@
     else      ti.style.display='none';
 
     // Wiring diagram SVG
-    document.getElementById('wSig').setAttribute('stroke', on ? '#343a40' : '#dee2e6');
+    document.getElementById('wSig').setAttribute('stroke', on ? '#e1ac3d' : '#dee2e6');
     document.getElementById('wSig').setAttribute('stroke-dasharray', on ? '0' : '7,3');
-    document.getElementById('sSVG').setAttribute('stroke', on ? '#343a40' : '#dee2e6');
-    document.getElementById('sOut').setAttribute('fill',   on ? '#343a40' : '#6c757d');
-    [['fr1','rgba(52,58,64,.45)'],['fr2','rgba(52,58,64,.25)'],['fr3','rgba(52,58,64,.12)']].forEach(([id,c]) =>
+    document.getElementById('sSVG').setAttribute('stroke', on ? '#e1ac3d' : '#dee2e6');
+    document.getElementById('sOut').setAttribute('fill',   on ? '#e1ac3d' : '#6c757d');
+    [['fr1','rgba(225,172,61,.5)'],['fr2','rgba(225,172,61,.3)'],['fr3','rgba(225,172,61,.14)']].forEach(([id,c]) =>
       document.getElementById(id).setAttribute('stroke', on ? c : 'transparent'));
-    document.getElementById('iSVG').setAttribute('stroke', on ? '#343a40' : '#dee2e6');
-    document.getElementById('iInner').setAttribute('fill', on ? '#f1f3f5' : '#f8f9fa');
+    document.getElementById('iSVG').setAttribute('stroke', on ? '#e1ac3d' : '#dee2e6');
+    document.getElementById('iInner').setAttribute('fill', on ? '#fbf1de' : '#f8f9fa');
     document.getElementById('bulbSVG').setAttribute('opacity', on ? '1' : '.28');
     document.getElementById('arc').className = 'det-arc' + (on ? ' on' : '');
     mObj.classList.toggle('detected', on);
