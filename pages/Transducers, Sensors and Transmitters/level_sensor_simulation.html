@@ -107,10 +107,11 @@ header.site-header .back-button { display: none !important; }
 .tabs {
   display: flex;
   align-items: center;
-  background: linear-gradient(135deg, #e1ac3d 0%, #c9922a 100%);
+  /* background: linear-gradient(135deg, #e1ac3d 0%, #c9922a 100%); */
+  background: #e1ac3d;
   border-bottom: 2px solid var(--border-color);
   padding: 12px 20px;
-  gap: 10px;
+  gap: 132px;
   box-shadow: var(--shadow);
   margin-top: -36px;
 }
@@ -149,10 +150,10 @@ header.site-header .back-button { display: none !important; }
   box-shadow: var(--shadow); padding: 24px; margin-bottom: 20px;
 }
 .card h2 {
-  font-size: 1.2rem; margin-bottom: 16px; color: var(--text-color);
+  font-size: 1.2rem; margin-bottom: 16px; color: #173681;
   border-left: 4px solid var(--gold); padding-left: 12px;
 }
-.card h3 { font-size: 1rem; margin-bottom: 10px; color: var(--text-color); }
+.card h3 { font-size: 1rem; margin-bottom: 10px; color: #173681; }
 .card p, .card li { font-size: 0.92rem; line-height: 1.7; color: var(--accent-color); margin-bottom: 8px; }
 .card ul { padding-left: 20px; }
 
@@ -389,7 +390,7 @@ header.site-header .back-button { display: none !important; }
 /* === CONTROLS === */
 .controls-panel { display: flex; flex-direction: column; gap: 14px; }
 .slider-group { background: var(--secondary-color); border-radius: 10px; padding: 16px; }
-.slider-group label { display: block; font-size: 0.85rem; font-weight: 700; color: var(--text-color); margin-bottom: 8px; }
+.slider-group label { display: block; font-size: 0.85rem; font-weight: 700; color: #e1ac3d; margin-bottom: 8px; }
 
 input[type="range"] {
   width: 100%; height: 8px; -webkit-appearance: none;
@@ -468,7 +469,7 @@ input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.2); }
   box-shadow: var(--shadow); padding: 20px;
   border-top: 4px solid var(--navy);
 }
-.info-card h3 { font-size: 1rem; margin-bottom: 12px; color: var(--text-color); }
+.info-card h3 { font-size: 1rem; margin-bottom: 12px; color: #173681; }
 .info-card p, .info-card li { font-size: 0.88rem; line-height: 1.7; color: var(--accent-color); }
 .info-card ul { padding-left: 18px; }
 
@@ -544,7 +545,7 @@ input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.2); }
 /* === LOG TABLE === */
 .log-table { width: 100%; border-collapse: collapse; font-size: 0.82rem; }
 .log-table th {
-  background: var(--secondary-color); padding: 10px 12px;
+  background: #e1ac3d; padding: 10px 12px;
   text-align: left; color: var(--text-color); font-weight: 700; border: 1px solid var(--border-color);
 }
 .log-table td { padding: 8px 12px; border: 1px solid var(--border-color); color: var(--accent-color); font-family: monospace; }
@@ -561,7 +562,7 @@ input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.2); }
   display: flex; align-items: center; justify-content: center; gap: 8px;
   margin: 12px 0;
 }
-.plate { width: 8px; height: 60px; background: linear-gradient(to right, #888, #ccc); border-radius: 2px; }
+.plate { width: 8px; height: 60px; background: #173681; border-radius: 2px; }
 .dielectric {
   width: 40px; height: 60px; display: flex; align-items: center; justify-content: center;
   border-radius: 4px; font-size: 0.7rem; font-family: monospace; font-weight: 700;
@@ -778,7 +779,7 @@ input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.2); }
           <!-- Info panel -->
           <div style="flex:1;min-width:180px;">
             <div style="margin-bottom:14px;">
-              <div style="font-size:0.78rem;color:#888;margin-bottom:4px;">Fill Level</div>
+              <div style="font-size:0.78rem;color:#173681;margin-bottom:4px;">Fill Level</div>
               <div style="background:#e9ecef;border-radius:10px;overflow:hidden;height:18px;position:relative;">
                 <div id="fillBar" style="height:100%;background:linear-gradient(to right,#173681,#e1ac3d);border-radius:10px;transition:width 0.5s;width:0%;"></div>
                 <div id="fillBarPct" style="position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:0.72rem;font-weight:700;color:white;mix-blend-mode:difference;">0%</div>
@@ -787,25 +788,25 @@ input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.2); }
 
             <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px;">
               <div style="background:rgba(23,54,129,0.06);border-radius:8px;padding:10px;text-align:center;">
-                <div style="font-size:0.68rem;color:#888;margin-bottom:3px;">Signal Span</div>
+                <div style="font-size:0.68rem;color:#173681;margin-bottom:3px;">Signal Span</div>
                 <div style="font-size:0.95rem;font-weight:700;color:var(--navy);">4 – 20 mA</div>
               </div>
               <div style="background:#e8f8f5;border-radius:8px;padding:10px;text-align:center;">
-                <div style="font-size:0.68rem;color:#888;margin-bottom:3px;">Level Range</div>
+                <div style="font-size:0.68rem;color:#173681;margin-bottom:3px;">Level Range</div>
                 <div style="font-size:0.95rem;font-weight:700;color:var(--green);">0 – 250 mm</div>
               </div>
               <div style="background:#fff8e7;border-radius:8px;padding:10px;text-align:center;">
-                <div style="font-size:0.68rem;color:#888;margin-bottom:3px;">Scale Factor</div>
+                <div style="font-size:0.68rem;color:#173681;margin-bottom:3px;">Scale Factor</div>
                 <div style="font-size:0.95rem;font-weight:700;color:var(--orange);">15.625 mm/mA</div>
               </div>
               <div style="background:#fde8e8;border-radius:8px;padding:10px;text-align:center;">
-                <div style="font-size:0.68rem;color:#888;margin-bottom:3px;">Density (ρ)</div>
+                <div style="font-size:0.68rem;color:#173681;margin-bottom:3px;">Density (ρ)</div>
                 <div style="font-size:0.95rem;font-weight:700;color:var(--red);">1000 kg/m³</div>
               </div>
             </div>
 
             <div style="background:#f8f9fa;border-radius:8px;padding:12px;text-align:center;">
-              <div style="font-size:0.75rem;font-weight:700;color:var(--text-color);margin-bottom:8px;">Capacitance Principle</div>
+              <div style="font-size:0.75rem;font-weight:700;color:#173681;margin-bottom:8px;">Capacitance Principle</div>
               <div class="cap-diagram">
                 <div class="plate"></div>
                 <div class="dielectric" id="dielectricBlock" style="background:rgba(0,105,217,0.1);">
@@ -813,7 +814,7 @@ input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.2); }
                 </div>
                 <div class="plate"></div>
               </div>
-              <div style="font-size:0.72rem;color:#888;margin-top:6px;">C = ε·A/d — higher water level → higher ε → higher C → higher mA</div>
+              <div style="font-size:0.72rem;color:#e1ac3d;margin-top:6px;">C = ε·A/d — higher water level → higher ε → higher C → higher mA</div>
             </div>
           </div>
         </div>
@@ -839,7 +840,7 @@ input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.2); }
 
           <!-- Setpoints -->
           <div style="background:#f8f9fa;border-radius:10px;padding:14px;border:1px solid #dee2e6;">
-            <div style="font-weight:700;font-size:0.9rem;margin-bottom:12px;">PLC Setpoints</div>
+            <div style="font-weight:700;font-size:0.9rem;margin-bottom:12px;color: #173681;">PLC Setpoints</div>
             <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:10px;">
               <div>
                 <label style="font-size:0.72rem;color:#888;display:block;margin-bottom:4px;">Low-Low (mm)</label>
@@ -898,7 +899,7 @@ input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.2); }
       </div>
 
       <!-- Quick reference -->
-      <div style="font-size:0.8rem;font-weight:700;margin-bottom:8px;margin-top:4px;">Quick Reference</div>
+      <div style="font-size:0.8rem;font-weight:700;margin-bottom:8px;margin-top:4px;color: #173681;">Quick Reference</div>
       <table class="log-table">
         <thead><tr><th>mA</th><th>Level (mm)</th><th>Status</th></tr></thead>
         <tbody>
@@ -920,7 +921,7 @@ input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.2); }
 <div class="tab-content" id="tab-theory">
   <div class="theory-grid">
 
-    <div class="info-card" style="border-top-color:#173681;">
+    <div class="info-card" style="border-top-color:#e1ac3d;">
       <h3>What is a Capacitive Level Sensor?</h3>
       <p>A capacitive level sensor measures the dielectric change between two conductive plates (electrodes) as liquid rises between them. Since water has a dielectric constant (ε ≈ 80) much higher than air (ε ≈ 1), the capacitance changes linearly with the liquid level.</p>
       <p>The transmitter converts this capacitance change into a standardized <strong>4–20 mA</strong> signal that the PLC can process and display.</p>
@@ -931,7 +932,7 @@ input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.2); }
       </ul>
     </div>
 
-    <div class="info-card" style="border-top-color:#28a745;">
+    <div class="info-card" style="border-top-color:#e1ac3d;">
       <h3>Capacitance Formula — C = ε·A / d</h3>
       <p>The fundamental relationship governing capacitive sensors:</p>
       <ul>
@@ -958,7 +959,7 @@ input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.2); }
       </div>
     </div>
 
-    <div class="info-card" style="border-top-color:#dc3545;">
+    <div class="info-card" style="border-top-color:#e1ac3d;">
       <h3>Types of Capacitive Sensors</h3>
       <ul>
         <li><strong>Bare/Uncoated Probe</strong> — Direct contact with liquid. Best for clean water, chemicals. Cannot use in conductive liquids.</li>
@@ -968,7 +969,7 @@ input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.2); }
       </ul>
     </div>
 
-    <div class="info-card" style="border-top-color:#173681;">
+    <div class="info-card" style="border-top-color:#e1ac3d;">
       <h3>Hydrostatic Pressure — P = ρgh</h3>
       <p>Every column of liquid exerts pressure at its base due to gravity:</p>
       <ul>
@@ -981,7 +982,7 @@ input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.2); }
       P = 1000 × 9.81 × 0.250 = <strong>2452.5 Pa</strong></p>
     </div>
 
-    <div class="info-card" style="border-top-color:#20c997;">
+    <div class="info-card" style="border-top-color:#e1ac3d;">
       <h3>PLC Alarm Logic for Level</h3>
       <ul>
         <li><strong>Low-Low (LL) &lt; 20 mm</strong> — Pump shutdown to prevent cavitation / dry running</li>
@@ -992,7 +993,7 @@ input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.2); }
       </ul>
     </div>
 
-    <div class="info-card" style="border-top-color:#e83e8c;grid-column:1/-1;">
+    <div class="info-card" style="border-top-color:#e1ac3d;grid-column:1/-1;">
       <h3>Complete Formula Sheet — 0–250 mm / 4–20 mA</h3>
       <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:14px;margin-top:12px;">
         <div class="formula-box"><div class="formula-title">At 4 mA</div><div class="formula-math">L = (4−4)×15.625 = 0 mm</div></div>
