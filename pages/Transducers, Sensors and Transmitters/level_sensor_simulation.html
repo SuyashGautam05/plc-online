@@ -32,7 +32,7 @@
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
 body {
-  font-family: Georgia, 'Times New Roman', Times, serif;
+  font-family: 'Poppins', sans-serif;
   background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
   color: var(--text-color);
   min-height: 100vh;
@@ -206,7 +206,7 @@ header.site-header .back-button { display: none !important; }
   pointer-events: none;
 }
 .gauge-tick-lbl {
-  font-size: 0.6rem; color: #888; font-family: monospace;
+  font-size: 0.6rem; color: #888; font-family: 'Poppins', sans-serif;
   text-align: left; line-height: 1;
 }
 
@@ -238,8 +238,8 @@ header.site-header .back-button { display: none !important; }
   padding: 8px 0; border-bottom: 1px solid #21262d;
 }
 .display-row:last-child { border-bottom: none; }
-.display-label { font-size: 0.72rem; color: #8b949e; text-transform: uppercase; letter-spacing: 1px; font-family: monospace; }
-.display-value { font-size: 1.05rem; font-family: 'Courier New', monospace; font-weight: bold; color: #00d4ff; text-shadow: 0 0 10px rgba(0,212,255,0.5); }
+.display-label { font-size: 0.72rem; color: #8b949e; text-transform: uppercase; letter-spacing: 1px; font-family: 'Poppins', sans-serif; }
+.display-value { font-size: 1.05rem; font-family: 'Poppins', sans-serif; font-weight: bold; color: #00d4ff; text-shadow: 0 0 10px rgba(0,212,255,0.5); }
 .display-value.warning { color: #ffc107; text-shadow: 0 0 10px rgba(255,193,7,0.5); }
 .display-value.danger { color: #ff4444; text-shadow: 0 0 10px rgba(255,68,68,0.5); }
 .display-value.normal { color: #00ff88; text-shadow: 0 0 10px rgba(0,255,136,0.4); }
@@ -266,7 +266,7 @@ header.site-header .back-button { display: none !important; }
   border-radius: 4px 4px 0 0;
   border: 2px solid #666;
   display: flex; align-items: center; justify-content: center;
-  font-size: 0.55rem; color: #fff; font-weight: 700; font-family: monospace;
+  font-size: 0.55rem; color: #fff; font-weight: 700; font-family: 'Poppins', sans-serif;
 }
 .probe-rod {
   width: 6px;
@@ -361,7 +361,7 @@ header.site-header .back-button { display: none !important; }
 }
 .cap-gap { width: 8px; }
 .cap-line { width: 1px; height: 30px; background: #888; }
-.cap-label { font-size: 0.55rem; color: #888; font-family: monospace; white-space: nowrap; }
+.cap-label { font-size: 0.55rem; color: #888; font-family: 'Poppins', sans-serif; white-space: nowrap; }
 
 .scale-strip {
   position: absolute; left: -46px; top: 0; height: 100%;
@@ -372,7 +372,7 @@ header.site-header .back-button { display: none !important; }
   display: flex; align-items: center; gap: 4px;
 }
 .scale-line { width: 10px; height: 1px; background: #7aabcc; }
-.scale-val { font-size: 0.6rem; color: #7aabcc; font-family: monospace; }
+.scale-val { font-size: 0.6rem; color: #7aabcc; font-family: 'Poppins', sans-serif; }
 
 .hydro-arrow {
   position: absolute; left: -18px; bottom: 0;
@@ -408,7 +408,7 @@ input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.2); }
 .slider-val { text-align: center; font-size: 1rem; font-weight: 700; color: var(--navy); margin-top: 6px; }
 
 /* === BUTTONS === */
-.btn { padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; font-size: 0.9rem; font-family: Georgia, serif; font-weight: 700; transition: all 0.3s; }
+.btn { padding: 10px 20px; border: none; border-radius: 8px; cursor: pointer; font-size: 0.9rem; font-family: 'Poppins', sans-serif; font-weight: 700; transition: all 0.3s; }
 .btn-primary { background: var(--blue); color: white; }
 .btn-primary:hover { background: #c82333; transform: translateY(-1px); box-shadow: 0 4px 12px rgba(220,53,69,0.4); }
 .btn-success { background: var(--green); color: white; }
@@ -428,10 +428,10 @@ input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.2); }
 }
 .formula-title { font-size: 0.78rem; font-weight: 700; color: var(--gold); text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
 .formula-math {
-  font-family: 'Courier New', monospace; font-size: 0.92rem; color: #1a2a4a;
+  font-family: 'Poppins', sans-serif; font-size: 0.92rem; color: #1a2a4a;
   background: white; padding: 10px; border-radius: 6px; border: 1px solid #dde; margin-bottom: 6px; word-break: break-word;
 }
-.formula-result { font-size: 0.9rem; color: var(--cyan); font-weight: 700; font-family: monospace; }
+.formula-result { font-size: 0.9rem; color: var(--cyan); font-weight: 700; font-family: 'Poppins', sans-serif; }
 
 /* === ALARM PANEL === */
 .alarm-panel {
@@ -481,7 +481,7 @@ input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.2); }
 .input-group label { font-size: 0.85rem; font-weight: 700; color: var(--text-color); }
 .input-group input {
   padding: 10px 14px; border: 2px solid var(--border-color);
-  border-radius: 8px; font-size: 0.95rem; font-family: monospace;
+  border-radius: 8px; font-size: 0.95rem; font-family: 'Poppins', sans-serif;
   color: var(--text-color); outline: none; transition: border-color 0.3s;
 }
 .input-group input:focus { border-color: var(--navy); }
@@ -510,7 +510,7 @@ input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.2); }
   margin-top: 12px; padding: 8px 20px;
   background: var(--navy); color: white;
   border: none; border-radius: 6px; cursor: pointer;
-  font-size: 0.85rem; font-family: Georgia, serif; font-weight: 700; transition: all 0.3s;
+  font-size: 0.85rem; font-family: 'Poppins', sans-serif; font-weight: 700; transition: all 0.3s;
 }
 .check-btn:hover { background: #0e2461; }
 .feedback {
@@ -533,7 +533,7 @@ input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.2); }
 .scenario-btn {
   padding: 12px 10px; background: var(--secondary-color);
   border: 2px solid var(--border-color); border-radius: 10px;
-  cursor: pointer; font-size: 0.82rem; font-family: Georgia, serif;
+  cursor: pointer; font-size: 0.82rem; font-family: 'Poppins', sans-serif;
   text-align: center; transition: all 0.3s; font-weight: 600;
   color: var(--text-color); line-height: 1.4;
 }
@@ -548,7 +548,7 @@ input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.2); }
   background: #e1ac3d; padding: 10px 12px;
   text-align: left; color: var(--text-color); font-weight: 700; border: 1px solid var(--border-color);
 }
-.log-table td { padding: 8px 12px; border: 1px solid var(--border-color); color: var(--accent-color); font-family: monospace; }
+.log-table td { padding: 8px 12px; border: 1px solid var(--border-color); color: var(--accent-color); font-family: 'Poppins', sans-serif; }
 .log-table tr:nth-child(even) td { background: #fafbfc; }
 
 .hydro-section {
@@ -565,7 +565,7 @@ input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.2); }
 .plate { width: 8px; height: 60px; background: #173681; border-radius: 2px; }
 .dielectric {
   width: 40px; height: 60px; display: flex; align-items: center; justify-content: center;
-  border-radius: 4px; font-size: 0.7rem; font-family: monospace; font-weight: 700;
+  border-radius: 4px; font-size: 0.7rem; font-family: 'Poppins', sans-serif; font-weight: 700;
   transition: background 0.5s; text-align: center; line-height: 1.2;
 }
 
@@ -576,8 +576,8 @@ input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.2); }
 .scen-box {
   background: #0d1117; border-radius: 10px; padding: 16px; text-align: center;
 }
-.scen-lbl { font-size: 0.65rem; color: #8b949e; font-family: monospace; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
-.scen-val { font-size: 1.6rem; font-family: monospace; font-weight: 900; }
+.scen-lbl { font-size: 0.65rem; color: #8b949e; font-family: 'Poppins', sans-serif; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px; }
+.scen-val { font-size: 1.6rem; font-family: 'Poppins', sans-serif; font-weight: 900; }
 </style>
 </head>
 <body>
@@ -663,7 +663,7 @@ input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.2); }
             </div>
           </div>
 
-          <div style="font-size:0.65rem;color:#888;font-family:monospace;writing-mode:vertical-rl;text-orientation:mixed;margin-left:6px;">mm (0–250)</div>
+          <div style="font-size:0.65rem;color:#888;font-family:'Poppins', sans-serif;writing-mode:vertical-rl;text-orientation:mixed;margin-left:6px;">mm (0–250)</div>
         </div>
 
         <div style="text-align:center;font-size:0.78rem;color:#888;">Capacitive Level Transmitter<br><small style="color:#aaa">Range: 0–250 mm | Output: 4–20 mA</small></div>
@@ -711,7 +711,7 @@ input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.2); }
             <div class="tank-assembly">
 
               <div style="text-align:center;margin-bottom:6px;">
-                <div style="display:inline-block;background:#173681;color:white;padding:4px 12px;border-radius:4px;font-size:0.7rem;font-family:monospace;font-weight:700;">CAPACITIVE TRANSMITTER</div>
+                <div style="display:inline-block;background:#173681;color:white;padding:4px 12px;border-radius:4px;font-size:0.7rem;font-family:'Poppins', sans-serif;font-weight:700;">CAPACITIVE TRANSMITTER</div>
               </div>
 
               <!-- Probe -->
@@ -732,7 +732,7 @@ input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.2); }
 
                   <div id="levelLine" style="position:absolute;left:0;right:0;height:2px;background:rgba(255,255,255,0.6);transition:bottom 0.6s;bottom:0;box-shadow:0 0 6px rgba(255,255,255,0.8);"></div>
 
-                  <div style="position:absolute;top:10px;left:10px;font-size:0.55rem;color:rgba(255,255,255,0.5);font-family:monospace;line-height:1.6;">
+                  <div style="position:absolute;top:10px;left:10px;font-size:0.55rem;color:rgba(255,255,255,0.5);font-family:'Poppins', sans-serif;line-height:1.6;">
                     C = ε·A/d<br>
                     ε<sub>water</sub> ≈ 80<br>
                     ε<sub>air</sub> ≈ 1
@@ -753,7 +753,7 @@ input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.2); }
                 <div class="hydro-arrow">
                   <div class="hydro-tip">▼</div>
                   <div class="hydro-bar" id="hydroBar" style="height:0px;"></div>
-                  <div style="font-size:0.55rem;color:#ff6b35;font-family:monospace;white-space:nowrap;margin-top:2px;" id="hydroLabel">P=0 Pa</div>
+                  <div style="font-size:0.55rem;color:#ff6b35;font-family:'Poppins', sans-serif;white-space:nowrap;margin-top:2px;" id="hydroLabel">P=0 Pa</div>
                 </div>
 
                 <div class="inlet-pipe"></div>
@@ -947,7 +947,7 @@ input[type="range"]::-webkit-slider-thumb:hover { transform: scale(1.2); }
     <div class="info-card" style="border-top-color:#e1ac3d;">
       <h3>Level Measurement Formulas</h3>
       <div style="background:#f8f9fa;border-radius:8px;padding:12px;margin-top:8px;">
-        <div style="font-family:monospace;font-size:0.9rem;line-height:2;">
+        <div style="font-family:'Poppins', sans-serif;font-size:0.9rem;line-height:2;">
           <strong>Forward (mA → mm):</strong><br>
           L = (I − 4) × 15.625<br><br>
           <strong>Reverse (mm → mA):</strong><br>
