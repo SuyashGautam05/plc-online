@@ -45,17 +45,17 @@ function drawLines() {
   document.getElementById('mainLine2').setAttribute('x1', smpsPositionXR);
   document.getElementById('mainLine2').setAttribute('y1', powerButtonY - 50);
   document.getElementById('mainLine2').setAttribute('x2', smpsPositionXR);
-  document.getElementById('mainLine2').setAttribute('y2', circuitT - 90);
+  document.getElementById('mainLine2').setAttribute('y2', circuitT - 63);
 
   document.getElementById('mainLine3').setAttribute('x1', smpsPositionXL + (smpsPositionXR - smpsPositionXL)/2 );
   document.getElementById('mainLine3').setAttribute('y1', powerButtonY - 75);
   document.getElementById('mainLine3').setAttribute('x2', smpsPositionXL + (smpsPositionXR - smpsPositionXL)/2);
   document.getElementById('mainLine3').setAttribute('y2', circuitM);
 
-  document.getElementById('horizontalLine1').setAttribute('x1', smpsPositionXL + 95);
-  document.getElementById('horizontalLine1').setAttribute('y1', circuitT);
+  document.getElementById('horizontalLine1').setAttribute('x1', smpsPositionXL + 109);
+  document.getElementById('horizontalLine1').setAttribute('y1', circuitT - 63);
   document.getElementById('horizontalLine1').setAttribute('x2', smpsPositionXR + 240);
-  document.getElementById('horizontalLine1').setAttribute('y2',circuitT);
+  document.getElementById('horizontalLine1').setAttribute('y2',circuitT - 63);
 
   document.getElementById('horizontalLine2').setAttribute('x1', smpsPositionXL + 1);
   document.getElementById('horizontalLine2').setAttribute('y1', circuitB -50);
