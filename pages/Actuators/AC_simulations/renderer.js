@@ -64,9 +64,9 @@ function drawLines() {
 
 
   document.getElementById('horizontalLine3').setAttribute('x1', smpsPositionXL + 330);
-  document.getElementById('horizontalLine3').setAttribute('y1', circuitM);
+  document.getElementById('horizontalLine3').setAttribute('y1', circuitM - 63);
   document.getElementById('horizontalLine3').setAttribute('x2', smpsPositionXR - 46);
-  document.getElementById('horizontalLine3').setAttribute('y2', circuitM);
+  document.getElementById('horizontalLine3').setAttribute('y2', circuitM - 63);
 
   document.getElementById('neutralCircle').setAttribute('cx', smpsPositionXL);
   document.getElementById('neutralCircle').setAttribute('cy', powerButtonY - 50);
