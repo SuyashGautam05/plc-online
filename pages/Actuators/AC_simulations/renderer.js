@@ -50,7 +50,7 @@ function drawLines() {
   document.getElementById('mainLine3').setAttribute('x1', smpsPositionXL + (smpsPositionXR - smpsPositionXL)/2 );
   document.getElementById('mainLine3').setAttribute('y1', powerButtonY - 75);
   document.getElementById('mainLine3').setAttribute('x2', smpsPositionXL + (smpsPositionXR - smpsPositionXL)/2);
-  document.getElementById('mainLine3').setAttribute('y2', circuitM);
+  document.getElementById('mainLine3').setAttribute('y2', circuitM - 62);
 
   document.getElementById('horizontalLine1').setAttribute('x1', smpsPositionXL + 109);
   document.getElementById('horizontalLine1').setAttribute('y1', circuitT - 63);
