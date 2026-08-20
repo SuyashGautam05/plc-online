@@ -69,13 +69,13 @@ function drawLines() {
   document.getElementById('horizontalLine3').setAttribute('y2', circuitM - 63);
 
   document.getElementById('neutralCircle').setAttribute('cx', smpsPositionXL);
-  document.getElementById('neutralCircle').setAttribute('cy', powerButtonY - 50);
+  document.getElementById('neutralCircle').setAttribute('cy', powerButtonY - 99);
 
   document.getElementById('liveCircle').setAttribute('cx', smpsPositionXR);
-  document.getElementById('liveCircle').setAttribute('cy', powerButtonY - 50);
+  document.getElementById('liveCircle').setAttribute('cy', powerButtonY - 99);
 
   document.getElementById('liveCircle2').setAttribute('cx', smpsPositionXL + (smpsPositionXR - smpsPositionXL)/2);
-  document.getElementById('liveCircle2').setAttribute('cy', powerButtonY - 50);
+  document.getElementById('liveCircle2').setAttribute('cy', powerButtonY - 99);
   
   document.getElementById('main-smpsN').setAttribute('x', smpsPositionXL - 5);
   document.getElementById('main-smpsN').setAttribute('y', powerButtonY - 90);
