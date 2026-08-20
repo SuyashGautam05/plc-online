@@ -39,7 +39,7 @@ function drawLines() {
   document.getElementById('mainLine1').setAttribute('x1', smpsPositionXL);
   document.getElementById('mainLine1').setAttribute('y1', powerButtonY - 75);
   document.getElementById('mainLine1').setAttribute('x2', smpsPositionXL);
-  document.getElementById('mainLine1').setAttribute('y2', circuitB -50);
+  document.getElementById('mainLine1').setAttribute('y2', circuitB -108);
 
 
   document.getElementById('mainLine2').setAttribute('x1', smpsPositionXR);
