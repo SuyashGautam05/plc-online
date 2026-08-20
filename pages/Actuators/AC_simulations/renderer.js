@@ -58,9 +58,9 @@ function drawLines() {
   document.getElementById('horizontalLine1').setAttribute('y2',circuitT - 63);
 
   document.getElementById('horizontalLine2').setAttribute('x1', smpsPositionXL + 1);
-  document.getElementById('horizontalLine2').setAttribute('y1', circuitB -50);
+  document.getElementById('horizontalLine2').setAttribute('y1', circuitB - 109);
   document.getElementById('horizontalLine2').setAttribute('x2', smpsPositionXR + 240);
-  document.getElementById('horizontalLine2').setAttribute('y2', circuitB - 50);
+  document.getElementById('horizontalLine2').setAttribute('y2', circuitB - 109);
 
 
   document.getElementById('horizontalLine3').setAttribute('x1', smpsPositionXL + 330);
