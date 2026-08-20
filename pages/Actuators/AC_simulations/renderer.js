@@ -37,18 +37,18 @@ function drawLines() {
   var smpsPositionY = smps.top + window.scrollY;
 
   document.getElementById('mainLine1').setAttribute('x1', smpsPositionXL);
-  document.getElementById('mainLine1').setAttribute('y1', powerButtonY - 75);
+  document.getElementById('mainLine1').setAttribute('y1', powerButtonY - 75 -18);
   document.getElementById('mainLine1').setAttribute('x2', smpsPositionXL);
   document.getElementById('mainLine1').setAttribute('y2', circuitB -108);
 
 
   document.getElementById('mainLine2').setAttribute('x1', smpsPositionXR);
-  document.getElementById('mainLine2').setAttribute('y1', powerButtonY - 50);
+  document.getElementById('mainLine2').setAttribute('y1', powerButtonY - 50 - 18);
   document.getElementById('mainLine2').setAttribute('x2', smpsPositionXR);
   document.getElementById('mainLine2').setAttribute('y2', circuitT - 63);
 
   document.getElementById('mainLine3').setAttribute('x1', smpsPositionXL + (smpsPositionXR - smpsPositionXL)/2 );
-  document.getElementById('mainLine3').setAttribute('y1', powerButtonY - 75);
+  document.getElementById('mainLine3').setAttribute('y1', powerButtonY - 75 - 18);
   document.getElementById('mainLine3').setAttribute('x2', smpsPositionXL + (smpsPositionXR - smpsPositionXL)/2);
   document.getElementById('mainLine3').setAttribute('y2', circuitM - 62);
 
