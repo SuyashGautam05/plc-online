@@ -78,13 +78,13 @@ function drawLines() {
   document.getElementById('liveCircle2').setAttribute('cy', powerButtonY - 99);
   
   document.getElementById('main-smpsN').setAttribute('x', smpsPositionXL - 5);
-  document.getElementById('main-smpsN').setAttribute('y', powerButtonY - 90);
+  document.getElementById('main-smpsN').setAttribute('y', powerButtonY - 68);
 
   document.getElementById('main-smpsL').setAttribute('x', smpsPositionXR - 5);
-  document.getElementById('main-smpsL').setAttribute('y', powerButtonY - 90);
+  document.getElementById('main-smpsL').setAttribute('y', powerButtonY - 68);
 
   document.getElementById('main-smpsT').setAttribute('x', smpsPositionXL + (smpsPositionXR - smpsPositionXL)/2 - 4);
-  document.getElementById('main-smpsT').setAttribute('y', powerButtonY - 90);
+  document.getElementById('main-smpsT').setAttribute('y', powerButtonY - 68);
 
 }
 
