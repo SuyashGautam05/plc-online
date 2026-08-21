@@ -34,20 +34,20 @@ function drawLines() {
   var smpsPositionXR = smps.right + window.scrollX - 50;
 
   document.getElementById('neutralCircle').setAttribute('cx', powerXL);
-  document.getElementById('neutralCircle').setAttribute('cy', powerY - 60);
+  document.getElementById('neutralCircle').setAttribute('cy', powerY - 89);
 
   document.getElementById('liveCircle').setAttribute('cx', powerXR);
-  document.getElementById('liveCircle').setAttribute('cy', powerY - 60);
+  document.getElementById('liveCircle').setAttribute('cy', powerY - 89);
 
   document.getElementById('mainLine1').setAttribute('x1', powerXL);
   document.getElementById('mainLine1').setAttribute('y1', powerY);
   document.getElementById('mainLine1').setAttribute('x2', powerXL);
-  document.getElementById('mainLine1').setAttribute('y2', powerY - 53.5);
+  document.getElementById('mainLine1').setAttribute('y2', powerY - 78.5);
 
   document.getElementById('mainLine2').setAttribute('x1', powerXR);
   document.getElementById('mainLine2').setAttribute('y1', powerY);
   document.getElementById('mainLine2').setAttribute('x2', powerXR);
-  document.getElementById('mainLine2').setAttribute('y2', powerY - 53.5);
+  document.getElementById('mainLine2').setAttribute('y2', powerY - 78.5);
   
 
   document.getElementById('smpsLine1').setAttribute('x1', smpsPositionXL);
@@ -61,10 +61,10 @@ function drawLines() {
   document.getElementById('smpsLine2').setAttribute('y2', smpsPositionY);
 
   document.getElementById('main-smpsN').setAttribute('x', powerXL - 5);
-  document.getElementById('main-smpsN').setAttribute('y', powerY - 75);
+  document.getElementById('main-smpsN').setAttribute('y', powerY - 108);
 
   document.getElementById('main-smpsL').setAttribute('x', powerXR - 5);
-  document.getElementById('main-smpsL').setAttribute('y', powerY - 75);
+  document.getElementById('main-smpsL').setAttribute('y', powerY - 108);
 
 }
 
