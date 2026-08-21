@@ -134,6 +134,12 @@ otherContainers.forEach(container => {
   function animateTire(timestamp) {
     let shouldAnimate = isPowerOn && motorToggle;
     const degreesPerRPM = 6;
+    // Real RPM math would swing the wheel over 200+ degrees per animation frame
+    // near 100% speed, which reads as a jittery glitch instead of a spin
+    // (no single frame can visually represent that much rotation smoothly).
+    // Cap the *visual* rotation rate while keeping currentRotationSpeed/RPM
+    // label true to the underlying physics.
+    const maxVisualDegPerFrame = 30; // ~4.5 smooth revolutions/sec at 60fps
   
     if (shouldAnimate) {
       let targetRotationSpeed = calculateRPM(speedPercentage);
@@ -153,7 +159,9 @@ otherContainers.forEach(container => {
         }
       }
     }
-    const degreesPerFrame = currentRotationSpeed * degreesPerRPM / 60 * directionMultiplier;
+    const rawDegreesPerFrame = currentRotationSpeed * degreesPerRPM / 60;
+    const cappedDegreesPerFrame = Math.min(Math.abs(rawDegreesPerFrame), maxVisualDegPerFrame);
+    const degreesPerFrame = cappedDegreesPerFrame * Math.sign(rawDegreesPerFrame || 1) * directionMultiplier;
     tireRotation += degreesPerFrame;
     tire.style.transform = `rotate(${tireRotation}deg)`;
 
