@@ -34,20 +34,20 @@ function drawLines() {
   var smpsPositionXR = smps.right + window.scrollX - 50;
 
   document.getElementById('neutralCircle').setAttribute('cx', powerXL);
-  document.getElementById('neutralCircle').setAttribute('cy', powerY - 60);
+  document.getElementById('neutralCircle').setAttribute('cy', powerY - 30);
 
   document.getElementById('liveCircle').setAttribute('cx', powerXR);
-  document.getElementById('liveCircle').setAttribute('cy', powerY - 60);
+  document.getElementById('liveCircle').setAttribute('cy', powerY - 30);
 
   document.getElementById('mainLine1').setAttribute('x1', powerXL);
   document.getElementById('mainLine1').setAttribute('y1', powerY);
   document.getElementById('mainLine1').setAttribute('x2', powerXL);
-  document.getElementById('mainLine1').setAttribute('y2', powerY - 53.5);
+  document.getElementById('mainLine1').setAttribute('y2', powerY - 22.5);
 
   document.getElementById('mainLine2').setAttribute('x1', powerXR);
   document.getElementById('mainLine2').setAttribute('y1', powerY);
   document.getElementById('mainLine2').setAttribute('x2', powerXR);
-  document.getElementById('mainLine2').setAttribute('y2', powerY - 53.5);
+  document.getElementById('mainLine2').setAttribute('y2', powerY - 22.5);
   
 
   document.getElementById('smpsLine1').setAttribute('x1', smpsPositionXL);
@@ -61,10 +61,10 @@ function drawLines() {
   document.getElementById('smpsLine2').setAttribute('y2', smpsPositionY);
 
   document.getElementById('main-smpsN').setAttribute('x', powerXL - 5);
-  document.getElementById('main-smpsN').setAttribute('y', powerY - 75);
+  document.getElementById('main-smpsN').setAttribute('y', powerY - 43);
 
   document.getElementById('main-smpsL').setAttribute('x', powerXR - 5);
-  document.getElementById('main-smpsL').setAttribute('y', powerY - 75);
+  document.getElementById('main-smpsL').setAttribute('y', powerY - 43);
 
 }
 
@@ -134,12 +134,6 @@ otherContainers.forEach(container => {
   function animateTire(timestamp) {
     let shouldAnimate = isPowerOn && motorToggle;
     const degreesPerRPM = 6;
-    // Real RPM math would swing the wheel over 200+ degrees per animation frame
-    // near 100% speed, which reads as a jittery glitch instead of a spin
-    // (no single frame can visually represent that much rotation smoothly).
-    // Cap the *visual* rotation rate while keeping currentRotationSpeed/RPM
-    // label true to the underlying physics.
-    const maxVisualDegPerFrame = 30; // ~4.5 smooth revolutions/sec at 60fps
   
     if (shouldAnimate) {
       let targetRotationSpeed = calculateRPM(speedPercentage);
@@ -159,9 +153,7 @@ otherContainers.forEach(container => {
         }
       }
     }
-    const rawDegreesPerFrame = currentRotationSpeed * degreesPerRPM / 60;
-    const cappedDegreesPerFrame = Math.min(Math.abs(rawDegreesPerFrame), maxVisualDegPerFrame);
-    const degreesPerFrame = cappedDegreesPerFrame * Math.sign(rawDegreesPerFrame || 1) * directionMultiplier;
+    const degreesPerFrame = currentRotationSpeed * degreesPerRPM / 60 * directionMultiplier;
     tireRotation += degreesPerFrame;
     tire.style.transform = `rotate(${tireRotation}deg)`;
 
