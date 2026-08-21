@@ -29,15 +29,22 @@
   }
 }
 
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  overflow: hidden;
+}
 body {
   font-family: Georgia, 'Times New Roman', Times, serif;
-  margin: 0;
   display: flex;
   flex-direction: column;
   height: 100vh; /* Ensure full height */
   overflow: hidden;
   user-select: none;
-  transform: scale(calc(100vw / 1920))
+  transform: scale(calc(100vw / 1920));
+  transform-origin: top left;
+  box-sizing: border-box;
 }
 header {
   display: flex;
@@ -217,6 +224,7 @@ header {
 #app {
   display: flex;
   flex: 1; /* Take up remaining height */
+  min-height: 0; /* allow flex children to size correctly, prevents overflow */
   overflow: hidden;
   background: #c9c9c9;
   justify-content: space-between;
@@ -230,7 +238,7 @@ header {
         </style>
 </head>
 <body>
- <header style="background: #f8f9fa;">
+ <header>
             <div class="left-header">
                 <img id="header-logo" src="../../../assets/Scientech logo-2.png" alt="Logo" />
             </div>
