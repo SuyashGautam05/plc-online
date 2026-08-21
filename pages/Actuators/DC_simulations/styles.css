@@ -1,3 +1,12 @@
+:root {
+  --navy: #173681;
+  --gold: #e1ac3d;
+  --red: #dc3545;
+  --bg: #eef1f7;
+  --card-border: #e6c98a;
+  --card-shadow: 0 6px 18px rgba(23, 54, 129, 0.10);
+}
+
 .svgOverlay{
   position: absolute;
   top: 0;
@@ -10,7 +19,7 @@
 
 .lines {
   stroke-width: 2;
-  stroke: #000;
+  stroke: var(--navy);
   z-index: 2;
 }
 
@@ -18,13 +27,14 @@
   font-family: Georgia, 'Times New Roman', Times, serif;
   font-size: 14px;
   font-weight: bold;
+  fill: var(--navy);
 }
 
 #app {
   display: flex;
   flex: 1; /* Take up remaining height */
   overflow: hidden;
-  background: #c9c9c9;
+  background: var(--bg);
 }
 
 #left-column {
@@ -42,12 +52,13 @@
 .powerSupply-box {
   display: flex;
   flex-direction: column;
-  background: white;
+  background: #fff;
   justify-content: space-around;
   align-items: center;
   padding: 20px;
-  border: 2px solid #000;
-  border-radius: 12px;
+  border: 2px solid var(--gold);
+  border-radius: 16px;
+  box-shadow: var(--card-shadow);
   height: 15%;
   margin: 50px 0 20px 0px;
   width: 165px;
@@ -57,12 +68,13 @@
 #speedControl {
   display: flex;
   flex-direction: column;
-  background: white;
+  background: #fff;
   align-items: center;
   justify-content: space-around;
   padding: 15px;
-  border: 2px solid #000;
-  border-radius: 12px;
+  border: 2px solid var(--gold);
+  border-radius: 16px;
+  box-shadow: var(--card-shadow);
   height: 50%;
   margin: 5px 0px;
   width: 215px;
@@ -72,18 +84,23 @@
 .speedControlLabel {
   font-size: 14px;
   font-weight: bold;
+  color: var(--navy);
 }
 
 .percetangeBox{
-  border: 2px solid #000;
+  border: 2px solid var(--gold);
   padding: 10px;
-  border-radius: 6px;
+  border-radius: 8px;
   width: 65px;
   text-align: center;
+  background: #fff;
+  color: var(--navy);
 }
 
 #knobPercentage{
   margin: 0;
+  color: var(--navy);
+  font-weight: bold;
 }
 
 .knob-img {
@@ -93,6 +110,7 @@
 #center-column div p{
   text-align: center;
   font-weight: bold;
+  color: var(--navy);
 }
 
 .toggle-img{
@@ -110,36 +128,38 @@
   font-weight: bold;
   width: 25%;
   text-align: center;
+  color: var(--navy);
 }
 
 #switch-box{
   display: flex;
   align-items: center;
   justify-content: space-around;
-  background-color: white;
-  border: 2px solid #000;
+  background-color: #fff;
+  border: 2px solid var(--navy);
   border-radius: 12px;
   width: 195px;
   height: 55px;
   margin-top: 15px;
-  
+  box-shadow: var(--card-shadow);
 }
 
 #direction-box{
   display: flex;
   align-items: center;
   justify-content: space-around;
-  background-color: white;
-  border: 2px solid #000;
+  background-color: #fff;
+  border: 2px solid var(--navy);
   border-radius: 12px;
   width: 195px;
   height: 55px;
+  box-shadow: var(--card-shadow);
 }
 
 
 #switchCircuit-box{
-  background-color: white;
-  border: 2px solid #000;
+  background-color: #fff;
+  border: 2px solid var(--navy);
   border-radius: 12px;
   padding: 10px;
   margin: 10px 0 0 0;
@@ -150,6 +170,7 @@
 #switchCircuitLabel {
   font-size: 14px;
   margin: 0;
+  color: var(--navy);
 }
 
 .bottom-row{
@@ -167,31 +188,34 @@
   position: absolute;
   top: 10%;
   left: 8%;
-  background-color: white;
-  border: 2px solid #000;
-  border-radius: 12px;
+  background-color: #fff;
+  border: 2px solid var(--navy);
+  border-radius: 10px;
   padding: 10px;
   margin: 22px 0;
-  color: black;
+  color: var(--navy);
   z-index: 1;
+  box-shadow: var(--card-shadow);
 }
 
 #currentLabel, #voltageLabel{
   font-weight: bold;
   margin: 0;
+  color: var(--navy);
 }
 
 #voltage-box {
   position: absolute;
   top: 30%;
   left: 1%;
-  background-color: white;
-  border: 2px solid #000;
-  border-radius: 12px;
+  background-color: #fff;
+  border: 2px solid var(--navy);
+  border-radius: 10px;
   padding: 10px;
   margin: 20px 0;
-  color: black;
+  color: var(--navy);
   z-index: 1;
+  box-shadow: var(--card-shadow);
 }
 
 .motor-img{
@@ -214,9 +238,10 @@
   height: 90%;
   padding: 20px;
   flex-direction: column;
-  background-color: white;
-  border: 2px solid #000;
-  border-radius: 12px;
+  background-color: #fff;
+  border: 2px solid var(--gold);
+  border-radius: 16px;
+  box-shadow: var(--card-shadow);
   justify-content: space-around;
   align-items: center;
 }
@@ -225,18 +250,23 @@
   font-weight: bold;
   margin-top: 10px;
   margin-bottom: 5px;
+  color: var(--navy);
 }
 
 .rpm-container{
-  border: 2px solid #000;
+  border: 2px solid var(--gold);
   padding: 10px;
-  border-radius: 6px;
+  border-radius: 8px;
   width: 80px;
   text-align: center;
+  background: #fff;
+  color: var(--navy);
 }
 
 #rpm{
   margin: 0;
+  color: var(--navy);
+  font-weight: bold;
 }
 
 @keyframes rotateTire {
@@ -251,8 +281,8 @@
 #circuitMotor {
   display: flex;
   flex-direction: column;
-  background-color: white;
-  border: 2px solid #000;
+  background-color: #fff;
+  border: 2px solid var(--navy);
   border-radius: 12px;
   width: 205px;
   height: 205px;
@@ -279,19 +309,22 @@
 #powerButton {
   font-size: 18px;
   padding: 10px 20px;
-  background: white;
-  border: 2px solid red;
-  color: red;
+  background: #fff;
+  border: 2px solid var(--red);
+  color: var(--red);
   border-radius: 8px;
-  box-shadow: 4px 2px 7px black;
-
+  box-shadow: var(--card-shadow);
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  font-weight: bold;
+  cursor: pointer;
 }
 
 #chart-section {
   display: flex;
-  background-color: white;
-  border: 2px solid #000;
-  border-radius: 12px;
+  background-color: #fff;
+  border: 2px solid var(--gold);
+  border-radius: 16px;
+  box-shadow: var(--card-shadow);
   padding: 15px;
   width: 1000px;
   height: 100%;
@@ -301,12 +334,14 @@
 #graphSwitch{
   position: absolute;
   border: 0;
-  padding: 5px 10px;
-  background: #007BFF;
-  color: white;
-  border-radius: 5px;
+  padding: 6px 14px;
+  background: var(--navy);
+  color: #fff;
+  border-radius: 20px;
   margin-top: -5px;
   cursor: pointer;
+  font-weight: bold;
+  box-shadow: var(--card-shadow);
 }
 
 .light-img {
@@ -324,12 +359,12 @@
 
 .light {
   display: flex;
-  background: white;
+  background: #fff;
   text-align: center;
   width: 85px;
   height: 85px;
-  border: 2px solid;
-  color: black;
+  border: 2px solid var(--navy);
+  color: var(--navy);
   border-radius: 50%;
 }
 #pwm-chart-container1, #pwm-chart-container2, #pwm-chart-container3  {
@@ -360,4 +395,3 @@
   justify-content: space-between;
   margin-top: 65px;
 }
-
