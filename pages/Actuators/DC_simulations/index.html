@@ -62,7 +62,7 @@ header {
   display: flex;
   align-items: center;
   padding: 10px;
-  border-right: 1px solid rgba(255, 255, 255, 0.25); /* Right divider for company name */
+  /* border-right: 1px solid rgba(255, 255, 255, 0.25); Right divider for company name */
   margin-left: 50px /* Right divider for company name */
 }
 
@@ -294,7 +294,7 @@ header {
     </div>
     <div id="right-column">
       <div id="chart-section">
-        <button id="graphSwitch">Switch Graph</button>
+        <button style="display: none;" id="graphSwitch">Switch Graph</button>
         <div class="chart-container" id="pwm-chart-container1">
           <canvas id="comparatorChart1"></canvas>
         </div>
