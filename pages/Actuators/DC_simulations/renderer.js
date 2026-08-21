@@ -42,12 +42,12 @@ function drawLines() {
   document.getElementById('mainLine1').setAttribute('x1', powerXL);
   document.getElementById('mainLine1').setAttribute('y1', powerY);
   document.getElementById('mainLine1').setAttribute('x2', powerXL);
-  document.getElementById('mainLine1').setAttribute('y2', powerY - 53.5);
+  document.getElementById('mainLine1').setAttribute('y2', powerY - 33.5);
 
   document.getElementById('mainLine2').setAttribute('x1', powerXR);
   document.getElementById('mainLine2').setAttribute('y1', powerY);
   document.getElementById('mainLine2').setAttribute('x2', powerXR);
-  document.getElementById('mainLine2').setAttribute('y2', powerY - 53.5);
+  document.getElementById('mainLine2').setAttribute('y2', powerY - 33.5);
   
 
   document.getElementById('smpsLine1').setAttribute('x1', smpsPositionXL);
