@@ -66,6 +66,7 @@
   width: 165px;
   z-index: 1;
   box-sizing: border-box;
+  margin-top: 17px;
 }
 
 #speedControl {
@@ -74,15 +75,16 @@
   background: #fff;
   align-items: center;
   justify-content: space-around;
-  padding: 15px;
+  padding: 13%;
   border: 2px solid var(--gold);
   border-radius: 16px;
   box-shadow: var(--card-shadow);
-  height: 55%;
+  height: 75%;
   margin: 5px 0px;
   width: 215px;
   z-index: 1;
   box-sizing: border-box;
+  margin-bottom: -18px;
 }
 
 .speedControlLabel {
@@ -225,7 +227,7 @@
 .motor-img{
   position: absolute;
   width: 100%;
-  bottom: 15px;
+  bottom: 22px;
   left: 0px;
   /* width: 165px; */
   /* margin: 0 0 10px 0; */
@@ -240,7 +242,7 @@
   display: flex;
   width: 30%;
   height: 90%;
-  padding: 20px;
+  /* padding: 20px; */
   flex-direction: column;
   background-color: #fff;
   border: 2px solid var(--gold);
@@ -330,7 +332,7 @@
   border: 2px solid var(--gold);
   border-radius: 16px;
   box-shadow: var(--card-shadow);
-  padding: 15px;
+  /* padding: 15px; */
   width: 1000px;
   height: 100%;
 
