@@ -91,6 +91,7 @@
   font-size: 14px;
   font-weight: bold;
   color: var(--navy);
+  margin-top: 5px;
 }
 
 .percetangeBox{
@@ -226,11 +227,12 @@
 
 .motor-img{
   position: absolute;
-  width: 100%;
+  width: 98%;
   bottom: 22px;
   left: 0px;
   /* width: 165px; */
   /* margin: 0 0 10px 0; */
+  height: 309px;
 }
 
 .tire-img{
