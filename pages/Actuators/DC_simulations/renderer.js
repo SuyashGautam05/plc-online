@@ -1,13 +1,3 @@
-// Electron zoom — only runs inside Electron, skipped in browser
-try {
-  const { webFrame, ipcRenderer } = require('electron');
-  ipcRenderer.invoke('get-screen-info').then(({ width, height }) => {
-    webFrame.setZoomFactor(width / 1838);
-  }).catch(() => {});
-} catch (e) {
-  // Running in browser — no zoom adjustment needed
-}
-
 let comparatorData = [];
 let comparatorData2 = [];
 let comparatorData3 = [];
@@ -15,12 +5,7 @@ let voltageData = [];
 let currentData = [];
 let powerData = [];
 let timeData = [];
-let comparatorChart;
-let comparatorChart2;
-let comparatorChart3;
 let voltageChart;
-let currentChart;
-let powerChart;
 let currentVoltage = 0;
 let currentAmpere = 0;
 let speedPercentage  = 50;
@@ -35,7 +20,6 @@ let motorToggle = true;
 let directionToggle = true;
 let directionMultiplier = 1;
 let smoothedRpm = 0;
-let pendingDirectionChange = false;
 
 function drawLines() {
   let powerButton = document.getElementById('powerButton').getBoundingClientRect();
@@ -232,6 +216,11 @@ otherContainers.forEach(container => {
     comparatorChart3.update();
   }
 
+  // function updateStats(){
+  //   document.getElementById('knobPercentage').innerHTML = `${speedPercentage.toFixed(2)}%`;
+  //   document.getElementById('rpm').innerHTML = `${currentRotationSpeed.toFixed()}RPM`;
+  // }
+
   function updateStats(){
     document.getElementById('knobPercentage').innerHTML = `${speedPercentage.toFixed(2)}%`;
     document.getElementById('rpm').innerHTML = `${smoothedRpm.toFixed(0)}RPM`;
@@ -327,68 +316,45 @@ otherContainers.forEach(container => {
       drawTime: "afterDatasetsDraw",
       type: 'line',
       mode: 'vertical',
-      scaleID: 'x',
-      value: i *12.5 * Math.PI,
-      borderColor: '#173681',
+      scaleID: 'x', // You may need to adjust this based on your chart's config
+      value: i *12.5 * Math.PI, // Set the value at multiples of π
+      borderColor: 'red',
       borderWidth: 0.5,
       label: {
         enabled: true,
         content: `${i}π`,
-        position: 'top',
-        font: {
-          family: 'Poppins',
-          weight: '600'
-        },
-        color: '#e1ac3d'
+        position: 'top'
       }
     });
   }
   const comparatorOptions = {
     scales: {
       y: {
-        min: 0,
-        max: 1,
-        ticks: {
-          font: { family: 'Poppins' }
-        },
-        grid: {
-          color: 'rgba(23, 54, 129, 0.08)'
-        }
-      },
-      x: {
-        ticks: {
-          font: { family: 'Poppins' }
-        },
-        grid: {
-          color: 'rgba(23, 54, 129, 0.08)'
-        }
+        min: 0, // Set minimum to 0
+        max: 1   // Set maximum to 1
       }
     },
     plugins: {
-      legend: {
-        labels: {
-          font: { family: 'Poppins', weight: '500' }
-        }
-      },
       annotation: {
         annotations: annotations
       }
     },
     maintainAspectRatio: false
   };
+  // Add these annotations to your chart's options
   comparatorOptions.plugins.annotation.annotations = annotations;
 
   const comparatorCtx = document.getElementById('comparatorChart1').getContext('2d');
   comparatorChart = new Chart(comparatorCtx, {
     type: 'line',
     data: {
-      labels: comparatorData.map((_, index) => index),
+      labels: comparatorData.map((_, index) => index), // Creating an array of indices for labels
       datasets: [{
         label: 'PWM 1',
         data: comparatorData,
-        backgroundColor: 'rgba(23, 54, 129, 0.3)',
-        borderColor: '#173681',
-        borderWidth: 1.5
+        backgroundColor: 'rgba(153, 102, 255, 0.5)',
+        borderColor: 'rgba(153, 102, 255, 1)',
+        borderWidth: 1
       }]
     },
     options: comparatorOptions
@@ -398,13 +364,13 @@ otherContainers.forEach(container => {
   comparatorChart2 = new Chart(comparatorCtx2, {
     type: 'line',
     data: {
-      labels: comparatorData2.map((_, index) => index),
+      labels: comparatorData2.map((_, index) => index), // Creating an array of indices for labels
       datasets: [{
         label: 'PWM 2',
         data: comparatorData2,
-        backgroundColor: 'rgba(225, 172, 61, 0.3)',
-        borderColor: '#e1ac3d',
-        borderWidth: 1.5
+        backgroundColor: 'rgba(153, 102, 255, 0.5)',
+        borderColor: 'rgba(153, 102, 255, 1)',
+        borderWidth: 1
       }]
     },
     options: comparatorOptions
@@ -414,13 +380,13 @@ otherContainers.forEach(container => {
   comparatorChart3 = new Chart(comparatorCtx3, {
     type: 'line',
     data: {
-      labels: comparatorData3.map((_, index) => index),
+      labels: comparatorData3.map((_, index) => index), // Creating an array of indices for labels
       datasets: [{
         label: 'PWM 3',
         data: comparatorData3,
-        backgroundColor: 'rgba(231, 76, 60, 0.3)',
-        borderColor: '#e74c3c',
-        borderWidth: 1.5
+        backgroundColor: 'rgba(153, 102, 255, 0.5)',
+        borderColor: 'rgba(153, 102, 255, 1)',
+        borderWidth: 1
       }]
     },
     options: comparatorOptions
@@ -433,9 +399,9 @@ otherContainers.forEach(container => {
       datasets: [{
         label: 'Voltage',
         data: voltageData,
-        backgroundColor: 'rgba(23, 54, 129, 0.3)',
-        borderColor: '#173681',
-        borderWidth: 1.5
+        backgroundColor: 'rgba(0, 123, 255, 0.5)',
+        borderColor: 'rgba(0, 123, 255, 1)',
+        borderWidth: 1
       }]
     },
     options: {
@@ -445,30 +411,13 @@ otherContainers.forEach(container => {
           realtime: {
             duration: 20000,
             refresh: 1000,
-          },
-          ticks: {
-            font: { family: 'Poppins' }
-          },
-          grid: {
-            color: 'rgba(23, 54, 129, 0.08)'
           }
         }],
         yAxes: [{
           ticks: {
-            beginAtZero: true,
-            font: { family: 'Poppins' }
-          },
-          grid: {
-            color: 'rgba(23, 54, 129, 0.08)'
+            beginAtZero: true
           }
         }]
-      },
-      plugins: {
-        legend: {
-          labels: {
-            font: { family: 'Poppins', weight: '500' }
-          }
-        }
       },
       maintainAspectRatio: false
     }
@@ -482,9 +431,9 @@ otherContainers.forEach(container => {
       datasets: [{
         label: 'Current',
         data: currentData,
-        backgroundColor: 'rgba(225, 172, 61, 0.3)',
-        borderColor: '#e1ac3d',
-        borderWidth: 1.5
+        backgroundColor: 'rgba(255, 99, 132, 0.5)',
+        borderColor: 'rgba(255, 99, 132, 1)',
+        borderWidth: 1
       }]
     },
     options: {
@@ -494,30 +443,13 @@ otherContainers.forEach(container => {
           realtime: {
             duration: 20000,
             refresh: 1000,
-          },
-          ticks: {
-            font: { family: 'Poppins' }
-          },
-          grid: {
-            color: 'rgba(23, 54, 129, 0.08)'
           }
         }],
         yAxes: [{
           ticks: {
-            beginAtZero: true,
-            font: { family: 'Poppins' }
-          },
-          grid: {
-            color: 'rgba(23, 54, 129, 0.08)'
+            beginAtZero: true
           }
         }]
-      },
-      plugins: {
-        legend: {
-          labels: {
-            font: { family: 'Poppins', weight: '500' }
-          }
-        }
       },
       maintainAspectRatio: false
     }
@@ -531,9 +463,9 @@ otherContainers.forEach(container => {
       datasets: [{
         label: 'Power',
         data: powerData,
-        backgroundColor: 'rgba(231, 76, 60, 0.3)',
-        borderColor: '#e74c3c',
-        borderWidth: 1.5
+        backgroundColor: 'rgba(75, 192, 192, 0.5)',
+        borderColor: 'rgba(75, 192, 192, 1)',
+        borderWidth: 1
       }]
     },
     options: {
@@ -543,30 +475,13 @@ otherContainers.forEach(container => {
           realtime: {
             duration: 20000,
             refresh: 1000,
-          },
-          ticks: {
-            font: { family: 'Poppins' }
-          },
-          grid: {
-            color: 'rgba(23, 54, 129, 0.08)'
           }
         }],
         yAxes: [{
           ticks: {
-            beginAtZero: true,
-            font: { family: 'Poppins' }
-          },
-          grid: {
-            color: 'rgba(23, 54, 129, 0.08)'
+            beginAtZero: true
           }
         }]
-      },
-      plugins: {
-        legend: {
-          labels: {
-            font: { family: 'Poppins', weight: '500' }
-          }
-        }
       },
       maintainAspectRatio: false
     }
