@@ -75,7 +75,8 @@
   background: #fff;
   align-items: center;
   justify-content: space-around;
-  padding: 13%;
+  /* padding: 13%; */
+  padding: 6%;
   border: 2px solid var(--gold);
   border-radius: 16px;
   box-shadow: var(--card-shadow);
