@@ -1,819 +1,333 @@
 <!DOCTYPE html>
 <html lang="en">
-    <head>
-        <meta charset="UTF-8" />
-        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>PLC Simtel Software</title>
-        <script src="./shared/js/chart.umd.js"></script>
-        <script src="./shared/js/chartjs-plugin-annotation.js"></script>
-        <link rel="preconnect" href="https://fonts.googleapis.com">
-        <link rel="stylesheet" href="./styles.css">
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-        <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-        <style>
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>NVIS7024</title>
+  <!-- <link rel="stylesheet" href="../../../styles.css"> -->
+  <link rel="stylesheet" href="styles.css">
+  <script src="./shared/js/chart.umd.js"></script>
+  <script src="./shared/js/chartjs-plugin-annotation.js"></script>
+          <style>
             @keyframes fadeIn {
-                from { opacity: 0; }
-                to { opacity: 1; }
-            }
-
-            @keyframes fadeInFromBottom {
-                from { bottom: -40px; opacity: 0; }
-                to { bottom: 40px; opacity: 1; }
-            }
-
-            *, *::before, *::after {
-                box-sizing: border-box;
-            }
-
-            body {
-                font-family: 'Poppins', sans-serif;
-                margin: 0;
-                display: flex;
-                flex-direction: column;
-                height: 100vh;
-                overflow: hidden;
-                user-select: none;
-                transform: scale(calc(100vw / 1920));
-                background: #e8ecf1;
-            }
-
-            /* ── Header ── */
-            header {
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                background: linear-gradient(135deg, #173681 0%, #1a3f9a 50%, #173681 100%);
-                color: #ffffff;
-                border-bottom: 3px solid #e1ac3d;
-                box-shadow: 0 4px 20px rgba(23, 54, 129, 0.35);
-                position: relative;
-                z-index: 10;
-                min-height: 64px;
-            }
-
-            .left-header {
-                background: rgba(255, 255, 255, 0.08);
-                display: flex;
-                align-items: center;
-                padding: 8px 12px;
-                border-right: 1px solid rgba(255, 255, 255, 0.15);
-                margin-left: 30px;
-            }
-
-            #header-logo, #header-title, #header-company {
-                font-size: 18px;
-                font-weight: 600;
-                flex: 1;
-                font-family: 'Poppins', sans-serif;
-            }
-
-            #header-logo {
-                height: 48px;
-                object-fit: contain;
-                margin-left: 0px;
-                filter: brightness(0) invert(1);
-            }
-
-            #header-title {
-                flex-grow: 1;
-                text-align: center;
-                margin-left: 20px;
-                font-size: 1.4vw;
-                font-weight: 600;
-                letter-spacing: 0.5px;
-                color: #ffffff;
-                text-shadow: 0 1px 4px rgba(0,0,0,0.2);
-            }
-
-            #header-company {
-                font-size: 14px;
-                font-weight: 500;
-                width: 280px;
-                margin-left: -30px;
-                margin-right: 10px;
-                color: rgba(255,255,255,0.85);
-            }
-
-            .back-button {
-                display: flex;
-                align-items: center;
-                gap: 8px;
-                background: rgba(255, 255, 255, 0.12);
-                color: #ffffff;
-                text-decoration: none;
-                padding: 8px 18px;
-                border-radius: 8px;
-                font-weight: 500;
-                font-size: 13px;
-                transition: 0.25s ease-in-out;
-                margin-right: 20px;
-                border: 1px solid rgba(255, 255, 255, 0.2);
-                backdrop-filter: blur(4px);
-                font-family: 'Poppins', sans-serif;
-            }
-
-            .back-button:hover {
-                background: #e1ac3d;
-                color: #173681;
-                border-color: #e1ac3d;
-            }
-
-            .back-button img {
-                filter: brightness(0) invert(1);
-                transition: filter 0.25s ease;
-            }
-
-            .back-button:hover img {
-                filter: brightness(0);
-            }
-
-            .back-btn {
-                position: absolute;
-                width: 20px;
-                left: 415px;
-                top: 20px;
-                background: white;
-                padding: 8px;
-                border-radius: 50%;
-                border: 2px solid #173681;
-                transition: 0.25s ease-in-out;
-            }
-
-            .back-btn:hover {
-                background: #e1ac3d;
-                border-color: #e1ac3d;
-            }
-
-            /* ── SVG Overlay ── */
-            .svgOverlay {
-                position: absolute;
-                top: 0;
-                left: 0;
-                width: 100%;
-                height: 100%;
-                z-index: 1;
-                pointer-events: none;
-            }
-
-            .lines {
-                stroke-width: 2.5;
-                stroke: #173681;
-                z-index: 2;
-                opacity: 0.7;
-            }
-
-            .svgLabels {
-                font-family: 'Poppins', sans-serif;
-                font-size: 13px;
-                font-weight: 700;
-                fill: #e1ac3d;
-            }
-
-            /* ── Main App ── */
-            #app {
-                display: flex;
-                flex: 1;
-                overflow: hidden;
-                background: linear-gradient(180deg, #e8ecf1 0%, #dce2eb 100%);
-                position: relative;
-            }
-
-            /* ── Left Column ── */
-            #left-column {
-                padding: 0;
-                display: flex;
-                flex-direction: column;
-                margin: 10px 25px;
-                margin-right: 0;
-                height: 90vh;
-                justify-content: space-around;
-                align-items: center;
-                z-index: 2;
-            }
-
-            /* ── Power Supply Box ── */
-            .powerSupply-box {
-                display: flex;
-                flex-direction: column;
-                background: #ffffff;
-                justify-content: space-around;
-                align-items: center;
-                padding: 20px;
-                border: none;
-                border-radius: 14px;
-                height: 15%;
-                margin: 50px 0 20px 0px;
-                width: 175px;
-                z-index: 2;
-                box-shadow: 0 4px 16px rgba(23, 54, 129, 0.12), 0 1px 3px rgba(0,0,0,0.06);
-                border-left: 4px solid #e1ac3d;
-            }
-
-            .powerSupply-box p {
-                margin: 0;
-                color: #173681;
-                font-size: 13px;
-                font-weight: 600;
-                letter-spacing: 0.3px;
-            }
-
-            #powerButton {
-                font-family: 'Poppins', sans-serif;
-                font-size: 15px;
-                font-weight: 600;
-                padding: 10px 28px;
-                background: #ffffff;
-                border: 2px solid #e74c3c;
-                color: #e74c3c;
-                border-radius: 10px;
-                box-shadow: 0 3px 10px rgba(231, 76, 60, 0.2);
-                cursor: pointer;
-                transition: all 0.25s ease;
-                letter-spacing: 0.5px;
-            }
-
-            #powerButton:hover {
-                background: #e74c3c;
-                color: #ffffff;
-                box-shadow: 0 4px 16px rgba(231, 76, 60, 0.35);
-            }
-
-            /* ── Speed Control ── */
-            #speedControl {
-                display: flex;
-                flex-direction: column;
-                background: #ffffff;
-                align-items: center;
-                justify-content: space-around;
-                padding: 15px;
-                border: none;
-                border-radius: 14px;
-                height: 50%;
-                margin: 5px 0px;
-                width: 225px;
-                z-index: 2;
-                box-shadow: 0 4px 16px rgba(23, 54, 129, 0.12), 0 1px 3px rgba(0,0,0,0.06);
-                border-top: 4px solid #173681;
-            }
-
-            .speedControlLabel {
-                font-family: 'Poppins', sans-serif;
-                font-size: 12px;
-                font-weight: 600;
-                color: #173681;
-                letter-spacing: 0.3px;
-            }
-
-            /* ── Percentage Box ── */
-            .percetangeBox {
-                border: 2px solid #173681;
-                padding: 8px 10px;
-                border-radius: 8px;
-                width: 80px;
-                text-align: center;
-                background: rgba(23, 54, 129, 0.04);
-            }
-
-            #knobPercentage {
-                margin: 0;
-                font-family: 'Poppins', sans-serif;
-                font-size: 13px;
-                font-weight: 600;
-                color: #173681;
-            }
-
-            /* ── Knob ── */
-            .knob-img {
-                width: 105px;
-                cursor: grab;
-            }
-
-            .knob-img:active {
-                cursor: grabbing;
-            }
-
-            /* ── Toggle Switches ── */
-            .toggle-img {
-                width: 40px;
-                rotate: -90deg;
-                cursor: pointer;
-            }
-
-            .toggle1-img {
-                width: 40px;
-                rotate: 90deg;
-                cursor: pointer;
-            }
-
-            #switchLabel {
-                font-family: 'Poppins', sans-serif;
-                font-size: 12px;
-                font-weight: 600;
-                width: 25%;
-                text-align: center;
-                color: #173681;
-            }
-
-            #switch-box {
-                display: flex;
-                align-items: center;
-                justify-content: space-around;
-                background-color: #ffffff;
-                border: none;
-                border-radius: 12px;
-                width: 200px;
-                height: 55px;
-                margin-top: 15px;
-                box-shadow: 0 4px 16px rgba(23, 54, 129, 0.12), 0 1px 3px rgba(0,0,0,0.06);
-                border-left: 4px solid #e1ac3d;
-            }
-
-            #direction-box {
-                display: flex;
-                align-items: center;
-                justify-content: space-around;
-                background-color: #ffffff;
-                border: none;
-                border-radius: 12px;
-                width: 200px;
-                height: 55px;
-                box-shadow: 0 4px 16px rgba(23, 54, 129, 0.12), 0 1px 3px rgba(0,0,0,0.06);
-                border-left: 4px solid #e1ac3d;
-            }
-
-            #switchCircuit-box {
-                background-color: #ffffff;
-                border: none;
-                border-radius: 12px;
-                padding: 10px;
-                margin: 10px 0 0 0;
-                height: 50px;
-                z-index: 0;
-                box-shadow: 0 4px 16px rgba(23, 54, 129, 0.12);
-            }
-
-            #switchCircuitLabel {
-                font-family: 'Poppins', sans-serif;
-                font-size: 13px;
-                font-weight: 500;
-                margin: 0;
-                color: #173681;
-            }
-
-            /* ── Right Column ── */
-            #right-column {
-                padding: 0;
-                display: flex;
-                flex-direction: column;
-                height: 82.5vh;
-                margin: 10px 10px 10px 0;
-                width: 100%;
-                gap: 25px;
-                justify-content: space-between;
-                align-items: end;
-                z-index: 2;
-            }
-
-            /* ── Chart Section ── */
-            #chart-section {
-                display: flex;
-                background-color: #ffffff;
-                border: none;
-                border-radius: 14px;
-                padding: 15px;
-                width: 1000px;
-                height: 100%;
-                box-shadow: 0 4px 16px rgba(23, 54, 129, 0.12), 0 1px 3px rgba(0,0,0,0.06);
-                border-top: 4px solid #173681;
-                position: relative;
-            }
-
-            #graphSwitch {
-                position: absolute;
-                border: none;
-                padding: 6px 14px;
-                background: #173681;
-                color: #ffffff;
-                border-radius: 8px;
-                margin-top: -5px;
-                cursor: pointer;
-                font-family: 'Poppins', sans-serif;
-                font-size: 12px;
-                font-weight: 600;
-                letter-spacing: 0.3px;
-                transition: all 0.25s ease;
-                box-shadow: 0 2px 8px rgba(23, 54, 129, 0.25);
-                z-index: 5;
-            }
-
-            #graphSwitch:hover {
-                background: #e1ac3d;
-                color: #173681;
-                box-shadow: 0 4px 14px rgba(225, 172, 61, 0.35);
-            }
-
-            /* ── Bottom Row ── */
-            .bottom-row {
-                width: 100%;
-                gap: 50px;
-                display: flex;
-            }
-
-            .circuit-container {
-                width: 70%;
-                position: relative;
-            }
-
-            /* ── Voltage / Current Boxes ── */
-            #current-box {
-                position: absolute;
-                top: 10%;
-                left: 8%;
-                background-color: #ffffff;
-                border: none;
-                border-radius: 10px;
-                padding: 8px 12px;
-                margin: 22px 0;
-                color: #173681;
-                z-index: 3;
-                box-shadow: 0 3px 12px rgba(23, 54, 129, 0.12);
-                border-left: 3px solid #e1ac3d;
-            }
-
-            #voltage-box {
-                position: absolute;
-                top: 30%;
-                left: 1%;
-                background-color: #ffffff;
-                border: none;
-                border-radius: 10px;
-                padding: 8px 12px;
-                margin: 20px 0;
-                color: #173681;
-                z-index: 3;
-                box-shadow: 0 3px 12px rgba(23, 54, 129, 0.12);
-                border-left: 3px solid #e1ac3d;
-            }
-
-            #currentLabel, #voltageLabel {
-                font-family: 'Poppins', sans-serif;
-                font-weight: 600;
-                margin: 0;
-                font-size: 13px;
-                color: #173681;
-            }
-
-            /* ── Motor Image ── */
-            .motor-img {
-                position: absolute;
-                width: 100%;
-                bottom: 15px;
-                left: 0px;
-                border-radius: 14px;
-                box-shadow: 0 4px 16px rgba(23, 54, 129, 0.12), 0 1px 3px rgba(0,0,0,0.06);
-            }
-
-            /* ── Tire ── */
-            .tire-img {
-                width: 85%;
-                margin: 0 0 10px 0;
-            }
-
-            /* ── Motor Box ── */
-            #motor-box {
-                display: flex;
-                width: 30%;
-                height: 90%;
-                padding: 20px;
-                flex-direction: column;
-                background-color: #ffffff;
-                border: none;
-                border-radius: 14px;
-                justify-content: space-around;
-                align-items: center;
-                box-shadow: 0 4px 16px rgba(23, 54, 129, 0.12), 0 1px 3px rgba(0,0,0,0.06);
-                border-top: 4px solid #e1ac3d;
-            }
-
-            .motorLabel {
-                font-family: 'Poppins', sans-serif;
-                font-weight: 600;
-                margin-top: 10px;
-                margin-bottom: 5px;
-                font-size: 13px;
-                color: #173681;
-                text-align: center;
-            }
-
-            .rpm-container {
-                border: 2px solid #173681;
-                padding: 8px 14px;
-                border-radius: 8px;
-                width: auto;
-                min-width: 100px;
-                text-align: center;
-                background: rgba(23, 54, 129, 0.04);
-            }
-
-            #rpm {
-                margin: 0;
-                font-family: 'Poppins', sans-serif;
-                font-weight: 700;
-                font-size: 16px;
-                color: #173681;
-            }
-
-            /* ── Tire Rotation ── */
-            @keyframes rotateTire {
-                from { transform: rotate(0deg); }
-                to { transform: rotate(360deg); }
-            }
-
-            .rotating {
-                animation: rotateTire 1s linear infinite;
-            }
-
-            /* ── Circuit Motor Box ── */
-            #circuitMotor {
-                display: flex;
-                flex-direction: column;
-                background-color: #ffffff;
-                border: none;
-                border-radius: 14px;
-                width: 205px;
-                height: 205px;
-                justify-content: center;
-                align-items: center;
-                z-index: 0;
-                box-shadow: 0 4px 16px rgba(23, 54, 129, 0.12);
-            }
-
-            /* ── Center Column Text ── */
-            #center-column div p {
-                text-align: center;
-                font-weight: 600;
-                font-family: 'Poppins', sans-serif;
-                color: #173681;
-            }
-
-            /* ── SVG Circles ── */
-            #neutralCircle {
-                fill: #e1ac3d;
-                stroke: #173681;
-                stroke-width: 2;
-            }
-
-            #liveCircle {
-                fill: #e74c3c;
-                stroke: #173681;
-                stroke-width: 2;
-            }
-
-            /* ── Lights ── */
-            .light-img {
-                width: 50px;
-                height: auto;
-                display: block;
-                margin: auto -5px;
-                rotate: 90deg;
-            }
-
-            #lightImgOn {
-                position: absolute;
-                opacity: 0;
-            }
-
-            .light {
-                display: flex;
-                background: white;
-                text-align: center;
-                width: 85px;
-                height: 85px;
-                border: 2px solid #173681;
-                color: #173681;
-                border-radius: 50%;
-            }
-
-            /* ── Chart Containers ── */
-            #pwm-chart-container1, #pwm-chart-container2, #pwm-chart-container3 {
-                display: none;
-            }
-
-            #voltage-chart-container, #current-chart-container, #power-chart-container, #pwm-chart-container1, #pwm-chart-container2, #pwm-chart-container3 {
-                width: 33%;
-                height: 100%;
-                flex: 2;
-            }
-
-            /* ── Load Section ── */
-            #load-section {
-                height: 360px;
-                width: 100%;
-                display: flex;
-                flex-direction: row;
-                justify-content: space-around;
-                align-items: center;
-                flex-wrap: wrap;
-            }
-
-            .loads {
-                display: flex;
-                width: 35%;
-                align-items: center;
-                justify-content: space-between;
-                margin-top: 65px;
-            }
-
-            /* ── Banner / Splash ── */
-            #sim-title {
-                animation-name: fadeIn;
-                animation-duration: 1s;
-                animation-fill-mode: forwards;
-                position: absolute;
-                bottom: 90px;
-                z-index: 1;
-                font-size: 20px;
-                left: 50%;
-                transform: translateX(-50%);
-                color: #173681;
-                font-family: 'Poppins', sans-serif;
-                font-weight: 600;
-            }
-
-            #sim-start {
-                animation-name: fadeInFromBottom;
-                animation-duration: 1s;
-                animation-fill-mode: forwards;
-                position: absolute;
-                bottom: 40px;
-                z-index: 1;
-                left: 50%;
-                text-decoration: none;
-                color: #173681;
-                font-weight: 600;
-                font-size: 14px;
-                transform: translateX(-50%);
-                padding: 10px 50px;
-                border: 2px solid #173681;
-                border-radius: 24px;
-                transition: 0.25s ease-in-out;
-                font-family: 'Poppins', sans-serif;
-            }
-
-            #sim-start:hover {
-                background: #173681;
-                color: #ffffff;
-            }
-
-            #logo {
-                animation-name: fadeIn;
-                animation-duration: 2s;
-                animation-fill-mode: forwards;
-                position: absolute;
-                height: 50px;
-                top: 20px;
-                right: 20px;
-                z-index: 1;
-            }
-
-            .sims-container {
-                margin-top: 450px;
-                margin-left: 20px;
-                z-index: 1;
-            }
-
-            .simLinkButton {
-                background: #173681;
-                border: none;
-                color: white;
-                border-radius: 8px;
-                padding: 10px;
-                margin: 5px;
-                font-size: 14px;
-                cursor: pointer;
-                font-family: 'Poppins', sans-serif;
-                font-weight: 500;
-                transition: background 0.25s ease;
-            }
-
-            .simLinkButton:hover {
-                background: #e1ac3d;
-                color: #173681;
-            }
-
-            .banner-container {
-                animation-name: fadeIn;
-                animation-duration: 2s;
-                animation-fill-mode: forwards;
-                position: absolute;
-                height: 105%;
-                z-index: 0;
-                margin: 0 auto;
-                top: -25px;
-                left: 50%;
-                transform: translateX(-50%);
-            }
-
-            .banner-container img {
-                height: 100%;
-            }
+  from {
+      opacity: 0;
+  }
+  to {
+      opacity: 1;
+  }
+}
+
+@keyframes fadeInFromBottom {
+  from {
+      bottom: -40px;
+      opacity: 0;
+  }
+  to {
+      bottom: 40px;
+      opacity: 1;
+  }
+}
+
+body {
+  font-family: Georgia, 'Times New Roman', Times, serif;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  height: 100vh; /* Ensure full height */
+  overflow: hidden;
+  user-select: none;
+  transform: scale(calc(100vw / 1920))
+}
+header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #fff;
+  color: black;
+  /* padding: 10px; */
+  border-top: 1px solid #dee2e6;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.left-header {
+  background: #f8f9fa;
+  display: flex;
+  align-items: center;
+  padding: 10px;
+  border-right: 1px solid #000; /* Right border for company name */
+  margin-left: 50px /* Right border for company name */
+}
+
+#header-logo, #header-title, #header-company {
+  font-size: 18px;
+  font-weight: bold;
+  flex: 1;
+}
+
+#header-logo {
+  height: 52px;   
+  object-fit: contain;
+  margin-left: -20px; /* Pushes all other elements to the right */
+}
+
+#header-title {
+  flex-grow: 1;
+  text-align: center;
+  margin-left: 20px; /* Space between border and title */
+  font-size: 1.5vw;
+}
+
+#header-company {
+  font-size: 16px;
+  width: 280px;
+  margin-left: -30px;
+  margin-right: 10px; /* This will push the company name to the right */
+}
+
+.back-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #E8E8E8;
+  color: #333;
+  text-decoration: none;
+  padding: 8px 16px;
+  border-radius: 20px;
+  font-weight: 500;
+  font-size: 16px;
+  transition: 0.2s ease-in-out;
+  margin-right: 20px;
+}
+
+.back-button:hover {
+  background-color: #f1f3f5;
+}
+
+.back-button i {
+  font-size: 18px;
+}
+
+.back-btn {
+  position: absolute;
+  width: 20px;
+  left: 415px;
+  top: 20px;
+  background: white;
+  padding: 8px;
+  border-radius: 50%;
+  border: 2px solid black;
+  transition: 0.2s ease-in-out;
+}
+
+.back-btn:hover {
+  filter: invert(1);
+  border: 2px solid white;
+}
+
+#sim-title{
+  animation-name: fadeIn;
+  animation-duration: 1s;
+  animation-fill-mode: forwards;
+  position: absolute;
+  bottom: 90px;
+  z-index: 1;
+  font-size: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: #000f0c;
+}
+
+
+#sim-start{
+  animation-name: fadeInFromBottom;
+  animation-duration: 1s;
+  animation-fill-mode: forwards;
+  position: absolute;
+  bottom: 40px;
+  z-index: 1;
+  left: 50%;
+  text-decoration: none;
+  color: #000f0c;
+  font-weight: bold;
+  font-size: 14px;
+  transform: translateX(-50%);
+  padding: 10px 50px;
+  border: 2px solid #000f0c;
+  border-radius: 24px;
+  transition: 0.2s ease-in-out;
+}
+
+#sim-start:hover{
+  background: #000f0c;
+  color: white;
+
+}
+
+
+
+
+#logo {
+  animation-name: fadeIn;
+  animation-duration: 2s;
+  animation-fill-mode: forwards;
+  position: absolute;
+  height: 50px;
+  top: 20px;
+  right: 20px;
+  z-index: 1;
+}
+
+.sims-container {
+  margin-top: 450px;
+  margin-left: 20px;
+  z-index: 1;
+}
+
+.simLinkButton {
+  background: #007BFF;
+  border: none;
+  color: white;
+  border-radius: 5px;
+  padding: 10px;
+  margin: 5px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+
+.banner-container{
+  animation-name: fadeIn;
+  animation-duration: 2s;
+  animation-fill-mode: forwards;
+  position: absolute;
+  height: 105%;
+  z-index: 0;
+  margin: 0 auto;
+  top: -25px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+.banner-container img{
+  height: 100%;
+}
+
+#app {
+  display: flex;
+  flex: 1; /* Take up remaining height */
+  overflow: hidden;
+  background: #c9c9c9;
+  justify-content: space-between;
+}
+
+
+#app > div {
+  display: flex;
+  flex-direction: column;
+}
         </style>
-    </head>
-    <body>
-        <header>
+</head>
+<body>
+ <header style="background: #f8f9fa;">
             <div class="left-header">
                 <img id="header-logo" src="../../../assets/Scientech logo-2.png" alt="Logo" />
             </div>
-            <div id="header-title">DC Motor PWM Control</div>
+            <div id="header-title">BLDC Motor</div>
             <div style="gap: clamp(12px, 2vw, 25px);flex-wrap: wrap;align-items: center;">
-                <a style="width: 170px;height: 39px;background-color: rgba(255,255,255,0.12);transform: translateY(-2px);box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);border-radius: clamp(4px, 0.8vw, 10px);border: 1px solid rgba(255,255,255,0.2);" href="../DC_Motors.html" class="back-button">
-                    <img style="height: 18px" src="../../../assets/left-arrow.png" alt=""> Back to Course
-                </a>
+              <a style="width: 170px;height: 39px;background-color: #edeff1;transform: translateY(-2px);box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);border-radius: clamp(4px, 0.8vw, 10px);border: 1px solid #dee2e6;" href="../AC_Motors.html" class="back-button">
+                <i class="fas fa-arrow-left"></i> <img style="height: 28px" src="../../../assets/left-arrow.png" alt=""> Back to Course
+            </a>
             </div>
+            <!-- <a href="../AC_Motors.html"><img src="./img/back.png" alt="back" class="back-btn" /></a> -->
         </header>
+  <!-- <a href="../index.html"><img src="../../../shared/img/back.png" alt="back" class="back-btn"></a> -->
+  <div id="app">
+    <svg class="svgOverlay">
+      <circle id="neutralCircle" r="8" stroke="black" stroke-width="2" fill="black" />
+      <circle id="liveCircle" r="8" stroke="black" stroke-width="2" fill="red" />
 
-        <div id="app">
-            <svg class="svgOverlay">
-                <line class="lines" id="mainLine1" />
-                <line class="lines" id="mainLine2" />
-                <line class="lines" id="smpsLine1" />
-                <line class="lines" id="smpsLine2" />
-                <text class="svgLabels" id="main-smpsN">+</text>
-                <text class="svgLabels" id="main-smpsL">−</text>
-                <circle id="neutralCircle" r="8" stroke="#173681" stroke-width="2" fill="#e1ac3d" />
-                <circle id="liveCircle" r="8" stroke="#173681" stroke-width="2" fill="#e74c3c" />
-            </svg>
+      <line class="lines" id="mainLine1"/>
+      <line class="lines" id="mainLine2"/>
 
-            <div id="left-column">
-                <div class="powerSupply-box">
-                    <button id="powerButton">Power</button>
-                    <p><b>24V DC</b></p>
-                </div>
+      <line class="lines" id="smpsLine1"/>
+      <line class="lines" id="smpsLine2"/>
 
-                <div id="speedControl">
-                    <p class="speedControlLabel">Speed Control</p>
-                    <img src="img/knob.png" id="knob" class="knob-img" />
-                    <div class="percetangeBox">
-                        <p id="knobPercentage">50.00%</p>
-                    </div>
-                    <div id="switch-box">
-                        <p id="switchLabel">Motor</p>
-                        <img id="toggle" class="toggle-img" src="img/toggle.png" />
-                    </div>
-                    <div id="direction-box">
-                        <p id="switchLabel">Direction</p>
-                        <img id="toggle1" class="toggle1-img" src="img/toggle.png" />
-                    </div>
-                </div>
-            </div>
-
-            <div id="right-column">
-                <div id="chart-section">
-                    <button id="graphSwitch">Switch to PWM</button>
-                    <div id="voltage-chart-container">
-                        <canvas id="voltageChart"></canvas>
-                    </div>
-                    <div id="current-chart-container">
-                        <canvas id="currentChart"></canvas>
-                    </div>
-                    <div id="power-chart-container">
-                        <canvas id="powerChart"></canvas>
-                    </div>
-                    <div id="pwm-chart-container1">
-                        <canvas id="comparatorChart1"></canvas>
-                    </div>
-                    <div id="pwm-chart-container2">
-                        <canvas id="comparatorChart2"></canvas>
-                    </div>
-                    <div id="pwm-chart-container3">
-                        <canvas id="comparatorChart3"></canvas>
-                    </div>
-                </div>
-
-                <div class="bottom-row">
-                    <div class="circuit-container">
-                        <div id="voltage-box">
-                            <p id="voltageLabel">0.00V</p>
-                        </div>
-                        <div id="current-box">
-                            <p id="currentLabel">0.00A</p>
-                        </div>
-                        <img src="img/dcMotor.png" id="motor" class="motor-img" />
-                    </div>
-
-                    <div id="motor-box">
-                        <img src="img/tire.png" id="tire" class="tire-img" />
-                        <div class="rpm-container">
-                            <p id="rpm">0 RPM</p>
-                        </div>
-                        <p class="motorLabel">DC Motor</p>
-                    </div>
-                </div>
-            </div>
+      <text class="svgLabels" id="main-smpsN">N</text>
+      <text class="svgLabels" id="main-smpsL">L</text>
+    </svg>
+    <div id="left-column">
+      <div class="powerSupply-box">
+        <button id="powerButton">Power</button>
+        <p style="font-weight: bold;">230V AC</p>
+      </div>
+      <div id="speedControl">
+        <p class="speedControlLabel">220V -> 24V SMPS</p>
+        <div class="switches">
+          <div id="direction-box">
+            <p id="switchLabel">Reverse</p>
+            <img src="img/toggle.png" id="toggle1" class="toggle1-img">
+            <p id="switchLabel">Forward</p>
+          </div>
+          <div id="switch-box">
+            <p id="switchLabel">Motoring Mode</p>
+            <img src="img/toggle.png" id="toggle" class="toggle-img">
+            <p id="switchLabel">Braking Mode</p>
+          </div>
         </div>
+        
+        <img src="img/knob.png" id="knob" class="knob-img">
+        <div class="percetangeBox">
+          <p id="knobPercentage">0.00%</p>
+        </div>
+        <p class="speedControlLabel">Speed Control</p>
+      </div>
+    </div>
+    <div id="right-column">
+      <div id="chart-section">
+        <button id="graphSwitch">Switch Graph</button>
+        <div class="chart-container" id="pwm-chart-container1">
+          <canvas id="comparatorChart1"></canvas>
+        </div>
+        <div class="chart-container" id="pwm-chart-container2">
+          <canvas id="comparatorChart2"></canvas>
+        </div>
+        <div class="chart-container" id="pwm-chart-container3">
+          <canvas id="comparatorChart3"></canvas>
+        </div>
+        <div class="chart-container" id="voltage-chart-container">
+          <canvas id="voltageChart"></canvas>
+        </div>
+        <div class="chart-container" id="current-chart-container">
+          <canvas id="currentChart"></canvas>
+        </div>
+        <div class="chart-container" id="power-chart-container">
+          <canvas id="powerChart"></canvas>
+        </div>
+      </div>
 
-        <script src="renderer.js"></script>
-        <link rel="stylesheet" href="https://unpkg.com/webtour@1.1.0/dist/webtour.min.css" />
-        <script src="https://unpkg.com/webtour@1.1.0/dist/webtour.min.js"></script>
-    </body>
+      <div class="bottom-row">
+        <div class="circuit-container">
+          <img src="img/motor.png" id="motor" class="motor-img">
+          <div id="voltage-box">
+            <p id="voltageLabel">0.00V</p>
+          </div>
+          <div id="current-box">
+            <p id="currentLabel">0.00A</p>
+          </div>
+        </div>
+        <div id="motor-box">
+          <img src="img/tire.png" id="tire" class="tire-img">
+          <div class="rpm-container">
+            <p id="rpm">0 RPM</p>
+          </div>
+          <p class="motorLabel">BLDC Motor</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="renderer.js"></script>
+  <link rel="stylesheet" href="https://unpkg.com/webtour@1.1.0/dist/webtour.min.css">
+  <script src="https://unpkg.com/webtour@1.1.0/dist/webtour.min.js"></script>
+</body>
 </html>
