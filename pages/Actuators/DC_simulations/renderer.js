@@ -61,10 +61,10 @@ function drawLines() {
   document.getElementById('smpsLine2').setAttribute('y2', smpsPositionY);
 
   document.getElementById('main-smpsN').setAttribute('x', powerXL - 5);
-  document.getElementById('main-smpsN').setAttribute('y', powerY - 55);
+  document.getElementById('main-smpsN').setAttribute('y', powerY - 25);
 
   document.getElementById('main-smpsL').setAttribute('x', powerXR - 5);
-  document.getElementById('main-smpsL').setAttribute('y', powerY - 55);
+  document.getElementById('main-smpsL').setAttribute('y', powerY - 25);
 
 }
 
