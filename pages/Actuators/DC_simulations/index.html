@@ -36,7 +36,8 @@ html, body {
   overflow: hidden;
 }
 body {
-  font-family: Georgia, 'Times New Roman', Times, serif;
+  /* font-family: Georgia, 'Times New Roman', Times, serif; */
+  font-family: 'Poppins', sans-serif;
   display: flex;
   flex-direction: column;
   height: 100vh; /* Ensure full height */
@@ -63,7 +64,8 @@ header {
   align-items: center;
   padding: 10px;
   /* border-right: 1px solid rgba(255, 255, 255, 0.25); Right divider for company name */
-  margin-left: 50px /* Right divider for company name */
+  margin-left: 50px; /* Right divider for company name */
+  height: 35px;
 }
 
 #header-logo, #header-title, #header-company {
@@ -77,6 +79,7 @@ header {
   height: 52px;   
   object-fit: contain;
   margin-left: -20px; /* Pushes all other elements to the right */
+  margin-top: -10px;
 }
 
 #header-title {
