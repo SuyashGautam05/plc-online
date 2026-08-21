@@ -9,42 +9,63 @@
     <link rel="stylesheet" href="../defination.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        :root {
+            --navy: #173681;
+            --navy-dark: #0f245c;
+            --gold: #e1ac3d;
+            --bg: #eef1f7;
+            --card-border: #e6c98a;
+            --card-shadow: 0 6px 18px rgba(23, 54, 129, 0.10);
+        }
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
+        html, body {
+            height: 100%;
+            overflow: hidden;
+        }
+
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            min-height: 100vh;
-            padding: 20px;
+            height: 100vh;
+            padding: 12px;
+            background: var(--bg);
         }
 
         .container {
             max-width: 1400px;
+            height: calc(100vh - 24px);
             margin: 0 auto;
-            background: white;
-            border-radius: 15px;
-            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+            background: transparent;
             overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
         }
 
         .header {
-            background: linear-gradient(135deg, #2c3e50, #34495e);
-            color: white;
-            padding: 20px 30px;
+            background: #fff;
+            color: var(--navy);
+            padding: 14px 24px;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            border: 1px solid var(--card-border);
+            border-top: 3px solid var(--gold);
+            border-radius: 16px;
+            box-shadow: var(--card-shadow);
         }
 
         .header h1 {
-            font-size: 24px;
+            font-size: 20px;
             display: flex;
             align-items: center;
             gap: 10px;
-            color: white;
+            color: var(--navy);
         }
 
         .controls {
@@ -53,9 +74,9 @@
         }
 
         .btn {
-            padding: 10px 20px;
+            padding: 8px 18px;
             border: none;
-            border-radius: 5px;
+            border-radius: 20px;
             cursor: pointer;
             font-size: 14px;
             font-weight: 600;
@@ -63,10 +84,11 @@
             display: flex;
             align-items: center;
             gap: 5px;
+            box-shadow: var(--card-shadow);
         }
 
-        .btn-primary { background: #3498db; color: white; }
-        .btn-primary:hover { background: #2980b9; transform: translateY(-2px); }
+        .btn-primary { background: var(--gold); color: #2c2205; }
+        .btn-primary:hover { background: #c9932c; transform: translateY(-2px); }
         .btn-success { background: #27ae60; color: white; }
         .btn-success:hover { background: #229954; transform: translateY(-2px); }
         .btn-danger { background: #e74c3c; color: white; }
@@ -74,77 +96,86 @@
 
         .main-content {
             display: flex;
-            height: calc(100vh - 140px);
+            flex: 1;
+            min-height: 0;
+            gap: 12px;
         }
 
         .sidebar {
-            width: 200px;
-            background: #34495e;
-            color: white;
-            padding: 20px;
-            overflow-y: auto;
+            width: 180px;
+            background: #fff;
+            color: var(--navy);
+            padding: 14px;
+            overflow-y: hidden;
+            border: 1px solid var(--card-border);
+            border-top: 3px solid var(--gold);
+            border-radius: 16px;
+            box-shadow: var(--card-shadow);
         }
 
-        .component-category { margin-bottom: 25px; }
+        .component-category { margin-bottom: 16px; }
 
         .category-title {
-            font-size: 12px;
-            font-weight: 600;
+            font-size: 11px;
+            font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 1px;
-            margin-bottom: 12px;
-            color: #bdc3c7;
+            margin-bottom: 10px;
+            color: var(--navy);
         }
 
         .component {
-            background: #2c3e50;
-            padding: 12px;
-            margin-bottom: 8px;
-            border-radius: 5px;
+            background: #fff;
+            padding: 8px;
+            margin-bottom: 6px;
+            border-radius: 8px;
             cursor: move;
             transition: all 0.3s;
-            border: 2px solid transparent;
+            border: 2px solid var(--gold);
             display: flex;
             align-items: center;
             justify-content: center;
         }
 
         .component:hover {
-            background: #1abc9c;
-            border-color: #16a085;
+            background: #fdf3e0;
+            border-color: var(--navy);
             transform: translateX(5px);
         }
 
-        .component svg { width: 80px; height: 40px; }
+        .component svg { width: 60px; height: 30px; }
 
         .workspace {
             flex: 1;
-            background: #ecf0f1;
-            padding: 20px;
-            overflow: auto;
+            background: var(--bg);
+            padding: 12px;
+            overflow: hidden;
             position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .grid-container {
             display: inline-block;
             background: white;
-            border-radius: 8px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            padding: 20px;
-            width: 100%;
-            height: 100%;
+            border: 1px solid var(--card-border);
+            border-top: 3px solid var(--gold);
+            border-radius: 16px;
+            box-shadow: var(--card-shadow);
+            padding: 12px;
         }
 
         .ladder-grid {
             display: grid;
-            grid-template-columns: repeat(5, 206px);
-            grid-template-rows: repeat(3, 153px);
+            grid-template-columns: repeat(5, 130px);
+            grid-template-rows: repeat(3, 96px);
             gap: 0;
             position: relative;
         }
 
         .grid-cell {
-            border: 1px solid #0d4163;
+            border: 1px solid var(--navy);
             position: relative;
             background: white;
             transition: all 0.2s;
@@ -152,29 +183,29 @@
             isolation: isolate;
         }
 
-        .grid-cell:hover { background: #e8f8f5; border-color: #1abc9c; }
+        .grid-cell:hover { background: #fdf3e0; border-color: var(--gold); }
         .grid-cell.rail {
-            background: #345e84;
+            background: var(--navy);
             border: none;
             cursor: not-allowed;
         }
-        .grid-cell.rail:hover { background: #1a252f; border-color: transparent; }
+        .grid-cell.rail:hover { background: var(--navy-dark); border-color: transparent; }
         .rail-label {
             position: absolute;
             top: 30%;
             left: 50%;
             transform: translate(-50%, -50%) rotate(359deg);
             color: #ecf0f1;
-            font-size: 19px;
+            font-size: 14px;
             font-weight: 700;
             text-transform: uppercase;
             letter-spacing: 1px;
             white-space: nowrap;
             pointer-events: none;
             z-index: 5;
-            opacity: 0.75;
+            opacity: 0.85;
         }
-        .grid-cell.occupied { background: #d5f4e6; }
+        .grid-cell.occupied { background: #fdf3e0; }
 
         .placed-component {
             width: 100%;
@@ -195,11 +226,11 @@
             bottom: 2px;
             left: 50%;
             transform: translateX(-50%);
-            font-size: 11px;
+            font-size: 10px;
             font-weight: 600;
-            background: #3498db;
+            background: var(--navy);
             color: white;
-            padding: 2px 8px;
+            padding: 2px 7px;
             border-radius: 3px;
             white-space: nowrap;
             z-index: 3;
@@ -210,10 +241,10 @@
             top: 2px;
             left: 50%;
             transform: translateX(-50%);
-            font-size: 10px;
+            font-size: 9px;
             font-weight: 600;
-            background: #e67e22;
-            color: white;
+            background: var(--gold);
+            color: #2c2205;
             padding: 2px 6px;
             border-radius: 3px;
             white-space: nowrap;
@@ -230,8 +261,8 @@
         }
 
         .wire.energized {
-            background: #f39c12;
-            box-shadow: 0 0 10px #f39c12;
+            background: var(--gold);
+            box-shadow: 0 0 10px var(--gold);
         }
 
         .wire-horizontal {
@@ -249,7 +280,7 @@
         .power-rail {
             position: absolute;
             width: 4px;
-            background: #2c3e50;
+            background: var(--navy-dark);
             top: 0;
             bottom: 0;
             z-index: 0;
@@ -270,11 +301,11 @@
             background: #e74c3c;
             color: white;
             border: none;
-            width: 20px;
-            height: 20px;
+            width: 18px;
+            height: 18px;
             border-radius: 50%;
             cursor: pointer;
-            font-size: 12px;
+            font-size: 11px;
             display: none;
             align-items: center;
             justify-content: center;
@@ -305,11 +336,11 @@
             width: 90%;
         }
 
-        .modal-header { font-size: 20px; font-weight: 600; margin-bottom: 20px; color: #2c3e50; }
+        .modal-header { font-size: 20px; font-weight: 600; margin-bottom: 20px; color: var(--navy); }
 
         .form-group { margin-bottom: 15px; }
 
-        .form-group label { display: block; margin-bottom: 5px; font-weight: 600; color: #34495e; }
+        .form-group label { display: block; margin-bottom: 5px; font-weight: 600; color: var(--navy); }
 
         .form-group input,
         .form-group select {
@@ -322,19 +353,24 @@
         }
 
         .form-group input:focus,
-        .form-group select:focus { outline: none; border-color: #3498db; }
+        .form-group select:focus { outline: none; border-color: var(--gold); }
 
         .modal-buttons { display: flex; gap: 10px; margin-top: 20px; }
         .modal-buttons .btn { flex: 1; }
 
         .status-bar {
-            background: #2c3e50;
-            color: white;
+            background: #fff;
+            color: var(--navy);
             padding: 10px 20px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             font-size: 12px;
+            font-weight: 600;
+            border: 1px solid var(--card-border);
+            border-top: 3px solid var(--gold);
+            border-radius: 16px;
+            box-shadow: var(--card-shadow);
         }
 
         .status-indicator { display: flex; align-items: center; gap: 8px; }
@@ -350,17 +386,18 @@
         .help-text { color: #7f8c8d; font-size: 12px; margin-top: 5px; }
 
         .simulation-panel {
-            background: #34495e;
-            padding: 15px;
-            border-radius: 8px;
-            margin-bottom: 15px;
+            background: #fdf3e0;
+            border: 2px solid var(--gold);
+            padding: 12px;
+            border-radius: 10px;
+            margin-bottom: 12px;
         }
 
-        .simulation-controls { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+        .simulation-controls { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; }
 
         .input-toggle {
-            background: #2c3e50;
-            padding: 10px;
+            background: var(--navy);
+            padding: 8px;
             border-radius: 5px;
             display: flex;
             justify-content: space-between;
@@ -369,11 +406,11 @@
             transition: all 0.3s;
         }
 
-        .input-toggle:hover { background: #1abc9c; }
+        .input-toggle:hover { background: #0f245c; }
         .input-toggle.active { background: #27ae60; }
 
         .toggle-switch {
-            width: 40px; height: 20px;
+            width: 36px; height: 18px;
             background: #95a5a6;
             border-radius: 10px;
             position: relative;
@@ -385,14 +422,14 @@
         .toggle-switch::after {
             content: '';
             position: absolute;
-            width: 16px; height: 16px;
+            width: 14px; height: 14px;
             background: white;
             border-radius: 50%;
             top: 2px; left: 2px;
             transition: left 0.3s;
         }
 
-        .input-toggle.active .toggle-switch::after { left: 22px; }
+        .input-toggle.active .toggle-switch::after { left: 20px; }
     </style>
 </head>
 <body>
@@ -410,7 +447,7 @@
         </header>
         <div class="header" style="margin-top: 10px;">
             <h1>
-                <svg width="30" height="30" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <rect x="3" y="3" width="18" height="18" rx="2"/>
                     <path d="M3 9h18M9 3v18"/>
                 </svg>
@@ -434,19 +471,19 @@
                     <div class="category-title">Contacts</div>
                     <div class="component" draggable="true" data-type="NO" ondragstart="dragStart(event)">
                         <svg viewBox="0 0 80 40">
-                            <line x1="0" y1="20" x2="25" y2="20" stroke="white" stroke-width="2"/>
-                            <line x1="25" y1="10" x2="25" y2="30" stroke="white" stroke-width="2"/>
-                            <line x1="55" y1="10" x2="55" y2="30" stroke="white" stroke-width="2"/>
-                            <line x1="55" y1="20" x2="80" y2="20" stroke="white" stroke-width="2"/>
+                            <line x1="0" y1="20" x2="25" y2="20" stroke="#173681" stroke-width="2"/>
+                            <line x1="25" y1="10" x2="25" y2="30" stroke="#173681" stroke-width="2"/>
+                            <line x1="55" y1="10" x2="55" y2="30" stroke="#173681" stroke-width="2"/>
+                            <line x1="55" y1="20" x2="80" y2="20" stroke="#173681" stroke-width="2"/>
                         </svg>
                     </div>
                     <div class="component" draggable="true" data-type="NC" ondragstart="dragStart(event)">
                         <svg viewBox="0 0 80 40">
-                            <line x1="0" y1="20" x2="25" y2="20" stroke="white" stroke-width="2"/>
-                            <line x1="25" y1="10" x2="25" y2="30" stroke="white" stroke-width="2"/>
-                            <line x1="55" y1="10" x2="55" y2="30" stroke="white" stroke-width="2"/>
-                            <line x1="55" y1="20" x2="80" y2="20" stroke="white" stroke-width="2"/>
-                            <line x1="25" y1="25" x2="55" y2="15" stroke="white" stroke-width="2"/>
+                            <line x1="0" y1="20" x2="25" y2="20" stroke="#173681" stroke-width="2"/>
+                            <line x1="25" y1="10" x2="25" y2="30" stroke="#173681" stroke-width="2"/>
+                            <line x1="55" y1="10" x2="55" y2="30" stroke="#173681" stroke-width="2"/>
+                            <line x1="55" y1="20" x2="80" y2="20" stroke="#173681" stroke-width="2"/>
+                            <line x1="25" y1="25" x2="55" y2="15" stroke="#173681" stroke-width="2"/>
                         </svg>
                     </div>
                 </div>
@@ -455,9 +492,9 @@
                     <div class="category-title">Coils</div>
                     <div class="component" draggable="true" data-type="COIL" ondragstart="dragStart(event)">
                         <svg viewBox="0 0 80 40">
-                            <line x1="0" y1="20" x2="28" y2="20" stroke="white" stroke-width="2"/>
-                            <circle cx="40" cy="20" r="12" stroke="white" stroke-width="2" fill="none"/>
-                            <line x1="51" y1="20" x2="80" y2="20" stroke="white" stroke-width="2"/>
+                            <line x1="0" y1="20" x2="28" y2="20" stroke="#173681" stroke-width="2"/>
+                            <circle cx="40" cy="20" r="12" stroke="#173681" stroke-width="2" fill="none"/>
+                            <line x1="51" y1="20" x2="80" y2="20" stroke="#173681" stroke-width="2"/>
                         </svg>
                     </div>
                 </div>
@@ -466,14 +503,14 @@
                     <div class="category-title">Timers</div>
                     <div class="component" draggable="true" data-type="TON" ondragstart="dragStart(event)">
                         <svg viewBox="0 0 80 40">
-                            <rect x="15" y="5" width="50" height="30" stroke="white" stroke-width="2" fill="none"/>
-                            <text x="40" y="25" text-anchor="middle" fill="white" font-size="12">TON</text>
+                            <rect x="15" y="5" width="50" height="30" stroke="#173681" stroke-width="2" fill="none"/>
+                            <text x="40" y="25" text-anchor="middle" fill="#173681" font-size="12">TON</text>
                         </svg>
                     </div>
                     <div class="component" draggable="true" data-type="TOF" ondragstart="dragStart(event)">
                         <svg viewBox="0 0 80 40">
-                            <rect x="15" y="5" width="50" height="30" stroke="white" stroke-width="2" fill="none"/>
-                            <text x="40" y="25" text-anchor="middle" fill="white" font-size="12">TOF</text>
+                            <rect x="15" y="5" width="50" height="30" stroke="#173681" stroke-width="2" fill="none"/>
+                            <text x="40" y="25" text-anchor="middle" fill="#173681" font-size="12">TOF</text>
                         </svg>
                     </div>
                 </div>
@@ -482,8 +519,8 @@
                     <div class="category-title">Counters</div>
                     <div class="component" draggable="true" data-type="CTU" ondragstart="dragStart(event)">
                         <svg viewBox="0 0 80 40">
-                            <rect x="15" y="5" width="50" height="30" stroke="white" stroke-width="2" fill="none"/>
-                            <text x="40" y="25" text-anchor="middle" fill="white" font-size="12">CTU</text>
+                            <rect x="15" y="5" width="50" height="30" stroke="#173681" stroke-width="2" fill="none"/>
+                            <text x="40" y="25" text-anchor="middle" fill="#173681" font-size="12">CTU</text>
                         </svg>
                     </div>
                 </div>
@@ -492,8 +529,8 @@
                     <div class="category-title">Logic</div>
                     <div class="component" draggable="true" data-type="SERIES" ondragstart="dragStart(event)">
                         <svg viewBox="0 0 80 40">
-                            <line x1="0" y1="20" x2="80" y2="20" stroke="white" stroke-width="3"/>
-                            <text x="40" y="15" text-anchor="middle" fill="white" font-size="10">AND</text>
+                            <line x1="0" y1="20" x2="80" y2="20" stroke="#173681" stroke-width="3"/>
+                            <text x="40" y="15" text-anchor="middle" fill="#173681" font-size="10">AND</text>
                         </svg>
                     </div>
                 </div>
