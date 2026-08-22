@@ -204,12 +204,6 @@
                 </div>
             </div>
             <div class="sidebar-block">
-                <div class="sidebar-title">Time until marked read</div>
-                <div class="progress-ring-wrap">
-                    <div class="progress-ring timer" id="toc-read-timer-ring"></div>
-                </div>
-            </div>
-            <div class="sidebar-block">
                 <div class="sidebar-title">On this page</div>
                 <nav id="toc-list">${tocLinks}</nav>
             </div>
@@ -368,14 +362,6 @@
             if (e.detail && e.detail.fresh) {
                 showToast("Nice! Marked as read.", 'fa-circle-check');
             }
-        });
-
-        // Live countdown ring in the TOC drawer, mirroring the floating
-        // badge's fill - ticks once a second from topic-read-tracker.js.
-        window.addEventListener('simtel:read-timer-tick', e => {
-            const { pct } = e.detail || {};
-            const ring = document.getElementById('toc-read-timer-ring');
-            if (ring) ring.style.setProperty('--pct', pct);
         });
     }
 
