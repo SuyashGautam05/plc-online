@@ -9,7 +9,7 @@
 #app {
   display: flex;
   flex-direction: row;
-  overflow: hidden;
+  overflow-y: auto;
   background: var(--bg);
   flex: 1;
   min-height: 0;
