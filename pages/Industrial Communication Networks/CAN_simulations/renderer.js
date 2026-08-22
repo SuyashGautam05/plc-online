@@ -38,6 +38,13 @@ function playVideo(videoId, nodeId, element) {
         notyf.error(`${nodeId} not connected!`);
         element.style.backgroundColor = '#4681f4';
         element.setAttribute('data-active', 'false');
+        element.classList.remove('switch-error');
+        // Force reflow so the animation re-triggers on repeated clicks
+        void element.offsetWidth;
+        element.classList.add('switch-error');
+        element.addEventListener('animationend', () => {
+            element.classList.remove('switch-error');
+        }, { once: true });
         if (video.dataset.playing === 'true') {
             video.pause();
             video.currentTime = 0;
@@ -139,38 +146,48 @@ function drawConnections() {
     const offsetY = 1 * (rowCenter - nodes[1].canH.y) / 4;
     const strokeWidth = 3;
     let lines = '';
-  
-    // Node Connections
-    let lastConnectedNode = nodes.length - 1;
-    for (let i = nodes.length - 1; i >= 0; i--) {
+
+    // Connected state per index (main node, index 0, is always the source)
+    const connected = [true];
+    for (let i = 1; i <= 4; i++) {
         const button = document.querySelector(`#node-${i}`)?.parentElement?.querySelector('button');
-        const isDisconnected = button && button.classList.contains('disconnected');
-        if (!isDisconnected) {
-            lastConnectedNode = i;
-            break;
-        }
+        connected.push(!(button && button.classList.contains('disconnected')));
     }
-  
+
+    // The bus is a single trunk: once a node is disconnected, everything
+    // downstream (to its right) also loses the trunk connection — this
+    // correctly handles a disconnect at ANY position, not just the tail.
+    let busBreakAt = nodes.length; // no break by default
+    for (let i = 1; i < nodes.length; i++) {
+        if (!connected[i]) { busBreakAt = i; break; }
+    }
+
     for (let i = 0; i < nodes.length; i++) {
         const currentNode = nodes[i];
         const nextNode = nodes[(i + 1) % nodes.length];
-    
-        let isDisconnected = false;
-        if (i > 0) {
-            const button = document.querySelector(`#node-${i}`)?.parentElement?.querySelector('button');
-            isDisconnected = button && button.classList.contains('disconnected');
-        }
-  
-        // Vertical lines
-        if (!isDisconnected || i === 0) {
+        const onLiveBus = i < busBreakAt;
+
+        if (onLiveBus) {
+            // Live segment: solid, full-color vertical drop
             lines += `
-                <line x1="${currentNode.canH.x}" y1="${currentNode.canH.y}" x2="${currentNode.canH.x}" y2="${rowCenter}" stroke="red" stroke-width="${strokeWidth}" />        
+                <line x1="${currentNode.canH.x}" y1="${currentNode.canH.y}" x2="${currentNode.canH.x}" y2="${rowCenter}" stroke="red" stroke-width="${strokeWidth}" />
                 <line x1="${currentNode.canL.x}" y1="${currentNode.canL.y}" x2="${currentNode.canL.x}" y2="${rowCenter - offsetY}" stroke="blue" stroke-width="${strokeWidth}" />
-            `;  
+            `;
+        } else if (i > 0) {
+            // Disconnected node: keep the stub visible but clearly "cut" —
+            // dashed, muted gray, plus a small red break marker where the
+            // bus would have continued. This makes the disconnect obvious
+            // instead of the wire just silently vanishing.
+            lines += `
+                <line x1="${currentNode.canH.x}" y1="${currentNode.canH.y}" x2="${currentNode.canH.x}" y2="${rowCenter}" stroke="#b0b0b0" stroke-width="${strokeWidth}" stroke-dasharray="6,5" />
+                <line x1="${currentNode.canL.x}" y1="${currentNode.canL.y}" x2="${currentNode.canL.x}" y2="${rowCenter - offsetY}" stroke="#b0b0b0" stroke-width="${strokeWidth}" stroke-dasharray="6,5" />
+                <circle cx="${currentNode.canH.x}" cy="${rowCenter}" r="6" fill="#e74c3c" />
+                <circle cx="${currentNode.canL.x}" cy="${rowCenter - offsetY}" r="6" fill="#e74c3c" />
+            `;
         }
-  
-        // Horizontal connection line
-        if (i < lastConnectedNode) {
+
+        // Horizontal trunk segment only while still on the live bus
+        if (i < busBreakAt - 1) {
             lines += `
                 <line x1="${currentNode.canH.x}" y1="${rowCenter}" x2="${nextNode.canH.x}" y2="${rowCenter}" stroke="red" stroke-width="${strokeWidth}" />
                 <line x1="${currentNode.canL.x}" y1="${rowCenter - offsetY}" x2="${nextNode.canL.x}" y2="${rowCenter - offsetY}" stroke="blue" stroke-width="${strokeWidth}" />
@@ -187,7 +204,6 @@ function drawConnections() {
             if (node && video) {
                 const nodeRect = node.getBoundingClientRect();
                 const videoRect = video.getBoundingClientRect();
-                console.log(videoRect);
                 lines += `
                     <line x1="${(nodeRect.left + nodeRect.right) / 2}" y1="${nodeRect.top}" 
                           x2="${(videoRect.left + videoRect.right) / 2}" y2="${videoRect.bottom}" 

@@ -42,6 +42,7 @@
   width: 90%;
   flex: 1 1 auto;
   min-height: 0;
+  margin-bottom: 50px; /* matches the Connected button + gap under node-1..4's cards */
 }
 
 .switch-container{
@@ -149,6 +150,19 @@
   font-weight: bold;
   cursor: pointer;
   flex-shrink: 0;
+}
+
+@keyframes errorShake {
+  0%, 100% { transform: translateX(0); }
+  20% { transform: translateX(-6px); }
+  40% { transform: translateX(6px); }
+  60% { transform: translateX(-4px); }
+  80% { transform: translateX(4px); }
+}
+
+.switch-error {
+  animation: errorShake 0.4s ease-in-out;
+  background: #e74c3c !important;
 }
 
 .node{
