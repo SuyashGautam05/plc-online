@@ -1,8 +1,18 @@
+:root {
+  --navy: #173681;
+  --gold: #e1ac3d;
+  --bg: #eef1f7;
+  --card-border: #e6c98a;
+  --card-shadow: 0 6px 18px rgba(23, 54, 129, 0.10);
+}
+
 #app {
   display: flex;
   flex-direction: row;
   overflow: hidden;
-  background: #fff;
+  background: var(--bg);
+  flex: 1;
+  min-height: 0;
 }
 
 #connections {
@@ -16,55 +26,82 @@
 }
 
 .left-col{
+  box-sizing: border-box;
   margin-left: 2%;
   width: 20%;
+  height: 100%;
+  padding: 20px 0;
   display: flex;
   flex-direction: column-reverse !important;
-  justify-content: space-around;
+  justify-content: space-between;
   align-items: center;
+  gap: 24px;
 }
 
 #main-node{
   width: 90%;
-  margin-bottom: 42px;
-  height: 43%;
+  flex: 1 1 auto;
+  min-height: 0;
 }
 
 .switch-container{
+  box-sizing: border-box;
   max-width: 300px;
   display: flex;
   justify-content: space-evenly;
   align-items: center;
   flex-direction: column;
-  border: 2px solid black;
-  border-radius: 12px;
+  background: #fff;
+  border: 1px solid var(--card-border);
+  border-top: 3px solid var(--gold);
+  border-radius: 16px;
+  box-shadow: var(--card-shadow);
   width: 90%;
-  height: 40%;
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+.switch-container h3 {
+  color: var(--navy);
 }
 
 .switch-container button{
   background: #4681f4;
   border-radius: 6px;
   color: white;
-  border: 2px solid black;
+  border: 2px solid var(--navy);
   padding: 10px 25px;
   font-size: 13px;
   font-weight: bold;
   cursor: pointer;
 }
+
 .right-col{
-  flex-direction: column-reverse !important;
+  box-sizing: border-box;
+  flex-direction: column;
   margin-right: 2%;
   width: 80%;
+  height: 100%;
+  padding: 20px 0;
+  display: flex;
+  gap: 44px; /* room for the bus-wire row between top and bottom sections */
+}
+
+#app .top-row{
+  display: flex;
+  flex-direction: row;
+  align-items: start;
+  flex: 1 1 auto;
+  min-height: 0;
 }
 
 #app .bottom-row{
   display: flex;
   justify-content: space-around;
   align-items: center;
-  height: 50%;
+  flex: 1 1 auto;
+  min-height: 0;
 }
-
 
 .components-container {
   display: flex;
@@ -74,27 +111,24 @@
 }
 
 .components-container img{
-  border: 4px solid black;
-  border-radius: 10px;
+  border: 1px solid var(--card-border);
+  border-top: 3px solid var(--gold);
+  border-radius: 16px;
+  box-shadow: var(--card-shadow);
   padding: 20px;
   width: 15%;
+  background: #fff;
 }
 
 .components-container video{
   background-color: white;
-  border: 4px solid black;
-  border-radius: 10px;
+  border: 1px solid var(--card-border);
+  border-top: 3px solid var(--gold);
+  border-radius: 16px;
+  box-shadow: var(--card-shadow);
   padding: 20px;
   width: 15%;
   z-index: 10;
-}
-
-#app .top-row{
-  display: flex;
-  flex-direction: row;
-  align-items: start;
-  height: 50%;
-  margin-bottom: 52px;
 }
 
 .node-col{
@@ -102,19 +136,19 @@
   flex-direction: column-reverse;
   justify-content: center;
   align-items: center;
-  gap: 30px;
+  gap: 20px;
+  height: 100%;
 }
 
 .node-col button{
   background: #5dbea3;
-  border: 2px solid black;
-  border-radius: 4px;
-  padding: 6px 9px;
+  border: 2px solid var(--navy);
+  border-radius: 20px;
+  padding: 6px 14px;
   font-size: 12px;
   font-weight: bold;
   cursor: pointer;
-  margin-bottom: -30px;
-  margin-top: 33px;
+  flex-shrink: 0;
 }
 
 .node{
@@ -123,13 +157,18 @@
   width: 80%;
   align-items: center;
   justify-content: space-evenly;
-  border: 2px solid black;
-  border-radius: 12px;
+  background: #fff;
+  border: 1px solid var(--card-border);
+  border-top: 3px solid var(--gold);
+  border-radius: 16px;
+  box-shadow: var(--card-shadow);
   overflow: hidden;
+  flex: 1 1 auto;
+  min-height: 0;
 }
 
 .node-heading{
-  background: black;
+  background: var(--navy);
   color: white;
   width: 100%;
   padding: 10px 0;
@@ -148,12 +187,11 @@
   width: 100%;
   justify-content: space-around;
   margin: 10px;
-  /* flex-direction: column; */
 }
 
 .node-end{
   font-weight: bold;
-  background: black;
+  background: var(--navy);
   color: white;
   padding: 3px 8px;
   border-radius: 4px;
@@ -178,4 +216,3 @@
   pointer-events: none;
   z-index: 1000;
 }
-
