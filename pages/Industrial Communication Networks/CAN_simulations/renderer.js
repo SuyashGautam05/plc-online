@@ -204,7 +204,7 @@ function drawConnections() {
         const mainNodeRect = mainNode.getBoundingClientRect();
         const switchContainerRect = switchContainer.getBoundingClientRect();
         lines += `
-            <line x1="${(mainNodeRect.left + mainNodeRect.right)/2}" y1="${mainNodeRect.top-25}" 
+            <line x1="${(mainNodeRect.left + mainNodeRect.right)/2}" y1="${mainNodeRect.top}" 
                   x2="${(switchContainerRect.left + switchContainerRect.right)/2}" y2="${switchContainerRect.top + switchContainerRect.height}" 
                   stroke="black" stroke-width="${strokeWidth}" />
         `;
