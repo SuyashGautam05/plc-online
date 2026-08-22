@@ -252,26 +252,27 @@
     }
 
     // ── Reading progress bar + sidebar progress ring, driven by scroll ──
-    function initProgressBar() {
-        const bar = document.createElement('div');
-        bar.id = 'reading-progress-bar';
-        document.body.appendChild(bar);
+function initProgressBar() {
+    const bar = document.createElement('div');
+    bar.id = 'reading-progress-bar';
+    document.body.appendChild(bar);
 
-        const ring = document.getElementById('sidebar-progress-ring');
-        const pctLabel = document.getElementById('sidebar-progress-pct');
-
-        const update = () => {
-            const scrollTop = window.scrollY;
-            const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-            const pct = docHeight > 0 ? Math.min(100, Math.round((scrollTop / docHeight) * 100)) : 0;
-            bar.style.width = pct + '%';
-            if (ring) ring.style.setProperty('--pct', pct);
-            if (pctLabel) pctLabel.textContent = pct + '%';
-        };
-        update();
-        window.addEventListener('scroll', update, { passive: true });
-        window.addEventListener('resize', update);
-    }
+    // Note: this bar only tracks raw scroll position (top-of-viewport
+    // progress bar). #sidebar-progress-ring in the TOC drawer is
+    // intentionally NOT updated here - it's driven by
+    // topic-read-tracker.js's 'simtel:read-timer-tick' broadcasts instead
+    // (see listenForReadCelebration below), so it reflects actual
+    // read-tracking progress rather than raw scroll position.
+    const update = () => {
+        const scrollTop = window.scrollY;
+        const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+        const pct = docHeight > 0 ? Math.min(100, Math.round((scrollTop / docHeight) * 100)) : 0;
+        bar.style.width = pct + '%';
+    };
+    update();
+    window.addEventListener('scroll', update, { passive: true });
+    window.addEventListener('resize', update);
+}
 
     // ── Highlight the current section's TOC entry while scrolling ──
     function initActiveHeadingTracking(sectionEls) {
@@ -362,6 +363,19 @@
             if (e.detail && e.detail.fresh) {
                 showToast("Nice! Marked as read.", 'fa-circle-check');
             }
+        });
+
+        // topic-read-tracker.js broadcasts read-progress percentage here
+        // (0% until the visitor scrolls to the bottom, then rising to 100%
+        // over the dwell period) - drives the SAME ring used for "Your
+        // progress" in the TOC drawer, so it shows live read-tracking
+        // status instead of raw scroll position.
+        window.addEventListener('simtel:read-timer-tick', e => {
+            const pct = e.detail && typeof e.detail.pct === 'number' ? e.detail.pct : 0;
+            const ring = document.getElementById('sidebar-progress-ring');
+            const pctLabel = document.getElementById('sidebar-progress-pct');
+            if (ring) ring.style.setProperty('--pct', pct);
+            if (pctLabel) pctLabel.textContent = Math.round(pct) + '%';
         });
     }
 

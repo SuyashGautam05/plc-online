@@ -10,6 +10,14 @@
 //  dwell period. If they close the tab/page before that, nothing
 //  is sent to the server — it is simply never marked read.
 //  While waiting, a small floating badge shows the current state.
+//
+//  ADDED: broadcasts the current read-progress percentage via a
+//  'simtel:read-timer-tick' event (0% until the bottom is reached,
+//  then rising to 100% over the dwell period) - theory-enhancements.js
+//  listens for this and displays it inside the TOC drawer's
+//  #sidebar-progress-ring, so the same ring used for "Your progress"
+//  shows live read-tracking status. Nothing about the existing
+//  floating badge or the scroll/dwell trigger logic itself changed.
 // ============================================================
 (function () {
     const cfg = window.SIMTEL_AUTH_CONFIG;
@@ -66,6 +74,17 @@
         if (txt) txt.textContent = text;
     }
 
+    // ── ADDED: broadcasts the current read-progress percentage so
+    // theory-enhancements.js can display it inside #sidebar-progress-ring
+    // in the TOC drawer. 0% until the bottom is reached (since the
+    // dwell countdown hasn't started yet), then rises to 100% as the
+    // dwell period elapses. ──
+    function broadcastPct(pct) {
+        window.dispatchEvent(new CustomEvent('simtel:read-timer-tick', {
+            detail: { pct: Math.max(0, Math.min(100, pct)) }
+        }));
+    }
+
     function pageHasNoScroll() {
         return document.documentElement.scrollHeight <= window.innerHeight + BOTTOM_THRESHOLD_PX;
     }
@@ -87,6 +106,7 @@
 
         if (!reachedBottom) {
             setBadge('Not marked as read — scroll to the end', '#dc3545');
+            broadcastPct(0);
             tickHandle = setTimeout(tick, BADGE_TICK_MS);
             return;
         }
@@ -101,6 +121,7 @@
 
         const secondsLeft = Math.ceil(remaining / 1000);
         setBadge(`Not marked as read yet — ${secondsLeft}s left`, '#f59e0b');
+        broadcastPct((elapsed / DWELL_MS) * 100);
         tickHandle = setTimeout(tick, BADGE_TICK_MS);
     }
 
@@ -109,6 +130,7 @@
         marked = true;
         if (tickHandle) clearTimeout(tickHandle);
         setBadge('Marked as read ✓', '#16a34a');
+        broadcastPct(100);
 
         // Let any listener (e.g. theory-enhancements.js's TOC drawer /
         // celebration toast) know, without this file needing to know who's
@@ -170,6 +192,7 @@
         if (alreadyRead) {
             marked = true;
             setBadge('Marked as read ✓', '#16a34a');
+            broadcastPct(100);
             window.dispatchEvent(new CustomEvent('simtel:topic-marked-read', { detail: { fresh: false } }));
             return; // no need to track scroll/dwell for something already read
         }
