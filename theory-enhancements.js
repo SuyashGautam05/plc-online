@@ -206,10 +206,7 @@
             <div class="sidebar-block">
                 <div class="sidebar-title">Time until marked read</div>
                 <div class="progress-ring-wrap">
-                    <div class="progress-ring timer" id="toc-read-timer-ring">
-                        <div class="progress-ring-inner" id="toc-read-timer-pct">0%</div>
-                    </div>
-                    <div class="progress-ring-label" id="toc-read-timer-label">Just arrived</div>
+                    <div class="progress-ring timer" id="toc-read-timer-ring"></div>
                 </div>
             </div>
             <div class="sidebar-block">
@@ -376,21 +373,9 @@
         // Live countdown ring in the TOC drawer, mirroring the floating
         // badge's fill - ticks once a second from topic-read-tracker.js.
         window.addEventListener('simtel:read-timer-tick', e => {
-            const { pct, secondsLeft, done } = e.detail || {};
+            const { pct } = e.detail || {};
             const ring = document.getElementById('toc-read-timer-ring');
-            const pctEl = document.getElementById('toc-read-timer-pct');
-            const labelEl = document.getElementById('toc-read-timer-label');
             if (ring) ring.style.setProperty('--pct', pct);
-            if (pctEl) pctEl.textContent = Math.round(pct) + '%';
-            if (labelEl) {
-                if (done) {
-                    labelEl.innerHTML = 'Marked as read ✓';
-                } else {
-                    const m = Math.floor(secondsLeft / 60);
-                    const s = secondsLeft % 60;
-                    labelEl.innerHTML = `<strong>${m}:${String(s).padStart(2, '0')}</strong> remaining`;
-                }
-            }
         });
     }
 

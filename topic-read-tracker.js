@@ -40,16 +40,8 @@
     let marked = false;
     let tickHandle = null;
 
-    function formatTime(ms) {
-        const totalSec = Math.max(0, Math.ceil(ms / 1000));
-        const m = Math.floor(totalSec / 60);
-        const s = totalSec % 60;
-        return `${m}:${String(s).padStart(2, '0')}`;
-    }
-
-    // ── Floating status badge - a small ring that fills up (conic-gradient,
-    // same visual idea as the TOC drawer's progress rings) with a clock
-    // icon at its center, plus a countdown label. Fully self-contained
+    // ── Floating status badge - just a plain white ring that fills up
+    // (conic-gradient) as the dwell period elapses. Fully self-contained
     // inline styles - this file doesn't depend on defination.css being
     // loaded/intact, since it runs on every single topic page. ──
     function injectBadge() {
@@ -57,28 +49,17 @@
         el.id = 'simtel-read-tracker-badge';
         el.style.cssText = `
             position: fixed; bottom: 18px; right: 18px; z-index: 999998;
-            display: flex; align-items: center; gap: 10px;
-            background: #1f2328; color: #fff;
-            font-family: Georgia, 'Times New Roman', serif;
-            font-size: 0.78rem; padding: 7px 16px 7px 7px; border-radius: 30px;
-            box-shadow: 0 4px 16px rgba(0,0,0,0.35);
+            width: 34px; height: 34px;
             pointer-events: none; user-select: none;
         `;
         el.innerHTML = `
-            <div id="simtel-read-ring" style="--pct:0; width:30px; height:30px; border-radius:50%; flex-shrink:0;
-                 background: conic-gradient(#e1ac3d calc(var(--pct) * 1%), rgba(255,255,255,0.2) 0);
-                 display:flex; align-items:center; justify-content:center; transition: background 0.3s linear;">
-                <div id="simtel-read-ring-inner" style="width:22px; height:22px; border-radius:50%; background:#1f2328;
-                     display:flex; align-items:center; justify-content:center; font-size:12px;">🕐</div>
+            <div id="simtel-read-ring" style="--pct:0; width:34px; height:34px; border-radius:50%;
+                 background: conic-gradient(#ffffff calc(var(--pct) * 1%), rgba(0,0,0,0.35) 0);
+                 box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+                 transition: background 0.3s linear;">
             </div>
-            <span id="simtel-read-tracker-text">Checking status…</span>
         `;
         document.body.appendChild(el);
-    }
-
-    function setBadgeText(text) {
-        const txt = document.getElementById('simtel-read-tracker-text');
-        if (txt) txt.textContent = text;
     }
 
     function setBadgeRing(pct) {
@@ -94,9 +75,6 @@
 
     function showDone(fresh) {
         setBadgeRing(100);
-        const inner = document.getElementById('simtel-read-ring-inner');
-        if (inner) inner.textContent = '✓';
-        setBadgeText('Marked as read ✓');
         broadcastTick(100, 0, true);
         // Let any listener (e.g. theory-enhancements.js's TOC drawer /
         // celebration toast) know, without this file needing to know who's
@@ -117,7 +95,6 @@
         }
 
         setBadgeRing(pct);
-        setBadgeText(`${formatTime(remaining)} until marked as read`);
         broadcastTick(pct, Math.ceil(remaining / 1000), false);
 
         tickHandle = setTimeout(tick, BADGE_TICK_MS);

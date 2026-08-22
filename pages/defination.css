@@ -357,11 +357,12 @@ main {
     transition: background 0.15s linear;
 }
 
-/* Read-timer countdown ring (fills gold as the dwell period elapses) -
-   same component, different fill color so it reads as a distinct
-   concept from the red scroll-position ring above it. */
+/* Read-timer countdown ring (fills white as the dwell period elapses) -
+   same component, plain white fill with a border so it stays visible
+   against the drawer's white background. */
 .progress-ring.timer {
-    background: conic-gradient(var(--cat-amber) calc(var(--pct) * 1%), var(--border-color) 0);
+    background: conic-gradient(#ffffff calc(var(--pct) * 1%), var(--border-color) 0);
+    box-shadow: inset 0 0 0 1px var(--border-color);
 }
 
 .progress-ring-inner {
