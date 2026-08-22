@@ -81,7 +81,7 @@ img { width: 100%; height: auto; display: block; }
 /* Wide - this is the "use complete space" change. 1100px -> 1400px. */
 .container {
     max-width: 1400px;
-    /* margin: 0 auto; */
+    margin: 0 auto; /* was commented out - without this the container hugs the left edge on wide screens instead of being centered */
     padding: 0 clamp(16px, 3vw, 32px) clamp(50px, 6vw, 80px);
     width: 100%;
     overflow-x: hidden;
@@ -100,14 +100,16 @@ header {
     box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
     padding: 0 var(--pad-x);
     margin: 0 calc(-1 * var(--pad-x)) clamp(24px, 4vw, 36px);
-    width: 116%;
+    /* width: 116% removed - that pushed the header well past the
+       right edge of the viewport, causing horizontal overflow/scroll
+       site-wide. The negative margin above already handles bleeding
+       it to the container's edges correctly on its own. */
 }
 
 .logo-container {
     display: flex;
     align-items: center;
-    /* gap: 11px; */
-    gap: 321px;
+    gap: 11px; /* was blown out to 321px, which shoved the title almost entirely off-screen */
     max-width: 1400px;
     margin: 0 auto;
     height: 62px;
@@ -171,16 +173,17 @@ h1 {
     min-width: 0;
 }
 
-main { width: 100%;
-    margin-left: 49px;
+main {
+    width: 100%;
+    /* margin-left: 49px removed - that offset shoved the whole page
+       body to the right, out of alignment with the header above it */
 }
 
 /* ── The card ── */
 .content-wrapper {
     display: flex;
     flex-direction: column;
-    /* width: 100%; */
-    width: 97%;
+    width: 100%; /* was squeezed to 97%, leaving an unexplained gap on the right */
     background: var(--white);
     border-radius: var(--r-3);
     box-shadow: var(--shadow-lg);
@@ -202,19 +205,16 @@ main { width: 100%;
 .lesson-hero {
     background: linear-gradient(120deg, var(--red-soft) 0%, var(--amber-soft) 100%);
     border-bottom: 1px solid var(--border-color);
-    /* padding: clamp(32px, 5vw, 52px) var(--pad-x); */
-    padding: 30px;
+    padding: clamp(32px, 5vw, 52px) var(--pad-x); /* was a flat 30px, losing the responsive scaling down to smaller screens */
 }
 
 .lesson-hero-inner {
-    /* max-width: 880px; */
-    width: 1100px;
-    /* margin: 0 auto; */
+    max-width: 880px; /* was a fixed 1100px, which overflowed on any viewport narrower than that */
+    margin: 0 auto;
 }
 
 .lesson-eyebrow {
-    /* display: inline-flex; */
-    display: none;
+    display: inline-flex; /* was set to none, hiding the "Lesson" tag entirely */
     align-items: center;
     gap: 8px;
     background: var(--white);
@@ -357,6 +357,13 @@ main { width: 100%;
     transition: background 0.15s linear;
 }
 
+/* Read-timer countdown ring (fills gold as the dwell period elapses) -
+   same component, different fill color so it reads as a distinct
+   concept from the red scroll-position ring above it. */
+.progress-ring.timer {
+    background: conic-gradient(var(--cat-amber) calc(var(--pct) * 1%), var(--border-color) 0);
+}
+
 .progress-ring-inner {
     width: 40px; height: 40px;
     border-radius: 50%;
@@ -429,9 +436,8 @@ main { width: 100%;
 .theory-section {
     background: transparent;
     padding: 0 var(--pad-x) clamp(24px, 4.5vw, 60px);
-    /* width: 960px; */
-    width: 1283px;
-    /* margin: 0 auto; */
+    max-width: 960px; /* was blown out to a fixed 1283px, overflowing narrower windows and losing the centered reading column */
+    margin: 0 auto;
     counter-reset: section-counter;
 }
 
@@ -461,8 +467,10 @@ main { width: 100%;
     padding-right: var(--pad-x);
     border-radius: var(--r-2);
     border-bottom: none;
-    /* width: 1280px; */
-    width: 1140px;
+    /* a fixed width here (1140px, and before that 1280px) fought with
+       the negative-margin bleed technique above and could overflow
+       its own parent - this element should never have a width of its
+       own, only the negative-margin + padding combo, so it's removed */
 }
 
 .theory-section h2 {
@@ -546,7 +554,7 @@ main { width: 100%;
     color: var(--body-text);
     margin-bottom: 16px;
     line-height: 1.85;
-    max-width: 94ch;
+    max-width: 74ch; /* was drifted to 94ch, inconsistent with the lists below - harmonized back to the same comfortable reading width */
 }
 
 .theory-section ul, .theory-section ol {
@@ -619,11 +627,8 @@ main { width: 100%;
     border: 1px solid var(--border-color);
     box-shadow: var(--shadow);
     margin: 22px 0 30px;
-    /* max-width: 640px; */
-    width: 1138px;
+    max-width: 640px; /* was forced to a fixed 1138px x 672px with 30px padding baked in - that broke the image's own aspect ratio/framing and could overflow narrower screens */
     transition: transform 0.3s var(--ease), box-shadow 0.3s var(--ease);
-    padding: 30px;
-    height: 672px;
 }
 
 .theory-section > img:hover,
@@ -680,7 +685,7 @@ footer { text-align: center; padding: 24px 0; margin-top: 40px; border-top: 1px 
 }
 .comparison-table thead { background: linear-gradient(135deg, var(--red) 0%, var(--red-hover) 100%); }
 .comparison-table th {
-    padding: 14px 18px; text-align: left; font-weight: 700; color: rgb(0, 0, 0);
+    padding: 14px 18px; text-align: left; font-weight: 700; color: white; /* was rgb(0,0,0) - black text was nearly unreadable against the dark red/amber gradient header background */
     font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.04em; border: none;
 }
 .comparison-table td { padding: 14px 18px; border-bottom: 1px solid var(--border-color); color: var(--body-text); font-size: 0.88rem; }
@@ -842,7 +847,7 @@ footer { text-align: center; padding: 24px 0; margin-top: 40px; border-top: 1px 
 }
 
 .reveal-on-scroll { opacity: 0; transform: translateY(18px); transition: opacity 0.6s var(--ease), transform 0.6s var(--ease); }
-.reveal-on-scroll.revealed { opacity: 1; transform: translateY(0); margin-left: 0px; }
+.reveal-on-scroll.revealed { opacity: 1; transform: translateY(0); }
 @media (prefers-reduced-motion: reduce) { .reveal-on-scroll { opacity: 1; transform: none; transition: none; } }
 
 /* ============================================================

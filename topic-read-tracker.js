@@ -5,20 +5,22 @@
 //  <script src="/auth-config.js"></script>
 //  <script src="/topic-read-tracker.js"></script>
 //
-//  Rule: a topic only counts as "read" once the visitor has
-//  scrolled to the bottom of the page AND stayed for a further
-//  dwell period. If they close the tab/page before that, nothing
-//  is sent to the server — it is simply never marked read.
-//  While waiting, a small floating badge shows the current state.
+//  Rule: a topic counts as "read" once the visitor has stayed on
+//  the page for DWELL_MS (2:30) — the timer starts the moment the
+//  page loads, not after scrolling to the bottom. If they close the
+//  tab/page before that, nothing is sent to the server — it is
+//  simply never marked read. While waiting, a floating clock-style
+//  badge (bottom-right) fills up as time passes, and the same
+//  progress is broadcast via 'simtel:read-timer-tick' so
+//  theory-enhancements.js can mirror it inside the TOC drawer.
 // ============================================================
 (function () {
     const cfg = window.SIMTEL_AUTH_CONFIG;
     if (!cfg) { console.error('auth-config.js must load before topic-read-tracker.js'); return; }
 
     // ── Tunables ──
-    const DWELL_MS = 2.5 * 60 * 1000;   // 2.5 minutes after reaching the bottom (adjust between 2–3 min)
-    const BOTTOM_THRESHOLD_PX = 48;     // how close to the very bottom counts as "reached the end"
-    const BADGE_TICK_MS = 1000;         // how often the countdown badge updates
+    const DWELL_MS = 2.5 * 60 * 1000;   // 2:30 total, starts counting from page load
+    const BADGE_TICK_MS = 1000;         // how often the badge/ring updates
 
     const topicId = canonicalPathId(window.location.pathname);   // canonical id — must match index.html's toTopicId()
     const topicTitle = document.title || topicId;
@@ -34,73 +36,90 @@
         catch { return pathname; }
     }
 
-    let reachedBottom = false;
-    let bottomReachedAt = null;
+    let startedAt = null;
     let marked = false;
     let tickHandle = null;
 
-    // ── Floating status badge ──
+    function formatTime(ms) {
+        const totalSec = Math.max(0, Math.ceil(ms / 1000));
+        const m = Math.floor(totalSec / 60);
+        const s = totalSec % 60;
+        return `${m}:${String(s).padStart(2, '0')}`;
+    }
+
+    // ── Floating status badge - a small ring that fills up (conic-gradient,
+    // same visual idea as the TOC drawer's progress rings) with a clock
+    // icon at its center, plus a countdown label. Fully self-contained
+    // inline styles - this file doesn't depend on defination.css being
+    // loaded/intact, since it runs on every single topic page. ──
     function injectBadge() {
         const el = document.createElement('div');
         el.id = 'simtel-read-tracker-badge';
         el.style.cssText = `
             position: fixed; bottom: 18px; right: 18px; z-index: 999998;
-            display: none; align-items: center; gap: 8px;
-            background: #343a40; color: #fff;
+            display: flex; align-items: center; gap: 10px;
+            background: #1f2328; color: #fff;
             font-family: Georgia, 'Times New Roman', serif;
-            font-size: 0.78rem; padding: 8px 14px; border-radius: 20px;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.3);
+            font-size: 0.78rem; padding: 7px 16px 7px 7px; border-radius: 30px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.35);
             pointer-events: none; user-select: none;
         `;
         el.innerHTML = `
-            <span id="simtel-read-tracker-dot" style="width:8px;height:8px;border-radius:50%;background:#6c757d;flex-shrink:0;"></span>
+            <div id="simtel-read-ring" style="--pct:0; width:30px; height:30px; border-radius:50%; flex-shrink:0;
+                 background: conic-gradient(#e1ac3d calc(var(--pct) * 1%), rgba(255,255,255,0.2) 0);
+                 display:flex; align-items:center; justify-content:center; transition: background 0.3s linear;">
+                <div id="simtel-read-ring-inner" style="width:22px; height:22px; border-radius:50%; background:#1f2328;
+                     display:flex; align-items:center; justify-content:center; font-size:12px;">🕐</div>
+            </div>
             <span id="simtel-read-tracker-text">Checking status…</span>
         `;
         document.body.appendChild(el);
     }
 
-    function setBadge(text, color) {
-        const dot = document.getElementById('simtel-read-tracker-dot');
+    function setBadgeText(text) {
         const txt = document.getElementById('simtel-read-tracker-text');
-        if (dot) dot.style.background = color;
         if (txt) txt.textContent = text;
     }
 
-    function pageHasNoScroll() {
-        return document.documentElement.scrollHeight <= window.innerHeight + BOTTOM_THRESHOLD_PX;
+    function setBadgeRing(pct) {
+        const ring = document.getElementById('simtel-read-ring');
+        if (ring) ring.style.setProperty('--pct', pct);
     }
 
-    function checkBottom() {
-        if (reachedBottom) return;
-        const scrolledTo = window.innerHeight + window.scrollY;
-        const fullHeight = document.documentElement.scrollHeight;
-        if (scrolledTo >= fullHeight - BOTTOM_THRESHOLD_PX) {
-            reachedBottom = true;
-            bottomReachedAt = Date.now();
-            window.removeEventListener('scroll', checkBottom);
-            tick(); // start the dwell countdown immediately
-        }
+    function broadcastTick(pct, secondsLeft, done) {
+        window.dispatchEvent(new CustomEvent('simtel:read-timer-tick', {
+            detail: { pct, secondsLeft, done }
+        }));
+    }
+
+    function showDone(fresh) {
+        setBadgeRing(100);
+        const inner = document.getElementById('simtel-read-ring-inner');
+        if (inner) inner.textContent = '✓';
+        setBadgeText('Marked as read ✓');
+        broadcastTick(100, 0, true);
+        // Let any listener (e.g. theory-enhancements.js's TOC drawer /
+        // celebration toast) know, without this file needing to know who's
+        // listening. fresh:true = just now completed the dwell timer.
+        window.dispatchEvent(new CustomEvent('simtel:topic-marked-read', { detail: { fresh } }));
     }
 
     function tick() {
         if (marked) return;
 
-        if (!reachedBottom) {
-            setBadge('Not marked as read — scroll to the end', '#dc3545');
-            tickHandle = setTimeout(tick, BADGE_TICK_MS);
-            return;
-        }
-
-        const elapsed = Date.now() - bottomReachedAt;
+        const elapsed = Date.now() - startedAt;
         const remaining = DWELL_MS - elapsed;
+        const pct = Math.min(100, (elapsed / DWELL_MS) * 100);
 
         if (remaining <= 0) {
             markRead();
             return;
         }
 
-        const secondsLeft = Math.ceil(remaining / 1000);
-        setBadge(`Not marked as read yet — ${secondsLeft}s left`, '#f59e0b');
+        setBadgeRing(pct);
+        setBadgeText(`${formatTime(remaining)} until marked as read`);
+        broadcastTick(pct, Math.ceil(remaining / 1000), false);
+
         tickHandle = setTimeout(tick, BADGE_TICK_MS);
     }
 
@@ -108,12 +127,7 @@
         if (marked) return;
         marked = true;
         if (tickHandle) clearTimeout(tickHandle);
-        setBadge('Marked as read ✓', '#16a34a');
-
-        // Let any listener (e.g. theory-enhancements.js's TOC drawer /
-        // celebration toast) know, without this file needing to know who's
-        // listening. fresh:true = just now completed the dwell timer.
-        window.dispatchEvent(new CustomEvent('simtel:topic-marked-read', { detail: { fresh: true } }));
+        showDone(true);
 
         const token = localStorage.getItem(cfg.TOKEN_KEY);
         if (!token) return; // not logged in — nothing to save
@@ -134,10 +148,9 @@
     }
 
     // Checks whether THIS topic is already marked read for the logged-in
-    // user, before starting the scroll/dwell tracking from scratch. Without
-    // this, revisiting an already-read page always showed "Not marked as
-    // read" and made you wait through the dwell timer again, even though
-    // the server already had it recorded - the tracker never looked.
+    // user, before starting the dwell timer from scratch. Without this,
+    // revisiting an already-read page would restart the whole countdown
+    // even though the server already had it recorded.
     async function checkAlreadyRead() {
         const token = localStorage.getItem(cfg.TOKEN_KEY);
         if (!token) return false; // not logged in - nothing to check
@@ -169,24 +182,18 @@
         const alreadyRead = await checkAlreadyRead();
         if (alreadyRead) {
             marked = true;
-            setBadge('Marked as read ✓', '#16a34a');
-            window.dispatchEvent(new CustomEvent('simtel:topic-marked-read', { detail: { fresh: false } }));
-            return; // no need to track scroll/dwell for something already read
+            showDone(false);
+            return; // no need to run the dwell timer for something already read
         }
 
-        // Short pages with no real scrollbar: treat "at the bottom" as
-        // already true, but the dwell timer still has to run its course.
-        if (pageHasNoScroll()) {
-            reachedBottom = true;
-            bottomReachedAt = Date.now();
-        } else {
-            window.addEventListener('scroll', checkBottom, { passive: true });
-        }
-
+        // Timer starts the moment the page is ready - no more waiting for
+        // the visitor to scroll anywhere.
+        startedAt = Date.now();
+        broadcastTick(0, Math.ceil(DWELL_MS / 1000), false);
         tick();
     });
 
-    // If the page is closed/reloaded before the conditions are met,
+    // If the page is closed/reloaded before the dwell timer completes,
     // nothing has been sent to the server — the topic simply stays
     // "not read". No special handling needed here on purpose.
 })();
