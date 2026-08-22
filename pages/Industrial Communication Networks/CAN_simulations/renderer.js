@@ -172,7 +172,7 @@ function drawConnections() {
         // Horizontal connection line
         if (i < lastConnectedNode) {
             lines += `
-                <line x1="${currentNode.canH.x}" y1="${rowCenter}" x2="${nextNode.canH.x}" y2="${rowCenter}" stroke="red" stroke-width="${strokeWidth}" />
+                <line x1="${currentNode.canH.x}" y1="${rowCenter-25}" x2="${nextNode.canH.x}" y2="${rowCenter}" stroke="red" stroke-width="${strokeWidth}" />
                 <line x1="${currentNode.canL.x}" y1="${rowCenter - offsetY}" x2="${nextNode.canL.x}" y2="${rowCenter - offsetY}" stroke="blue" stroke-width="${strokeWidth}" />
             `;
         }
