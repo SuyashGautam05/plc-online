@@ -26,6 +26,11 @@
     const wordCount = theory.textContent.trim().split(/\s+/).length;
     const minutes = Math.max(1, Math.round(wordCount / 200)); // ~200 wpm
 
+    // Not shown anywhere in the UI (per request, no "time" displays) - but
+    // topic-read-tracker.js reads this to scale its dwell timer per-topic
+    // instead of using one fixed duration for every page.
+    window.SIMTEL_TOPIC_READ_MINUTES = minutes;
+
     buildHero(wrapper, sections.length, minutes);
     decorateHeadings(sections);
 
@@ -121,7 +126,6 @@
                 <span class="lesson-eyebrow"><i class="fas fa-graduation-cap"></i> Lesson</span>
                 <h2 class="lesson-hero-title">${escapeHtml(title)}</h2>
                 <div class="lesson-meta">
-                    <span class="meta-chip"><i class="fas fa-clock"></i> ${readMinutes} min read</span>
                     ${sectionCount ? `<span class="meta-chip"><i class="fas fa-layer-group"></i> ${sectionCount} section${sectionCount > 1 ? 's' : ''}</span>` : ''}
                 </div>
             </div>
@@ -129,19 +133,15 @@
         wrapperEl.insertBefore(hero, wrapperEl.firstChild);
     }
 
-    // ── Per-section reading time + copy-link button on each h2 ──
+    // ── Copy-link button on each h2 ──
     function decorateHeadings(sectionEls) {
         sectionEls.forEach(sec => {
             const h2 = sec.querySelector('h2');
             if (!h2) return;
 
-            const words = sec.textContent.trim().split(/\s+/).length;
-            const mins = Math.max(1, Math.round(words / 200));
-
             const actions = document.createElement('span');
             actions.className = 'h2-actions';
             actions.innerHTML = `
-                <span class="section-time-badge">${mins} min</span>
                 <button type="button" class="section-link-btn" aria-label="Copy link to this section"><i class="fas fa-link"></i></button>
             `;
             h2.appendChild(actions);
@@ -194,7 +194,7 @@
                     <div class="progress-ring" id="sidebar-progress-ring">
                         <div class="progress-ring-inner" id="sidebar-progress-pct">0%</div>
                     </div>
-                    <div class="progress-ring-label">~${readMinutes} min read<br><strong>${sectionEls.length}</strong> section${sectionEls.length > 1 ? 's' : ''}</div>
+                    <div class="progress-ring-label"><strong>${sectionEls.length}</strong> section${sectionEls.length > 1 ? 's' : ''}</div>
                 </div>
             </div>
             <div class="sidebar-block">

@@ -5,28 +5,40 @@
 //  <script src="/auth-config.js"></script>
 //  <script src="/topic-read-tracker.js"></script>
 //
-//  Rule: a topic only counts as "read" once the visitor has
-//  scrolled to the bottom of the page AND stayed for a further
-//  dwell period. If they close the tab/page before that, nothing
-//  is sent to the server — it is simply never marked read.
-//  While waiting, a small floating badge shows the current state.
+//  Rule: a topic counts as "read" once the visitor has stayed on
+//  the page for a dwell period. The timer starts the moment the
+//  page loads — no more waiting for a scroll-to-bottom. If they
+//  close the tab/page before the dwell completes, nothing is sent
+//  to the server — it is simply never marked read.
 //
-//  ADDED: broadcasts the current read-progress percentage via a
-//  'simtel:read-timer-tick' event (0% until the bottom is reached,
-//  then rising to 100% over the dwell period) - theory-enhancements.js
-//  listens for this and displays it inside the TOC drawer's
-//  #sidebar-progress-ring, so the same ring used for "Your progress"
-//  shows live read-tracking status. Nothing about the existing
-//  floating badge or the scroll/dwell trigger logic itself changed.
+//  DYNAMIC DWELL DURATION: instead of one fixed time for every
+//  topic, the dwell length scales with how long the topic actually
+//  is. theory-enhancements.js already estimates each page's reading
+//  time (word count / 200 wpm) and exposes it as
+//  window.SIMTEL_TOPIC_READ_MINUTES - this file reads that and
+//  scales the dwell period from it (roughly 60% of the estimated
+//  reading time), clamped between MIN_DWELL_MS and MAX_DWELL_MS so
+//  very short topics still take a sensible minimum and very long
+//  ones don't take forever. If that global isn't available (e.g. a
+//  page without theory-enhancements.js loaded), it falls back to
+//  measuring word count directly from .theory-section itself, and
+//  finally to a fixed default if neither is possible.
+//
+//  Broadcasts the current read-progress percentage via
+//  'simtel:read-timer-tick' (0% at page load, rising to 100% as the
+//  dwell period elapses) - theory-enhancements.js listens for this
+//  and displays it inside the TOC drawer's #sidebar-progress-ring.
 // ============================================================
 (function () {
     const cfg = window.SIMTEL_AUTH_CONFIG;
     if (!cfg) { console.error('auth-config.js must load before topic-read-tracker.js'); return; }
 
     // ── Tunables ──
-    const DWELL_MS = 2.5 * 60 * 1000;   // 2.5 minutes after reaching the bottom (adjust between 2–3 min)
-    const BOTTOM_THRESHOLD_PX = 48;     // how close to the very bottom counts as "reached the end"
-    const BADGE_TICK_MS = 1000;         // how often the countdown badge updates
+    const MIN_DWELL_MS = 60 * 1000;         // never require less than 1 minute, even for tiny topics
+    const MAX_DWELL_MS = 5 * 60 * 1000;     // never require more than 5 minutes, even for huge topics
+    const DWELL_FACTOR = 0.6;               // dwell = ~60% of the topic's estimated reading time
+    const DEFAULT_DWELL_MS = 2.5 * 60 * 1000; // used only if no read-time estimate is available at all
+    const BADGE_TICK_MS = 1000;             // how often the badge/ring updates
 
     const topicId = canonicalPathId(window.location.pathname);   // canonical id — must match index.html's toTopicId()
     const topicTitle = document.title || topicId;
@@ -42,8 +54,32 @@
         catch { return pathname; }
     }
 
-    let reachedBottom = false;
-    let bottomReachedAt = null;
+    // Works out this specific topic's dwell duration. Prefers
+    // theory-enhancements.js's already-computed estimate (window.
+    // SIMTEL_TOPIC_READ_MINUTES) since that avoids re-measuring the DOM
+    // twice; falls back to measuring .theory-section itself if that
+    // global isn't present, and finally to a fixed default.
+    function computeDwellMs() {
+        let minutes = typeof window.SIMTEL_TOPIC_READ_MINUTES === 'number'
+            ? window.SIMTEL_TOPIC_READ_MINUTES
+            : null;
+
+        if (minutes === null) {
+            const theory = document.querySelector('.theory-section');
+            if (theory) {
+                const words = theory.textContent.trim().split(/\s+/).length;
+                minutes = Math.max(1, Math.round(words / 200)); // ~200 wpm, same formula theory-enhancements.js uses
+            }
+        }
+
+        if (minutes === null) return DEFAULT_DWELL_MS;
+
+        const scaled = minutes * 60 * 1000 * DWELL_FACTOR;
+        return Math.min(MAX_DWELL_MS, Math.max(MIN_DWELL_MS, scaled));
+    }
+
+    let DWELL_MS = DEFAULT_DWELL_MS; // finalized inside DOMContentLoaded, once the page/theory-enhancements.js are ready
+    let startedAt = null;
     let marked = false;
     let tickHandle = null;
 
@@ -74,44 +110,19 @@
         if (txt) txt.textContent = text;
     }
 
-    // ── ADDED: broadcasts the current read-progress percentage so
+    // Broadcasts the current read-progress percentage so
     // theory-enhancements.js can display it inside #sidebar-progress-ring
-    // in the TOC drawer. 0% until the bottom is reached (since the
-    // dwell countdown hasn't started yet), then rises to 100% as the
-    // dwell period elapses. ──
+    // in the TOC drawer.
     function broadcastPct(pct) {
         window.dispatchEvent(new CustomEvent('simtel:read-timer-tick', {
             detail: { pct: Math.max(0, Math.min(100, pct)) }
         }));
     }
 
-    function pageHasNoScroll() {
-        return document.documentElement.scrollHeight <= window.innerHeight + BOTTOM_THRESHOLD_PX;
-    }
-
-    function checkBottom() {
-        if (reachedBottom) return;
-        const scrolledTo = window.innerHeight + window.scrollY;
-        const fullHeight = document.documentElement.scrollHeight;
-        if (scrolledTo >= fullHeight - BOTTOM_THRESHOLD_PX) {
-            reachedBottom = true;
-            bottomReachedAt = Date.now();
-            window.removeEventListener('scroll', checkBottom);
-            tick(); // start the dwell countdown immediately
-        }
-    }
-
     function tick() {
         if (marked) return;
 
-        if (!reachedBottom) {
-            setBadge('Not marked as read — scroll to the end', '#dc3545');
-            broadcastPct(0);
-            tickHandle = setTimeout(tick, BADGE_TICK_MS);
-            return;
-        }
-
-        const elapsed = Date.now() - bottomReachedAt;
+        const elapsed = Date.now() - startedAt;
         const remaining = DWELL_MS - elapsed;
 
         if (remaining <= 0) {
@@ -156,10 +167,9 @@
     }
 
     // Checks whether THIS topic is already marked read for the logged-in
-    // user, before starting the scroll/dwell tracking from scratch. Without
-    // this, revisiting an already-read page always showed "Not marked as
-    // read" and made you wait through the dwell timer again, even though
-    // the server already had it recorded - the tracker never looked.
+    // user, before starting the dwell timer from scratch. Without this,
+    // revisiting an already-read page would restart the whole countdown
+    // even though the server already had it recorded.
     async function checkAlreadyRead() {
         const token = localStorage.getItem(cfg.TOKEN_KEY);
         if (!token) return false; // not logged in - nothing to check
@@ -194,22 +204,23 @@
             setBadge('Marked as read ✓', '#16a34a');
             broadcastPct(100);
             window.dispatchEvent(new CustomEvent('simtel:topic-marked-read', { detail: { fresh: false } }));
-            return; // no need to track scroll/dwell for something already read
+            return; // no need to run the dwell timer for something already read
         }
 
-        // Short pages with no real scrollbar: treat "at the bottom" as
-        // already true, but the dwell timer still has to run its course.
-        if (pageHasNoScroll()) {
-            reachedBottom = true;
-            bottomReachedAt = Date.now();
-        } else {
-            window.addEventListener('scroll', checkBottom, { passive: true });
-        }
+        // By this point theory-enhancements.js (a synchronous script late
+        // in <body>) has already run and set window.SIMTEL_TOPIC_READ_MINUTES
+        // if it's present on this page, so the dwell duration can be
+        // computed per-topic now.
+        DWELL_MS = computeDwellMs();
 
+        // Timer starts the moment the page is ready - no more waiting for
+        // the visitor to scroll anywhere.
+        startedAt = Date.now();
+        broadcastPct(0);
         tick();
     });
 
-    // If the page is closed/reloaded before the conditions are met,
+    // If the page is closed/reloaded before the dwell timer completes,
     // nothing has been sent to the server — the topic simply stays
     // "not read". No special handling needed here on purpose.
 })();
