@@ -59,6 +59,7 @@
   width: 90%;
   flex: 1 1 auto;
   min-height: 0;
+  gap: 2px;
 }
 
 .switch-container h3 {
