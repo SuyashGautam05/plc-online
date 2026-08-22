@@ -42,6 +42,7 @@
   width: 90%;
   flex: 1 1 auto;
   min-height: 0;
+  margin-bottom: 50px;
 }
 
 .switch-container{
