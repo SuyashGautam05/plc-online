@@ -173,7 +173,7 @@ function drawConnections() {
         if (i < lastConnectedNode) {
             lines += `
                 <line x1="${currentNode.canH.x}" y1="${rowCenter}" x2="${nextNode.canH.x}" y2="${rowCenter}" stroke="red" stroke-width="${strokeWidth}" />
-                <line x1="${currentNode.canL.x}" y1="${rowCenter - offsetY - 25}" x2="${nextNode.canL.x}" y2="${rowCenter - offsetY}" stroke="blue" stroke-width="${strokeWidth}" />
+                <line x1="${currentNode.canL.x}" y1="${rowCenter - offsetY}" x2="${nextNode.canL.x}" y2="${rowCenter - offsetY}" stroke="blue" stroke-width="${strokeWidth}" />
             `;
         }
     }
@@ -204,7 +204,7 @@ function drawConnections() {
         const mainNodeRect = mainNode.getBoundingClientRect();
         const switchContainerRect = switchContainer.getBoundingClientRect();
         lines += `
-            <line x1="${(mainNodeRect.left + mainNodeRect.right)/2}" y1="${mainNodeRect.top}" 
+            <line x1="${(mainNodeRect.left + mainNodeRect.right)/2}" y1="${mainNodeRect.top-25}" 
                   x2="${(switchContainerRect.left + switchContainerRect.right)/2}" y2="${switchContainerRect.top + switchContainerRect.height}" 
                   stroke="black" stroke-width="${strokeWidth}" />
         `;
