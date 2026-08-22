@@ -10,7 +10,7 @@
 #app {
   display: flex;
   flex-direction: row;
-  overflow-y: auto;
+  overflow: hidden;
   background: var(--bg);
   flex: 1;
   min-height: 0;
