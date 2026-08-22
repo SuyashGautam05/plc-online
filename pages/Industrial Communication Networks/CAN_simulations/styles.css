@@ -78,7 +78,7 @@
 
 .right-col{
   box-sizing: border-box;
-  flex-direction: column;
+  flex-direction: column-reverse !important;
   margin-right: 2%;
   width: 80%;
   height: 100%;
