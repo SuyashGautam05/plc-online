@@ -4,6 +4,7 @@
   --bg: #eef1f7;
   --card-border: #e6c98a;
   --card-shadow: 0 6px 18px rgba(23, 54, 129, 0.10);
+  font-family: 'Poppins', sans-serif;
 }
 
 #app {
