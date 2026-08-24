@@ -257,7 +257,8 @@ main { width: 100%;
     color: #173681;
 }
 .meta-chip i { 
-    color: #e1ac3d;
+    /* color: #e1ac3d; */
+    color: #173681;
  }
 
 /* ── Table of contents: a left-side toggle button that slides in
@@ -569,7 +570,8 @@ main { width: 100%;
 .theory-section h3 {
     font-size: clamp(1.02rem, 1.5vw, 1.22rem);
     font-weight: 700;
-    color: var(--cat-amber);
+    /* color: var(--cat-amber); */
+    color: #173681;
     margin-top: clamp(20px, 2.5vw, 28px);
     margin-bottom: 10px;
 }
