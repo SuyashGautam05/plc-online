@@ -236,7 +236,8 @@ main { width: 100%;
     font-weight: 800;
     letter-spacing: -0.02em;
     line-height: 1.15;
-    color: var(--text-color);
+    /* color: var(--text-color); */
+    color: #173681;
     margin-bottom: 20px;
 }
 
@@ -323,12 +324,15 @@ main { width: 100%;
 .toc-drawer-title {
     font-size: 0.98rem;
     font-weight: 800;
-    color: var(--text-color);
+    /* color: var(--text-color); */
+    color: #173681;
     display: flex;
     align-items: center;
     gap: 8px;
 }
-.toc-drawer-title i { color: var(--red); }
+.toc-drawer-title i { 
+    color: #173681;
+ }
 .toc-drawer-close {
     background: none;
     border: none;
@@ -353,7 +357,8 @@ main { width: 100%;
     text-transform: uppercase;
     letter-spacing: 0.07em;
     font-weight: 800;
-    color: var(--accent-color);
+    /* color: var(--accent-color); */
+    color: #173681;
     margin-bottom: 12px;
 }
 
@@ -363,7 +368,8 @@ main { width: 100%;
     --pct: 0;
     width: 54px; height: 54px;
     border-radius: 50%;
-    background: conic-gradient(var(--red) calc(var(--pct) * 1%), var(--border-color) 0);
+    /* background: conic-gradient(var(--red) calc(var(--pct) * 1%), var(--border-color) 0); */
+    background: #173681;
     display: flex; align-items: center; justify-content: center;
     flex-shrink: 0;
     transition: background 0.15s linear;
@@ -415,8 +421,14 @@ main { width: 100%;
     line-height: 1.4;
     transition: all 0.15s ease;
 }
-#toc-list a:hover { color: var(--red); }
-#toc-list a.active { color: var(--red); border-left-color: var(--red); font-weight: 700; }
+#toc-list a:hover { 
+    /* color: var(--red); */
+    color: #173681;
+ }
+#toc-list a.active { 
+    color: #173681;
+     border-left-color: #173681;
+      font-weight: 700; }
 
 .back-to-top-btn {
     display: flex;
