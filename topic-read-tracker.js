@@ -54,6 +54,37 @@
         catch { return pathname; }
     }
 
+    // Local cache of topics confirmed read in THIS browser - lets a
+    // revisit to an already-read page show "Marked as read" instantly
+    // instead of waiting on the /my-progress network round-trip (which is
+    // what made reopening a page look like it was "loading" / restarting
+    // the timer every time, even though it had already been read).
+    const LOCAL_READ_CACHE_KEY = 'simtel_locally_read_topics';
+
+    function getLocalReadCache() {
+        try {
+            const raw = localStorage.getItem(LOCAL_READ_CACHE_KEY);
+            return raw ? JSON.parse(raw) : {};
+        } catch {
+            return {};
+        }
+    }
+
+    function isLocallyMarkedRead(id) {
+        return !!getLocalReadCache()[id];
+    }
+
+    function markLocallyRead(id) {
+        try {
+            const cache = getLocalReadCache();
+            cache[id] = true;
+            localStorage.setItem(LOCAL_READ_CACHE_KEY, JSON.stringify(cache));
+        } catch {
+            // localStorage full/unavailable - not critical, the network
+            // check on next visit still works as a fallback.
+        }
+    }
+
     // Works out this specific topic's dwell duration. Prefers
     // theory-enhancements.js's already-computed estimate (window.
     // SIMTEL_TOPIC_READ_MINUTES) since that avoids re-measuring the DOM
@@ -142,6 +173,7 @@
         if (tickHandle) clearTimeout(tickHandle);
         setBadge('Marked as read ✓', '#16a34a');
         broadcastPct(100);
+        markLocallyRead(topicId);
 
         // Let any listener (e.g. theory-enhancements.js's TOC drawer /
         // celebration toast) know, without this file needing to know who's
@@ -198,9 +230,23 @@
     document.addEventListener('DOMContentLoaded', async () => {
         injectBadge();
 
+        // Instant path: this browser already confirmed this topic as read
+        // before - skip the network check entirely so the badge shows
+        // "Marked as read" immediately instead of a visible "Checking
+        // status..." delay (which is what made reopening the page look
+        // like it was loading/restarting the timer every time).
+        if (isLocallyMarkedRead(topicId)) {
+            marked = true;
+            setBadge('Marked as read ✓', '#16a34a');
+            broadcastPct(100);
+            window.dispatchEvent(new CustomEvent('simtel:topic-marked-read', { detail: { fresh: false } }));
+            return;
+        }
+
         const alreadyRead = await checkAlreadyRead();
         if (alreadyRead) {
             marked = true;
+            markLocallyRead(topicId); // cache it so the next visit skips the network check too
             setBadge('Marked as read ✓', '#16a34a');
             broadcastPct(100);
             window.dispatchEvent(new CustomEvent('simtel:topic-marked-read', { detail: { fresh: false } }));
