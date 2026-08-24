@@ -347,7 +347,10 @@ main { width: 100%;
     transition: all 0.2s ease;
     flex-shrink: 0;
 }
-.toc-drawer-close:hover { background: var(--hover-color); color: var(--red); }
+.toc-drawer-close:hover { 
+    background: #173681;
+     color: #173681; 
+    }
 
 .sidebar-block { margin-bottom: 26px; }
 .sidebar-block:last-child { margin-bottom: 0; }
@@ -447,7 +450,10 @@ main { width: 100%;
     font-family: inherit;
     transition: all 0.2s ease;
 }
-.back-to-top-btn:hover { border-color: var(--red); color: var(--red); }
+.back-to-top-btn:hover { 
+    border-color: #173681;
+     color: #173681; 
+    }
 
 /* ── Theory content ── */
 .theory-section {
