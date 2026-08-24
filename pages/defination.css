@@ -348,7 +348,7 @@ main { width: 100%;
     flex-shrink: 0;
 }
 .toc-drawer-close:hover { 
-    background: #173681;
+    background: var(--hover-color);
      color: #173681; 
     }
 
@@ -503,7 +503,8 @@ main { width: 100%;
     gap: 14px;
     font-size: clamp(1.2rem, 2vw, 1.55rem);
     font-weight: 800;
-    color: var(--text-color);
+    /* color: var(--text-color); */
+    color: #173681;
     letter-spacing: -0.01em;
     margin-bottom: 18px;
     line-height: 1.3;
