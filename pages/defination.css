@@ -200,7 +200,8 @@ main { width: 100%;
 /* ── Hero band (injected by JS, full-width background, content
    centered to the same reading column as the body text below) ── */
 .lesson-hero {
-    background: linear-gradient(120deg, var(--red-soft) 0%, var(--amber-soft) 100%);
+    /* background: linear-gradient(120deg, var(--red-soft) 0%, var(--amber-soft) 100%); */
+    background: linear-gradient(120deg, #e1ac3d 0%, #e1ac3d 100%);
     border-bottom: 1px solid var(--border-color);
     /* padding: clamp(32px, 5vw, 52px) var(--pad-x); */
     padding: 30px;
@@ -230,7 +231,8 @@ main { width: 100%;
 }
 
 .lesson-hero-title {
-    font-size: clamp(1.6rem, 3.4vw, 2.5rem);
+    /* font-size: clamp(1.6rem, 3.4vw, 2.5rem); */
+    font-size: 36px;
     font-weight: 800;
     letter-spacing: -0.02em;
     line-height: 1.15;
@@ -250,9 +252,12 @@ main { width: 100%;
     border-radius: var(--r-pill);
     font-size: 0.82rem;
     font-weight: 600;
-    color: var(--text-color);
+    /* color: var(--text-color); */
+    color: #173681;
 }
-.meta-chip i { color: var(--red); }
+.meta-chip i { 
+    color: #e1ac3d;
+ }
 
 /* ── Table of contents: a left-side toggle button that slides in
    a drawer, rather than an always-visible column - works the same
@@ -265,7 +270,8 @@ main { width: 100%;
     z-index: 60;
     width: 50px; height: 50px;
     border-radius: 50%;
-    background: var(--text-color);
+    /* background: var(--text-color); */
+    background: #173681;
     color: var(--primary-color);
     border: none;
     cursor: pointer;
@@ -276,8 +282,14 @@ main { width: 100%;
     font-size: 1.05rem;
     transition: all 0.25s var(--ease);
 }
-#toc-toggle-btn:hover { background: var(--red); transform: translateY(-50%) scale(1.06); }
-#toc-toggle-btn.active { background: var(--red); }
+#toc-toggle-btn:hover { 
+    /* background: var(--red); */
+    background: #1a3d8f;
+     transform: translateY(-50%) scale(1.06); }
+#toc-toggle-btn.active { 
+    /* background: var(--red); */
+    background: #1a3d8f;
+ }
 
 #toc-drawer-overlay {
     display: none;
@@ -489,8 +501,10 @@ main { width: 100%;
     width: 2.1em;
     height: 2.1em;
     border-radius: var(--r-1);
-    background: linear-gradient(135deg, var(--red) 0%, var(--red-hover) 100%);
-    color: white;
+    /* background: linear-gradient(135deg, var(--red) 0%, var(--red-hover) 100%); */
+    background: linear-gradient(135deg, #e1ac3d 0%, #e1ac3d 100%);
+    /* color: white; */
+    color: #173681;
     font-size: 0.52em;
     font-weight: 800;
     box-shadow: 0 4px 14px var(--red-glow);
@@ -571,7 +585,8 @@ main { width: 100%;
     left: 4px; top: 0.65em;
     width: 8px; height: 8px;
     border-radius: 50%;
-    background: var(--red);
+    /* background: var(--red); */
+    background: #173681;
 }
 
 .theory-section ol { counter-reset: ol-counter; }
@@ -591,7 +606,8 @@ main { width: 100%;
 .theory-section ol li strong, .theory-section ol li b,
 .theory-section p strong, .theory-section p b {
     font-weight: 700;
-    color: var(--text-color);
+    /* color: var(--text-color); */
+    color: #173681;
     background: linear-gradient(to bottom, transparent 62%, var(--amber-soft) 62%);
     padding: 0 2px;
     border-radius: 3px;
@@ -680,7 +696,7 @@ footer { text-align: center; padding: 24px 0; margin-top: 40px; border-top: 1px 
 }
 .comparison-table thead { background: linear-gradient(135deg, var(--red) 0%, var(--red-hover) 100%); }
 .comparison-table th {
-    padding: 14px 18px; text-align: left; font-weight: 700; color: rgb(0, 0, 0);
+    padding: 14px 18px; text-align: left; font-weight: 700; color: #e1ac3d;
     font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.04em; border: none;
 }
 .comparison-table td { padding: 14px 18px; border-bottom: 1px solid var(--border-color); color: var(--body-text); font-size: 0.88rem; }
