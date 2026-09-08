@@ -122,7 +122,7 @@
             position: fixed; bottom: 18px; right: 18px; z-index: 999998;
             display: none; align-items: center; gap: 8px;
             background: #343a40; color: #fff;
-            font-family: Georgia, 'Times New Roman', serif;
+            font-family: 'Poppins' ,sans-serif;
             font-size: 0.78rem; padding: 8px 14px; border-radius: 20px;
             box-shadow: 0 2px 12px rgba(0,0,0,0.3);
             pointer-events: none; user-select: none;

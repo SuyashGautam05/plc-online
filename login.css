@@ -11,7 +11,7 @@
 }
 
 body {
-    font-family: Georgia, 'Times New Roman', Times, serif;
+    font-family: 'Poppins' ,sans-serif;
     background: #f8f9fa;
     color: #343a40;
     min-height: 100vh;
@@ -82,7 +82,7 @@ form input {
     border: 1px solid #dee2e6;
     border-radius: 5px;
     font-size: 0.95rem;
-    font-family: inherit;
+    font-family: 'Poppins' ,sans-serif;
     color: #343a40;
     background: #fff;
     transition: border-color 0.15s, box-shadow 0.15s;
@@ -110,7 +110,7 @@ form button[type="submit"] {
     border: none;
     border-radius: 5px;
     font-size: 1rem;
-    font-family: inherit;
+    font-family: 'Poppins' ,sans-serif;
     font-weight: 600;
     cursor: pointer;
     margin-top: 4px;

@@ -269,7 +269,7 @@ function addMCQButton() {
         font-weight: bold;
         box-shadow: 0 4px 12px rgba(0, 123, 255, 0.4);
         z-index: 99;
-        font-family: inherit;
+        font-family: 'Poppins' ,sans-serif;
     `;
     
     document.body.appendChild(button);

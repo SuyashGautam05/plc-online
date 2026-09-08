@@ -28,7 +28,7 @@
                 background: #173681;
                 color: #fff;
                 padding: 6px 14px;
-                font-family: Georgia, serif;
+                font-family: 'Poppins' ,sans-serif;
                 font-size: 0.82rem;
                 border-bottom-left-radius: 8px;
                 box-shadow: 0 2px 8px rgba(0,0,0,0.25);
@@ -61,7 +61,7 @@
                 padding: 2px 10px;
                 font-size: 0.78rem;
                 cursor: pointer;
-                font-family: inherit;
+                font-family: 'Poppins' ,sans-serif;
                 transition: all 0.15s;
             }
             #simtel-user-bar button:hover {
