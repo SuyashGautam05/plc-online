@@ -11,6 +11,11 @@ const INCLUDE = [
     'auth-config.js',
     'auth-guard.js',
     'user-bar.js',
+        'theory-enhancements.js',   // ← add karo (agar pehle se missing hai)
+    'topic-read-tracker.js',    // ← add karo (agar pehle se missing hai)
+    'pre-post-quiz.js',         // ← NAYA add karo
+    'mcq-handler.js',           // ← add karo (agar pehle se missing hai)
+    'defination.css',           // ← add karo (agar pehle se missing hai)
     'mcq_with_explation.json',
     'assets',
     'pages',
