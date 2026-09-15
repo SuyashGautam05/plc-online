@@ -7,18 +7,25 @@
 //  <script src="/topic-read-tracker.js"></script>
 //  <script src="/pre-post-quiz.js"></script>
 //
-//  Rule: if this topic has quiz data in prepost-quiz-data.json,
-//  a PRE-quiz gate blocks the lesson content until answered
-//  (baseline check - just needs every question attempted, not
-//  necessarily correct). Once the visitor finishes reading
-//  (topic-read-tracker.js's dwell timer completes and fires
-//  'simtel:topic-marked-read'), a POST-quiz appears, then a
-//  before/after comparison. Pages with no entry in the JSON for
-//  their path are completely unaffected - nothing is injected.
+//  ONE shared data file (prepost-quiz-data.json, in /pages/) holds
+//  every topic's pre-quiz and post-quiz questions, keyed by topic.
 //
-//  Fully self-contained: no HTML markup needs to be added to any
-//  page, unlike the older mcq-handler.js pattern. Just the script
-//  tag above.
+//  This injects two buttons into the page's <header>: "Pre-Quiz"
+//  and "Post-Quiz". The Post-Quiz button stays locked/disabled
+//  until the Pre-Quiz has been completed - clicking Pre-Quiz opens
+//  it, and finishing it unlocks Post-Quiz. Once both are done, a
+//  before/after comparison is shown. Pages with no entry for their
+//  key are completely unaffected - no buttons are injected.
+//
+//  To identify itself in the shared JSON, a page can either:
+//    (a) set window.PPQ_TOPIC_KEY explicitly before this script
+//        runs (recommended - no ambiguity, e.g.:
+//          <script>window.PPQ_TOPIC_KEY = "Actuators/Classification_of_Actuators.html";</script>
+//        ), or
+//    (b) do nothing and let this script derive the key from the
+//        page's own URL path (same convention mcq-data.json
+//        already uses) - works but relies on the page living under
+//        /pages/<Module>/<File>.html.
 // ============================================================
 (function () {
     const cfg = window.SIMTEL_AUTH_CONFIG;
@@ -28,9 +35,6 @@
     const NAVY = '#173681';
     const GOLD = '#e1ac3d';
 
-    // Same relative-path scheme mcq-data.json already uses (e.g.
-    // "Actuators/Classification_of_Actuators.html") so both systems can
-    // share one lookup key per topic without inventing a second convention.
     function getRelativePagePath() {
         const parts = window.location.pathname.split('/');
         const pagesIndex = parts.findIndex(p => p.toLowerCase() === 'pages');
@@ -64,9 +68,6 @@
         return state[topicKey];
     }
 
-    // Best-effort save to the backend, in addition to the local record
-    // above. Silently does nothing if the endpoint isn't set up yet -
-    // never blocks the quiz flow on this.
     async function saveScoreToServer(topicId, phase, score, total) {
         const token = localStorage.getItem(cfg.TOKEN_KEY);
         if (!token) return;
@@ -82,6 +83,22 @@
     function injectBaseStyles() {
         const style = document.createElement('style');
         style.textContent = `
+            .ppq-header-btns {
+                display: flex; align-items: center; gap: 10px;
+                margin-left: auto; flex-shrink: 0; padding: 0 8px;
+            }
+            .ppq-header-btn {
+                display: inline-flex; align-items: center; gap: 6px;
+                padding: 8px 16px; border-radius: 20px; border: none;
+                font-family: Georgia, 'Times New Roman', serif; font-size: 0.82rem; font-weight: 700;
+                cursor: pointer; transition: all 0.2s; white-space: nowrap;
+                background: ${NAVY}; color: #fff;
+            }
+            .ppq-header-btn:hover:not(:disabled) { background: #0e2461; transform: translateY(-1px); }
+            .ppq-header-btn:disabled { background: #adb5bd; color: #f1f3f5; cursor: not-allowed; opacity: 0.75; }
+            .ppq-header-btn.ppq-done { background: #28a745; }
+            .ppq-header-btn.ppq-done:hover { background: #218838; }
+
             .ppq-overlay {
                 position: fixed; inset: 0; z-index: 999990;
                 background: rgba(15, 23, 42, 0.72);
@@ -130,6 +147,8 @@
             .ppq-btn-primary { background: ${NAVY}; color: #fff; }
             .ppq-btn-primary:disabled { background: #adb5bd; cursor: not-allowed; }
             .ppq-btn-primary:not(:disabled):hover { background: #0e2461; }
+            .ppq-btn-secondary { background: #e9ecef; color: #333; }
+            .ppq-btn-secondary:hover { background: #dee2e6; }
             .ppq-progress { font-size: 0.8rem; color: #6c757d; margin-top: 4px; }
             .ppq-summary { text-align: center; padding: 10px 0 6px; }
             .ppq-summary .ppq-score-row { display: flex; justify-content: center; gap: 32px; margin: 18px 0; }
@@ -138,15 +157,31 @@
             .ppq-summary .ppq-score-lbl { font-size: 0.78rem; color: #6c757d; text-transform: uppercase; letter-spacing: 0.05em; }
             .ppq-summary .ppq-arrow { font-size: 1.8rem; color: ${GOLD}; align-self: center; }
             .ppq-summary .ppq-verdict { font-size: 1rem; font-weight: 700; margin-top: 4px; }
+
+            .ppq-toast {
+                position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%) translateY(20px);
+                background: #212529; color: #fff; padding: 12px 20px; border-radius: 8px;
+                font-family: Georgia, serif; font-size: 0.88rem; z-index: 999995;
+                opacity: 0; transition: all 0.3s; pointer-events: none; max-width: 90vw; text-align: center;
+            }
+            .ppq-toast.ppq-show { opacity: 1; transform: translateX(-50%) translateY(0); }
         `;
         document.head.appendChild(style);
     }
 
-    // Renders a quiz form into a container, calling onComplete(score, total)
-    // once every question has been answered. showFeedback=true reveals
-    // correct/incorrect styling and explanations as each question is
-    // answered (used for the post-quiz); false keeps it neutral (used for
-    // the pre-quiz, which is a baseline check, not a test to pass/fail).
+    function showToast(message, ms = 3200) {
+        let toast = document.querySelector('.ppq-toast');
+        if (!toast) {
+            toast = document.createElement('div');
+            toast.className = 'ppq-toast';
+            document.body.appendChild(toast);
+        }
+        toast.textContent = message;
+        requestAnimationFrame(() => toast.classList.add('ppq-show'));
+        clearTimeout(toast._hideTimer);
+        toast._hideTimer = setTimeout(() => toast.classList.remove('ppq-show'), ms);
+    }
+
     function renderQuiz(container, questions, showFeedback, onAllAnswered) {
         const answers = new Array(questions.length).fill(null);
 
@@ -168,7 +203,7 @@
         container.querySelectorAll('.ppq-q').forEach((qEl, qi) => {
             qEl.querySelectorAll('.ppq-opt').forEach((optEl, oi) => {
                 optEl.addEventListener('click', () => {
-                    if (answers[qi] !== null && showFeedback) return; // locked after first answer when feedback is shown
+                    if (answers[qi] !== null && showFeedback) return;
                     answers[qi] = oi;
                     qEl.querySelectorAll('input').forEach(r => r.checked = false);
                     qEl.querySelector(`#ppq-q${qi}-o${oi}`).checked = true;
@@ -201,7 +236,7 @@
         return score;
     }
 
-    function showQuizModal({ title, subtitle, questions, showFeedback, dismissible, onComplete }) {
+    function showQuizModal({ title, subtitle, questions, showFeedback, onComplete, onCancel }) {
         const overlay = document.createElement('div');
         overlay.className = 'ppq-overlay';
         overlay.innerHTML = `
@@ -215,7 +250,8 @@
                     <div class="ppq-progress">0 of ${questions.length} answered</div>
                 </div>
                 <div class="ppq-footer">
-                    <button class="ppq-btn ppq-btn-primary" disabled>Continue</button>
+                    <button class="ppq-btn ppq-btn-secondary ppq-cancel-btn">Cancel</button>
+                    <button class="ppq-btn ppq-btn-primary" disabled>Submit</button>
                 </div>
             </div>
         `;
@@ -223,7 +259,8 @@
         document.documentElement.style.overflow = 'hidden';
 
         const progressEl = overlay.querySelector('.ppq-progress');
-        const continueBtn = overlay.querySelector('.ppq-btn-primary');
+        const submitBtn = overlay.querySelector('.ppq-btn-primary');
+        const cancelBtn = overlay.querySelector('.ppq-cancel-btn');
         const quizContainer = overlay.querySelector('.ppq-quiz-container');
 
         let latestAnswers = null;
@@ -232,24 +269,30 @@
             latestAnswers = answers;
             const answeredCount = answers.filter(a => a !== null).length;
             progressEl.textContent = `${answeredCount} of ${questions.length} answered`;
-            continueBtn.disabled = !allAnswered;
+            submitBtn.disabled = !allAnswered;
         });
 
-        continueBtn.addEventListener('click', () => {
-            const score = scoreAnswers(questions, latestAnswers);
+        function close() {
             document.documentElement.style.overflow = '';
             overlay.remove();
-            onComplete(score, questions.length);
+        }
+
+        cancelBtn.addEventListener('click', () => {
+            close();
+            if (onCancel) onCancel();
         });
 
-        if (!dismissible) return; // pre-quiz: no escape/close - must complete it
+        submitBtn.addEventListener('click', () => {
+            const score = scoreAnswers(questions, latestAnswers);
+            close();
+            onComplete(score, questions.length);
+        });
     }
 
     function showComparisonSummary(preScore, preTotal, postScore, postTotal) {
         const prePct = Math.round((preScore / preTotal) * 100);
         const postPct = Math.round((postScore / postTotal) * 100);
-        const improved = postPct > prePct;
-        const verdict = improved
+        const verdict = postPct > prePct
             ? `🎉 Great improvement — up ${postPct - prePct} points!`
             : postPct === prePct
                 ? `You held steady at ${postPct}%.`
@@ -290,92 +333,120 @@
         });
     }
 
-    function lockPageContent() {
-        const wrapper = document.querySelector('.content-wrapper') || document.body;
-        wrapper.style.filter = 'blur(6px)';
-        wrapper.style.pointerEvents = 'none';
-        wrapper.style.userSelect = 'none';
+    // ---- Header buttons ----
+    function injectHeaderButtons(entry, topicKey) {
+        const header = document.querySelector('header');
+        if (!header) return null;
+
+        const wrap = document.createElement('div');
+        wrap.className = 'ppq-header-btns';
+
+        const hasPre = entry.preQuestions?.length > 0;
+        const hasPost = entry.postQuestions?.length > 0;
+
+        if (hasPre) {
+            wrap.innerHTML += `<button class="ppq-header-btn" id="ppq-btn-pre">📋 Pre-Quiz</button>`;
+        }
+        if (hasPost) {
+            wrap.innerHTML += `<button class="ppq-header-btn" id="ppq-btn-post" disabled>✅ Post-Quiz</button>`;
+        }
+
+        header.style.display = header.style.display || 'flex';
+        header.style.alignItems = header.style.alignItems || 'center';
+        header.appendChild(wrap);
+
+        return {
+            preBtn: wrap.querySelector('#ppq-btn-pre'),
+            postBtn: wrap.querySelector('#ppq-btn-post'),
+        };
     }
 
-    function unlockPageContent() {
-        const wrapper = document.querySelector('.content-wrapper') || document.body;
-        wrapper.style.filter = '';
-        wrapper.style.pointerEvents = '';
-        wrapper.style.userSelect = '';
+    function setBtnDone(btn, label) {
+        if (!btn) return;
+        btn.classList.add('ppq-done');
+        btn.textContent = label;
+        btn.disabled = false;
     }
 
     document.addEventListener('DOMContentLoaded', async () => {
-        // Each page can define its own quiz data directly, inline, right in
-        // that page's HTML:
-        //
-        //   <script>
-        //     window.PPQ_QUIZ_DATA = {
-        //       preQuestions: [ ... ],
-        //       postQuestions: [ ... ]
-        //     };
-        //   </script>
-        //   <script src="/pre-post-quiz.js"></script>
-        //
-        // This is checked FIRST and is fully self-contained - no shared
-        // file, no path-matching, nothing to keep in sync across pages.
-        // Every page's quiz lives with that page. If a page doesn't define
-        // window.PPQ_QUIZ_DATA, this falls back to looking the page up in
-        // the shared prepost-quiz-data.json by path (useful for topics
-        // whose quiz data was already written there).
-        let entry = window.PPQ_QUIZ_DATA || null;
-        let storageKey = window.location.pathname; // stable per-page key either way - always exactly this page, nothing to mismatch
+        let entry = null;
+        let topicKey = window.PPQ_TOPIC_KEY || getRelativePagePath();
 
-        if (!entry) {
-            const quizData = await loadQuizData();
-            if (quizData) {
-                const topicKey = getRelativePagePath();
-                entry = quizData[topicKey] || null;
-            }
-        }
+        const quizData = await loadQuizData();
+        if (quizData) entry = quizData[topicKey] || null;
 
-        if (!entry || (!entry.preQuestions?.length && !entry.postQuestions?.length)) return; // nothing configured for this page - it behaves exactly as before
+        if (!entry || (!entry.preQuestions?.length && !entry.postQuestions?.length)) return; // nothing configured for this topic - page behaves exactly as before
 
         injectBaseStyles();
-        const state = getState()[storageKey] || {};
+        const buttons = injectHeaderButtons(entry, topicKey);
+        if (!buttons) return;
 
-        // ---- PRE-QUIZ GATE ----
-        if (entry.preQuestions?.length && !state.preComplete) {
-            lockPageContent();
-            showQuizModal({
-                title: '📋 Quick Check-In',
-                subtitle: 'Answer these before starting the lesson - this just measures your starting point, there\'s no pass/fail.',
-                questions: entry.preQuestions,
-                showFeedback: false,
-                dismissible: false,
-                onComplete: (score, total) => {
-                    saveState(storageKey, { preComplete: true, preScore: score, preTotal: total });
-                    saveScoreToServer(storageKey, 'pre', score, total);
-                    unlockPageContent();
+        const { preBtn, postBtn } = buttons;
+        const state = getState()[topicKey] || {};
+
+        // Restore already-completed state on revisit
+        if (state.preComplete && preBtn) setBtnDone(preBtn, '✓ Pre-Quiz');
+        if (state.preComplete && postBtn) postBtn.disabled = false;
+        if (state.postComplete && postBtn) setBtnDone(postBtn, '✓ Post-Quiz');
+
+        if (preBtn) {
+            preBtn.addEventListener('click', () => {
+                const current = getState()[topicKey] || {};
+                if (current.preComplete) {
+                    showToast(`Pre-Quiz already completed — you scored ${current.preScore}/${current.preTotal}.`);
+                    return;
                 }
+                showQuizModal({
+                    title: '📋 Pre-Quiz',
+                    subtitle: 'A quick baseline check before you start — there\'s no pass/fail here.',
+                    questions: entry.preQuestions,
+                    showFeedback: false,
+                    onComplete: (score, total) => {
+                        saveState(topicKey, { preComplete: true, preScore: score, preTotal: total });
+                        saveScoreToServer(topicKey, 'pre', score, total);
+                        setBtnDone(preBtn, '✓ Pre-Quiz');
+                        if (postBtn) {
+                            postBtn.disabled = false;
+                            showToast('Pre-Quiz complete! Post-Quiz is now unlocked.');
+                        }
+                    }
+                });
             });
         }
 
-        // ---- POST-QUIZ, triggered when topic-read-tracker.js confirms the
-        // dwell timer completed (the existing "finished reading" signal) ----
-        if (entry.postQuestions?.length) {
-            window.addEventListener('simtel:topic-marked-read', () => {
-                const current = getState()[storageKey] || {};
-                if (current.postComplete) return; // already taken - don't show again on a reload of an already-read page
-
+        if (postBtn) {
+            postBtn.addEventListener('click', () => {
+                if (postBtn.disabled) return; // locked until pre-quiz is done
+                const current = getState()[topicKey] || {};
+                if (current.postComplete) {
+                    showToast(`Post-Quiz already completed — you scored ${current.postScore}/${current.postTotal}.`);
+                    return;
+                }
                 showQuizModal({
-                    title: '✅ Wrap-Up Quiz',
+                    title: '✅ Post-Quiz',
                     subtitle: 'Let\'s see what you picked up from this lesson.',
                     questions: entry.postQuestions,
                     showFeedback: true,
-                    dismissible: false,
                     onComplete: (score, total) => {
-                        const updated = saveState(storageKey, { postComplete: true, postScore: score, postTotal: total });
-                        saveScoreToServer(storageKey, 'post', score, total);
+                        const updated = saveState(topicKey, { postComplete: true, postScore: score, postTotal: total });
+                        saveScoreToServer(topicKey, 'post', score, total);
+                        setBtnDone(postBtn, '✓ Post-Quiz');
                         if (updated.preComplete) {
                             showComparisonSummary(updated.preScore, updated.preTotal, score, total);
                         }
                     }
                 });
+            });
+        }
+
+        // Gentle nudge (not a forced popup) once the reading dwell-timer
+        // completes, if Post-Quiz is unlocked but not yet taken.
+        if (postBtn) {
+            window.addEventListener('simtel:topic-marked-read', () => {
+                const current = getState()[topicKey] || {};
+                if (!postBtn.disabled && !current.postComplete) {
+                    showToast('Nice reading! The Post-Quiz is ready whenever you are.', 4000);
+                }
             });
         }
     });
