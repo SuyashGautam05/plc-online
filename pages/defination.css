@@ -581,14 +581,14 @@ main { width: 100%;
     color: var(--body-text);
     margin-bottom: 16px;
     line-height: 1.85;
-    max-width: 94ch;
+    max-width: 111ch;
 }
 
 .theory-section ul, .theory-section ol {
     list-style: none;
     margin: 0 0 18px;
     padding-left: 0;
-    max-width: 74ch;
+    max-width: 111ch;
 }
 
 .theory-section ul li, .theory-section ol li {
