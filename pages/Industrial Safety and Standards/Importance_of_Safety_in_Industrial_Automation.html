@@ -341,9 +341,19 @@
     </div>
 
     <!-- MCQ Handler Script -->
-    <script src="../mcq-handler.js"></script>
-    <script src="/theory-enhancements.js"></script>
-    <script src="/pre-post-quiz.js"></script>
+<script src="/auth-config.js"></script>
+<script src="/topic-read-tracker.js"></script>
+<script>
+  window.PPQ_QUIZ_DATA = {
+    preQuestions: [
+      { question: "Aapka sawaal?", options: ["A", "B", "C"], correct: 1, explanation: "kyun sahi hai" }
+    ],
+    postQuestions: [
+      { question: "Post-quiz sawaal?", options: ["A", "B", "C"], correct: 2, explanation: "kyun sahi hai" }
+    ]
+  };
+</script>
+<script src="/pre-post-quiz.js"></script>
 </body>
 
 </html>

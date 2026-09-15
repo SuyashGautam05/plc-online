@@ -305,16 +305,38 @@
     }
 
     document.addEventListener('DOMContentLoaded', async () => {
-        const quizData = await loadQuizData();
-        if (!quizData) return; // data file not present on this deployment yet - no-op
+        // Each page can define its own quiz data directly, inline, right in
+        // that page's HTML:
+        //
+        //   <script>
+        //     window.PPQ_QUIZ_DATA = {
+        //       preQuestions: [ ... ],
+        //       postQuestions: [ ... ]
+        //     };
+        //   </script>
+        //   <script src="/pre-post-quiz.js"></script>
+        //
+        // This is checked FIRST and is fully self-contained - no shared
+        // file, no path-matching, nothing to keep in sync across pages.
+        // Every page's quiz lives with that page. If a page doesn't define
+        // window.PPQ_QUIZ_DATA, this falls back to looking the page up in
+        // the shared prepost-quiz-data.json by path (useful for topics
+        // whose quiz data was already written there).
+        let entry = window.PPQ_QUIZ_DATA || null;
+        let storageKey = window.location.pathname; // stable per-page key either way - always exactly this page, nothing to mismatch
 
-        const topicKey = getRelativePagePath();
-        console.log('[pre-post-quiz] this page\'s key in prepost-quiz-data.json is:', JSON.stringify(topicKey));
-        const entry = quizData[topicKey];
-        if (!entry || (!entry.preQuestions?.length && !entry.postQuestions?.length)) return; // nothing configured for this topic - page behaves exactly as before
+        if (!entry) {
+            const quizData = await loadQuizData();
+            if (quizData) {
+                const topicKey = getRelativePagePath();
+                entry = quizData[topicKey] || null;
+            }
+        }
+
+        if (!entry || (!entry.preQuestions?.length && !entry.postQuestions?.length)) return; // nothing configured for this page - it behaves exactly as before
 
         injectBaseStyles();
-        const state = getState()[topicKey] || {};
+        const state = getState()[storageKey] || {};
 
         // ---- PRE-QUIZ GATE ----
         if (entry.preQuestions?.length && !state.preComplete) {
@@ -326,8 +348,8 @@
                 showFeedback: false,
                 dismissible: false,
                 onComplete: (score, total) => {
-                    saveState(topicKey, { preComplete: true, preScore: score, preTotal: total });
-                    saveScoreToServer(topicKey, 'pre', score, total);
+                    saveState(storageKey, { preComplete: true, preScore: score, preTotal: total });
+                    saveScoreToServer(storageKey, 'pre', score, total);
                     unlockPageContent();
                 }
             });
@@ -337,7 +359,7 @@
         // dwell timer completed (the existing "finished reading" signal) ----
         if (entry.postQuestions?.length) {
             window.addEventListener('simtel:topic-marked-read', () => {
-                const current = getState()[topicKey] || {};
+                const current = getState()[storageKey] || {};
                 if (current.postComplete) return; // already taken - don't show again on a reload of an already-read page
 
                 showQuizModal({
@@ -347,8 +369,8 @@
                     showFeedback: true,
                     dismissible: false,
                     onComplete: (score, total) => {
-                        const updated = saveState(topicKey, { postComplete: true, postScore: score, postTotal: total });
-                        saveScoreToServer(topicKey, 'post', score, total);
+                        const updated = saveState(storageKey, { postComplete: true, postScore: score, postTotal: total });
+                        saveScoreToServer(storageKey, 'post', score, total);
                         if (updated.preComplete) {
                             showComparisonSummary(updated.preScore, updated.preTotal, score, total);
                         }
