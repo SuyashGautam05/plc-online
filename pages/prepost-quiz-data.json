@@ -334,5 +334,89 @@
         "explanation": "VR is used for operator training, virtual commissioning and testing, factory layout planning, and safety training simulations without risking equipment damage or human injury."
       }
     ]
+  },
+  "Introduction to Industrial Automation/Importance_of_Safety_in_Industrial_Automation.html": {
+    "title": "Importance of Safety in Industrial Automation",
+    "preQuestions": [
+      {
+        "question": "Why do you think safety matters in an industrial automation environment?",
+        "options": [
+          "It doesn't matter much",
+          "To protect workers and prevent accidents",
+          "Only to satisfy inspectors",
+          "Automated systems don't need safety measures"
+        ],
+        "correct": 1,
+        "explanation": "Safety protects workers and operators from the high voltages, moving parts, and complex control logic present in automated systems."
+      },
+      {
+        "question": "What could happen in an automated factory without proper safety measures?",
+        "options": [
+          "Nothing changes",
+          "Accidents, equipment damage, and production losses",
+          "Machines automatically become safer on their own",
+          "Workers become more productive with no safety measures"
+        ],
+        "correct": 1,
+        "explanation": "Without proper safety measures, automated systems can cause serious accidents, equipment damage, and production losses."
+      }
+    ],
+    "postQuestions": [
+      {
+        "question": "Which devices directly help protect workers from moving machinery and live electrical parts?",
+        "options": [
+          "Fuses only",
+          "Emergency stop buttons, interlocks, and machine guards",
+          "Circuit breakers only",
+          "None of these"
+        ],
+        "correct": 1,
+        "explanation": "Emergency stop buttons, interlocks, and machine guards prevent accidental contact with hazards and allow machines to be stopped immediately."
+      },
+      {
+        "question": "How do safety systems help prevent equipment damage?",
+        "options": [
+          "By increasing machine speed",
+          "By protecting circuits with fuses/breakers and preventing overheating or mechanical stress",
+          "By removing all sensors",
+          "By ignoring overload conditions"
+        ],
+        "correct": 1,
+        "explanation": "Safety systems protect costly equipment like motors, PLCs, and drives using fuses, circuit breakers, and limits that prevent overheating and mechanical stress."
+      },
+      {
+        "question": "What is the relationship between safety and reliable operation?",
+        "options": [
+          "They are unrelated",
+          "Proper safety measures reduce unexpected failures and minimize production interruptions",
+          "Safety measures always slow production down permanently",
+          "Reliability has nothing to do with accidents"
+        ],
+        "correct": 1,
+        "explanation": "Accidents and failures often cause downtime — proper safety measures reduce unexpected failures and help maintain stable, continuous operation."
+      },
+      {
+        "question": "Which international standards are commonly referenced for industrial automation safety compliance?",
+        "options": [
+          "HTML and CSS standards",
+          "IEC and ISO standards",
+          "Only company-specific internal standards",
+          "No standards are needed"
+        ],
+        "correct": 1,
+        "explanation": "Industrial automation systems must follow recognized safety standards such as IEC and ISO, which define safe design, installation, and operating practices."
+      },
+      {
+        "question": "In the context of Industry 5.0, why is safety especially important?",
+        "options": [
+          "Because robots are being removed entirely",
+          "Because it enables safe human-robot collaboration as humans and machines work closely together",
+          "Because Industry 5.0 has no automation",
+          "Safety is not relevant to Industry 5.0"
+        ],
+        "correct": 1,
+        "explanation": "In Industry 5.0, humans and machines collaborate closely, so safety systems are essential to enable safe human-robot interaction and support new technology adoption without risk."
+      }
+    ]
   }
 }

@@ -309,6 +309,7 @@
         if (!quizData) return; // data file not present on this deployment yet - no-op
 
         const topicKey = getRelativePagePath();
+        console.log('[pre-post-quiz] this page\'s key in prepost-quiz-data.json is:', JSON.stringify(topicKey));
         const entry = quizData[topicKey];
         if (!entry || (!entry.preQuestions?.length && !entry.postQuestions?.length)) return; // nothing configured for this topic - page behaves exactly as before
 
