@@ -38,8 +38,36 @@ body {
 
 .app {
   display: grid;
-  grid-template-rows: 56px 1fr 30px;
+  grid-template-rows: 50px 56px 1fr 30px;
   height: 100vh;
+}
+
+/* ── Scientech header - self-contained, matches the rest of the
+   SimTel suite's simulation pages exactly ── */
+header.site-header {
+  background: #173681;
+  display: flex;
+  align-items: center;
+  padding: 0 20px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
+}
+header.site-header .logo-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  height: 50px;
+}
+header.site-header .logo-container img {
+  height: 32px;
+  width: auto;
+  object-fit: contain;
+}
+header.site-header h1 {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #ffffff;
+  letter-spacing: -0.01em;
+  margin: 0;
 }
 
 /* Top bar */
@@ -814,6 +842,14 @@ body {
 </head>
 <body>
 <div class="app">
+  <!-- Scientech Header -->
+  <header class="site-header">
+    <div class="logo-container">
+        <img src="../../assets/Scientech logo-2.png" alt="Scientech Logo">
+        <h1>PLC Ladder Logic Simulator</h1>
+    </div>
+  </header>
+
   <!-- Top Bar -->
   <div class="topbar">
     <div class="brand">
