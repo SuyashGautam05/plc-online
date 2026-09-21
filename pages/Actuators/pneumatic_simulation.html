@@ -24,19 +24,17 @@
     color:var(--ink);font-family:'Inter',system-ui,sans-serif;-webkit-font-smoothing:antialiased;}
   .app{display:flex;flex-direction:column;height:100vh;padding:14px;gap:12px;}
   header.site-header{
-    display:flex;align-items:center;gap:14px;
-    background:#173681;border-radius:14px;
-    padding:10px 20px;box-shadow:var(--shadow);
-    margin:0 0 2px;
+    background:#173681;
+    display:flex;align-items:center;
+    padding:0 20px;height:62px;
+    box-shadow:var(--shadow);
+    margin:0 0 12px;
   }
-  header.site-header .logo-container{display:flex;align-items:center;flex-shrink:0;}
-  header.site-header .logo-container img{height:32px;width:auto;object-fit:contain;}
-  header.site-header > div:nth-child(2){flex:1;min-width:0;}
-  header.site-header h1{font-size:19px;font-weight:800;letter-spacing:-0.01em;margin:0;color:#ffffff;}
+  header.site-header .logo-container{display:flex;align-items:center;gap:12px;height:62px;}
+  header.site-header .logo-container img{height:40px;width:auto;object-fit:contain;}
+  header.site-header h1{font-size:1.15rem;font-weight:700;letter-spacing:-0.01em;margin:0;color:#ffffff;}
   header.site-header h1 span{color:var(--gold);}
-  header.site-header p{margin:2px 0 0;font-size:12.5px;color:rgba(255,255,255,0.75);}
-  header.site-header .badge{flex-shrink:0;}
-  .badge{font-family:'JetBrains Mono',monospace;font-size:10.5px;font-weight:600;color:#173681;
+  .badge{margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:10.5px;font-weight:600;color:#173681;
     background:#fdf3e2;border:1px solid var(--gold);padding:3px 8px;border-radius:20px;letter-spacing:.03em;}
   .main{flex:1;display:grid;grid-template-columns:232px 1fr 240px;gap:12px;min-height:0;}
   .panel{background:var(--panel);border:1px solid var(--panel-border);border-radius:14px;box-shadow:var(--shadow);overflow:hidden;display:flex;flex-direction:column;}
@@ -71,7 +69,7 @@
   .tbtn.stop:hover{background:#ffe3e0;}
   .tbtn:disabled{opacity:.4;cursor:not-allowed;}
   .tb-sep{width:1px;height:20px;background:var(--panel-border);margin:0 3px;}
-  .status-chip{margin-left:auto;display:flex;align-items:center;gap:6px;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600;color:var(--ink-soft);padding:5px 10px;background:#f4f6f9;border-radius:20px;}
+  .status-chip{display:flex;align-items:center;gap:6px;font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600;color:var(--ink-soft);padding:5px 10px;background:#f4f6f9;border-radius:20px;}
   .status-chip .led{width:7px;height:7px;border-radius:50%;background:var(--ink-faint);}
   .status-chip.running .led{background:var(--ok);box-shadow:0 0 0 3px rgba(26,158,92,.18);}
   .status-chip.running{color:var(--ok);}
@@ -122,12 +120,8 @@
   <header class="site-header">
     <div class="logo-container">
         <img src="../../assets/Scientech logo-2.png" alt="Scientech Logo">
+        <h1>Pneumatic <span>Circuit</span> Simulator</h1>
     </div>
-    <div>
-      <h1>Pneumatic <span>Circuit</span> Simulator</h1>
-      <p>Drag any of the 52 components onto the canvas, wire up ports, then run the circuit.</p>
-    </div>
-    <div class="badge">52 COMPONENTS · LIVE PHYSICS</div>
   </header>
 
   <div class="main">
@@ -146,6 +140,7 @@
         <button class="tbtn" id="btn-undo">↺ Undo</button>
         <button class="tbtn" id="btn-rotate">↻ Rotate</button>
         <button class="tbtn" id="btn-clear">✕ Clear All</button>
+        <div class="badge">52 COMPONENTS · LIVE PHYSICS</div>
         <div class="status-chip" id="status-chip"><span class="led"></span><span id="status-text">Idle</span></div>
       </div>
       <svg id="canvas" viewBox="0 0 1400 900" xmlns="http://www.w3.org/2000/svg">
