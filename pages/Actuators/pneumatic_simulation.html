@@ -22,7 +22,7 @@
   html,body{height:100%;}
   body{margin:0;background:radial-gradient(1200px 500px at 15% -10%, #f4f8ff 0%, transparent 60%),var(--bg);
     color:var(--ink);font-family:'Inter',system-ui,sans-serif;-webkit-font-smoothing:antialiased;}
-  .app{display:flex;flex-direction:column;height:100vh;padding:14px;gap:12px;}
+  .app{display:flex;flex-direction:column;height:100vh;gap:12px;}
   header.site-header{
     background:#173681;
     display:flex;align-items:center;
@@ -30,8 +30,15 @@
     box-shadow:var(--shadow);
     margin:0 0 12px;
   }
-  header.site-header .logo-container{display:flex;align-items:center;gap:12px;height:62px;}
-  header.site-header .logo-container img{height:40px;width:auto;object-fit:contain;}
+  header.site-header .logo-container{display:flex;align-items:center;
+    /* gap:12px; */
+    gap:346px;
+    height:62px;}
+  header.site-header .logo-container img{
+    /* height:40px; */
+    height:97px;
+    margin-top: -12px;
+    width:auto;object-fit:contain;}
   header.site-header h1{font-size:1.15rem;font-weight:700;letter-spacing:-0.01em;margin:0;color:#ffffff;}
   header.site-header h1 span{color:var(--gold);}
   .badge{margin-left:auto;font-family:'JetBrains Mono',monospace;font-size:10.5px;font-weight:600;color:#173681;
@@ -39,9 +46,9 @@
   .main{flex:1;display:grid;grid-template-columns:232px 1fr 240px;gap:12px;min-height:0;}
   .panel{background:var(--panel);border:1px solid var(--panel-border);border-radius:14px;box-shadow:var(--shadow);overflow:hidden;display:flex;flex-direction:column;}
   .palette{padding:12px;overflow-y:auto;}
-  .palette h2, .properties h2{font-size:10.5px;text-transform:uppercase;letter-spacing:.08em;color:var(--ink-faint);font-weight:700;margin:4px 0 10px;}
-  .search-box{width:100%;padding:7px 9px;border:1px solid #e6ebf1;border-radius:8px;font-size:12px;font-family:inherit;margin-bottom:10px;background:#f7f9fc;}
-  .search-box:focus{outline:none;border-color:var(--accent);background:#fff;}
+  .palette h2, .properties h2{font-size:15px;text-transform:uppercase;color:#173681;font-weight:700;margin:4px 0 10px;}
+  .search-box{width:100%;padding:7px 9px;border:1px solid #173681;border-radius:8px;font-size:12px;font-family:inherit;margin-bottom:10px;background:#f7f9fc;}
+  .search-box:focus{outline:none;border-color:#173681;background:#fff;}
   .category{margin-bottom:2px;}
   .cat-head{display:flex;align-items:center;justify-content:space-between;width:100%;background:none;border:none;text-align:left;padding:7px 4px;font-size:11px;font-weight:700;color:var(--ink);cursor:pointer;border-radius:6px;}
   .cat-head:hover{background:#f2f5f9;}
@@ -120,7 +127,7 @@
   <header class="site-header">
     <div class="logo-container">
         <img src="../../assets/Scientech logo-2.png" alt="Scientech Logo">
-        <h1>Pneumatic <span>Circuit</span> Simulator</h1>
+        <h1>Pneumatic Circuit</h1>
     </div>
   </header>
 
