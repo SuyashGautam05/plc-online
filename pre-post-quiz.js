@@ -85,7 +85,7 @@
         style.textContent = `
             .ppq-header-btns {
                 display: flex; align-items: center; gap: 10px;
-                margin-left: auto; flex-shrink: 0; padding: 0 8px;
+                margin-left: auto; flex-shrink: 0; padding: 0 8px; margin-right: 90px;
             }
             .ppq-header-btn {
                 display: inline-flex; align-items: center; gap: 6px;
