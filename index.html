@@ -953,6 +953,19 @@ footer a:hover { color: var(--red); }
 }
 .topic-badge-sim:hover { background: rgba(13, 148, 136, 0.16); }
 
+/* Pre-quiz / post-quiz score badges (read from this browser's
+   localStorage, written by pre-post-quiz.js on the lesson page). */
+.topic-badge-quiz-pre {
+    background: rgba(225, 172, 61, 0.14);
+    color: #a5780f;
+    border-color: rgba(225, 172, 61, 0.4);
+}
+.topic-badge-quiz-post {
+    background: rgba(23, 54, 129, 0.08);
+    color: #173681;
+    border-color: rgba(23, 54, 129, 0.22);
+}
+
 /* ── Roadmap (learning path map) ── */
 .roadmap-modal-body { padding: 20px 16px; }
 .roadmap-node {
@@ -1386,6 +1399,8 @@ const mcqTopics = new Set(); // mcq-data.json keys - which topics have practice 
 // mcq-data.json is keyed by the path relative to /pages/, e.g.
 // "Introduction to Industrial Automation/Definition_and_Scope_of_Industrial_Automation.html"
 // - exactly a topic's href with the leading "./pages/" stripped off.
+// pre-post-quiz.js's default (non-overridden) topic key uses this exact
+// same convention, so it doubles as the quiz-results lookup key too.
 function mcqKeyFromHref(href) {
     return href.replace(/^\.\/pages\//, '');
 }
@@ -1400,6 +1415,19 @@ async function loadMcqIndex() {
         console.warn('Could not load MCQ index:', err);
     }
 }
+
+// ── Pre-quiz/post-quiz results, read from THIS browser's localStorage
+// (pre-post-quiz.js on each lesson page writes here under the same
+// "relative to /pages/" key mcq-data.json uses). No network round-trip
+// needed - it's local to this browser, same as the quiz state itself. ──
+function loadQuizResults() {
+    try {
+        return JSON.parse(localStorage.getItem('simtel_prepost_quiz_state')) || {};
+    } catch {
+        return {};
+    }
+}
+const quizResults = loadQuizResults();
 
 // Resolve a relative "./pages/..." href to the same canonical id
 // the topic page itself will report (its window.location.pathname).
@@ -1480,6 +1508,7 @@ function renderTopicNode(item) {
     }
     const isRead = readSet.has(toTopicId(item.href));
     const hasMcq = mcqTopics.has(mcqKeyFromHref(item.href));
+    const quizState = quizResults[mcqKeyFromHref(item.href)];
 
     // Simulation link is a sibling of the main topic <a>, not nested inside
     // it (anchors can't nest) - stopPropagation keeps a click on it from
@@ -1490,6 +1519,12 @@ function renderTopicNode(item) {
     }
     if (item.simHref) {
         badges.push(`<a href="${escAttr(item.simHref)}" class="topic-badge topic-badge-sim" title="Open interactive simulation" onclick="event.stopPropagation()"><i class="fas fa-flask"></i> Simulation</a>`);
+    }
+    if (quizState?.preComplete) {
+        badges.push(`<span class="topic-badge topic-badge-quiz-pre" title="Your pre-quiz baseline score"><i class="fas fa-clipboard-list"></i> Pre-Quiz: ${quizState.preScore}/${quizState.preTotal}</span>`);
+    }
+    if (quizState?.postComplete) {
+        badges.push(`<span class="topic-badge topic-badge-quiz-post" title="Your post-quiz score"><i class="fas fa-circle-check"></i> Post-Quiz: ${quizState.postScore}/${quizState.postTotal}</span>`);
     }
 
     return `<li>
@@ -1640,6 +1675,7 @@ document.getElementById('topicsModalOverlay').addEventListener('click', e => {
 // user comes back to this tab — e.g. after reading a topic elsewhere.
 document.addEventListener('visibilitychange', () => {
     if (document.visibilityState !== 'visible') return;
+    Object.assign(quizResults, loadQuizResults()); // picks up any pre/post scores set on the page just visited
     loadProgress().then(() => {
         applyFilters();
         renderOverallProgress();

@@ -34,52 +34,220 @@
           "Use of control systems to operate machinery",
           "Mechanical design only"
         ],
-        "correct": 3,
-        "explanation": "Augmented Reality is a technology that overlays digital information onto the real-world environment in real time, allowing users to see both the real system and additional contextual information simultaneously."
+        "correct": 2,
+        "explanation": "Industrial automation is primarily concerned with using control systems (like PLCs) to operate machinery and processes with minimal human intervention."
       },
       {
-        "question": "Which of the following is NOT a device used to view AR content?",
+        "question": "Which of these best describes the scope of industrial automation?",
         "options": [
-          "Smart glasses",
-          "Tablets",
-          "Mobile phones",
-          "Closed-circuit television (CCTV)"
+          "Only robotics",
+          "Only software",
+          "Control systems, machinery, and processes across an industrial operation",
+          "Only office administration"
         ],
-        "correct": 3,
-        "explanation": "CCTV is a surveillance system that doesn't support AR overlays. AR content is viewed through smart glasses, tablets, and mobile phones."
+        "correct": 2,
+        "explanation": "Industrial automation's scope spans control systems, machinery, and processes throughout an industrial operation, not just one narrow technology."
       },
       {
-        "question": "What is the primary application of AR in industrial maintenance?",
+        "question": "What is a key benefit industrial automation provides over manual operation?",
         "options": [
-          "Entertainment and games",
-          "Displaying step-by-step instructions directly on machines",
-          "Replacing workers completely",
-          "Storing large amounts of data"
-        ],
-        "correct": 1,
-        "explanation": "In maintenance, AR displays step-by-step instructions directly on machines, reducing dependency on manuals and minimizing human error."
-      },
-      {
-        "question": "How does Virtual Reality (VR) differ from Augmented Reality (AR)?",
-        "options": [
-          "VR overlays information, AR replaces it",
-          "VR fully replaces the real environment, AR overlays digital information on the real world",
-          "VR is cheaper than AR",
-          "There is no difference"
+          "Higher unpredictability",
+          "Improved consistency and repeatability",
+          "More manual labor required",
+          "Slower production"
         ],
         "correct": 1,
-        "explanation": "VR creates a completely immersive digital environment that fully replaces the real world, while AR overlays digital information onto the real environment."
+        "explanation": "Automated systems provide consistent, repeatable performance, which is difficult to achieve reliably with manual operation alone."
       },
       {
-        "question": "Which of the following is a primary use of VR in industrial settings?",
+        "question": "Which of these is typically NOT a goal of industrial automation?",
         "options": [
-          "Only for entertainment",
-          "Operator training for complex or hazardous equipment",
-          "Replacing all workers",
-          "Storing production data"
+          "Increasing productivity",
+          "Reducing human error",
+          "Eliminating all quality control",
+          "Improving consistency"
+        ],
+        "correct": 2,
+        "explanation": "Industrial automation aims to increase productivity, reduce human error, and improve consistency — not eliminate quality control, which remains essential."
+      },
+      {
+        "question": "Industrial automation systems typically include which of the following?",
+        "options": [
+          "Sensors and actuators only",
+          "Sensors, actuators, and control systems working together",
+          "Only human operators",
+          "Paper-based tracking only"
         ],
         "correct": 1,
-        "explanation": "VR is used for operator training, virtual commissioning and testing, factory layout planning, and safety training simulations without risking equipment damage or human injury."
+        "explanation": "Industrial automation systems combine sensors, actuators, and control systems (like PLCs) working together to automate processes."
+      }
+    ]
+  },
+  "Industrial Safety and Standards/Importance_of_Safety_in_Industrial_Automation.html": {
+    "title": "Importance of Safety in Industrial Automation",
+    "preQuestions": [
+      {
+        "question": "Why do you think safety matters in an industrial automation environment?",
+        "options": [
+          "It doesn't matter much",
+          "To protect workers and prevent accidents",
+          "Only to satisfy inspectors",
+          "Automated systems don't need safety measures"
+        ],
+        "correct": 1,
+        "explanation": "Safety protects workers and operators from the high voltages, moving parts, and complex control logic present in automated systems."
+      },
+      {
+        "question": "What could happen in an automated factory without proper safety measures?",
+        "options": [
+          "Nothing changes",
+          "Accidents, equipment damage, and production losses",
+          "Machines automatically become safer on their own",
+          "Workers become more productive with no safety measures"
+        ],
+        "correct": 1,
+        "explanation": "Without proper safety measures, automated systems can cause serious accidents, equipment damage, and production losses."
+      }
+    ],
+    "postQuestions": [
+      {
+        "question": "Which devices directly help protect workers from moving machinery and live electrical parts?",
+        "options": [
+          "Fuses only",
+          "Emergency stop buttons, interlocks, and machine guards",
+          "Circuit breakers only",
+          "None of these"
+        ],
+        "correct": 1,
+        "explanation": "Emergency stop buttons, interlocks, and machine guards prevent accidental contact with hazards and allow machines to be stopped immediately."
+      },
+      {
+        "question": "How do safety systems help prevent equipment damage?",
+        "options": [
+          "By increasing machine speed",
+          "By protecting circuits with fuses/breakers and preventing overheating or mechanical stress",
+          "By removing all sensors",
+          "By ignoring overload conditions"
+        ],
+        "correct": 1,
+        "explanation": "Safety systems protect costly equipment like motors, PLCs, and drives using fuses, circuit breakers, and limits that prevent overheating and mechanical stress."
+      },
+      {
+        "question": "What is the relationship between safety and reliable operation?",
+        "options": [
+          "They are unrelated",
+          "Proper safety measures reduce unexpected failures and minimize production interruptions",
+          "Safety measures always slow production down permanently",
+          "Reliability has nothing to do with accidents"
+        ],
+        "correct": 1,
+        "explanation": "Accidents and failures often cause downtime — proper safety measures reduce unexpected failures and help maintain stable, continuous operation."
+      },
+      {
+        "question": "Which international standards are commonly referenced for industrial automation safety compliance?",
+        "options": [
+          "HTML and CSS standards",
+          "IEC and ISO standards",
+          "Only company-specific internal standards",
+          "No standards are needed"
+        ],
+        "correct": 1,
+        "explanation": "Industrial automation systems must follow recognized safety standards such as IEC and ISO, which define safe design, installation, and operating practices."
+      },
+      {
+        "question": "In the context of Industry 5.0, why is safety especially important?",
+        "options": [
+          "Because robots are being removed entirely",
+          "Because it enables safe human-robot collaboration as humans and machines work closely together",
+          "Because Industry 5.0 has no automation",
+          "Safety is not relevant to Industry 5.0"
+        ],
+        "correct": 1,
+        "explanation": "In Industry 5.0, humans and machines collaborate closely, so safety systems are essential to enable safe human-robot interaction and support new technology adoption without risk."
+      }
+    ]
+  },
+  "Industrial Safety and Standards/Machine_Safety_Systems.html": {
+    "title": "Machine Safety Systems",
+    "preQuestions": [
+      {
+        "question": "Why might a factory need machine safety systems?",
+        "options": [
+          "To make machines run faster",
+          "To protect operators from injury",
+          "To reduce equipment size",
+          "Safety systems aren't really needed"
+        ],
+        "correct": 1,
+        "explanation": "Machine safety systems exist primarily to protect operators and maintenance personnel from hazards like moving machinery."
+      },
+      {
+        "question": "What's a simple example of a machine safety device you might already know?",
+        "options": [
+          "A coffee mug",
+          "An emergency stop button",
+          "A wristwatch",
+          "A calculator"
+        ],
+        "correct": 1,
+        "explanation": "An emergency stop button is a classic, widely recognized machine safety device that immediately halts operation."
+      }
+    ],
+    "postQuestions": [
+      {
+        "question": "What is the primary purpose of an Emergency Stop System?",
+        "options": [
+          "To speed up production",
+          "To immediately halt machine operation during hazardous situations",
+          "To lubricate machine parts",
+          "To generate reports"
+        ],
+        "correct": 1,
+        "explanation": "Emergency stop systems override all other controls and bring the machine to a safe state as quickly as possible."
+      },
+      {
+        "question": "How do safety interlocks work?",
+        "options": [
+          "They speed up the machine cycle",
+          "They prevent machines from operating unless safety conditions like closed guards are met",
+          "They only work during maintenance",
+          "They have no effect on machine operation"
+        ],
+        "correct": 1,
+        "explanation": "Interlock systems prevent machines from operating unless safety conditions are met, such as closed guards or correct operating modes."
+      },
+      {
+        "question": "Which devices can detect human presence and automatically stop or slow down machines?",
+        "options": [
+          "Light curtains, safety mats, and laser scanners",
+          "Only mechanical guards",
+          "Power supplies",
+          "Communication modules"
+        ],
+        "correct": 0,
+        "explanation": "Safety sensors and devices such as light curtains, safety mats, and laser scanners detect human presence and automatically stop or slow machines to prevent injury."
+      },
+      {
+        "question": "What role do safety relays or safety PLCs play in machine safety systems?",
+        "options": [
+          "They have no role in safety",
+          "They continuously monitor safety inputs and ensure correct responses to unsafe conditions",
+          "They only control lighting",
+          "They replace the need for guards entirely"
+        ],
+        "correct": 1,
+        "explanation": "Modern machine safety systems are often integrated with safety relays or safety PLCs, using redundant circuits and self-diagnostics for reliability."
+      },
+      {
+        "question": "Which standards must machine safety systems comply with?",
+        "options": [
+          "Only company policy",
+          "ISO and IEC standards along with occupational safety regulations",
+          "Only local building codes",
+          "No standards are required"
+        ],
+        "correct": 1,
+        "explanation": "Machine safety systems must comply with ISO standards for machine safety design, IEC standards for safety-related control systems, and applicable occupational safety regulations."
       }
     ]
   },
@@ -332,258 +500,6 @@
         ],
         "correct": 1,
         "explanation": "VR is used for operator training, virtual commissioning and testing, factory layout planning, and safety training simulations without risking equipment damage or human injury."
-      }
-    ]
-  },
-  "Introduction to Industrial Automation/Importance_of_Safety_in_Industrial_Automation.html": {
-    "title": "Importance of Safety in Industrial Automation",
-    "preQuestions": [
-      {
-        "question": "Why do you think safety matters in an industrial automation environment?",
-        "options": [
-          "It doesn't matter much",
-          "To protect workers and prevent accidents",
-          "Only to satisfy inspectors",
-          "Automated systems don't need safety measures"
-        ],
-        "correct": 1,
-        "explanation": "Safety protects workers and operators from the high voltages, moving parts, and complex control logic present in automated systems."
-      },
-      {
-        "question": "What could happen in an automated factory without proper safety measures?",
-        "options": [
-          "Nothing changes",
-          "Accidents, equipment damage, and production losses",
-          "Machines automatically become safer on their own",
-          "Workers become more productive with no safety measures"
-        ],
-        "correct": 1,
-        "explanation": "Without proper safety measures, automated systems can cause serious accidents, equipment damage, and production losses."
-      }
-    ],
-    "postQuestions": [
-      {
-        "question": "Which devices directly help protect workers from moving machinery and live electrical parts?",
-        "options": [
-          "Fuses only",
-          "Emergency stop buttons, interlocks, and machine guards",
-          "Circuit breakers only",
-          "None of these"
-        ],
-        "correct": 1,
-        "explanation": "Emergency stop buttons, interlocks, and machine guards prevent accidental contact with hazards and allow machines to be stopped immediately."
-      },
-      {
-        "question": "How do safety systems help prevent equipment damage?",
-        "options": [
-          "By increasing machine speed",
-          "By protecting circuits with fuses/breakers and preventing overheating or mechanical stress",
-          "By removing all sensors",
-          "By ignoring overload conditions"
-        ],
-        "correct": 1,
-        "explanation": "Safety systems protect costly equipment like motors, PLCs, and drives using fuses, circuit breakers, and limits that prevent overheating and mechanical stress."
-      },
-      {
-        "question": "What is the relationship between safety and reliable operation?",
-        "options": [
-          "They are unrelated",
-          "Proper safety measures reduce unexpected failures and minimize production interruptions",
-          "Safety measures always slow production down permanently",
-          "Reliability has nothing to do with accidents"
-        ],
-        "correct": 1,
-        "explanation": "Accidents and failures often cause downtime — proper safety measures reduce unexpected failures and help maintain stable, continuous operation."
-      },
-      {
-        "question": "Which international standards are commonly referenced for industrial automation safety compliance?",
-        "options": [
-          "HTML and CSS standards",
-          "IEC and ISO standards",
-          "Only company-specific internal standards",
-          "No standards are needed"
-        ],
-        "correct": 1,
-        "explanation": "Industrial automation systems must follow recognized safety standards such as IEC and ISO, which define safe design, installation, and operating practices."
-      },
-      {
-        "question": "In the context of Industry 5.0, why is safety especially important?",
-        "options": [
-          "Because robots are being removed entirely",
-          "Because it enables safe human-robot collaboration as humans and machines work closely together",
-          "Because Industry 5.0 has no automation",
-          "Safety is not relevant to Industry 5.0"
-        ],
-        "correct": 1,
-        "explanation": "In Industry 5.0, humans and machines collaborate closely, so safety systems are essential to enable safe human-robot interaction and support new technology adoption without risk."
-      }
-    ]
-  },
-  "Importance_of_Safety_in_Industrial_Automation": {
-    "title": "Importance of Safety in Industrial Automation",
-    "preQuestions": [
-      {
-        "question": "Why do you think safety matters in an industrial automation environment?",
-        "options": [
-          "It doesn't matter much",
-          "To protect workers and prevent accidents",
-          "Only to satisfy inspectors",
-          "Automated systems don't need safety measures"
-        ],
-        "correct": 1,
-        "explanation": "Safety protects workers and operators from the high voltages, moving parts, and complex control logic present in automated systems."
-      },
-      {
-        "question": "What could happen in an automated factory without proper safety measures?",
-        "options": [
-          "Nothing changes",
-          "Accidents, equipment damage, and production losses",
-          "Machines automatically become safer on their own",
-          "Workers become more productive with no safety measures"
-        ],
-        "correct": 1,
-        "explanation": "Without proper safety measures, automated systems can cause serious accidents, equipment damage, and production losses."
-      }
-    ],
-    "postQuestions": [
-      {
-        "question": "Which devices directly help protect workers from moving machinery and live electrical parts?",
-        "options": [
-          "Fuses only",
-          "Emergency stop buttons, interlocks, and machine guards",
-          "Circuit breakers only",
-          "None of these"
-        ],
-        "correct": 1,
-        "explanation": "Emergency stop buttons, interlocks, and machine guards prevent accidental contact with hazards and allow machines to be stopped immediately."
-      },
-      {
-        "question": "How do safety systems help prevent equipment damage?",
-        "options": [
-          "By increasing machine speed",
-          "By protecting circuits with fuses/breakers and preventing overheating or mechanical stress",
-          "By removing all sensors",
-          "By ignoring overload conditions"
-        ],
-        "correct": 1,
-        "explanation": "Safety systems protect costly equipment like motors, PLCs, and drives using fuses, circuit breakers, and limits that prevent overheating and mechanical stress."
-      },
-      {
-        "question": "What is the relationship between safety and reliable operation?",
-        "options": [
-          "They are unrelated",
-          "Proper safety measures reduce unexpected failures and minimize production interruptions",
-          "Safety measures always slow production down permanently",
-          "Reliability has nothing to do with accidents"
-        ],
-        "correct": 1,
-        "explanation": "Accidents and failures often cause downtime — proper safety measures reduce unexpected failures and help maintain stable, continuous operation."
-      },
-      {
-        "question": "Which international standards are commonly referenced for industrial automation safety compliance?",
-        "options": [
-          "HTML and CSS standards",
-          "IEC and ISO standards",
-          "Only company-specific internal standards",
-          "No standards are needed"
-        ],
-        "correct": 1,
-        "explanation": "Industrial automation systems must follow recognized safety standards such as IEC and ISO, which define safe design, installation, and operating practices."
-      },
-      {
-        "question": "In the context of Industry 5.0, why is safety especially important?",
-        "options": [
-          "Because robots are being removed entirely",
-          "Because it enables safe human-robot collaboration as humans and machines work closely together",
-          "Because Industry 5.0 has no automation",
-          "Safety is not relevant to Industry 5.0"
-        ],
-        "correct": 1,
-        "explanation": "In Industry 5.0, humans and machines collaborate closely, so safety systems are essential to enable safe human-robot interaction and support new technology adoption without risk."
-      }
-    ]
-  },
-  "Machine_Safety_Systems": {
-    "title": "Machine Safety Systems",
-    "preQuestions": [
-      {
-        "question": "Why might a factory need machine safety systems?",
-        "options": [
-          "To make machines run faster",
-          "To protect operators from injury",
-          "To reduce equipment size",
-          "Safety systems aren't really needed"
-        ],
-        "correct": 1,
-        "explanation": "Machine safety systems exist primarily to protect operators and maintenance personnel from hazards like moving machinery."
-      },
-      {
-        "question": "What's a simple example of a machine safety device you might already know?",
-        "options": [
-          "A coffee mug",
-          "An emergency stop button",
-          "A wristwatch",
-          "A calculator"
-        ],
-        "correct": 1,
-        "explanation": "An emergency stop button is a classic, widely recognized machine safety device that immediately halts operation."
-      }
-    ],
-    "postQuestions": [
-      {
-        "question": "What is the primary purpose of an Emergency Stop System?",
-        "options": [
-          "To speed up production",
-          "To immediately halt machine operation during hazardous situations",
-          "To lubricate machine parts",
-          "To generate reports"
-        ],
-        "correct": 1,
-        "explanation": "Emergency stop systems override all other controls and bring the machine to a safe state as quickly as possible."
-      },
-      {
-        "question": "How do safety interlocks work?",
-        "options": [
-          "They speed up the machine cycle",
-          "They prevent machines from operating unless safety conditions like closed guards are met",
-          "They only work during maintenance",
-          "They have no effect on machine operation"
-        ],
-        "correct": 1,
-        "explanation": "Interlock systems prevent machines from operating unless safety conditions are met, such as closed guards or correct operating modes."
-      },
-      {
-        "question": "Which devices can detect human presence and automatically stop or slow down machines?",
-        "options": [
-          "Light curtains, safety mats, and laser scanners",
-          "Only mechanical guards",
-          "Power supplies",
-          "Communication modules"
-        ],
-        "correct": 0,
-        "explanation": "Safety sensors and devices such as light curtains, safety mats, and laser scanners detect human presence and automatically stop or slow machines to prevent injury."
-      },
-      {
-        "question": "What role do safety relays or safety PLCs play in machine safety systems?",
-        "options": [
-          "They have no role in safety",
-          "They continuously monitor safety inputs and ensure correct responses to unsafe conditions",
-          "They only control lighting",
-          "They replace the need for guards entirely"
-        ],
-        "correct": 1,
-        "explanation": "Modern machine safety systems are often integrated with safety relays or safety PLCs, using redundant circuits and self-diagnostics for reliability."
-      },
-      {
-        "question": "Which standards must machine safety systems comply with?",
-        "options": [
-          "Only company policy",
-          "ISO and IEC standards along with occupational safety regulations",
-          "Only local building codes",
-          "No standards are required"
-        ],
-        "correct": 1,
-        "explanation": "Machine safety systems must comply with ISO standards for machine safety design, IEC standards for safety-related control systems, and applicable occupational safety regulations."
       }
     ]
   }

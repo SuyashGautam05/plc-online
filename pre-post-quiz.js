@@ -8,7 +8,9 @@
 //  <script src="/pre-post-quiz.js"></script>
 //
 //  ONE shared data file (prepost-quiz-data.json, in /pages/) holds
-//  every topic's pre-quiz and post-quiz questions, keyed by topic.
+//  every topic's pre-quiz and post-quiz questions, keyed by the
+//  SAME "relative to /pages/" path index.html's mcq-data.json
+//  already uses (e.g. "Actuators/Classification_of_Actuators.html").
 //
 //  This injects two buttons into the page's <header>: "Pre-Quiz"
 //  and "Post-Quiz". The Post-Quiz button stays locked/disabled
@@ -17,15 +19,23 @@
 //  before/after comparison is shown. Pages with no entry for their
 //  key are completely unaffected - no buttons are injected.
 //
+//  RETAKING: clicking a completed quiz's button re-opens it for
+//  another attempt - the new score overwrites the saved one (and
+//  re-locks Post-Quiz if Pre-Quiz is retaken, matching the normal
+//  "post needs a completed pre" rule).
+//
 //  To identify itself in the shared JSON, a page can either:
-//    (a) set window.PPQ_TOPIC_KEY explicitly before this script
-//        runs (recommended - no ambiguity, e.g.:
-//          <script>window.PPQ_TOPIC_KEY = "Actuators/Classification_of_Actuators.html";</script>
-//        ), or
-//    (b) do nothing and let this script derive the key from the
-//        page's own URL path (same convention mcq-data.json
-//        already uses) - works but relies on the page living under
-//        /pages/<Module>/<File>.html.
+//    (a) do nothing and let this script derive the key from the
+//        page's own URL path - this is the default and matches
+//        mcq-data.json's convention automatically as long as the
+//        page lives under /pages/<Module>/<File>.html (true for
+//        every standard lesson page), or
+//    (b) set window.PPQ_TOPIC_KEY explicitly before this script
+//        runs, ONLY for a page that doesn't live at a standard
+//        /pages/<Module>/<File>.html location - and it must still
+//        use the exact same "<Module>/<File>.html" format as (a)
+//        would have produced, so index.html's own lookup (which
+//        always uses that format) can find it too.
 // ============================================================
 (function () {
     const cfg = window.SIMTEL_AUTH_CONFIG;
@@ -165,6 +175,42 @@
                 opacity: 0; transition: all 0.3s; pointer-events: none; max-width: 90vw; text-align: center;
             }
             .ppq-toast.ppq-show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+            /* Persistent results panel - stays visible on the page itself
+               (not just tucked into a button label), so the score is
+               clearly visible without needing to go anywhere else. */
+            .ppq-results-panel {
+                display: none;
+                max-width: 640px;
+                margin: 0 auto 18px;
+                background: #ffffff;
+                border: 1px solid #e2e5ea;
+                border-left: 4px solid ${NAVY};
+                border-radius: 10px;
+                padding: 14px 20px;
+                font-family: Georgia, 'Times New Roman', serif;
+                box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+            }
+            .ppq-results-panel.ppq-visible { display: block; }
+            .ppq-results-title {
+                font-size: 0.72rem; font-weight: 700; text-transform: uppercase;
+                letter-spacing: 0.05em; color: #6c757d; margin-bottom: 10px;
+            }
+            .ppq-results-row { display: flex; gap: 28px; flex-wrap: wrap; align-items: center; }
+            .ppq-results-item { display: flex; align-items: center; gap: 8px; }
+            .ppq-results-label { font-size: 0.86rem; color: #495057; font-weight: 600; }
+            .ppq-results-score {
+                font-size: 1.05rem; font-weight: 800; color: ${NAVY};
+                background: rgba(23,54,129,0.07); padding: 2px 12px; border-radius: 20px;
+            }
+            .ppq-results-pending { font-size: 0.86rem; color: #adb5bd; font-style: italic; }
+            .ppq-results-retake {
+                background: none; border: 1px solid #dee2e6; color: #495057;
+                padding: 4px 12px; border-radius: 20px; font-size: 0.76rem;
+                cursor: pointer; font-family: inherit; font-weight: 600;
+                transition: all 0.15s;
+            }
+            .ppq-results-retake:hover { background: #f1f3f5; border-color: ${NAVY}; color: ${NAVY}; }
         `;
         document.head.appendChild(style);
     }
@@ -334,7 +380,7 @@
     }
 
     // ---- Header buttons ----
-    function injectHeaderButtons(entry, topicKey) {
+    function injectHeaderButtons(entry) {
         const header = document.querySelector('header');
         if (!header) return null;
 
@@ -368,8 +414,81 @@
         btn.disabled = false;
     }
 
+    function setBtnUndone(btn, label) {
+        if (!btn) return;
+        btn.classList.remove('ppq-done');
+        btn.textContent = label;
+    }
+
+    // ---- Persistent on-page results panel ----
+    function injectResultsPanel(hasPre, hasPost) {
+        const panel = document.createElement('div');
+        panel.className = 'ppq-results-panel';
+        panel.id = 'ppq-results-panel';
+        panel.innerHTML = `
+            <div class="ppq-results-title"><i>📊</i> Your Quiz Results — This Page</div>
+            <div class="ppq-results-row" id="ppq-results-row"></div>
+        `;
+
+        // Prefer the same spot the lesson content lives in, so the panel
+        // reads as part of this page - falls back gracefully if the page
+        // doesn't use the usual theory-enhancements.js structure.
+        const contentWrapper = document.querySelector('.content-wrapper');
+        const theory = document.querySelector('.theory-section');
+        const header = document.querySelector('header');
+
+        if (contentWrapper && theory) {
+            contentWrapper.insertBefore(panel, theory);
+        } else if (header && header.nextSibling) {
+            header.parentNode.insertBefore(panel, header.nextSibling);
+        } else {
+            document.body.insertBefore(panel, document.body.firstChild);
+        }
+
+        return panel;
+    }
+
+    function updateResultsPanel(hasPre, hasPost, state, onRetakePre, onRetakePost) {
+        const panel = document.getElementById('ppq-results-panel');
+        const row = document.getElementById('ppq-results-row');
+        if (!panel || !row) return;
+
+        const anyComplete = !!(state.preComplete || state.postComplete);
+        panel.classList.toggle('ppq-visible', anyComplete);
+        if (!anyComplete) return;
+
+        let html = '';
+        if (hasPre) {
+            html += state.preComplete
+                ? `<div class="ppq-results-item">
+                     <span class="ppq-results-label">Pre-Quiz:</span>
+                     <span class="ppq-results-score">${state.preScore}/${state.preTotal}</span>
+                     <button type="button" class="ppq-results-retake" id="ppq-retake-pre">↺ Retake</button>
+                   </div>`
+                : `<div class="ppq-results-item"><span class="ppq-results-pending">Pre-Quiz not taken yet</span></div>`;
+        }
+        if (hasPost) {
+            html += state.postComplete
+                ? `<div class="ppq-results-item">
+                     <span class="ppq-results-label">Post-Quiz:</span>
+                     <span class="ppq-results-score">${state.postScore}/${state.postTotal}</span>
+                     <button type="button" class="ppq-results-retake" id="ppq-retake-post">↺ Retake</button>
+                   </div>`
+                : `<div class="ppq-results-item"><span class="ppq-results-pending">${state.preComplete ? 'Post-Quiz not taken yet' : 'Complete Pre-Quiz to unlock'}</span></div>`;
+        }
+        row.innerHTML = html;
+
+        const retakePreBtn = document.getElementById('ppq-retake-pre');
+        if (retakePreBtn) retakePreBtn.addEventListener('click', onRetakePre);
+        const retakePostBtn = document.getElementById('ppq-retake-post');
+        if (retakePostBtn) retakePostBtn.addEventListener('click', onRetakePost);
+    }
+
     document.addEventListener('DOMContentLoaded', async () => {
         let entry = null;
+        // Standard pages: always auto-derive (matches mcq-data.json/index.html's
+        // convention automatically). window.PPQ_TOPIC_KEY is only for pages
+        // living outside the normal /pages/<Module>/<File>.html structure.
         let topicKey = window.PPQ_TOPIC_KEY || getRelativePagePath();
 
         const quizData = await loadQuizData();
@@ -378,64 +497,79 @@
         if (!entry || (!entry.preQuestions?.length && !entry.postQuestions?.length)) return; // nothing configured for this topic - page behaves exactly as before
 
         injectBaseStyles();
-        const buttons = injectHeaderButtons(entry, topicKey);
+        const buttons = injectHeaderButtons(entry);
         if (!buttons) return;
 
         const { preBtn, postBtn } = buttons;
+        const hasPre = entry.preQuestions?.length > 0;
+        const hasPost = entry.postQuestions?.length > 0;
+        injectResultsPanel(hasPre, hasPost);
+
+        function refreshPanel() {
+            updateResultsPanel(hasPre, hasPost, getState()[topicKey] || {}, openPreQuiz, openPostQuiz);
+        }
+
         const state = getState()[topicKey] || {};
 
         // Restore already-completed state on revisit
-        if (state.preComplete && preBtn) setBtnDone(preBtn, '✓ Pre-Quiz');
+        if (state.preComplete && preBtn) setBtnDone(preBtn, `✓ Pre-Quiz (${state.preScore}/${state.preTotal})`);
         if (state.preComplete && postBtn) postBtn.disabled = false;
-        if (state.postComplete && postBtn) setBtnDone(postBtn, '✓ Post-Quiz');
+        if (state.postComplete && postBtn) setBtnDone(postBtn, `✓ Post-Quiz (${state.postScore}/${state.postTotal})`);
+        refreshPanel();
 
-        if (preBtn) {
-            preBtn.addEventListener('click', () => {
-                const current = getState()[topicKey] || {};
-                if (current.preComplete) {
-                    showToast(`Pre-Quiz already completed — you scored ${current.preScore}/${current.preTotal}.`);
-                    return;
-                }
-                showQuizModal({
-                    title: '📋 Pre-Quiz',
-                    subtitle: 'A quick baseline check before you start — there\'s no pass/fail here.',
-                    questions: entry.preQuestions,
-                    showFeedback: false,
-                    onComplete: (score, total) => {
-                        saveState(topicKey, { preComplete: true, preScore: score, preTotal: total });
-                        saveScoreToServer(topicKey, 'pre', score, total);
-                        setBtnDone(preBtn, '✓ Pre-Quiz');
-                        if (postBtn) {
-                            postBtn.disabled = false;
-                            showToast('Pre-Quiz complete! Post-Quiz is now unlocked.');
-                        }
+        function openPreQuiz() {
+            showQuizModal({
+                title: '📋 Pre-Quiz',
+                subtitle: 'A quick baseline check before you start — there\'s no pass/fail here.',
+                questions: entry.preQuestions,
+                showFeedback: false,
+                onComplete: (score, total) => {
+                    const wasAlreadyComplete = !!getState()[topicKey]?.preComplete;
+                    // Retaking the pre-quiz re-locks post-quiz and clears its
+                    // old score, since "post" is meant to follow a *fresh* pre.
+                    saveState(topicKey, { preComplete: true, preScore: score, preTotal: total, postComplete: false, postScore: undefined, postTotal: undefined });
+                    saveScoreToServer(topicKey, 'pre', score, total);
+                    setBtnDone(preBtn, `✓ Pre-Quiz (${score}/${total})`);
+                    if (postBtn) {
+                        postBtn.disabled = false;
+                        setBtnUndone(postBtn, '✅ Post-Quiz');
+                        showToast(wasAlreadyComplete
+                            ? `Pre-Quiz retaken — new score ${score}/${total}. Post-Quiz is ready for another attempt too.`
+                            : 'Pre-Quiz complete! Post-Quiz is now unlocked.');
                     }
-                });
+                    refreshPanel();
+                }
             });
         }
 
+        function openPostQuiz() {
+            showQuizModal({
+                title: '✅ Post-Quiz',
+                subtitle: 'Let\'s see what you picked up from this lesson.',
+                questions: entry.postQuestions,
+                showFeedback: true,
+                onComplete: (score, total) => {
+                    const updated = saveState(topicKey, { postComplete: true, postScore: score, postTotal: total });
+                    saveScoreToServer(topicKey, 'post', score, total);
+                    setBtnDone(postBtn, `✓ Post-Quiz (${score}/${total})`);
+                    refreshPanel();
+                    if (updated.preComplete) {
+                        showComparisonSummary(updated.preScore, updated.preTotal, score, total);
+                    }
+                }
+            });
+        }
+
+        // Clicking a completed quiz's button (in the header OR the results
+        // panel's "Retake" button) retakes it - overwrites the saved score
+        // rather than just showing the old result. Both entry points share
+        // the exact same openPreQuiz/openPostQuiz functions, so behavior is
+        // identical either way, and the panel always reflects the latest attempt.
+        if (preBtn) preBtn.addEventListener('click', openPreQuiz);
         if (postBtn) {
             postBtn.addEventListener('click', () => {
                 if (postBtn.disabled) return; // locked until pre-quiz is done
-                const current = getState()[topicKey] || {};
-                if (current.postComplete) {
-                    showToast(`Post-Quiz already completed — you scored ${current.postScore}/${current.postTotal}.`);
-                    return;
-                }
-                showQuizModal({
-                    title: '✅ Post-Quiz',
-                    subtitle: 'Let\'s see what you picked up from this lesson.',
-                    questions: entry.postQuestions,
-                    showFeedback: true,
-                    onComplete: (score, total) => {
-                        const updated = saveState(topicKey, { postComplete: true, postScore: score, postTotal: total });
-                        saveScoreToServer(topicKey, 'post', score, total);
-                        setBtnDone(postBtn, '✓ Post-Quiz');
-                        if (updated.preComplete) {
-                            showComparisonSummary(updated.preScore, updated.preTotal, score, total);
-                        }
-                    }
-                });
+                openPostQuiz();
             });
         }
 
