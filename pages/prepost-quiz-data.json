@@ -423,14 +423,14 @@
     "title": "Importance of Safety in Industrial Automation",
     "preQuestions": [
       {
-        "question": "Why do you think safety matters in an industrial automation environment?",
+        "question": "Why is safety important in industrial automation?",
         "options": [
-          "It doesn't matter much",
-          "To protect workers and prevent accidents",
-          "Only to satisfy inspectors",
-          "Automated systems don't need safety measures"
+          "To prevent accidents and injuries",
+          "To increase manual work",
+          "To reduce machine efficiency",
+          "To increase production cost"
         ],
-        "correct": 1,
+        "correct": 0,
         "explanation": "Safety protects workers and operators from the high voltages, moving parts, and complex control logic present in automated systems."
       },
       {
