@@ -176,27 +176,27 @@
             }
             .ppq-toast.ppq-show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
-            /* Persistent results panel - stays visible on the page itself
-               (not just tucked into a button label), so the score is
-               clearly visible without needing to go anywhere else. */
-            .ppq-results-panel {
+            /* Compact results trigger - a small pill (not a page-taking
+               panel). Only shown once a quiz has been completed; clicking
+               it opens the scores as a popup. */
+            .ppq-results-trigger {
                 display: none;
-                max-width: 640px;
+                align-items: center; gap: 8px;
                 margin: 0 auto 18px;
                 background: #ffffff;
                 border: 1px solid #e2e5ea;
                 border-left: 4px solid ${NAVY};
-                border-radius: 10px;
-                padding: 14px 20px;
+                border-radius: 999px;
+                padding: 8px 18px;
                 font-family: Georgia, 'Times New Roman', serif;
+                font-size: 0.82rem; font-weight: 700; color: ${NAVY};
+                cursor: pointer;
                 box-shadow: 0 2px 10px rgba(0,0,0,0.06);
+                transition: all 0.15s;
             }
-            .ppq-results-panel.ppq-visible { display: block; }
-            .ppq-results-title {
-                font-size: 0.72rem; font-weight: 700; text-transform: uppercase;
-                letter-spacing: 0.05em; color: #6c757d; margin-bottom: 10px;
-            }
-            .ppq-results-row { display: flex; gap: 28px; flex-wrap: wrap; align-items: center; }
+            .ppq-results-trigger:hover { background: rgba(23,54,129,0.05); transform: translateY(-1px); }
+            .ppq-results-trigger.ppq-visible { display: inline-flex; }
+            .ppq-results-row { display: flex; gap: 28px; flex-wrap: wrap; align-items: center; margin-top: 4px; }
             .ppq-results-item { display: flex; align-items: center; gap: 8px; }
             .ppq-results-label { font-size: 0.86rem; color: #495057; font-weight: 600; }
             .ppq-results-score {
@@ -228,58 +228,72 @@
         toast._hideTimer = setTimeout(() => toast.classList.remove('ppq-show'), ms);
     }
 
-    function renderQuiz(container, questions, showFeedback, onAllAnswered) {
-        const answers = new Array(questions.length).fill(null);
-
-        container.innerHTML = questions.map((q, qi) => `
-            <div class="ppq-q" data-qi="${qi}">
-                <div class="ppq-q-text">${qi + 1}. ${q.question}</div>
-                <div class="ppq-opts">
-                    ${q.options.map((opt, oi) => `
-                        <div class="ppq-opt" data-oi="${oi}">
-                            <input type="radio" name="ppq-q${qi}" id="ppq-q${qi}-o${oi}" value="${oi}">
-                            <label for="ppq-q${qi}-o${oi}">${opt}</label>
-                        </div>
-                    `).join('')}
-                </div>
-                <div class="ppq-explain" data-qi="${qi}"></div>
-            </div>
-        `).join('');
-
-        container.querySelectorAll('.ppq-q').forEach((qEl, qi) => {
-            qEl.querySelectorAll('.ppq-opt').forEach((optEl, oi) => {
-                optEl.addEventListener('click', () => {
-                    if (answers[qi] !== null && showFeedback) return;
-                    answers[qi] = oi;
-                    qEl.querySelectorAll('input').forEach(r => r.checked = false);
-                    qEl.querySelector(`#ppq-q${qi}-o${oi}`).checked = true;
-                    qEl.querySelectorAll('.ppq-opt').forEach(e => e.classList.remove('ppq-selected', 'ppq-correct', 'ppq-wrong'));
-
-                    if (showFeedback) {
-                        const correct = questions[qi].correct;
-                        optEl.classList.add(oi === correct ? 'ppq-correct' : 'ppq-wrong');
-                        if (oi !== correct) {
-                            qEl.querySelector(`.ppq-opt[data-oi="${correct}"]`).classList.add('ppq-correct');
-                        }
-                        const explainEl = qEl.querySelector('.ppq-explain');
-                        if (questions[qi].explanation) {
-                            explainEl.style.display = 'block';
-                            explainEl.textContent = questions[qi].explanation;
-                        }
-                    } else {
-                        optEl.classList.add('ppq-selected');
-                    }
-
-                    onAllAnswered(answers, answers.every(a => a !== null));
-                });
-            });
-        });
-    }
-
     function scoreAnswers(questions, answers) {
         let score = 0;
         questions.forEach((q, i) => { if (answers[i] === q.correct) score++; });
         return score;
+    }
+
+    // One question shown at a time, with Previous/Next navigation - not
+    // all questions stacked in one scroll. onStateChange fires after every
+    // answer/navigation so the caller can update the footer's Next/Submit
+    // button and progress label.
+    function renderQuizStep(container, questions, showFeedback, state, onStateChange) {
+        const qi = state.current;
+        const q = questions[qi];
+        const selected = state.answers[qi];
+
+        container.innerHTML = `
+            <div class="ppq-q">
+                <div class="ppq-q-text">${qi + 1}. ${q.question}</div>
+                <div class="ppq-opts">
+                    ${q.options.map((opt, oi) => `
+                        <div class="ppq-opt" data-oi="${oi}">
+                            <input type="radio" name="ppq-q" id="ppq-o${oi}" value="${oi}">
+                            <label for="ppq-o${oi}">${opt}</label>
+                        </div>
+                    `).join('')}
+                </div>
+                <div class="ppq-explain"></div>
+            </div>
+        `;
+
+        const qEl = container.querySelector('.ppq-q');
+        const explainEl = qEl.querySelector('.ppq-explain');
+
+        function paintAnswered(oi) {
+            qEl.querySelectorAll('input').forEach(r => r.checked = false);
+            qEl.querySelector(`#ppq-o${oi}`).checked = true;
+            qEl.querySelectorAll('.ppq-opt').forEach(e => e.classList.remove('ppq-selected', 'ppq-correct', 'ppq-wrong'));
+            const optEl = qEl.querySelector(`.ppq-opt[data-oi="${oi}"]`);
+            if (showFeedback) {
+                const correct = q.correct;
+                optEl.classList.add(oi === correct ? 'ppq-correct' : 'ppq-wrong');
+                if (oi !== correct) {
+                    qEl.querySelector(`.ppq-opt[data-oi="${correct}"]`).classList.add('ppq-correct');
+                }
+                if (q.explanation) {
+                    explainEl.style.display = 'block';
+                    explainEl.textContent = q.explanation;
+                }
+            } else {
+                optEl.classList.add('ppq-selected');
+            }
+        }
+
+        if (selected !== null && selected !== undefined) paintAnswered(selected);
+
+        qEl.querySelectorAll('.ppq-opt').forEach((optEl, oi) => {
+            optEl.addEventListener('click', () => {
+                // Read the live answer from state (not the stale "selected"
+                // closure captured when this step first rendered) so the
+                // lock actually holds after the first click, in feedback mode.
+                if (state.answers[qi] !== null && showFeedback) return;
+                state.answers[qi] = oi;
+                paintAnswered(oi);
+                onStateChange();
+            });
+        });
     }
 
     function showQuizModal({ title, subtitle, questions, showFeedback, onComplete, onCancel }) {
@@ -293,11 +307,12 @@
                 </div>
                 <div class="ppq-body">
                     <div class="ppq-quiz-container"></div>
-                    <div class="ppq-progress">0 of ${questions.length} answered</div>
+                    <div class="ppq-progress">Question 1 of ${questions.length}</div>
                 </div>
                 <div class="ppq-footer">
                     <button class="ppq-btn ppq-btn-secondary ppq-cancel-btn">Cancel</button>
-                    <button class="ppq-btn ppq-btn-primary" disabled>Submit</button>
+                    <button class="ppq-btn ppq-btn-secondary ppq-prev-btn" style="display:none;">◀ Previous</button>
+                    <button class="ppq-btn ppq-btn-primary ppq-next-btn" disabled>Next ▶</button>
                 </div>
             </div>
         `;
@@ -305,18 +320,30 @@
         document.documentElement.style.overflow = 'hidden';
 
         const progressEl = overlay.querySelector('.ppq-progress');
-        const submitBtn = overlay.querySelector('.ppq-btn-primary');
+        const nextBtn = overlay.querySelector('.ppq-next-btn');
+        const prevBtn = overlay.querySelector('.ppq-prev-btn');
         const cancelBtn = overlay.querySelector('.ppq-cancel-btn');
         const quizContainer = overlay.querySelector('.ppq-quiz-container');
 
-        let latestAnswers = null;
+        const state = { current: 0, answers: new Array(questions.length).fill(null) };
+        const isLast = () => state.current === questions.length - 1;
 
-        renderQuiz(quizContainer, questions, showFeedback, (answers, allAnswered) => {
-            latestAnswers = answers;
-            const answeredCount = answers.filter(a => a !== null).length;
-            progressEl.textContent = `${answeredCount} of ${questions.length} answered`;
-            submitBtn.disabled = !allAnswered;
-        });
+        function refreshFooter() {
+            const answered = state.answers[state.current] !== null;
+            progressEl.textContent = `Question ${state.current + 1} of ${questions.length}`;
+            prevBtn.style.display = state.current > 0 ? 'inline-block' : 'none';
+            nextBtn.textContent = isLast() ? 'Submit' : 'Next ▶';
+            nextBtn.disabled = !answered;
+        }
+
+        function showStep() {
+            renderQuizStep(quizContainer, questions, showFeedback, state, () => {
+                nextBtn.disabled = false;
+            });
+            refreshFooter();
+        }
+
+        showStep();
 
         function close() {
             document.documentElement.style.overflow = '';
@@ -328,8 +355,20 @@
             if (onCancel) onCancel();
         });
 
-        submitBtn.addEventListener('click', () => {
-            const score = scoreAnswers(questions, latestAnswers);
+        prevBtn.addEventListener('click', () => {
+            if (state.current > 0) {
+                state.current -= 1;
+                showStep();
+            }
+        });
+
+        nextBtn.addEventListener('click', () => {
+            if (!isLast()) {
+                state.current += 1;
+                showStep();
+                return;
+            }
+            const score = scoreAnswers(questions, state.answers);
             close();
             onComplete(score, questions.length);
         });
@@ -420,43 +459,33 @@
         btn.textContent = label;
     }
 
-    // ---- Persistent on-page results panel ----
+    // ---- Results trigger (small pill) + popup, instead of an always-on
+    // inline panel taking up page space. The pill only appears once at
+    // least one quiz has been completed; clicking it opens the results
+    // as a popup. ----
     function injectResultsPanel(hasPre, hasPost) {
-        const panel = document.createElement('div');
-        panel.className = 'ppq-results-panel';
-        panel.id = 'ppq-results-panel';
-        panel.innerHTML = `
-            <div class="ppq-results-title"><i>📊</i> Your Quiz Results — This Page</div>
-            <div class="ppq-results-row" id="ppq-results-row"></div>
-        `;
+        const trigger = document.createElement('button');
+        trigger.type = 'button';
+        trigger.className = 'ppq-results-trigger';
+        trigger.id = 'ppq-results-trigger';
+        trigger.innerHTML = `📊 Your Quiz Results — This Page`;
 
-        // Prefer the same spot the lesson content lives in, so the panel
-        // reads as part of this page - falls back gracefully if the page
-        // doesn't use the usual theory-enhancements.js structure.
         const contentWrapper = document.querySelector('.content-wrapper');
         const theory = document.querySelector('.theory-section');
         const header = document.querySelector('header');
 
         if (contentWrapper && theory) {
-            contentWrapper.insertBefore(panel, theory);
+            contentWrapper.insertBefore(trigger, theory);
         } else if (header && header.nextSibling) {
-            header.parentNode.insertBefore(panel, header.nextSibling);
+            header.parentNode.insertBefore(trigger, header.nextSibling);
         } else {
-            document.body.insertBefore(panel, document.body.firstChild);
+            document.body.insertBefore(trigger, document.body.firstChild);
         }
 
-        return panel;
+        return trigger;
     }
 
-    function updateResultsPanel(hasPre, hasPost, state, onRetakePre, onRetakePost) {
-        const panel = document.getElementById('ppq-results-panel');
-        const row = document.getElementById('ppq-results-row');
-        if (!panel || !row) return;
-
-        const anyComplete = !!(state.preComplete || state.postComplete);
-        panel.classList.toggle('ppq-visible', anyComplete);
-        if (!anyComplete) return;
-
+    function buildResultsRowHtml(hasPre, hasPost, state) {
         let html = '';
         if (hasPre) {
             html += state.preComplete
@@ -476,12 +505,53 @@
                    </div>`
                 : `<div class="ppq-results-item"><span class="ppq-results-pending">${state.preComplete ? 'Post-Quiz not taken yet' : 'Complete Pre-Quiz to unlock'}</span></div>`;
         }
-        row.innerHTML = html;
+        return html;
+    }
 
-        const retakePreBtn = document.getElementById('ppq-retake-pre');
-        if (retakePreBtn) retakePreBtn.addEventListener('click', onRetakePre);
-        const retakePostBtn = document.getElementById('ppq-retake-post');
-        if (retakePostBtn) retakePostBtn.addEventListener('click', onRetakePost);
+    function openResultsPopup(hasPre, hasPost, state, onRetakePre, onRetakePost) {
+        const overlay = document.createElement('div');
+        overlay.className = 'ppq-overlay';
+        overlay.innerHTML = `
+            <div class="ppq-card" style="max-width: 480px;">
+                <div class="ppq-header">
+                    <h2>📊 Your Quiz Results</h2>
+                    <p>This page's pre-quiz and post-quiz scores</p>
+                </div>
+                <div class="ppq-body">
+                    <div class="ppq-results-row" id="ppq-results-row-popup">${buildResultsRowHtml(hasPre, hasPost, state)}</div>
+                </div>
+                <div class="ppq-footer">
+                    <button class="ppq-btn ppq-btn-primary">Close</button>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(overlay);
+        document.documentElement.style.overflow = 'hidden';
+
+        function close() {
+            document.documentElement.style.overflow = '';
+            overlay.remove();
+        }
+        overlay.querySelector('.ppq-btn-primary').addEventListener('click', close);
+
+        const retakePreBtn = overlay.querySelector('#ppq-retake-pre');
+        if (retakePreBtn) retakePreBtn.addEventListener('click', () => { close(); onRetakePre(); });
+        const retakePostBtn = overlay.querySelector('#ppq-retake-post');
+        if (retakePostBtn) retakePostBtn.addEventListener('click', () => { close(); onRetakePost(); });
+    }
+
+    function updateResultsPanel(hasPre, hasPost, state, onRetakePre, onRetakePost) {
+        const trigger = document.getElementById('ppq-results-trigger');
+        if (!trigger) return;
+
+        const anyComplete = !!(state.preComplete || state.postComplete);
+        trigger.classList.toggle('ppq-visible', anyComplete);
+        if (!anyComplete) return;
+
+        // Re-bind on every update (state is already the freshly-read value
+        // from this call) so the popup always opens with the latest scores,
+        // even after a retake changes them.
+        trigger.onclick = () => openResultsPopup(hasPre, hasPost, state, onRetakePre, onRetakePost);
     }
 
     document.addEventListener('DOMContentLoaded', async () => {
