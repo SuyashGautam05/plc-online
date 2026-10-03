@@ -146,6 +146,32 @@
                 margin-top: 8px; padding: 10px 12px; border-radius: 6px;
                 font-size: 0.85rem; background: #f1f3f5; display: none;
             }
+
+            /* Final review slide - all questions, with right/wrong, shown
+               after the last question is answered and before finishing. */
+            .ppq-review-score {
+                text-align: center; font-size: 1.15rem; font-weight: 800;
+                color: ${NAVY}; margin-bottom: 18px; padding-bottom: 14px;
+                border-bottom: 1px solid #eee;
+            }
+            .ppq-review-item {
+                padding: 12px 14px; border-radius: 8px; margin-bottom: 12px;
+                border-left: 4px solid #dee2e6; background: #f8f9fa;
+            }
+            .ppq-review-item.ppq-review-right { border-left-color: #28a745; background: #f1faf3; }
+            .ppq-review-item.ppq-review-wrong { border-left-color: #dc3545; background: #fdf3f4; }
+            .ppq-review-q { font-weight: 700; font-size: 0.92rem; color: #212529; margin-bottom: 6px; display: flex; gap: 8px; }
+            .ppq-review-badge {
+                flex-shrink: 0; width: 20px; height: 20px; border-radius: 50%;
+                display: inline-flex; align-items: center; justify-content: center;
+                font-size: 0.72rem; font-weight: 900; color: #fff;
+            }
+            .ppq-review-right .ppq-review-badge { background: #28a745; }
+            .ppq-review-wrong .ppq-review-badge { background: #dc3545; }
+            .ppq-review-ans { font-size: 0.85rem; color: #495057; margin-left: 28px; }
+            .ppq-review-correct-ans { color: #198754; }
+            .ppq-review-exp { font-size: 0.8rem; color: #6c757d; margin: 6px 0 0 28px; font-style: italic; }
+
             .ppq-footer {
                 padding: 16px 26px 22px; display: flex; justify-content: flex-end; gap: 10px;
                 border-top: 1px solid #eee;
@@ -296,6 +322,33 @@
         });
     }
 
+    // Final review slide, shown after the last question's "Submit" -
+    // lists every question with the user's answer, the correct answer,
+    // and a right/wrong badge, before the attempt is actually finished.
+    function renderReviewSlide(container, questions, answers) {
+        const score = scoreAnswers(questions, answers);
+        container.innerHTML = `
+            <div class="ppq-review">
+                <div class="ppq-review-score">You scored <strong>${score}/${questions.length}</strong></div>
+                ${questions.map((q, qi) => {
+                    const userAns = answers[qi];
+                    const isRight = userAns === q.correct;
+                    return `
+                        <div class="ppq-review-item ${isRight ? 'ppq-review-right' : 'ppq-review-wrong'}">
+                            <div class="ppq-review-q">
+                                <span class="ppq-review-badge">${isRight ? '✓' : '✗'}</span>
+                                ${qi + 1}. ${q.question}
+                            </div>
+                            <div class="ppq-review-ans">Your answer: <strong>${q.options[userAns]}</strong></div>
+                            ${!isRight ? `<div class="ppq-review-ans ppq-review-correct-ans">Correct answer: <strong>${q.options[q.correct]}</strong></div>` : ''}
+                            ${q.explanation ? `<div class="ppq-review-exp">${q.explanation}</div>` : ''}
+                        </div>
+                    `;
+                }).join('')}
+            </div>
+        `;
+    }
+
     function showQuizModal({ title, subtitle, questions, showFeedback, onComplete, onCancel }) {
         const overlay = document.createElement('div');
         overlay.className = 'ppq-overlay';
@@ -325,21 +378,34 @@
         const cancelBtn = overlay.querySelector('.ppq-cancel-btn');
         const quizContainer = overlay.querySelector('.ppq-quiz-container');
 
-        const state = { current: 0, answers: new Array(questions.length).fill(null) };
+        const state = { current: 0, answers: new Array(questions.length).fill(null), onReview: false };
         const isLast = () => state.current === questions.length - 1;
 
         function refreshFooter() {
+            if (state.onReview) {
+                progressEl.textContent = 'Review your answers';
+                prevBtn.style.display = 'inline-block';
+                prevBtn.textContent = '◀ Back to Questions';
+                nextBtn.textContent = 'Finish';
+                nextBtn.disabled = false;
+                return;
+            }
             const answered = state.answers[state.current] !== null;
             progressEl.textContent = `Question ${state.current + 1} of ${questions.length}`;
             prevBtn.style.display = state.current > 0 ? 'inline-block' : 'none';
-            nextBtn.textContent = isLast() ? 'Submit' : 'Next ▶';
+            prevBtn.textContent = '◀ Previous';
+            nextBtn.textContent = isLast() ? 'Review Answers' : 'Next ▶';
             nextBtn.disabled = !answered;
         }
 
         function showStep() {
-            renderQuizStep(quizContainer, questions, showFeedback, state, () => {
-                nextBtn.disabled = false;
-            });
+            if (state.onReview) {
+                renderReviewSlide(quizContainer, questions, state.answers);
+            } else {
+                renderQuizStep(quizContainer, questions, showFeedback, state, () => {
+                    nextBtn.disabled = false;
+                });
+            }
             refreshFooter();
         }
 
@@ -356,21 +422,29 @@
         });
 
         prevBtn.addEventListener('click', () => {
-            if (state.current > 0) {
+            if (state.onReview) {
+                state.onReview = false;
+                showStep();
+            } else if (state.current > 0) {
                 state.current -= 1;
                 showStep();
             }
         });
 
         nextBtn.addEventListener('click', () => {
+            if (state.onReview) {
+                const score = scoreAnswers(questions, state.answers);
+                close();
+                onComplete(score, questions.length);
+                return;
+            }
             if (!isLast()) {
                 state.current += 1;
                 showStep();
                 return;
             }
-            const score = scoreAnswers(questions, state.answers);
-            close();
-            onComplete(score, questions.length);
+            state.onReview = true;
+            showStep();
         });
     }
 
@@ -590,9 +664,9 @@
         function openPreQuiz() {
             showQuizModal({
                 title: '📋 Pre-Quiz',
-                subtitle: 'A quick baseline check before you start — there\'s no pass/fail here.',
+                subtitle: 'A quick baseline check before you start.',
                 questions: entry.preQuestions,
-                showFeedback: false,
+                showFeedback: true,
                 onComplete: (score, total) => {
                     const wasAlreadyComplete = !!getState()[topicKey]?.preComplete;
                     // Retaking the pre-quiz re-locks post-quiz and clears its
