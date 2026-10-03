@@ -1,88 +1,71 @@
 {
-  "Introduction to Industrial Automation/Definition_and_Scope_of_Industrial_Automation.html": {
+"Introduction to Industrial Automation/Definition_and_Scope_of_Industrial_Automation.html": {
     "title": "Definition and Scope of Industrial Automation",
     "preQuestions": [
       {
-        "question": "In everyday terms, what does \"automation\" generally mean?",
-        "options": [
-          "Doing everything by hand",
-          "Using machines or systems to perform tasks with less human effort",
-          "A job title in an office",
-          "A type of hand tool"
-        ],
+        "question": "What is Industrial Automation?",
+        "options": ["Manual operation of machines", "Automatic control of industrial processes using technology", "Maintenance of machines", "Product packaging only"],
         "correct": 1,
-        "explanation": "Automation means using control systems and machinery to carry out tasks with minimal direct human intervention."
+        "explanation": "Industrial automation refers to using control systems and technology to automatically operate industrial processes, reducing manual intervention."
       },
       {
-        "question": "Which of these is an example of something you may have already seen automated?",
-        "options": [
-          "A person manually filling water bottles",
-          "An ATM dispensing cash on its own",
-          "Handwriting a letter",
-          "None of these"
-        ],
+        "question": "What does PLC stand for?",
+        "options": ["Power Logic Controller", "Programmable Logic Controller", "Process Load Controller", "Programmable Line Circuit"],
         "correct": 1,
-        "explanation": "An ATM is a simple, everyday example of an automated process — it dispenses cash without a human operator."
+        "explanation": "PLC stands for Programmable Logic Controller, the core control device used throughout industrial automation."
+      },
+      {
+        "question": "What is the main function of a sensor?",
+        "options": ["To detect and measure physical conditions", "To control motor speed", "To store programs", "To display information"],
+        "correct": 0,
+        "explanation": "Sensors detect and measure physical conditions like temperature, pressure, or position, and send that data to the control system."
+      },
+      {
+        "question": "Which device is commonly used to control AC motor speed?",
+        "options": ["HMI", "VFD", "Sensor", "Relay"],
+        "correct": 1,
+        "explanation": "A Variable Frequency Drive (VFD) is commonly used to control AC motor speed by varying the frequency of the power supplied to it."
+      },
+      {
+        "question": "Which is a major benefit of industrial automation?",
+        "options": ["Increased manual work", "Reduced productivity", "Improved productivity and consistency", "Increased human error"],
+        "correct": 2,
+        "explanation": "Industrial automation improves productivity and consistency by reducing variability and human error in repetitive tasks."
       }
     ],
     "postQuestions": [
       {
-        "question": "What is industrial automation primarily concerned with?",
-        "options": [
-          "Manual control of machines",
-          "Use of human labor only",
-          "Use of control systems to operate machinery",
-          "Mechanical design only"
-        ],
-        "correct": 3,
-        "explanation": "Augmented Reality is a technology that overlays digital information onto the real-world environment in real time, allowing users to see both the real system and additional contextual information simultaneously."
-      },
-      {
-        "question": "Which of the following is NOT a device used to view AR content?",
-        "options": [
-          "Smart glasses",
-          "Tablets",
-          "Mobile phones",
-          "Closed-circuit television (CCTV)"
-        ],
-        "correct": 3,
-        "explanation": "CCTV is a surveillance system that doesn't support AR overlays. AR content is viewed through smart glasses, tablets, and mobile phones."
-      },
-      {
-        "question": "What is the primary application of AR in industrial maintenance?",
-        "options": [
-          "Entertainment and games",
-          "Displaying step-by-step instructions directly on machines",
-          "Replacing workers completely",
-          "Storing large amounts of data"
-        ],
+        "question": "Which sequence represents a basic automation system?",
+        "options": ["Actuator → Sensor → Controller", "Sensor → Controller → Actuator", "Controller → Actuator → Sensor", "Sensor → Actuator → Controller"],
         "correct": 1,
-        "explanation": "In maintenance, AR displays step-by-step instructions directly on machines, reducing dependency on manuals and minimizing human error."
+        "explanation": "In a basic automation system, sensors detect conditions, the controller processes that data and decides, and actuators carry out the physical action."
       },
       {
-        "question": "How does Virtual Reality (VR) differ from Augmented Reality (AR)?",
-        "options": [
-          "VR overlays information, AR replaces it",
-          "VR fully replaces the real environment, AR overlays digital information on the real world",
-          "VR is cheaper than AR",
-          "There is no difference"
-        ],
+        "question": "What is the primary role of an HMI?",
+        "options": ["Mechanical movement", "Operator monitoring and control of the process", "Measuring temperature only", "Supplying electrical power"],
         "correct": 1,
-        "explanation": "VR creates a completely immersive digital environment that fully replaces the real world, while AR overlays digital information onto the real environment."
+        "explanation": "A Human-Machine Interface (HMI) lets operators monitor and interact with the automated process."
       },
       {
-        "question": "Which of the following is a primary use of VR in industrial settings?",
-        "options": [
-          "Only for entertainment",
-          "Operator training for complex or hazardous equipment",
-          "Replacing all workers",
-          "Storing production data"
-        ],
-        "correct": 1,
-        "explanation": "VR is used for operator training, virtual commissioning and testing, factory layout planning, and safety training simulations without risking equipment damage or human injury."
+        "question": "What is the main purpose of SCADA?",
+        "options": ["Supervisory monitoring, data acquisition, and control", "Mechanical assembly", "Motor manufacturing", "Manual inspection"],
+        "correct": 0,
+        "explanation": "SCADA systems provide supervisory monitoring, data acquisition, and control of industrial processes across a plant or facility."
+      },
+      {
+        "question": "Which technology is strongly associated with Industry 4.0?",
+        "options": ["IIoT", "Manual control", "Paper-based monitoring", "Conventional wiring only"],
+        "correct": 0,
+        "explanation": "The Industrial Internet of Things (IIoT) is a core enabling technology of Industry 4.0, connecting machines and systems for data exchange."
+      },
+      {
+        "question": "Which combination represents the broader scope of industrial automation?",
+        "options": ["Sensors only", "PLC only", "PLC, HMI, SCADA, sensors, drives, robotics, and industrial communication", "Motors only"],
+        "correct": 2,
+        "explanation": "Industrial automation's scope spans multiple integrated technologies — PLCs, HMI, SCADA, sensors, drives, robotics, and communication networks — not just one component."
       }
     ]
-  },
+},
   "Actuators/Introduction_and_Function_of_Actuators.html": {
     "title": "Introduction and Function of Actuators",
     "preQuestions": [
