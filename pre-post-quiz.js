@@ -118,7 +118,7 @@
             }
             .ppq-card {
                 background: #ffffff; border-radius: 14px;
-                max-width: 770px; width: 118%; max-height: 110vh;
+                max-width: 640px; width: 100%; max-height: 88vh;
                 overflow-y: auto;
                 box-shadow: 0 20px 60px rgba(0,0,0,0.35);
             }
@@ -202,25 +202,11 @@
             }
             .ppq-toast.ppq-show { opacity: 1; transform: translateX(-50%) translateY(0); }
 
-            /* Compact results trigger - a small pill (not a page-taking
-               panel). Only shown once a quiz has been completed; clicking
-               it opens the scores as a popup. */
-            .ppq-results-trigger {
-                display: none;
-                align-items: center; gap: 8px;
-                margin: 0 auto 18px;
-                background: #ffffff;
-                border: 1px solid #e2e5ea;
-                border-left: 4px solid ${NAVY};
-                border-radius: 999px;
-                padding: 8px 18px;
-                font-family: Georgia, 'Times New Roman', serif;
-                font-size: 0.82rem; font-weight: 700; color: ${NAVY};
-                cursor: pointer;
-                box-shadow: 0 2px 10px rgba(0,0,0,0.06);
-                transition: all 0.15s;
-            }
-            .ppq-results-trigger:hover { background: rgba(23,54,129,0.05); transform: translateY(-1px); }
+            /* "Result" button - lives in the header next to Pre/Post-Quiz.
+               Hidden until at least one quiz has been completed; opens
+               the scores as a popup. */
+            .ppq-results-trigger { display: none; background: ${GOLD}; color: ${NAVY}; }
+            .ppq-results-trigger:hover:not(:disabled) { background: #cb9c35; }
             .ppq-results-trigger.ppq-visible { display: inline-flex; }
             .ppq-results-row { display: flex; gap: 28px; flex-wrap: wrap; align-items: center; margin-top: 4px; }
             .ppq-results-item { display: flex; align-items: center; gap: 8px; }
@@ -509,6 +495,7 @@
         if (hasPost) {
             wrap.innerHTML += `<button class="ppq-header-btn" id="ppq-btn-post" disabled>✅ Post-Quiz</button>`;
         }
+        wrap.innerHTML += `<button class="ppq-header-btn ppq-results-trigger" id="ppq-results-trigger" type="button">📊 Result</button>`;
 
         header.style.display = header.style.display || 'flex';
         header.style.alignItems = header.style.alignItems || 'center';
@@ -537,26 +524,9 @@
     // inline panel taking up page space. The pill only appears once at
     // least one quiz has been completed; clicking it opens the results
     // as a popup. ----
-    function injectResultsPanel(hasPre, hasPost) {
-        const trigger = document.createElement('button');
-        trigger.type = 'button';
-        trigger.className = 'ppq-results-trigger';
-        trigger.id = 'ppq-results-trigger';
-        trigger.innerHTML = `📊 Your Quiz Results — This Page`;
-
-        const contentWrapper = document.querySelector('.content-wrapper');
-        const theory = document.querySelector('.theory-section');
-        const header = document.querySelector('header');
-
-        if (contentWrapper && theory) {
-            contentWrapper.insertBefore(trigger, theory);
-        } else if (header && header.nextSibling) {
-            header.parentNode.insertBefore(trigger, header.nextSibling);
-        } else {
-            document.body.insertBefore(trigger, document.body.firstChild);
-        }
-
-        return trigger;
+    function injectResultsPanel() {
+        // The Result button is created in injectHeaderButtons (header).
+        return document.getElementById('ppq-results-trigger');
     }
 
     function buildResultsRowHtml(hasPre, hasPost, state) {
