@@ -118,7 +118,7 @@
             }
             .ppq-card {
                 background: #ffffff; border-radius: 14px;
-                max-width: 640px; width: 100%; max-height: 88vh;
+                max-width: 770px; width: 118%; max-height: 110vh;
                 overflow-y: auto;
                 box-shadow: 0 20px 60px rgba(0,0,0,0.35);
             }
