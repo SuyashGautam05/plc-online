@@ -185,179 +185,105 @@
   },
   "Introduction to Industrial Automation/Industrial_Automation_Tools_and_Technologies.html": {
     "title": "Industrial Automation Tools and Technologies",
-    "preQuestions": [
+       "preQuestions": [
       {
         "question": "Which device is commonly used for industrial machine control?",
-        "options": [
-          "PLC",
-          "Printer",
-          "Router only",
-          "Calculator"
-        ],
+        "options": ["PLC", "Printer", "Router only", "Calculator"],
         "correct": 0,
-        "explanation": ""
+        "explanation": "A PLC (Programmable Logic Controller) is the standard device used to control industrial machines."
       },
       {
         "question": "What is the main purpose of an HMI?",
-        "options": [
-          "Operator monitoring and control",
-          "Mechanical cutting",
-          "Power generation",
-          "Product packaging"
-        ],
+        "options": ["Operator monitoring and control", "Mechanical cutting", "Power generation", "Product packaging"],
         "correct": 0,
-        "explanation": ""
+        "explanation": "An HMI lets the operator monitor and control the process."
       },
       {
         "question": "Which device is used to detect physical conditions such as temperature or position?",
-        "options": [
-          "Sensor",
-          "PLC",
-          "HMI",
-          "VFD"
-        ],
+        "options": ["Sensor", "PLC", "HMI", "VFD"],
         "correct": 0,
-        "explanation": ""
+        "explanation": "Sensors detect physical conditions like temperature or position and send the signal to the controller."
       },
       {
         "question": "What is the main function of a VFD?",
-        "options": [
-          "Control AC motor speed",
-          "Measure temperature",
-          "Store production data",
-          "Display process information"
-        ],
+        "options": ["Control AC motor speed", "Measure temperature", "Store production data", "Display process information"],
         "correct": 0,
-        "explanation": ""
+        "explanation": "A VFD controls the speed of an AC motor by varying the supply frequency."
       },
       {
         "question": "Which technology is used for supervisory monitoring and data acquisition?",
-        "options": [
-          "SCADA",
-          "VFD",
-          "Sensor",
-          "Actuator"
-        ],
+        "options": ["SCADA", "VFD", "Sensor", "Actuator"],
         "correct": 0,
-        "explanation": ""
+        "explanation": "SCADA provides supervisory monitoring, data acquisition, and control of processes."
       }
     ],
     "postQuestions": [
       {
         "question": "Which combination represents commonly used industrial automation technologies?",
-        "options": [
-          "PLC, HMI, SCADA, VFD, Sensors",
-          "Printer, Scanner, Keyboard, Mouse",
-          "Camera, Speaker, Projector, Printer",
-          "Calculator, Telephone, Radio, TV"
-        ],
+        "options": ["PLC, HMI, SCADA, VFD, Sensors", "Printer, Scanner, Keyboard, Mouse", "Camera, Speaker, Projector, Printer", "Calculator, Telephone, Radio, TV"],
         "correct": 0,
-        "explanation": ""
+        "explanation": "PLC, HMI, SCADA, VFD, and sensors are the core technologies used in industrial automation."
       },
       {
         "question": "Which technology enables communication between industrial automation devices and systems?",
-        "options": [
-          "Industrial communication networks",
-          "Mechanical gears",
-          "Hydraulic oil",
-          "Electrical fuse only"
-        ],
+        "options": ["Industrial communication networks", "Mechanical gears", "Hydraulic oil", "Electrical fuse only"],
         "correct": 0,
-        "explanation": ""
+        "explanation": "Industrial communication networks connect devices, controllers, and supervisory systems."
       },
       {
         "question": "Which technology is widely used for connecting industrial devices and collecting real-time data?",
-        "options": [
-          "IIoT",
-          "Manual control",
-          "Paper documentation",
-          "Conventional switchboard"
-        ],
+        "options": ["IIoT", "Manual control", "Paper documentation", "Conventional switchboard"],
         "correct": 0,
-        "explanation": ""
+        "explanation": "IIoT (Industrial Internet of Things) connects devices and collects real-time data."
       },
       {
         "question": "Which tool is most suitable for monitoring process parameters and displaying alarms, trends, and status?",
-        "options": [
-          "SCADA",
-          "VFD",
-          "Contactor",
-          "Sensor"
-        ],
+        "options": ["SCADA", "VFD", "Contactor", "Sensor"],
         "correct": 0,
-        "explanation": ""
+        "explanation": "SCADA displays process parameters, alarms, trends, and status for supervision."
       },
       {
         "question": "Which combination best supports modern Smart Factory automation?",
-        "options": [
-          "PLC + HMI + SCADA + IIoT + Industrial Networks",
-          "Manual switches + paper records",
-          "Mechanical tools only",
-          "Motors without control systems"
-        ],
+        "options": ["PLC + HMI + SCADA + IIoT + Industrial Networks", "Manual switches + paper records", "Mechanical tools only", "Motors without control systems"],
         "correct": 0,
-        "explanation": ""
-      },
-      {
-        "question": "Which approach was mainly used before the development of modern automation?",
-        "options": [
-          "Manual operation",
-          "PLC control",
-          "SCADA",
-          "IIoT"
-        ],
-        "correct": 0,
-        "explanation": ""
-      },
-      {
-        "question": "Which technology played an important role in early automatic control systems?",
-        "options": [
-          "Relay-based control",
-          "Cloud computing",
-          "Artificial Intelligence",
-          "Digital Twin"
-        ],
-        "correct": 0,
-        "explanation": ""
-      },
-      {
-        "question": "What does PLC stand for?",
-        "options": [
-          "Programmable Logic Controller",
-          "Process Level Computer",
-          "Power Logic Control",
-          "Programmable Load Circuit"
-        ],
-        "correct": 0,
-        "explanation": ""
-      },
-      {
-        "question": "Which technology is associated with modern connected manufacturing?",
-        "options": [
-          "IIoT",
-          "Manual control",
-          "Relay only",
-          "Mechanical switches only"
-        ],
-        "correct": 0,
-        "explanation": ""
-      },
-      {
-        "question": "Which Industry Revolution introduced computers and electronic control systems into manufacturing?",
-        "options": [
-          "Industry 1.0",
-          "Industry 2.0",
-          "Industry 3.0",
-          "Industry 4.0"
-        ],
-        "correct": 2,
-        "explanation": ""
+        "explanation": "A Smart Factory combines control, visualization, supervision, IIoT, and industrial networks."
       }
     ]
   },
   "Introduction to Industrial Automation/Evolution_of_Industrial_Automation.html": {
-    "title": "Evolution of Industrial Automation",
-    "preQuestions": [],
+       "title": "Evolution of Industrial Automation",
+    "preQuestions": [
+      {
+        "question": "Which approach was mainly used before the development of modern automation?",
+        "options": ["Manual operation", "PLC control", "SCADA", "IIoT"],
+        "correct": 0,
+        "explanation": "Before modern automation, industrial processes were mainly operated manually."
+      },
+      {
+        "question": "Which technology played an important role in early automatic control systems?",
+        "options": ["Relay-based control", "Cloud computing", "Artificial Intelligence", "Digital Twin"],
+        "correct": 0,
+        "explanation": "Relay-based control logic was the backbone of early automatic control systems."
+      },
+      {
+        "question": "What does PLC stand for?",
+        "options": ["Programmable Logic Controller", "Process Level Computer", "Power Logic Control", "Programmable Load Circuit"],
+        "correct": 0,
+        "explanation": "PLC stands for Programmable Logic Controller."
+      },
+      {
+        "question": "Which technology is associated with modern connected manufacturing?",
+        "options": ["IIoT", "Manual control", "Relay only", "Mechanical switches only"],
+        "correct": 0,
+        "explanation": "IIoT connects machines and systems for data exchange in modern manufacturing."
+      },
+      {
+        "question": "Which Industry Revolution introduced computers and electronic control systems into manufacturing?",
+        "options": ["Industry 1.0", "Industry 2.0", "Industry 3.0", "Industry 4.0"],
+        "correct": 2,
+        "explanation": "Industry 3.0 introduced computers, electronics, and programmable control into manufacturing."
+      }
+    ],
     "postQuestions": [
       {
         "question": "What is the typical evolution of industrial automation?",
@@ -368,29 +294,19 @@
           "IIoT → Relay → Manual → PLC"
         ],
         "correct": 0,
-        "explanation": ""
+        "explanation": "Automation moved from manual operation to mechanical, then relay-based control, then PLCs, and now digital/connected automation."
       },
       {
         "question": "Which development replaced many hardwired relay-control systems with programmable control?",
-        "options": [
-          "PLC",
-          "Sensor",
-          "Motor",
-          "Transformer"
-        ],
+        "options": ["PLC", "Sensor", "Motor", "Transformer"],
         "correct": 0,
-        "explanation": ""
+        "explanation": "PLCs replaced hardwired relay panels with logic that can be changed by programming."
       },
       {
         "question": "Which Industry Revolution introduced mass production using electricity?",
-        "options": [
-          "Industry 1.0",
-          "Industry 2.0",
-          "Industry 3.0",
-          "Industry 4.0"
-        ],
+        "options": ["Industry 1.0", "Industry 2.0", "Industry 3.0", "Industry 4.0"],
         "correct": 1,
-        "explanation": ""
+        "explanation": "Industry 2.0 brought mass production using electricity and assembly lines."
       },
       {
         "question": "Which technologies are key characteristics of Industry 4.0?",
@@ -401,7 +317,7 @@
           "Relay panels only"
         ],
         "correct": 0,
-        "explanation": ""
+        "explanation": "Industry 4.0 is built on connected, data-driven technologies such as IIoT, AI, cloud computing, big data, and digital twins."
       },
       {
         "question": "What is a major characteristic of modern industrial automation?",
@@ -412,80 +328,50 @@
           "Use of only mechanical control"
         ],
         "correct": 0,
-        "explanation": ""
+        "explanation": "Modern automation is connected, intelligent, data-driven, and flexible."
       }
     ]
   },
   "Introduction to Industrial Automation/Industrial_Applications_of_Automation.html": {
-    "title": "Industrial Applications of Automation",
+       "title": "Industrial Applications of Automation",
     "preQuestions": [
       {
         "question": "Which industry commonly uses automation for assembly and production?",
-        "options": [
-          "Manufacturing",
-          "Education only",
-          "Banking only",
-          "Tourism"
-        ],
+        "options": ["Manufacturing", "Education only", "Banking only", "Tourism"],
         "correct": 0,
-        "explanation": ""
+        "explanation": "Manufacturing is the industry that most commonly uses automation for assembly and production."
       },
       {
         "question": "What is commonly used for automated material movement in factories?",
-        "options": [
-          "Conveyor systems",
-          "Manual notebooks",
-          "Office printers",
-          "Telephones"
-        ],
+        "options": ["Conveyor systems", "Manual notebooks", "Office printers", "Telephones"],
         "correct": 0,
-        "explanation": ""
+        "explanation": "Conveyor systems move materials and products automatically through a factory."
       },
       {
         "question": "Which application uses automation to control temperature, pressure, and flow?",
-        "options": [
-          "Process control",
-          "Manual inspection",
-          "Office administration",
-          "Document management"
-        ],
+        "options": ["Process control", "Manual inspection", "Office administration", "Document management"],
         "correct": 0,
-        "explanation": ""
+        "explanation": "Process control automatically regulates variables such as temperature, pressure, and flow."
       },
       {
         "question": "Which system can automatically identify and sort products on a production line?",
-        "options": [
-          "Automated sorting system",
-          "Manual switch",
-          "Calculator",
-          "Printer"
-        ],
+        "options": ["Automated sorting system", "Manual switch", "Calculator", "Printer"],
         "correct": 0,
-        "explanation": ""
+        "explanation": "Automated sorting systems identify products and route them without manual handling."
       },
       {
         "question": "Which industry can use automated robots for welding and assembly?",
-        "options": [
-          "Automotive industry",
-          "Banking industry",
-          "Hospitality only",
-          "Education only"
-        ],
+        "options": ["Automotive industry", "Banking industry", "Hospitality only", "Education only"],
         "correct": 0,
-        "explanation": ""
+        "explanation": "The automotive industry widely uses robots for welding and assembly."
       }
     ],
     "postQuestions": [
       {
         "question": "Which of the following is a major application of industrial automation?",
-        "options": [
-          "Automated production and assembly",
-          "Manual record keeping",
-          "Office documentation",
-          "Manual transportation only"
-        ],
+        "options": ["Automated production and assembly", "Manual record keeping", "Office documentation", "Manual transportation only"],
         "correct": 0,
-        "explanation": ""
+        "explanation": "Automated production and assembly is one of the main applications of industrial automation."
       },
       {
         "question": "How is automation used in the packaging industry?",
@@ -496,18 +382,13 @@
           "Paper-based monitoring"
         ],
         "correct": 0,
-        "explanation": ""
+        "explanation": "Packaging lines automate filling, labeling, sealing, and sorting."
       },
       {
         "question": "Which automation application is commonly used for quality inspection?",
-        "options": [
-          "Machine vision",
-          "Manual paperwork",
-          "Office software",
-          "Mechanical switch only"
-        ],
+        "options": ["Machine vision", "Manual paperwork", "Office software", "Mechanical switch only"],
         "correct": 0,
-        "explanation": ""
+        "explanation": "Machine vision systems use cameras and software to inspect product quality automatically."
       },
       {
         "question": "How can automation support predictive maintenance?",
@@ -518,7 +399,7 @@
           "By stopping data collection"
         ],
         "correct": 0,
-        "explanation": ""
+        "explanation": "Predictive maintenance relies on continuous monitoring and analysis of sensor data to spot problems early."
       },
       {
         "question": "Which combination represents modern industrial automation applications?",
@@ -529,18 +410,7 @@
           "Manual inspection without sensors"
         ],
         "correct": 0,
-        "explanation": ""
-      },
-      {
-        "question": "Industrial Safety and Standards\n> Importance of Safety in Industrial Automation\nre-Training (Prerequisite) Test -- Importance of Safety in Industrial Automation\n1. Why is safety important in industrial automation?",
-        "options": [
-          "To prevent accidents and injuries",
-          "To increase manual work",
-          "To reduce machine efficiency",
-          "To increase production cost"
-        ],
-        "correct": 0,
-        "explanation": ""
+        "explanation": "Modern automation applications include robotics, process control, material handling, machine vision, and smart manufacturing."
       }
     ]
   },
