@@ -687,6 +687,15 @@
             });
         }
 
+        // Opened from the index page badge (?quiz=pre / ?quiz=post)
+        try {
+            const want = new URLSearchParams(location.search).get('quiz');
+            const cur = getState()[topicKey] || {};
+            if (want === 'pre' && hasPre && preBtn) openPreQuiz();
+            else if (want === 'post' && hasPost && postBtn && !postBtn.disabled) openPostQuiz();
+            else if (want === 'post' && hasPre && !cur.preComplete) showToast('Complete the Pre-Quiz first.', 3000);
+        } catch (e) {}
+
         // Gentle nudge (not a forced popup) once the reading dwell-timer
         // completes, if Post-Quiz is unlocked but not yet taken.
         if (postBtn) {

@@ -511,7 +511,7 @@ body {
      color: #ffffff;
      }
 
-.meta-pill.mcq-pill { display: none; background: rgba(37, 99, 235, 0.08); color: var(--cat-blue); border-color: rgba(37, 99, 235, 0.18); }
+.meta-pill.mcq-pill { background: rgba(37, 99, 235, 0.08); color: var(--cat-blue); border-color: rgba(37, 99, 235, 0.18); }
 .meta-pill.mcq-pill i { color: var(--cat-blue); }
 .meta-pill.sim-pill { background: rgba(13, 148, 136, 0.08); color: var(--cat-teal); border-color: rgba(13, 148, 136, 0.18); }
 .meta-pill.sim-pill i { color: var(--cat-teal); }
@@ -944,7 +944,6 @@ footer a:hover { color: var(--red); }
     background: rgba(37, 99, 235, 0.08);
     color: var(--cat-blue);
     border-color: rgba(37, 99, 235, 0.18);
-    display: none;
 }
 .topic-badge-sim {
     background: rgba(13, 148, 136, 0.08);
@@ -961,6 +960,12 @@ footer a:hover { color: var(--red); }
     color: #a5780f;
     border-color: rgba(225, 172, 61, 0.4);
 }
+.topic-badge-locked {
+    opacity: 0.55;
+    cursor: not-allowed;
+    filter: grayscale(0.6);
+}
+a.topic-badge-quiz-pre:hover, a.topic-badge-quiz-post:hover { filter: brightness(0.95); }
 .topic-badge-quiz-post {
     background: rgba(23, 54, 129, 0.08);
     color: #173681;
@@ -1395,6 +1400,7 @@ const sections = [
 //  minutes) — this page just displays whatever the server has.
 // ============================================================
 const readSet = new Set(); // canonical topic ids (URL pathnames) already read
+const quizTopics = new Set(); // prepost-quiz-data.json keys - topics that have pre/post quizzes
 const mcqTopics = new Set(); // mcq-data.json keys - which topics have practice questions
 
 // mcq-data.json is keyed by the path relative to /pages/, e.g.
@@ -1404,6 +1410,20 @@ const mcqTopics = new Set(); // mcq-data.json keys - which topics have practice 
 // same convention, so it doubles as the quiz-results lookup key too.
 function mcqKeyFromHref(href) {
     return href.replace(/^\.\/pages\//, '');
+}
+
+async function loadQuizIndex() {
+    try {
+        const res = await fetch('./pages/prepost-quiz-data.json');
+        if (!res.ok) return;
+        const data = await res.json();
+        Object.keys(data).forEach(k => {
+            const e = data[k] || {};
+            if (e.preQuestions?.length || e.postQuestions?.length) quizTopics.add(k);
+        });
+    } catch (err) {
+        console.warn('Could not load quiz index:', err);
+    }
 }
 
 async function loadMcqIndex() {
@@ -1521,11 +1541,23 @@ function renderTopicNode(item) {
     if (item.simHref) {
         badges.push(`<a href="${escAttr(item.simHref)}" class="topic-badge topic-badge-sim" title="Open interactive simulation" onclick="event.stopPropagation()"><i class="fas fa-flask"></i> Simulation</a>`);
     }
-    if (quizState?.preComplete) {
-        badges.push(`<span class="topic-badge topic-badge-quiz-pre" title="Your pre-quiz baseline score"><i class="fas fa-clipboard-list"></i> Pre-Quiz: ${quizState.preScore}/${quizState.preTotal}</span>`);
-    }
-    if (quizState?.postComplete) {
-        badges.push(`<span class="topic-badge topic-badge-quiz-post" title="Your post-quiz score"><i class="fas fa-circle-check"></i> Post-Quiz: ${quizState.postScore}/${quizState.postTotal}</span>`);
+    if (quizTopics.has(mcqKeyFromHref(item.href))) {
+        // Always visible. Pre-Quiz opens once the topic is read; Post-Quiz
+        // opens once the topic is read AND the pre-quiz is done.
+        const mk = (kind, label, icon, done, score, total, unlocked, lockMsg) => {
+            const cls = `topic-badge topic-badge-quiz-${kind}`;
+            if (done) {
+                return `<a href="${escAttr(item.href)}?quiz=${kind}" class="${cls}" title="Completed - click to review/retake" onclick="event.stopPropagation()"><i class="fas ${icon}"></i> ${label}: ${score}/${total}</a>`;
+            }
+            if (unlocked) {
+                return `<a href="${escAttr(item.href)}?quiz=${kind}" class="${cls}" title="Open ${label}" onclick="event.stopPropagation()"><i class="fas ${icon}"></i> ${label}</a>`;
+            }
+            return `<span class="${cls} topic-badge-locked" title="${lockMsg}"><i class="fas fa-lock"></i> ${label}</span>`;
+        };
+        badges.push(mk('pre', 'Pre-Quiz', 'fa-clipboard-list', !!quizState?.preComplete, quizState?.preScore, quizState?.preTotal,
+            isRead, 'Read this topic to unlock'));
+        badges.push(mk('post', 'Post-Quiz', 'fa-circle-check', !!quizState?.postComplete, quizState?.postScore, quizState?.postTotal,
+            isRead && !!quizState?.preComplete, isRead ? 'Complete the Pre-Quiz first' : 'Read this topic to unlock'));
     }
 
     return `<li>
@@ -1747,7 +1779,7 @@ document.addEventListener('keydown', e => {
 //  Boot: load progress + MCQ index first so cards render with correct counts
 // ============================================================
 renderFilters();
-Promise.all([loadProgress(), loadMcqIndex()]).finally(() => { applyFilters(); renderOverallProgress(); });
+Promise.all([loadProgress(), loadMcqIndex(), loadQuizIndex()]).finally(() => { applyFilters(); renderOverallProgress(); });
 </script>
 </body>
 </html>
