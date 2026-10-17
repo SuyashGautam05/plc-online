@@ -57,8 +57,13 @@
 
         const name = m[2];
         if (MAP[name] === m[1] + '/' + m[2] + '.html') {
-            const q = new URLSearchParams(win.location.search).get('quiz');
-            history.replaceState(null, '', location.pathname + (q ? '?quiz=' + encodeURIComponent(q) : '') + '#' + encodeURIComponent(name));
+            // Show only  <site>/#Lesson_Name  (index.html turns this back into the lesson on refresh).
+            const dir = location.pathname.replace(/[^/]*$/, '');
+            try {
+                history.replaceState(null, '', dir + '#' + encodeURIComponent(name));
+            } catch (e) {
+                history.replaceState(null, '', location.pathname + '#' + encodeURIComponent(name)); // file:// fallback
+            }
         }
 
         const h1 = doc.querySelector('header h1');

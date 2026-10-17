@@ -5,6 +5,15 @@
     <script src="./auth-guard.js"></script>
     <script src="./user-bar.js"></script>
     <script src="./lesson-map.js"></script>
+    <script>
+    // Short lesson URL (/#Lesson_Name) reloaded -> reopen that lesson in the lesson shell.
+    (function () {
+        try {
+            var h = decodeURIComponent(location.hash.slice(1));
+            if (h && window.LESSON_MAP && window.LESSON_MAP[h]) location.replace("./learn.html#" + encodeURIComponent(h));
+        } catch (e) {}
+    })();
+    </script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PLC Simulation Software</title>
