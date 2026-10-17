@@ -94,7 +94,7 @@
         const style = document.createElement('style');
         style.textContent = `
             .ppq-header-btns {
-                display: flex; align-items: center; gap: 10px;
+                display: flex; align-items: center; gap: 5px;
                 margin-left: auto; flex-shrink: 0; padding: 0 8px; margin-right: 90px;
             }
             .ppq-header-btn {

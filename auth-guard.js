@@ -54,10 +54,15 @@
         startPolling();
 
     } catch (err) {
-        // Network error — allow access with cached token (offline tolerance)
-        console.warn('Auth server unreachable, using cached session');
+        // Fail CLOSED: if the auth server can't confirm the session, the page
+        // stays hidden. (Showing it on a cached token let anyone put a fake
+        // token in localStorage and block the verify request to get in.)
+        console.warn('Auth server unreachable - access denied until it can be verified');
         document.documentElement.style.visibility = 'visible';
-        startPolling();
+        const showRetry = () => { document.body.innerHTML = '<div style="font-family:Inter,Arial,sans-serif;max-width:420px;margin:15vh auto;text-align:center;color:#173681">' +
+            '<h2>Unable to verify your session</h2><p>Please check your internet connection and try again.</p>' +
+            '<button onclick="location.reload()" style="padding:10px 22px;border:0;border-radius:8px;background:#173681;color:#fff;font-weight:600;cursor:pointer">Retry</button></div>'; };
+        if (document.body) showRetry(); else document.addEventListener('DOMContentLoaded', showRetry);
     }
 
     function checkSession(currentToken) {
