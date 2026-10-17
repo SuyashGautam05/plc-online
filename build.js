@@ -19,6 +19,8 @@ const INCLUDE = [
     'mcq_with_explation.json',
     'assets',
     'pages',
+    'learn.html',
+   'lesson-map.js',
 ];
 
 const SRC = __dirname;
