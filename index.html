@@ -1606,7 +1606,7 @@ function renderCard(s) {
             <div class="card-meta">
                 <span class="meta-pill"><i class="fas fa-list"></i>${total} topics</span>
                 <span class="meta-pill read-pill"><i class="fas fa-check-circle"></i>${read}/${total} read</span>
-                ${mcqCount ? `<span class="meta-pill mcq-pill"><i class="fas fa-list-check"></i>${mcqCount} MCQ${mcqCount > 1 ? 's' : ''}</span>` : ''}
+                ${mcqCount ? `<span style="display: none;" class="meta-pill mcq-pill"><i class="fas fa-list-check"></i>${mcqCount} MCQ${mcqCount > 1 ? 's' : ''}</span>` : ''}
                 ${simCount ? `<span class="meta-pill sim-pill"><i class="fas fa-flask"></i>${simCount} Simulation${simCount > 1 ? 's' : ''}</span>` : ''}
             </div>
             <div class="progress-track"><div class="progress-fill" style="width:${pct}%"></div></div>
