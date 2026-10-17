@@ -4,6 +4,7 @@
     <script src="./auth-config.js"></script>
     <script src="./auth-guard.js"></script>
     <script src="./user-bar.js"></script>
+    <script src="./lesson-map.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>PLC Simulation Software</title>
@@ -464,7 +465,8 @@ body {
 .card-category i { font-size: 0.62rem; }
 
 .card-title {
-    font-size: 1rem;
+    /* font-size: 1rem; */
+    font-size: 17px;
     font-weight: 700;
     /* color: var(--text-color); */
     color: #173681;
@@ -1461,6 +1463,16 @@ function toTopicId(href) {
     catch { return pathname; }
 }
 
+// Lessons open through learn.html so the address bar shows only the
+// short lesson name (learn.html#Lesson_Name) instead of the full file path.
+function lessonHref(href, quiz) {
+    const m = href.match(/^\.\/pages\/([^/]+)\/([^/]+)\.html$/);
+    if (m && window.LESSON_MAP && window.LESSON_MAP[m[2]] === m[1] + '/' + m[2] + '.html') {
+        return './learn.html' + (quiz ? '?quiz=' + quiz : '') + '#' + encodeURIComponent(m[2]);
+    }
+    return href + (quiz ? '?quiz=' + quiz : '');
+}
+
 function authHeader() {
     const token = localStorage.getItem(cfg.TOKEN_KEY);
     return token ? { Authorization: `Bearer ${token}` } : null;
@@ -1547,10 +1559,10 @@ function renderTopicNode(item) {
         const mk = (kind, label, icon, done, score, total, unlocked, lockMsg) => {
             const cls = `topic-badge topic-badge-quiz-${kind}`;
             if (done) {
-                return `<a href="${escAttr(item.href)}?quiz=${kind}" class="${cls}" title="Completed - click to review/retake" onclick="event.stopPropagation()"><i class="fas ${icon}"></i> ${label}: ${score}/${total}</a>`;
+                return `<a href="${escAttr(lessonHref(item.href, kind))}" class="${cls}" title="Completed - click to review/retake" onclick="event.stopPropagation()"><i class="fas ${icon}"></i> ${label}: ${score}/${total}</a>`;
             }
             if (unlocked) {
-                return `<a href="${escAttr(item.href)}?quiz=${kind}" class="${cls}" title="Open ${label}" onclick="event.stopPropagation()"><i class="fas ${icon}"></i> ${label}</a>`;
+                return `<a href="${escAttr(lessonHref(item.href, kind))}" class="${cls}" title="Open ${label}" onclick="event.stopPropagation()"><i class="fas ${icon}"></i> ${label}</a>`;
             }
             return `<span class="${cls} topic-badge-locked" title="${lockMsg}"><i class="fas fa-lock"></i> ${label}</span>`;
         };
@@ -1561,7 +1573,7 @@ function renderTopicNode(item) {
     }
 
     return `<li>
-        <a href="${escAttr(item.href)}" class="topic-link${isRead ? ' topic-read' : ''}" data-href="${escAttr(item.href)}">
+        <a href="${escAttr(lessonHref(item.href))}" class="topic-link${isRead ? ' topic-read' : ''}" data-href="${escAttr(item.href)}">
             <i class="fas fa-arrow-up-right-from-square"></i><span>${escHtml(item.title)}</span>
             <span class="topic-status-icon">${isRead ? '<i class="fas fa-check"></i> Read' : 'Not read yet'}</span>
         </a>

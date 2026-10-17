@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PLC Simulation Software</title>
+    <style>
+        html, body { margin: 0; height: 100%; overflow: hidden; background: #fff; }
+        iframe { border: 0; width: 100%; height: 100%; display: block; }
+    </style>
+    <script src="./lesson-map.js"></script>
+</head>
+<body>
+<iframe id="lessonFrame" title="Lesson" allow="fullscreen; autoplay; clipboard-write" allowfullscreen></iframe>
+<script>
+/* Lesson shell: the real lesson page runs inside the iframe (so progress
+   tracking, quizzes, auth etc. see their normal /pages/... path), while the
+   address bar only shows  learn.html#<Lesson_Name>.  Reload-safe, no server
+   config needed. */
+(function () {
+    const frame = document.getElementById('lessonFrame');
+    const MAP = window.LESSON_MAP || {};
+    const quiz = new URLSearchParams(location.search).get('quiz');
+
+    function hashName() {
+        const h = location.hash.slice(1);
+        try { return decodeURIComponent(h); } catch (e) { return h; }
+    }
+
+    function lessonSrc(name) {
+        const rel = MAP[name];
+        if (!rel) return null;
+        return './pages/' + rel.split('/').map(encodeURIComponent).join('/') +
+            (quiz ? '?quiz=' + encodeURIComponent(quiz) : '');
+    }
+
+    const first = lessonSrc(hashName());
+    if (!first) { location.replace('./index.html'); return; }
+    frame.src = first;
+
+    window.addEventListener('hashchange', () => {
+        const src = lessonSrc(hashName());
+        if (src) frame.src = src;
+    });
+
+    function leaveToTop(url) { location.href = url; }
+
+    frame.addEventListener('load', () => {
+        let win, doc;
+        try { win = frame.contentWindow; doc = win.document; } catch (e) { return; }
+
+        const path = (() => { try { return decodeURIComponent(win.location.pathname); } catch (e) { return win.location.pathname; } })();
+        const m = path.match(/\/pages\/([^/]+)\/([^/]+)\.html$/i);
+
+        // Frame ended up on a non-lesson page (index, login, simulations...) -> show it full window.
+        if (!m) { location.replace(win.location.href); return; }
+
+        const name = m[2];
+        if (MAP[name] === m[1] + '/' + m[2] + '.html') {
+            const q = new URLSearchParams(win.location.search).get('quiz');
+            history.replaceState(null, '', location.pathname + (q ? '?quiz=' + encodeURIComponent(q) : '') + '#' + encodeURIComponent(name));
+        }
+
+        const h1 = doc.querySelector('header h1');
+        document.title = (h1 && h1.textContent.trim()) || doc.title || 'PLC Simulation Software';
+
+        // Links leaving the lessons (Back to Course, external, etc.) open in the full window.
+        doc.addEventListener('click', (e) => {
+            const a = e.target.closest && e.target.closest('a[href]');
+            if (!a || a.target === '_blank') return;
+            const raw = a.getAttribute('href');
+            if (!raw || raw[0] === '#' || /^(javascript|mailto|tel):/i.test(raw)) return;
+            let u; try { u = new URL(a.href); } catch (err) { return; }
+            const p = decodeURIComponent(u.pathname);
+            const isLesson = u.origin === location.origin && /\/pages\/[^/]+\/[^/]+\.html$/i.test(p);
+            if (!isLesson) { e.preventDefault(); leaveToTop(u.href); }
+        }, true);
+    });
+})();
+</script>
+</body>
+</html>
