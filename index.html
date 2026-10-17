@@ -475,7 +475,7 @@ body {
 
 .card-title {
     /* font-size: 1rem; */
-    font-size: 17px;
+    font-size: 15px;
     font-weight: 700;
     /* color: var(--text-color); */
     color: #173681;
@@ -1557,7 +1557,7 @@ function renderTopicNode(item) {
     // also triggering the topic-link's own navigation underneath it.
     const badges = [];
     if (hasMcq) {
-        badges.push(`<span class="topic-badge topic-badge-mcq" title="Practice questions available"><i class="fas fa-list-check"></i> MCQs</span>`);
+        badges.push(`<span style="display: none;" class="topic-badge topic-badge-mcq" title="Practice questions available"><i class="fas fa-list-check"></i> MCQs</span>`);
     }
     if (item.simHref) {
         badges.push(`<a href="${escAttr(item.simHref)}" class="topic-badge topic-badge-sim" title="Open interactive simulation" onclick="event.stopPropagation()"><i class="fas fa-flask"></i> Simulation</a>`);
