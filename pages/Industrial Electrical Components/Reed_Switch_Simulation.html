@@ -11,8 +11,8 @@
   :root {
     --primary-color: #f8f9fa;
     --secondary-color: #e9ecef;
-    --text-color: #262a30;
-    --accent-color: #6c757d;
+    --text-color: #173681;
+    --accent-color: #173681;
     --border-color: #e4e7eb;
     --hover-color: #f1f3f5;
     --shadow: 0 2px 10px rgba(0,0,0,0.1);
@@ -65,8 +65,9 @@
     font-size: clamp(0.72rem,1.1vw,0.88rem);
     font-weight:700; color:var(--accent-color);
     letter-spacing:1px; text-transform:uppercase;
-    border-bottom:1px solid var(--border-color);
-    padding-bottom:7px; margin-bottom:11px;
+    background:#e1ac3d;
+    border-bottom:2px solid #173681;
+    padding:7px 12px; margin-bottom:11px;
   }
 
   /* Status bar */
@@ -180,12 +181,12 @@
   /* Controls */
   .sim-controls { display:flex; gap:9px; flex-wrap:wrap; align-items:center; margin-top:11px; }
   .ctrl-btn {
-    padding:5px 13px; border:1px solid var(--border-color); border-radius:6px;
+    padding:5px 13px; border:1px solid #173681; border-radius:6px;
     cursor:pointer; font-size:.75rem; font-family:Georgia,serif; font-weight:600;
-    background:var(--secondary-color); color:var(--text-color); transition:all .2s;
+    background:#ffffff; color:#173681; transition:all .2s;
   }
-  .ctrl-btn:hover { background:var(--hover-color); transform:translateY(-1px); box-shadow:var(--shadow); }
-  .ctrl-btn.active-btn { background:var(--red); color:white; border-color:var(--red); }
+  .ctrl-btn:hover, .ctrl-btn:active, .ctrl-btn:focus-visible { background:#173681; color:#ffffff; border-color:#173681; transform:translateY(-1px); box-shadow:var(--shadow); }
+  .ctrl-btn.active-btn { background:#173681; color:#ffffff; border-color:#173681; }
   .speed-row { display:flex; align-items:center; gap:8px; font-size:.72rem; color:var(--accent-color); margin-top:7px; font-weight:bold; }
   .speed-row input[type=range] { max-width:110px; accent-color:var(--accent-color); }
 
@@ -224,8 +225,8 @@
   .theory-section::-webkit-scrollbar { width:6px; }
   .theory-section::-webkit-scrollbar-track { background:var(--secondary-color); border-radius:10px; }
   .theory-section::-webkit-scrollbar-thumb { background:var(--accent-color); border-radius:10px; }
-  .theory-section h2 { font-size:clamp(1rem,1.8vw,1.25rem); color:var(--text-color); margin-bottom:clamp(9px,1.4vw,16px); border-bottom:2px solid var(--secondary-color); padding-bottom:clamp(7px,1vw,12px); }
-  .theory-section h3 { font-size:clamp(.86rem,1.3vw,.98rem); color:var(--text-color); margin-top:clamp(11px,1.6vw,16px); margin-bottom:clamp(5px,.9vw,8px); }
+  .theory-section h2 { font-size:clamp(1rem,1.8vw,1.25rem); color:#173681; margin-bottom:clamp(9px,1.4vw,16px); background:#e1ac3d; border-bottom:2px solid #173681; padding:clamp(7px,1vw,12px) 12px; }
+  .theory-section h3 { font-size:clamp(.86rem,1.3vw,.98rem); color:#173681; margin-top:clamp(11px,1.6vw,16px); margin-bottom:clamp(5px,.9vw,8px); }
   .theory-section p  { font-size:clamp(.72rem,1vw,.85rem); color:var(--text-color); margin-bottom:clamp(9px,1.4vw,13px); text-align:justify; line-height:1.7; }
 
   .ind-box {
@@ -330,37 +331,35 @@
       <svg style="width:100%;height:auto" viewBox="0 0 700 144" xmlns="http://www.w3.org/2000/svg">
 
         <!-- POWER SUPPLY box -->
-        <rect x="14" y="14" width="76" height="104" rx="7" fill="white" stroke="#dee2e6" stroke-width="2"/>
-        <rect x="20" y="20" width="64" height="92" rx="5" fill="#f8f9fa" stroke="#e9ecef" stroke-width="1"/>
-        <text x="52" y="50" text-anchor="middle" fill="#343a40" font-size="17">⚡</text>
-        <text x="52" y="64" text-anchor="middle" fill="#6c757d" font-size="7" font-family="Georgia,serif" style="font-weight:bold;font-size:0.71rem;">POWER</text>
-        <text x="52" y="74" text-anchor="middle" fill="#6c757d" font-size="7" font-family="Georgia,serif" style="font-weight:bold;font-size:0.71rem;">SUPPLY</text>
-        <text x="52" y="84" text-anchor="middle" fill="#6c757d" font-size="7" font-family="Georgia,serif" style="font-weight:bold;font-size:0.71rem;">24 V DC</text>
-        <circle cx="37" cy="108" r="5" fill="#343a40"/>
-        <text x="37" y="123" text-anchor="middle" fill="#343a40" font-size="7" font-family="Georgia,serif" style="font-weight:bold;font-size:0.61rem;">24V</text>
-        <circle cx="67" cy="108" r="5" fill="#e9ecef" stroke="#6c757d" stroke-width="1.5"/>
-        <text x="67" y="123" text-anchor="middle" fill="#6c757d" font-size="7" font-family="Georgia,serif" style="font-weight:bold;font-size:0.61rem;">GND</text>
+        <rect x="14" y="14" width="76" height="104" rx="7" fill="white" stroke="#173681" stroke-width="2"/>
+        <rect x="20" y="20" width="64" height="92" rx="5" fill="#ffffff" stroke="#e1ac3d" stroke-width="1.5"/>
+        <text x="52" y="50" text-anchor="middle" fill="#173681" font-size="17">⚡</text>
+        <text x="52" y="64" text-anchor="middle" fill="#173681" font-size="7" font-family="Georgia,serif" style="font-weight:bold;font-size:0.71rem;">POWER</text>
+        <text x="52" y="74" text-anchor="middle" fill="#173681" font-size="7" font-family="Georgia,serif" style="font-weight:bold;font-size:0.71rem;">SUPPLY</text>
+        <text x="52" y="84" text-anchor="middle" fill="#173681" font-size="7" font-family="Georgia,serif" style="font-weight:bold;font-size:0.71rem;">24 V DC</text>
+        <circle cx="67" cy="112" r="5" fill="#ffffff" stroke="#000000" stroke-width="1.8"/>
+        <text x="67" y="131" text-anchor="middle" fill="#173681" font-size="7" font-family="Georgia,serif" style="font-weight:bold;font-size:0.61rem;">GND</text>
 
         <!-- REED SWITCH symbol (center) -->
         <!-- Glass capsule outline -->
-        <rect x="285" y="38" width="130" height="56" rx="28" fill="rgba(180,230,220,0.25)" stroke="#dee2e6" stroke-width="1.5" id="reedGlassWire"/>
+        <rect x="285" y="38" width="130" height="56" rx="28" fill="#ffffff" stroke="#173681" stroke-width="1.5" id="reedGlassWire"/>
         <!-- Lead wires -->
-        <line x1="90" y1="65" x2="286" y2="65" fill="none" stroke="#343a40" stroke-width="2.5" stroke-linecap="round" id="wH"/>
-        <line x1="415" y1="65" x2="535" y2="65" fill="none" stroke="#343a40" stroke-width="2.5" stroke-linecap="round" id="wH2"/>
+        <line x1="90" y1="65" x2="286" y2="65" fill="none" stroke="#dc3545" stroke-width="2.5" stroke-linecap="round" id="wH"/>
+        <line x1="415" y1="65" x2="535" y2="65" fill="none" stroke="#dc3545" stroke-width="2.5" stroke-linecap="round" id="wH2"/>
         <!-- OPEN state contact symbol (default) -->
         <g id="reedOpen">
-          <line x1="300" y1="65" x2="340" y2="65" stroke="#dee2e6" stroke-width="2.5" stroke-linecap="round"/>
-          <line x1="340" y1="65" x2="354" y2="51" stroke="#dee2e6" stroke-width="2.5" stroke-linecap="round"/>
-          <line x1="360" y1="65" x2="400" y2="65" stroke="#dee2e6" stroke-width="2.5" stroke-linecap="round"/>
-          <text x="350" y="36" text-anchor="middle" fill="#6c757d" font-size="8" font-family="Georgia,serif" style="font-weight:bold;font-size:0.61rem;">REED SWITCH</text>
-          <text x="350" y="101" text-anchor="middle" fill="#6c757d" font-size="7.5" font-family="Georgia,serif" style="font-weight:bold;font-size:0.55rem;">X0 (OPEN)</text>
+          <line x1="300" y1="65" x2="340" y2="65" stroke="#173681" stroke-width="2.5" stroke-linecap="round"/>
+          <line x1="340" y1="65" x2="354" y2="51" stroke="#173681" stroke-width="2.5" stroke-linecap="round"/>
+          <line x1="360" y1="65" x2="400" y2="65" stroke="#173681" stroke-width="2.5" stroke-linecap="round"/>
+          <text x="350" y="36" text-anchor="middle" fill="#173681" font-size="8" font-family="Georgia,serif" style="font-weight:bold;font-size:0.61rem;">REED SWITCH</text>
+          <text x="350" y="101" text-anchor="middle" fill="#173681" font-size="7.5" font-family="Georgia,serif" style="font-weight:bold;font-size:0.55rem;">X0 (OPEN)</text>
         </g>
         <!-- CLOSED state contact symbol -->
         <g id="reedClosed" opacity="0">
-          <line x1="300" y1="65" x2="340" y2="65" stroke="#343a40" stroke-width="2.5" stroke-linecap="round"/>
-          <line x1="340" y1="65" x2="400" y2="65" stroke="#343a40" stroke-width="2.5" stroke-linecap="round"/>
-          <text x="350" y="36" text-anchor="middle" fill="#343a40" font-size="8" font-family="Georgia,serif" style="font-weight:bold;font-size:0.61rem;">REED SWITCH</text>
-          <text x="350" y="101" text-anchor="middle" fill="#343a40" font-size="7.5" font-family="Georgia,serif" style="font-weight:bold;font-size:0.55rem;">X0 (CLOSED)</text>
+          <line x1="300" y1="65" x2="340" y2="65" stroke="#173681" stroke-width="2.5" stroke-linecap="round"/>
+          <line x1="340" y1="65" x2="400" y2="65" stroke="#173681" stroke-width="2.5" stroke-linecap="round"/>
+          <text x="350" y="36" text-anchor="middle" fill="#173681" font-size="8" font-family="Georgia,serif" style="font-weight:bold;font-size:0.61rem;">REED SWITCH</text>
+          <text x="350" y="101" text-anchor="middle" fill="#173681" font-size="7.5" font-family="Georgia,serif" style="font-weight:bold;font-size:0.55rem;">X0 (CLOSED)</text>
         </g>
 
         <!-- Magnetic field arcs (decorative, visible when active) -->
@@ -368,27 +367,28 @@
         <ellipse cx="350" cy="65" rx="84" ry="38" fill="none" stroke="transparent" stroke-width=".8" stroke-dasharray="5,4" id="mf2" style="transition:stroke .5s"/>
 
         <!-- INDICATOR circle -->
-        <circle cx="624" cy="65" r="38" fill="white" stroke="#dee2e6" stroke-width="2" id="iSVG"/>
-        <circle cx="624" cy="65" r="31" fill="#f8f9fa" stroke="#e9ecef" stroke-width="1" id="iInner"/>
+        <circle cx="624" cy="65" r="38" fill="white" stroke="#173681" stroke-width="2" id="iSVG"/>
+        <circle cx="624" cy="65" r="31" fill="#ffffff" stroke="#ffffff" stroke-width="1" id="iInner"/>
         <text x="624" y="72" text-anchor="middle" font-size="22" id="bulbSVG" opacity=".28">💡</text>
-        <text x="624" y="96" text-anchor="middle" fill="#6c757d" font-size="7" font-family="Georgia,serif" style="font-weight:bold;font-size:0.51rem;">INDICATOR</text>
-        <circle cx="586" cy="52" r="4" fill="#343a40"/>
-        <text x="573" y="48" text-anchor="middle" fill="#343a40" font-size="6" font-family="Georgia,serif" style="font-weight:bold;font-size:0.61rem;">24V</text>
-        <circle cx="586" cy="78" r="4" fill="#e9ecef" stroke="#6c757d" stroke-width="1"/>
-        <text x="573" y="84" text-anchor="middle" fill="#6c757d" font-size="6" font-family="Georgia,serif" style="font-weight:bold;font-size:0.61rem;">GND</text>
+        <text x="624" y="96" text-anchor="middle" fill="#173681" font-size="7" font-family="Georgia,serif" style="font-weight:bold;font-size:0.51rem;">INDICATOR</text>
+        <circle cx="586" cy="52" r="4" fill="#dc3545"/>
+        <text x="573" y="48" text-anchor="middle" fill="#173681" font-size="6" font-family="Georgia,serif" style="font-weight:bold;font-size:0.61rem;">24V</text>
+        <circle cx="586" cy="78" r="4" fill="#ffffff" stroke="#000000" stroke-width="1.5"/>
+        <text x="573" y="84" text-anchor="middle" fill="#173681" font-size="6" font-family="Georgia,serif" style="font-weight:bold;font-size:0.61rem;">GND</text>
 
         <!-- WIRES -->
-        <!-- 24V from PSU → reed input lead -->
-        <polyline id="wH3" points="37,103 37,28 285,28 285,65" fill="none" stroke="#343a40" stroke-width="2.5" stroke-linecap="round"/>
+        <!-- 24V: ONE straight wire from the PSU 24V terminal (right edge) → reed input lead.
+             (wH above is that wire; the old 90° up-and-over route was a duplicate 24V connection.) -->
+        <circle cx="90" cy="65" r="5" fill="#dc3545"/>
         <!-- Signal wire (reed OUT → indicator) — INACTIVE color -->
-        <polyline id="wSig" points="415,65 535,65 535,30 586,30 586,52" fill="none" stroke="#dee2e6" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="7,3"/>
+        <polyline id="wSig" points="415,65 535,65 535,30 586,30 586,52" fill="none" stroke="#dc3545" stroke-width="2.5" stroke-linecap="round" stroke-dasharray="7,3"/>
         <!-- GND wire (indicator GND → PSU GND) -->
-        <polyline id="wGnd" points="586,78 586,105 67,105 67,103" fill="none" stroke="#343a40" stroke-width="2.5" stroke-linecap="round"/>
+        <polyline id="wGnd" points="586,78 586,112 72,112" fill="none" stroke="#000000" stroke-width="2.5" stroke-linecap="round"/>
 
-        <!-- 24V label on top bus -->
-        <text x="170" y="22" text-anchor="middle" fill="#343a40" font-size="7" font-family="Georgia,serif" style="font-weight:bold;font-size:0.61rem;">24V</text>
+        <!-- 24V label on the straight wire -->
+        <text x="170" y="56" text-anchor="middle" fill="#173681" font-size="7" font-family="Georgia,serif" style="font-weight:bold;font-size:0.61rem;">24V</text>
         <!-- GND label on bottom bus -->
-        <text x="300" y="120" text-anchor="middle" fill="#6c757d" font-size="7" font-family="Georgia,serif" style="font-weight:bold;font-size:0.61rem;">GND</text>
+        <text x="300" y="128" text-anchor="middle" fill="#173681" font-size="7" font-family="Georgia,serif" style="font-weight:bold;font-size:0.61rem;">GND</text>
       </svg>
     </div>
 
@@ -644,22 +644,22 @@
     document.getElementById('switchStateTxt').style.color = on ? 'var(--gold)' : 'var(--accent-color)';
 
     // Wiring diagram SVG — signal wire
-    document.getElementById('wSig').setAttribute('stroke', on ? '#d97706' : '#dee2e6');
+    document.getElementById('wSig').setAttribute('stroke', '#dc3545');
     document.getElementById('wSig').setAttribute('stroke-dasharray', on ? '0' : '7,3');
 
     // Indicator bulb in wiring diagram
-    document.getElementById('iSVG').setAttribute('stroke', on ? '#d97706' : '#dee2e6');
-    document.getElementById('iInner').setAttribute('fill', on ? '#fdf3e7' : '#f8f9fa');
+    document.getElementById('iSVG').setAttribute('stroke', on ? '#e1ac3d' : '#173681');
+    document.getElementById('iInner').setAttribute('fill', '#ffffff');
     document.getElementById('bulbSVG').setAttribute('opacity', on ? '1' : '.28');
 
     // Reed switch symbol in wiring diagram
-    document.getElementById('reedGlassWire').setAttribute('stroke', on ? '#d97706' : '#dee2e6');
+    document.getElementById('reedGlassWire').setAttribute('stroke', on ? '#e1ac3d' : '#173681');
     document.getElementById('reedOpen').style.opacity   = on ? '0' : '1';
     document.getElementById('reedClosed').style.opacity = on ? '1' : '0';
 
     // Magnetic field arcs in wiring diagram
-    document.getElementById('mf1').setAttribute('stroke', on ? 'rgba(52,152,219,0.25)' : 'transparent');
-    document.getElementById('mf2').setAttribute('stroke', on ? 'rgba(52,152,219,0.12)' : 'transparent');
+    document.getElementById('mf1').setAttribute('stroke', on ? '#e1ac3d' : 'transparent');
+    document.getElementById('mf2').setAttribute('stroke', on ? '#e1ac3d' : 'transparent');
 
     // Track reed contacts
     document.getElementById('cLeft').className  = 'contact-left '  + (on ? 'closed' : 'open');
