@@ -185,6 +185,7 @@
   width: 100%;
   gap: 50px;
   display: flex;
+  flex: none;
 }
 
 .circuit-container{
@@ -339,8 +340,11 @@
   box-shadow: var(--card-shadow);
   /* padding: 15px; */
   width: 1000px;
-  height: 100%;
-
+  /* Fill the space left above the bottom row. min-height:0 + overflow:hidden stop the
+     chart canvases from pushing the section taller every time the window is resized. */
+  flex: 1 1 0;
+  min-height: 0;
+  overflow: hidden;
 }
 
 #graphSwitch{
@@ -387,6 +391,10 @@
   width: 33%;
   height: 100%;
   flex: 2;
+  position: relative;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
 }
 
 #load-section{
