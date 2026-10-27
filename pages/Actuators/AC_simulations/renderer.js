@@ -377,6 +377,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const degreesPerFrame = currentRotationSpeed * degreesPerRPM / 60;
     tireRotation += degreesPerFrame;
     tire.style.transform = `rotate(${tireRotation}deg)`;
+    if (window.updateShaft) window.updateShaft(tireRotation, currentRotationSpeed);
 
     if (currentRotationSpeed !== 0 || shouldAnimate) {
       animationFrameId = requestAnimationFrame(animateTire);

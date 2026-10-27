@@ -843,7 +843,35 @@
                     </div>
 
                     <div class="right-col" id="motor-box">
-                        <img src="img/tire.png" id="tire" class="tire-img" />
+                        <div style="width:265px;height:265px;">
+                            <svg id="motorArt" viewBox="0 0 240 240" style="width:265px;height:265px;display:block;" xmlns="http://www.w3.org/2000/svg" aria-label="Three phase induction motor (front view)">
+                              <defs>
+                                <linearGradient id="mfBody" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#0f2a78"/><stop offset=".5" stop-color="#2a58c4"/><stop offset="1" stop-color="#0f2a78"/></linearGradient>
+                                <radialGradient id="mfBell" cx="40%" cy="35%" r="80%"><stop offset="0" stop-color="#5a86e8"/><stop offset=".6" stop-color="#2150bd"/><stop offset="1" stop-color="#0f2a78"/></radialGradient>
+                                <radialGradient id="mfShaft" cx="38%" cy="35%" r="75%"><stop offset="0" stop-color="#ff8a77"/><stop offset=".55" stop-color="#e83a2a"/><stop offset="1" stop-color="#9c1a12"/></radialGradient>
+                              </defs>
+                              <ellipse cx="120" cy="228" rx="100" ry="6" fill="#000" opacity=".12"/>
+                              <rect x="24" y="206" width="192" height="20" rx="4" fill="#0c2266" stroke="#071647" stroke-width="1.5"/>
+                              <rect x="32" y="212" width="16" height="7" rx="3" fill="#071647"/><rect x="192" y="212" width="16" height="7" rx="3" fill="#071647"/>
+                              <rect x="88" y="26" width="64" height="30" rx="4" fill="#2f5fc9" stroke="#0a1b52" stroke-width="2"/>
+                              <rect x="110" y="12" width="20" height="16" rx="2" fill="#10131f" stroke="#0a1b52" stroke-width="1.5"/>
+                              <rect x="34" y="50" width="172" height="160" rx="22" fill="url(#mfBody)" stroke="#0a1b52" stroke-width="2.5"/>
+                              <g stroke="#0a1b52" stroke-width="2" opacity=".7"><line x1="40" y1="64" x2="40" y2="196" /><line x1="45" y1="64" x2="45" y2="196" /><line x1="50" y1="64" x2="50" y2="196" /><line x1="190" y1="64" x2="190" y2="196" /><line x1="195" y1="64" x2="195" y2="196" /><line x1="200" y1="64" x2="200" y2="196" /><line x1="52" y1="52" x2="52" y2="62" /><line x1="60" y1="52" x2="60" y2="62" /><line x1="68" y1="52" x2="68" y2="62" /><line x1="76" y1="52" x2="76" y2="62" /><line x1="84" y1="52" x2="84" y2="62" /><line x1="92" y1="52" x2="92" y2="62" /><line x1="100" y1="52" x2="100" y2="62" /><line x1="108" y1="52" x2="108" y2="62" /><line x1="116" y1="52" x2="116" y2="62" /><line x1="124" y1="52" x2="124" y2="62" /><line x1="132" y1="52" x2="132" y2="62" /><line x1="140" y1="52" x2="140" y2="62" /><line x1="148" y1="52" x2="148" y2="62" /><line x1="156" y1="52" x2="156" y2="62" /><line x1="164" y1="52" x2="164" y2="62" /><line x1="172" y1="52" x2="172" y2="62" /><line x1="180" y1="52" x2="180" y2="62" /><line x1="188" y1="52" x2="188" y2="62" /></g>
+                              <circle cx="120" cy="130" r="74" fill="url(#mfBell)" stroke="#0a1b52" stroke-width="3"/>
+                              <circle cx="120" cy="130" r="64" fill="none" stroke="#8fb0f2" stroke-width="1.5" opacity=".6"/>
+                              <circle cx="120" cy="130" r="42" fill="#2a58c4" stroke="#0a1b52" stroke-width="2"/>
+                              <circle cx="120" cy="130" r="34" fill="none" stroke="#0a1b52" stroke-width="1.5" opacity=".6"/>
+                              <circle cx="170.8" cy="151.0" r="4.2" fill="#c9d2e3" stroke="#0a1b52" stroke-width="1.5"/><circle cx="141.0" cy="180.8" r="4.2" fill="#c9d2e3" stroke="#0a1b52" stroke-width="1.5"/><circle cx="99.0" cy="180.8" r="4.2" fill="#c9d2e3" stroke="#0a1b52" stroke-width="1.5"/><circle cx="69.2" cy="151.0" r="4.2" fill="#c9d2e3" stroke="#0a1b52" stroke-width="1.5"/><circle cx="69.2" cy="109.0" r="4.2" fill="#c9d2e3" stroke="#0a1b52" stroke-width="1.5"/><circle cx="99.0" cy="79.2" r="4.2" fill="#c9d2e3" stroke="#0a1b52" stroke-width="1.5"/><circle cx="141.0" cy="79.2" r="4.2" fill="#c9d2e3" stroke="#0a1b52" stroke-width="1.5"/><circle cx="170.8" cy="109.0" r="4.2" fill="#c9d2e3" stroke="#0a1b52" stroke-width="1.5"/>
+                              <circle cx="120" cy="130" r="27" fill="#1a3f9e" stroke="#0a1b52" stroke-width="2"/>
+                              <g id="tire" style="transform-box: fill-box; transform-origin: center;">
+                                <circle cx="120" cy="130" r="22" fill="url(#mfShaft)" stroke="#7a130d" stroke-width="2"/>
+                                <circle cx="120" cy="130" r="15" fill="none" stroke="#7a130d" stroke-width="1" opacity=".55"/>
+                                <rect x="116.5" y="110" width="7" height="11" rx="1.5" fill="#5b0c08" stroke="#2e0604" stroke-width="1"/>
+                                <line x1="120" y1="130" x2="120" y2="121" stroke="#ffb3a8" stroke-width="2" stroke-linecap="round"/>
+                                <circle cx="120" cy="130" r="3.5" fill="#3b0906"/>
+                              </g>
+                            </svg>
+                        </div>
                         <div class="rpm-container">
                             <p id="rpm">0 RPM</p>
                         </div>
@@ -852,6 +880,20 @@
                 </div>
             </div>
         </div>
+        <script>
+            /* At high RPM the shaft would strobe (frame aliasing), so show smooth fast rotation instead */
+            (function () {
+                var phase = 0;
+                window.updateShaft = function (angle, rpm) {
+                    var el = document.getElementById('tire');
+                    if (!el) return;
+                    if (Math.abs(rpm) > 300) {
+                        phase += (rpm < 0 ? -1 : 1) * 25;
+                        el.style.transform = 'rotate(' + phase + 'deg)';
+                    }
+                };
+            })();
+        </script>
         <script src="renderer.js"></script>
         <link rel="stylesheet" href="https://unpkg.com/webtour@1.1.0/dist/webtour.min.css" />
         <script src="https://unpkg.com/webtour@1.1.0/dist/webtour.min.js"></script>
