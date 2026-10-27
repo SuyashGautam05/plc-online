@@ -2,10 +2,26 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
   <title>NVIS7024</title>
   <!-- <link rel="stylesheet" href="../../../styles.css"> -->
   <link rel="stylesheet" href="styles.css">
+  <script>
+    /* Block browser zoom (Ctrl +, Ctrl -, Ctrl 0, Ctrl + mouse wheel, pinch) on this page */
+    (function () {
+      window.addEventListener('keydown', function (e) {
+        if ((e.ctrlKey || e.metaKey) && ['+', '=', '-', '_', '0', 'Add', 'Subtract'].indexOf(e.key) !== -1) {
+          e.preventDefault();
+        }
+      }, { passive: false, capture: true });
+      window.addEventListener('wheel', function (e) {
+        if (e.ctrlKey) e.preventDefault();
+      }, { passive: false, capture: true });
+      ['gesturestart', 'gesturechange', 'gestureend'].forEach(function (n) {
+        document.addEventListener(n, function (e) { e.preventDefault(); });
+      });
+    })();
+  </script>
   <script src="./shared/js/chart.umd.js"></script>
   <script src="./shared/js/chartjs-plugin-annotation.js"></script>
           <style>

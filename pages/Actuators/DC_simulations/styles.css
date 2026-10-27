@@ -186,6 +186,7 @@
   gap: 50px;
   display: flex;
   flex: none;
+  height: 334px;
 }
 
 .circuit-container{
@@ -240,8 +241,13 @@
 }
 
 .tire-img{
-  width: 85%;
-  margin: 0 0 10px 0;
+  /* shrink to whatever space the box has left, so the RPM box below is never pushed out */
+  width: auto;
+  max-width: 85%;
+  flex: 1 1 0;
+  min-height: 0;
+  object-fit: contain;
+  margin: 8px 0 0 0;
 }
 
 #motor-box {
@@ -254,8 +260,10 @@
   border: 2px solid var(--gold);
   border-radius: 16px;
   box-shadow: var(--card-shadow);
-  justify-content: space-around;
+  justify-content: space-between;
   align-items: center;
+  padding-bottom: 12px;
+  box-sizing: border-box;
 }
 
 .motorLabel {
@@ -266,10 +274,13 @@
 }
 
 .rpm-container{
+  flex: none;
+  white-space: nowrap;
+  min-width: 80px;
+  width: auto;
   border: 2px solid var(--gold);
   padding: 10px;
   border-radius: 8px;
-  width: 80px;
   text-align: center;
   background: #fff;
   color: var(--navy);
