@@ -36,7 +36,7 @@ html {
   overflow: hidden;
   background: #eef1f7;
 }
-/* Fixed-size "design stage": the whole page is laid out at 1366 x 768 CSS px
+/* Design stage: laid out at 1366 px wide
    and then scaled to the window by the fit script below. This keeps every
    element (and the SVG wires) in exactly the same place on any screen size. */
 body {
@@ -45,8 +45,8 @@ body {
   position: absolute;
   top: 0;
   left: 0;
-  width: 1366px;
-  height: 768px;
+  width: 100vw;
+  height: 100vh;
   font-family: 'Poppins', sans-serif;
   display: flex;
   flex-direction: column;
@@ -348,24 +348,22 @@ header {
     </div>
   </div>
   <script>
-    /* Scale the fixed 1366 x 768 design stage to fit the window (centred sideways, top aligned).
-       The layout inside the stage never changes, so nothing moves when the
-       window is resized - it only gets bigger or smaller. */
+    /* The page is designed at 1366 px wide and scaled by the window, so every
+       element keeps its position relative to the others at any window size.
+       The stage always fills the whole window: scaled by width, and any extra
+       height is given to the charts (see #chart-section in styles.css).
+       Minimum design height is 640 px so nothing is ever cramped. */
     (function () {
-      var BW = 1366, BH = 768;
+      var BW = 1366, BH = 640;
       function fit() {
         var vw = window.innerWidth, vh = window.innerHeight;
         var s = Math.min(vw / BW, vh / BH);
         var b = document.body;
-        b.style.width = BW + 'px';
-        b.style.height = BH + 'px';
-        b.style.left = Math.max(0, (vw - BW * s) / 2) + 'px';
+        b.style.width = (vw / s) + 'px';
+        b.style.height = (vh / s) + 'px';
+        b.style.left = '0px';
         b.style.top = '0px';
         b.style.transform = 'scale(' + s + ')';
-        // keep the navy header band continuous across the full window width
-        var hh = document.querySelector('header').offsetHeight * s;
-        document.documentElement.style.background =
-          'linear-gradient(#173681 0, #173681 ' + hh + 'px, #eef1f7 ' + hh + 'px)';
         window.__simScale = s;
       }
       fit();

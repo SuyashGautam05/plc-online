@@ -312,7 +312,9 @@
   flex-direction: column;
   height: 100%;
   margin: 0 10px 10px 0;
-  width: 100%;
+  width: auto;
+  flex: 1 1 0;
+  min-width: 0;
   gap: 15px;
   justify-content: space-between;
   align-items: end;
@@ -339,7 +341,7 @@
   border-radius: 16px;
   box-shadow: var(--card-shadow);
   /* padding: 15px; */
-  width: 1000px;
+  width: 100%;
   /* Fill the space left above the bottom row. min-height:0 + overflow:hidden stop the
      chart canvases from pushing the section taller every time the window is resized. */
   flex: 1 1 0;
