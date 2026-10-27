@@ -2487,17 +2487,20 @@
         document.getElementById("alarmCritical").className =
           "alarm-panel critical" + (currentPressure >= spCrit ? " show" : "");
 
-        // Status dot
-        if (currentPressure >= spCrit) {
-          document.getElementById("sysStatusDot").style.background = "#dc3545";
-          document.getElementById("sysStatusText").textContent = "CRITICAL";
-        } else if (currentPressure >= spHigh) {
-          document.getElementById("sysStatusDot").style.background = "#e1ac3d";
-          document.getElementById("sysStatusText").textContent = "Alarm Active";
-        } else {
-          document.getElementById("sysStatusDot").style.background = "#28a745";
-          document.getElementById("sysStatusText").textContent =
-            "System Online";
+        // Status dot (header badge is commented out, so guard it)
+        const dotEl = document.getElementById("sysStatusDot");
+        const dotTxt = document.getElementById("sysStatusText");
+        if (dotEl && dotTxt) {
+          if (currentPressure >= spCrit) {
+            dotEl.style.background = "#dc3545";
+            dotTxt.textContent = "CRITICAL";
+          } else if (currentPressure >= spHigh) {
+            dotEl.style.background = "#e1ac3d";
+            dotTxt.textContent = "Alarm Active";
+          } else {
+            dotEl.style.background = "#28a745";
+            dotTxt.textContent = "System Online";
+          }
         }
 
         // Air fill animation
