@@ -519,6 +519,9 @@
 // });
 
 // window.addEventListener('resize', drawLines);
+// Images/fonts change box sizes after first paint, so redraw once everything has loaded.
+window.addEventListener('load', drawLines);
+if (document.fonts && document.fonts.ready) document.fonts.ready.then(drawLines);
 
 
 let comparatorData = [];
@@ -545,16 +548,28 @@ let directionMultiplier = 1;
 let smoothedRpm = 0;
 
 function drawLines() {
-  let powerButton = document.getElementById('powerButton').getBoundingClientRect();
-  let smps =  document.getElementById('speedControl').getBoundingClientRect();
+  // The page is a scaled design stage, so read positions in the body's own
+  // (unscaled) coordinate space instead of raw viewport pixels.
+  const bodyRect = document.body.getBoundingClientRect();
+  const sc = bodyRect.width / document.body.offsetWidth || 1;
+  const local = (el) => {
+    const r = document.getElementById(el).getBoundingClientRect();
+    return {
+      left: (r.left - bodyRect.left) / sc,
+      right: (r.right - bodyRect.left) / sc,
+      top: (r.top - bodyRect.top) / sc
+    };
+  };
+  let powerButton = local('powerButton');
+  let smps = local('speedControl');
 
-  var powerXL = powerButton.left + window.scrollX;
-  var powerY = powerButton.top + window.scrollY;
-  var powerXR = powerButton.right + window.scrollX;
+  var powerXL = powerButton.left;
+  var powerY = powerButton.top;
+  var powerXR = powerButton.right;
 
-  var smpsPositionXL = smps.left + window.scrollX + 50;
-  var smpsPositionY = smps.top + window.scrollY + 100;
-  var smpsPositionXR = smps.right + window.scrollX - 50;
+  var smpsPositionXL = smps.left + 50;
+  var smpsPositionY = smps.top + 100;
+  var smpsPositionXR = smps.right - 50;
 
   document.getElementById('neutralCircle').setAttribute('cx', powerXL);
   document.getElementById('neutralCircle').setAttribute('cy', powerY - 30);
@@ -1050,3 +1065,6 @@ otherContainers.forEach(container => {
 });
 
 window.addEventListener('resize', drawLines);
+// Images/fonts change box sizes after first paint, so redraw once everything has loaded.
+window.addEventListener('load', drawLines);
+if (document.fonts && document.fonts.ready) document.fonts.ready.then(drawLines);

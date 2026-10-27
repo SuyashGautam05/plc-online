@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NVIS7024</title>
+  <title>PLC Software</title>
   <!-- <link rel="stylesheet" href="../../../styles.css"> -->
   <link rel="stylesheet" href="styles.css">
   <script src="./shared/js/chart.umd.js"></script>
@@ -29,22 +29,30 @@
   }
 }
 
-html, body {
+html {
   margin: 0;
   padding: 0;
   height: 100%;
   overflow: hidden;
+  background: #eef1f7;
 }
+/* Fixed-size "design stage": the whole page is laid out at 1366 x 768 CSS px
+   and then scaled to the window by the fit script below. This keeps every
+   element (and the SVG wires) in exactly the same place on any screen size. */
 body {
-  /* font-family: Georgia, 'Times New Roman', Times, serif; */
+  margin: 0;
+  padding: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 1366px;
+  height: 768px;
   font-family: 'Poppins', sans-serif;
   display: flex;
   flex-direction: column;
-  height: 100vh; /* Ensure full height */
   overflow: hidden;
   user-select: none;
-  transform: scale(calc(100vw / 1920));
-  transform-origin: top left;
+  transform-origin: 0 0;
   box-sizing: border-box;
 }
 header {
@@ -87,7 +95,7 @@ header {
   text-align: center;
   /* margin-left: 20px; Space between border and title */
   margin-left: -180px; /* Space between border and title */
-  font-size: 1.5vw;
+  font-size: 20px;
 }
 
 #header-company {
@@ -339,6 +347,31 @@ header {
       </div>
     </div>
   </div>
+  <script>
+    /* Scale the fixed 1366 x 768 design stage to fit the window (centred sideways, top aligned).
+       The layout inside the stage never changes, so nothing moves when the
+       window is resized - it only gets bigger or smaller. */
+    (function () {
+      var BW = 1366, BH = 768;
+      function fit() {
+        var vw = window.innerWidth, vh = window.innerHeight;
+        var s = Math.min(vw / BW, vh / BH);
+        var b = document.body;
+        b.style.width = BW + 'px';
+        b.style.height = BH + 'px';
+        b.style.left = Math.max(0, (vw - BW * s) / 2) + 'px';
+        b.style.top = '0px';
+        b.style.transform = 'scale(' + s + ')';
+        // keep the navy header band continuous across the full window width
+        var hh = document.querySelector('header').offsetHeight * s;
+        document.documentElement.style.background =
+          'linear-gradient(#173681 0, #173681 ' + hh + 'px, #eef1f7 ' + hh + 'px)';
+        window.__simScale = s;
+      }
+      fit();
+      window.addEventListener('resize', fit);
+    })();
+  </script>
   <script src="renderer.js"></script>
   <link rel="stylesheet" href="https://unpkg.com/webtour@1.1.0/dist/webtour.min.css">
   <script src="https://unpkg.com/webtour@1.1.0/dist/webtour.min.js"></script>
