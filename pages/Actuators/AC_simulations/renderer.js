@@ -77,10 +77,10 @@ function drawLines() {
   document.getElementById('liveCircle2').setAttribute('cx', smpsPositionXL + (smpsPositionXR - smpsPositionXL)/2);
   document.getElementById('liveCircle2').setAttribute('cy', powerButtonY - 99);
   
-  document.getElementById('main-smpsN').setAttribute('x', smpsPositionXL - 5);
+  document.getElementById('main-smpsN').setAttribute('x', smpsPositionXR - 5);
   document.getElementById('main-smpsN').setAttribute('y', powerButtonY - 112);
 
-  document.getElementById('main-smpsL').setAttribute('x', smpsPositionXR - 5);
+  document.getElementById('main-smpsL').setAttribute('x', smpsPositionXL - 5);
   document.getElementById('main-smpsL').setAttribute('y', powerButtonY - 112);
 
   document.getElementById('main-smpsT').setAttribute('x', smpsPositionXL + (smpsPositionXR - smpsPositionXL)/2 - 4);
