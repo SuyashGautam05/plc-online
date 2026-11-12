@@ -436,6 +436,17 @@ header.site-header h1 {
   font-weight: 500;
   text-align: center;
 }
+.block-tag.coil-tag {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--primary);
+  letter-spacing: 0.04em;
+  margin-bottom: 1px;
+}
+.block.output-block .block-symbol {
+  font-size: 13px;
+  letter-spacing: 0.15em;
+}
 .block-meta {
   font-family: 'JetBrains Mono', monospace;
   font-size: 9px;
@@ -542,7 +553,27 @@ header.site-header h1 {
   flex: 1;
   min-width: 60px;
   height: 3px;
-  background: repeating-linear-gradient(90deg, var(--border-light) 0 6px, transparent 6px 12px);
+  background: var(--wire-off);
+  border-radius: 1px;
+  position: relative;
+}
+.branch-path-empty::after {
+  content: 'short';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 9px;
+  font-family: 'JetBrains Mono', monospace;
+  color: var(--muted);
+  background: var(--panel-light);
+  padding: 0 4px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+.branch-group.energized .branch-path-empty {
+  background: var(--wire-on);
+  box-shadow: 0 0 6px var(--accent-glow);
 }
 .branch-delete {
   position: absolute;
@@ -848,7 +879,7 @@ header.site-header h1 {
   <!-- Scientech Header -->
   <header class="site-header">
     <div class="logo-container">
-        <img src="../../assets/Scientech logo-2.png" alt="Scientech Logo">
+        <img src="../../assets/Scientech logo-2.png" alt="Scientech Logo" onerror="this.style.display='none'">
         <h1>PLC Ladder Logic Simulator</h1>
     </div>
     <div class="status-led">
@@ -1018,7 +1049,7 @@ header.site-header h1 {
         <div id="timersList"><div class="empty-io">None used</div></div>
       </div>
       <div class="io-group">
-        <div class="section-title">Registers (N:)</div>
+        <div class="section-title">Registers (D:)</div>
         <div id="numbersList"><div class="empty-io">None used</div></div>
       </div>
     </div>
@@ -1029,7 +1060,7 @@ header.site-header h1 {
     <span><i class="fas fa-list"></i>Rungs: <span id="rungCount">0</span></span>
     <span><i class="fas fa-cube"></i>Blocks: <span id="blockCount">0</span></span>
     <span><i class="fas fa-bolt"></i>Power: <span id="powerStatus">OFF</span></span>
-    <span style="margin-left:auto">PLC Ladder Logic Simulator v2.0</span>
+    <span style="margin-left:auto">PLC Ladder Logic Simulator v2.3</span>
   </div>
 </div>
 
@@ -1052,14 +1083,14 @@ header.site-header h1 {
     <div class="modal-scroll info-box">
       <p><b>Tag prefixes:</b></p>
       <p>I: &rarr; Physical Input &nbsp;&middot;&nbsp; O: &rarr; Physical Output</p>
-      <p>B: &rarr; Internal Bit (memory relay) &nbsp;&middot;&nbsp; N: &rarr; Numeric Register</p>
+      <p>B: &rarr; Internal Bit (memory relay) &nbsp;&middot;&nbsp; D: &rarr; Data Register</p>
       <p>T: &rarr; Timer &nbsp;&middot;&nbsp; C: &rarr; Counter</p>
       <hr class="divider">
       <p><b>Rung layout (fixed):</b></p>
       <p>Contacts always sit on the <b>left</b>, Functions (Timer/Counter/Math/CMP/Move/Scale) sit in the <b>center</b>, Coils always sit on the <b>right</b>. New elements are placed into the correct zone automatically.</p>
       <hr class="divider">
       <p><b>Series &amp; parallel wiring:</b></p>
-      <p>Contacts can no longer be combined with AND/OR gate blocks. Instead use the <b>Connections</b> tools: <b>Vertical Line</b> creates a new parallel branch (OR); <b>Horizontal Line</b> adds another parallel path to the nearest branch. Add NO/NC contacts inside each path to build series (AND) &times; parallel (OR) logic.</p>
+      <p>Use the <b>Connections</b> tools: <b>Vertical Line</b> creates a new parallel branch (OR); <b>Horizontal Line</b> adds another parallel path to the nearest branch. Add NO/NC contacts inside each path to build series (AND) &times; parallel (OR) logic. An <b>empty parallel path acts as a short</b> (always conducts) — same as a continuous wire in a real ladder diagram.</p>
       <hr class="divider">
       <p><b>Placing elements (drag &amp; drop only):</b></p>
       <p>1. Drag an element from the palette</p>
@@ -1067,11 +1098,23 @@ header.site-header h1 {
       <p>3. Timers, Counters, Compare, Math, Move &amp; Scale open their settings immediately so you can set the value</p>
       <p>4. Click any placed block again to edit it later</p>
       <hr class="divider">
+      <p><b>Coils &amp; internal bits:</b></p>
+      <p>Ordinary <b>COIL</b>, <b>SET</b> and <b>RESET</b> can drive <b>O:</b> (physical output) or <b>B:</b> (internal bit / memory relay). Use B: tags for latches and intermediate logic without consuming a physical output.</p>
+      <hr class="divider">
       <p><b>Run mode:</b></p>
       <p>Once you press RUN the program structure is locked &mdash; you can still toggle switches to test the logic, but you must press STOP before adding, deleting or editing elements.</p>
       <hr class="divider">
       <p><b>Set / Reset:</b></p>
       <p>RESET always takes priority over SET on any given scan, so a live RESET input reliably turns an output off even if a SET input is also active &mdash; this avoids the old ambiguous latch behaviour.</p>
+      <hr class="divider">
+      <p><b>Counters:</b></p>
+      <p>CTU / CTD / CTUD use rising-edge counting. The DONE bit is <b>level-based</b> (CTU/CTUD: ACC ≥ PRE; CTD: ACC ≤ 0) and clears automatically when the condition is no longer true (e.g. after a RESET).</p>
+      <hr class="divider">
+      <p><b>Timers &amp; counters as contacts:</b></p>
+      <p>For teaching simplicity, a Timer or Counter block on the rung passes power only when its DONE bit is true (it behaves like a contact). In industrial PLCs the instruction usually has a separate enable input and a discrete .DN bit.</p>
+      <hr class="divider">
+      <p><b>Mathematics / Move / Scale:</b></p>
+      <p>These instructions do <b>not</b> need a coil after them. They write the result into a <b>D:</b> data register and show the live value on the block itself (e.g. <code>D:1 + 5 → D:2 = 9</code>). You only need a coil if you also want a physical output to turn on when the math rung is powered.</p>
     </div>
     <div class="modal-actions">
       <button class="btn primary" onclick="closeHelp()"><i class="fas fa-check"></i> Got it</button>
@@ -1114,7 +1157,7 @@ const state = {
   inputs: {},     // I: tag -> bool
   outputs: {},    // O: tag -> bool
   bits: {},       // B: tag -> bool
-  numbers: {},    // N: tag -> number
+  numbers: {},    // D: tag -> number
   timers: {},     // T: tag -> {acc,pre,done,running,prevPower,out}
   counters: {},   // C: tag -> {acc,pre,done,kind,prevPower,prevDownPower}
   running: false,
@@ -1146,7 +1189,7 @@ function getTagValue(tag) {
   if (p === 'I') return !!state.inputs[tag];
   if (p === 'O') return !!state.outputs[tag];
   if (p === 'B') return !!state.bits[tag];
-  if (p === 'N') return !!state.numbers[tag];
+  if (p === 'D') return !!state.numbers[tag];
   if (p === 'T') { const t = state.timers[tag]; return t ? t.done : false; }
   if (p === 'C') { const c = state.counters[tag]; return c ? c.done : false; }
   const n = parseFloat(tag);
@@ -1158,29 +1201,30 @@ function getTagNum(tag) {
   if (p === 'I') return state.inputs[tag] ? 1 : 0;
   if (p === 'O') return state.outputs[tag] ? 1 : 0;
   if (p === 'B') return state.bits[tag] ? 1 : 0;
-  if (p === 'N') return state.numbers[tag] || 0;
+  if (p === 'D') return state.numbers[tag] || 0;
   if (p === 'T') { const t = state.timers[tag]; return t ? t.acc : 0; }
   if (p === 'C') { const c = state.counters[tag]; return c ? c.acc : 0; }
   const n = parseFloat(tag);
   return isNaN(n) ? 0 : n;
 }
 function setNumberValue(tag, val) {
-  if (!tag || tagPrefix(tag) !== 'N') return;
+  if (!tag || tagPrefix(tag) !== 'D') return;
   state.numbers[tag] = Math.round((val || 0) * 1000) / 1000;
 }
 
-function ensureTagExists(tag, btype) {
+function ensureTagExists(tag, btype, preHint) {
   if (!tag || !isTagLike(tag)) return;
   const p = tagPrefix(tag);
+  const pre = (typeof preHint === 'number' && preHint > 0) ? preHint : 5;
   if (p === 'I' && !(tag in state.inputs)) state.inputs[tag] = false;
   else if (p === 'O' && !(tag in state.outputs)) state.outputs[tag] = false;
   else if (p === 'B' && !(tag in state.bits)) state.bits[tag] = false;
-  else if (p === 'N' && !(tag in state.numbers)) state.numbers[tag] = 0;
+  else if (p === 'D' && !(tag in state.numbers)) state.numbers[tag] = 0;
   else if (p === 'T' && !(tag in state.timers)) {
-    state.timers[tag] = { acc: 0, pre: 5, done: false, running: false, prevPower: false, out: false };
+    state.timers[tag] = { acc: 0, pre: pre, done: false, running: false, prevPower: false, out: false };
   } else if (p === 'C' && !(tag in state.counters)) {
     const kind = btype === 'CTD' ? 'CTD' : (btype === 'CTUD' ? 'CTUD' : 'CTU');
-    state.counters[tag] = { acc: kind === 'CTD' ? 5 : 0, pre: 5, done: false, kind, prevPower: false, prevDownPower: false };
+    state.counters[tag] = { acc: kind === 'CTD' ? pre : 0, pre: pre, done: false, kind, prevPower: false, prevDownPower: false };
   }
 }
 
@@ -1200,7 +1244,15 @@ function tagFields(block) {
   }
 }
 function ensureTagsForBlock(block) {
-  tagFields(block).forEach(v => { if (isTagLike(v)) ensureTagExists(v, block.type); });
+  const preHint = (typeof block.pre === 'number') ? block.pre : undefined;
+  tagFields(block).forEach(v => { if (isTagLike(v)) ensureTagExists(v, block.type, preHint); });
+  // Keep runtime PRE in sync with the block's configured preset
+  if (['TON', 'TOF', 'RTO'].includes(block.type) && block.tag && state.timers[block.tag]) {
+    state.timers[block.tag].pre = block.pre;
+  }
+  if (['CTU', 'CTD', 'CTUD'].includes(block.type) && block.tag && state.counters[block.tag]) {
+    state.counters[block.tag].pre = block.pre;
+  }
 }
 function forEachAllBlocks(cb) {
   state.rungs.forEach(r => r.items.forEach(it => {
@@ -1270,11 +1322,11 @@ function newBlock(type) {
     case 'CMP':
       return { itemType: 'block', type, tag: nextTag('I'), op: '>=', value: 1 };
     case 'ADD': case 'SUB': case 'MUL': case 'DIV':
-      return { itemType: 'block', type, src1: '', src2: '', dest: nextTag('N') };
+      return { itemType: 'block', type, src1: '', src2: '', dest: nextTag('D') };
     case 'MOVE':
-      return { itemType: 'block', type, src: '', dest: nextTag('N') };
+      return { itemType: 'block', type, src: '', dest: nextTag('D') };
     case 'SCALE':
-      return { itemType: 'block', type, src: '', inMin: 0, inMax: 100, outMin: 0, outMax: 100, dest: nextTag('N') };
+      return { itemType: 'block', type, src: '', inMin: 0, inMax: 100, outMin: 0, outMax: 100, dest: nextTag('D') };
   }
 }
 function insertIndexFor(rung, cat) {
@@ -1400,8 +1452,9 @@ function buildModal(block) {
     html += `<div class="form-group"><label>Input Tag</label>
       <input class="form-input" id="fld_tag" value="${block.tag}" placeholder="I:1"></div>`;
   } else if (block.type === 'COIL') {
-    html += `<div class="form-group"><label>Output Tag</label>
-      <input class="form-input" id="fld_tag" value="${block.tag}" placeholder="O:1"></div>`;
+    html += `<div class="form-group"><label>Output / Bit Tag</label>
+      <input class="form-input" id="fld_tag" value="${block.tag}" placeholder="O:1 or B:1">
+      <div class="form-hint">COIL can write to <b>O:</b> (physical output) or <b>B:</b> (internal bit / memory relay).</div></div>`;
   } else if (block.type === 'SET' || block.type === 'RESET') {
     html += `<div class="form-group"><label>Output / Bit Tag</label>
       <input class="form-input" id="fld_tag" value="${block.tag}" placeholder="O:1 or B:1">
@@ -1427,14 +1480,14 @@ function buildModal(block) {
       <div class="form-hint">The rung's own power counts UP; this separate tag counts DOWN on its rising edge.</div></div>`;
   } else if (block.type === 'CMP') {
     html += `<div class="form-group"><label>Source Tag</label>
-      <input class="form-input" id="fld_tag" value="${block.tag}" placeholder="I:1 or N:1"></div>
+      <input class="form-input" id="fld_tag" value="${block.tag}" placeholder="I:1 or D:1"></div>
       <div class="form-row">
         <div class="form-group"><label>Operator</label>
         <select class="form-select" id="fld_op">
           <option ${block.op === '==' ? 'selected' : ''} value="==">== Equal</option>
           <option ${block.op === '!=' ? 'selected' : ''} value="!=">!= Not Equal</option>
           <option ${block.op === '>' ? 'selected' : ''} value=">">&gt; Greater</option>
-          <option ${block.op === '>=' ? 'selected' : ''} value=">=">&gt;= Grt/Equal</option>
+          <option ${block.op === '>=' ? 'selected' : ''} value=">=">&gt;= Grt/equal</option>
           <option ${block.op === '<' ? 'selected' : ''} value="<">&lt; Less</option>
           <option ${block.op === '<=' ? 'selected' : ''} value="<=">&lt;= Lss/Equal</option>
         </select></div>
@@ -1444,29 +1497,29 @@ function buildModal(block) {
   } else if (['ADD', 'SUB', 'MUL', 'DIV'].includes(block.type)) {
     html += `<div class="form-row">
         <div class="form-group"><label>Source 1</label>
-        <input class="form-input" id="fld_src1" value="${block.src1}" placeholder="N:1 or 5"></div>
+        <input class="form-input" id="fld_src1" value="${block.src1}" placeholder="D:1 or 5"></div>
         <div class="form-group"><label>Source 2</label>
-        <input class="form-input" id="fld_src2" value="${block.src2}" placeholder="N:2 or 3"></div>
+        <input class="form-input" id="fld_src2" value="${block.src2}" placeholder="D:2 or 3"></div>
       </div>
-      <div class="form-group"><label>Destination (N: register)</label>
-      <input class="form-input" id="fld_dest" value="${block.dest}" placeholder="N:3"></div>
-      <div class="form-hint">Sources may be a tag (I:, O:, N:, T:, C:) or a literal number.</div>`;
+      <div class="form-group"><label>Destination (D: register)</label>
+      <input class="form-input" id="fld_dest" value="${block.dest}" placeholder="D:3"></div>
+      <div class="form-hint">Sources may be a tag (I:, O:, D:, T:, C:) or a literal number.</div>`;
   } else if (block.type === 'MOVE') {
     html += `<div class="form-group"><label>Source</label>
-      <input class="form-input" id="fld_src" value="${block.src}" placeholder="I:1, N:1 or literal"></div>
-      <div class="form-group"><label>Destination (N: register)</label>
-      <input class="form-input" id="fld_dest" value="${block.dest}" placeholder="N:1"></div>`;
+      <input class="form-input" id="fld_src" value="${block.src}" placeholder="I:1, D:1 or literal"></div>
+      <div class="form-group"><label>Destination (D: register)</label>
+      <input class="form-input" id="fld_dest" value="${block.dest}" placeholder="D:1"></div>`;
   } else if (block.type === 'SCALE') {
     html += `<div class="form-group"><label>Source</label>
-      <input class="form-input" id="fld_src" value="${block.src}" placeholder="I:1 or N:1"></div>
+      <input class="form-input" id="fld_src" value="${block.src}" placeholder="I:1 or D:1"></div>
       <div class="form-row cols-4">
         <div class="form-group"><label>In Min</label><input class="form-input" id="fld_inmin" type="number" value="${block.inMin}"></div>
         <div class="form-group"><label>In Max</label><input class="form-input" id="fld_inmax" type="number" value="${block.inMax}"></div>
         <div class="form-group"><label>Out Min</label><input class="form-input" id="fld_outmin" type="number" value="${block.outMin}"></div>
         <div class="form-group"><label>Out Max</label><input class="form-input" id="fld_outmax" type="number" value="${block.outMax}"></div>
       </div>
-      <div class="form-group"><label>Destination (N: register)</label>
-      <input class="form-input" id="fld_dest" value="${block.dest}" placeholder="N:1"></div>`;
+      <div class="form-group"><label>Destination (D: register)</label>
+      <input class="form-input" id="fld_dest" value="${block.dest}" placeholder="D:1"></div>`;
   }
 
   modalContent.innerHTML = html;
@@ -1527,19 +1580,32 @@ function openHelp() { document.getElementById('helpModal').classList.add('active
 function closeHelp() { document.getElementById('helpModal').classList.remove('active'); }
 
 // =================== RENDERING ===================
+function formatTagLabel(tag) {
+  // Keep letter-O distinct from digit-zero in output tags (avoid "(0:1)" misread)
+  if (!tag) return '\u2014';
+  return String(tag).replace(/^O:/i, 'O:');
+}
 function getBlockTagDisplay(block) {
   switch (block.type) {
     case 'NO': case 'NC': case 'COIL': case 'SET': case 'RESET':
     case 'TON': case 'TOF': case 'RTO': case 'CTU': case 'CTD': case 'CTUD': case 'CMP':
-      return block.tag || '\u2014';
+      return formatTagLabel(block.tag);
     case 'ADD': case 'SUB': case 'MUL': case 'DIV':
-      return `${block.src1 || '\u2014'} ${MATH_OP_SYMBOL[block.type]} ${block.src2 || '\u2014'} &rarr; ${block.dest || '\u2014'}`;
-    case 'MOVE': case 'SCALE':
-      return `${block.src || '\u2014'} &rarr; ${block.dest || '\u2014'}`;
+      // Expression only — result is shown live in meta (no coil required)
+      return `${block.src1 || '\u2014'} ${MATH_OP_SYMBOL[block.type]} ${block.src2 || '\u2014'}`;
+    case 'MOVE':
+      return `${block.src || '\u2014'} \u2192 ${block.dest || '\u2014'}`;
+    case 'SCALE':
+      return `${block.src || '\u2014'} \u2192 ${block.dest || '\u2014'}`;
     default: return '';
   }
 }
 function getOpSymbol(op) { return { '==': '==', '!=': '\u2260', '>': '>', '>=': '\u2265', '<': '<', '<=': '\u2264' }[op] || op; }
+function formatNum(n) {
+  if (typeof n !== 'number' || isNaN(n)) return '—';
+  const r = Math.round(n * 1000) / 1000;
+  return Number.isInteger(r) ? String(r) : r.toFixed(3).replace(/\.?0+$/, '');
+}
 function getBlockMeta(block) {
   if (block.type === 'TON' || block.type === 'TOF' || block.type === 'RTO') {
     const t = state.timers[block.tag];
@@ -1553,7 +1619,27 @@ function getBlockMeta(block) {
     return `PRE:${block.pre}${dn}`;
   }
   if (block.type === 'CMP') return `${getOpSymbol(block.op)} ${block.value}`;
-  if (block.type === 'SCALE') return `${block.inMin}..${block.inMax} &rarr; ${block.outMin}..${block.outMax}`;
+  // Math / Move / Scale: show live result on the ladder (no coil needed)
+  if (['ADD', 'SUB', 'MUL', 'DIV'].includes(block.type)) {
+    const dest = block.dest || '';
+    const val = dest ? getTagNum(dest) : null;
+    const destLabel = dest || '—';
+    if (val === null || dest === '') return `→ ${destLabel}`;
+    return `→ ${destLabel} = ${formatNum(val)}`;
+  }
+  if (block.type === 'MOVE') {
+    const dest = block.dest || '';
+    const val = dest ? getTagNum(dest) : null;
+    if (!dest) return '';
+    return val === null ? dest : `= ${formatNum(val)}`;
+  }
+  if (block.type === 'SCALE') {
+    const dest = block.dest || '';
+    const val = dest ? getTagNum(dest) : null;
+    const range = `${block.inMin}..${block.inMax} → ${block.outMin}..${block.outMax}`;
+    if (!dest) return range;
+    return `${range}<br>= ${formatNum(val)}`;
+  }
   return '';
 }
 function isDoneMeta(block) {
@@ -1564,13 +1650,20 @@ function isDoneMeta(block) {
 
 function renderBlockHtml(rungId, block, pathStr, extraClass) {
   const meta = getBlockMeta(block);
-  const cls = catOf(block) === 'coil' ? 'output-block' : (catOf(block) === 'function' ? 'function-block' : 'contact-block');
+  const cat = catOf(block);
+  const cls = cat === 'coil' ? 'output-block' : (cat === 'function' ? 'function-block' : 'contact-block');
+  const tagHtml = getBlockTagDisplay(block);
+  // Coils: tag above the ( ) symbol so it reads as O:1, not (O:1)/(0:1)
+  const body = cat === 'coil'
+    ? `<div class="block-tag coil-tag">${tagHtml}</div>
+       <div class="block-symbol">${TYPE_META[block.type].symbol}</div>`
+    : `<div class="block-symbol">${TYPE_META[block.type].symbol}</div>
+       <div class="block-tag">${tagHtml}</div>`;
   return `
     <div class="block ${cls} ${extraClass || ''}" id="blk-${rungId}-${pathStr.replace(/,/g, '-')}"
          onclick="editBlockAt(${rungId}, '${pathStr}')">
       <button class="block-delete" onclick="event.stopPropagation(); deleteBlockAt(${rungId}, '${pathStr}')">&times;</button>
-      <div class="block-symbol">${TYPE_META[block.type].symbol}</div>
-      <div class="block-tag">${getBlockTagDisplay(block)}</div>
+      ${body}
       ${meta ? `<div class="block-meta ${isDoneMeta(block) ? 'done' : ''}">${meta}</div>` : ''}
     </div>`;
 }
@@ -1650,6 +1743,7 @@ function evalFunctionBlock(item, inPower, commit, dt) {
     case 'TON': {
       const t = state.timers[item.tag];
       if (!t) return { through: false, glow: false };
+      t.pre = item.pre; // keep runtime PRE in sync with block
       if (commit) {
         if (inPower) {
           if (!t.done) { t.acc = Math.min(t.acc + dt, item.pre); if (t.acc >= item.pre) t.done = true; }
@@ -1661,6 +1755,7 @@ function evalFunctionBlock(item, inPower, commit, dt) {
     case 'TOF': {
       const t = state.timers[item.tag];
       if (!t) return { through: false, glow: false };
+      t.pre = item.pre;
       if (commit) {
         if (inPower) { t.acc = 0; t.done = false; t.out = true; }
         else if (t.out) {
@@ -1673,6 +1768,7 @@ function evalFunctionBlock(item, inPower, commit, dt) {
     case 'RTO': {
       const t = state.timers[item.tag];
       if (!t) return { through: false, glow: false };
+      t.pre = item.pre;
       if (commit) {
         if (inPower && !t.done) { t.acc = Math.min(t.acc + dt, item.pre); if (t.acc >= item.pre) t.done = true; t.running = true; }
         else t.running = false;
@@ -1682,8 +1778,12 @@ function evalFunctionBlock(item, inPower, commit, dt) {
     case 'CTU': {
       const c = state.counters[item.tag];
       if (!c) return { through: false, glow: false };
+      c.pre = item.pre;
       if (commit) {
-        if (inPower && !c.prevPower && c.acc < item.pre) { c.acc++; if (c.acc >= item.pre) c.done = true; }
+        // Rising-edge count-up; ACC may go past PRE (standard PLC behaviour)
+        if (inPower && !c.prevPower) c.acc++;
+        // DONE is level-based, not latched — clears if ACC drops below PRE (e.g. after RESET)
+        c.done = c.acc >= item.pre;
         c.prevPower = inPower;
       }
       return { through: c.done, glow: c.done };
@@ -1691,8 +1791,12 @@ function evalFunctionBlock(item, inPower, commit, dt) {
     case 'CTD': {
       const c = state.counters[item.tag];
       if (!c) return { through: false, glow: false };
+      c.pre = item.pre;
       if (commit) {
-        if (inPower && !c.prevPower && c.acc > 0) { c.acc--; if (c.acc <= 0) c.done = true; }
+        // Rising-edge count-down; stop at 0
+        if (inPower && !c.prevPower && c.acc > 0) c.acc--;
+        // DONE is level-based — true while ACC <= 0, clears when ACC rises again (e.g. after RESET)
+        c.done = c.acc <= 0;
         c.prevPower = inPower;
       }
       return { through: c.done, glow: c.done };
@@ -1700,10 +1804,12 @@ function evalFunctionBlock(item, inPower, commit, dt) {
     case 'CTUD': {
       const c = state.counters[item.tag];
       if (!c) return { through: false, glow: false };
+      c.pre = item.pre;
       const downVal = item.downTag ? getTagValue(item.downTag) : false;
       if (commit) {
-        if (inPower && !c.prevPower && c.acc < item.pre) c.acc++;
+        if (inPower && !c.prevPower) c.acc++;
         if (downVal && !c.prevDownPower && c.acc > 0) c.acc--;
+        // DONE follows ACC vs PRE every scan
         c.done = c.acc >= item.pre;
         c.prevPower = inPower; c.prevDownPower = downVal;
       }
@@ -1754,6 +1860,23 @@ function toggleEl(id, val) {
   const el = document.getElementById(id);
   if (el) el.classList.toggle('energized', val);
 }
+function updateBlockMetaDom(block, elId) {
+  const blkEl = document.getElementById(elId);
+  if (!blkEl) return;
+  const metaText = getBlockMeta(block);
+  let metaEl = blkEl.querySelector('.block-meta');
+  if (!metaText) {
+    if (metaEl) metaEl.remove();
+    return;
+  }
+  if (!metaEl) {
+    metaEl = document.createElement('div');
+    metaEl.className = 'block-meta';
+    blkEl.appendChild(metaEl);
+  }
+  metaEl.innerHTML = metaText;
+  metaEl.classList.toggle('done', isDoneMeta(block));
+}
 function computeAndRender(rung, commit) {
   const dt = 0.1;
   const coilActions = [];
@@ -1764,7 +1887,8 @@ function computeAndRender(rung, commit) {
     if (item.itemType === 'branch') {
       let branchOut = false;
       item.paths.forEach((path, pIdx) => {
-        let pPower = path.length > 0;
+        // Empty path = continuous wire (always conducts) — same as a real ladder short
+        let pPower = true;
         path.forEach((blk, bIdx) => {
           const val = getContactValue(blk);
           pPower = pPower && val;
@@ -1791,7 +1915,10 @@ function computeAndRender(rung, commit) {
         coilActions.push({ block: item, power });
         out = power;
       }
-      toggleEl(`blk-${rung.id}-${idx}`, glow);
+      const elId = `blk-${rung.id}-${idx}`;
+      toggleEl(elId, glow);
+      // Live-update PRE/ACC on timer & counter blocks in the ladder
+      if (meta.cat === 'function') updateBlockMetaDom(item, elId);
       power = out;
     }
     toggleEl(`wire-${rung.id}-m${idx + 1}`, power);
@@ -1819,12 +1946,20 @@ function applyReset(tag) {
   else if (p === 'T') { const t = state.timers[tag]; if (t) { t.acc = 0; t.done = false; t.running = false; t.out = false; } }
 }
 
+function applyCoil(tag, power) {
+  if (!tag) return;
+  const p = tagPrefix(tag);
+  if (p === 'O') state.outputs[tag] = power;
+  else if (p === 'B') state.bits[tag] = power;
+  // Ignore other prefixes — coil only drives O: or B:
+}
+
 function tickSim() {
   const t0 = performance.now();
   const setResetActions = [];
   state.rungs.forEach(rung => {
     computeAndRender(rung, true).forEach(a => {
-      if (a.block.type === 'COIL') { if (a.block.tag) state.outputs[a.block.tag] = a.power; }
+      if (a.block.type === 'COIL') applyCoil(a.block.tag, a.power);
       else setResetActions.push(a);
     });
   });
@@ -1888,7 +2023,7 @@ function refreshIOPanel() {
       else if (p === 'O') outputs.add(t);
       else if (p === 'T') timers.add(t);
       else if (p === 'C') counters.add(t);
-      else if (p === 'N') numbers.add(t);
+      else if (p === 'D') numbers.add(t);
     });
   });
 
@@ -2043,22 +2178,20 @@ function loadExample() {
     { itemType: 'block', type: 'COIL', tag: 'O:8' }
   ]});
 
-  // Rung 9: ADD math
+  // Rung 9: ADD math — result shown on the block (no coil required)
   state.rungs.push({ id: state.rungs.length, items: [
     { itemType: 'block', type: 'NO', tag: 'I:8' },
-    { itemType: 'block', type: 'ADD', src1: 'N:1', src2: '5', dest: 'N:2' },
-    { itemType: 'block', type: 'COIL', tag: 'O:9' }
+    { itemType: 'block', type: 'ADD', src1: 'D:1', src2: '5', dest: 'D:2' }
   ]});
 
-  // Rung 10: SCALE example
+  // Rung 10: SCALE — live scaled value shown on the block
   state.rungs.push({ id: state.rungs.length, items: [
     { itemType: 'block', type: 'NO', tag: 'I:9' },
-    { itemType: 'block', type: 'SCALE', src: 'N:1', inMin: 0, inMax: 10, outMin: 0, outMax: 100, dest: 'N:3' },
-    { itemType: 'block', type: 'COIL', tag: 'O:10' }
+    { itemType: 'block', type: 'SCALE', src: 'D:1', inMin: 0, inMax: 10, outMin: 0, outMax: 100, dest: 'D:3' }
   ]});
 
   forEachAllBlocks(b => ensureTagsForBlock(b));
-  state.numbers['N:1'] = 4;
+  state.numbers['D:1'] = 4;
 
   renderLadder();
   refreshIOPanel();
