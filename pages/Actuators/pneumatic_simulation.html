@@ -112,6 +112,11 @@
   .comp-sub{font-family:'JetBrains Mono',monospace;font-size:8.5px;fill:var(--ink-faint);text-anchor:middle;pointer-events:none;}
   .port{cursor:crosshair;stroke:#fff;stroke-width:1.6;transition:r .1s;}
   .port:hover{r:8;}
+  .port.port-hint{stroke:#e08a1e;stroke-width:2.6;animation:phint 1s ease-in-out infinite;}
+  @keyframes phint{0%,100%{r:6}50%{r:10}}
+  #canvas{cursor:grab;}
+  #canvas.panning{cursor:grabbing;}
+  .next-btn{margin-top:6px;text-align:left;}
   .port.active-src{stroke:var(--accent);stroke-width:2.4;r:8;}
   .conn-path{fill:none;stroke:#c3cddb;stroke-width:3.5;stroke-linecap:round;cursor:pointer;}
   .conn-path.pressurized{stroke:var(--flow);}
@@ -120,13 +125,33 @@
   .particle{fill:var(--flow-glow);filter:drop-shadow(0 0 3px var(--flow));}
   .temp-line{stroke:var(--accent);stroke-width:2;stroke-dasharray:5 4;fill:none;pointer-events:none;}
   .ghost-drop{fill:rgba(42,99,232,.08);stroke:var(--accent);stroke-width:1.5;stroke-dasharray:4 3;}
+
+  /* ---- Scientech gold accent (#e1ac3d) ---- */
+  header.site-header{border-bottom:4px solid #e1ac3d;}
+  .panel{border-top:3px solid #e1ac3d;}
+  .palette h2, .properties h2{border-bottom:2px solid #e1ac3d;padding-bottom:5px;display:block;}
+  .comp-btn{border-left:3px solid #e1ac3d;}
+  .comp-btn:hover{border-color:#e1ac3d;background:#fff8e8;}
+  .cat-head{border-bottom:1px solid #f1e2bd;}
+  .cat-head:hover{background:#fff8e8;}
+  .search-box:focus{border-color:#e1ac3d;}
+  .action-btn:hover{border-color:#e1ac3d;background:#fff8e8;}
+  .toolbar{border-bottom:2px solid #e1ac3d;}
+  .toolbar button:hover{border-color:#e1ac3d;}
+  .comp.selected .sel-outline{stroke:#e1ac3d;stroke-width:2.4;}
+  .port.active-src{stroke:#e1ac3d;}
+  .zoom-controls{border-color:#e1ac3d;}
+  .hint-bar{border-color:#e1ac3d;}
+  .status-chip{border:1px solid #e1ac3d;}
+  input[type=range]{accent-color:#e1ac3d;}
+  .prop-value{color:#173681;}
 </style>
 </head>
 <body>
 <div class="app">
   <header class="site-header">
     <div class="logo-container">
-        <img src="../../assets/Scientech logo-2.png" alt="Scientech Logo">
+        <img src="../../assets/Scientech logo-2.png" alt="Scientech Logo" onerror="this.style.display='none'">
         <h1>Pneumatic Circuit</h1>
     </div>
   </header>
@@ -161,7 +186,7 @@
         <button id="zoom-out">−</button>
         <button id="zoom-reset">⤢</button>
       </div>
-      <div class="hint-bar">Drag a component from the palette onto the canvas · click ports to connect · click a valve to toggle it while running</div>
+      <div class="hint-bar">Drag a component from the palette onto the canvas · click ports to connect · click a valve to operate it · drag empty area to pan</div>
     </section>
 
     <aside class="panel properties">
@@ -173,7 +198,7 @@
 
       <h2 style="margin-top:16px;">Selection</h2>
       <div class="prop-block" id="selection-panel">
-        <div class="empty-msg">Nothing selected. Click a component or connection on the canvas.</div>
+        <div class="empty-msg">Nothing selected. Click a component to see its ports and what to add next. Drag empty canvas to pan, scroll to move, Ctrl+scroll to zoom.</div>
       </div>
 
       <h2 style="margin-top:16px;">Flow Legend</h2>
@@ -200,16 +225,16 @@
     tank:        { w:60,  h:78, ports:{ inb:{dx:30,dy:78,kind:'in'}, out:{dx:60,dy:14,kind:'out'} } },
     passthrough: { w:88,  h:48, ports:{ in:{dx:0,dy:24,kind:'in'}, out:{dx:88,dy:24,kind:'out'} } },
     frl:         { w:104, h:56, ports:{ in:{dx:0,dy:28,kind:'in'}, out:{dx:104,dy:28,kind:'out'} } },
-    v2:          { w:74,  h:46, ports:{ p1:{dx:0,dy:40,kind:'in'}, p2:{dx:74,dy:8,kind:'out'} } },
-    v3:          { w:96,  h:66, ports:{ p1:{dx:0,dy:58,kind:'in'}, p2:{dx:48,dy:0,kind:'out'}, p3:{dx:96,dy:58,kind:'exhaust'} } },
-    v5_2:        { w:124, h:70, ports:{ p2:{dx:20,dy:0,kind:'out'}, p4:{dx:104,dy:0,kind:'out'}, p3:{dx:0,dy:36,kind:'exhaust'}, p5:{dx:124,dy:36,kind:'exhaust'}, p1:{dx:62,dy:70,kind:'in'} } },
-    v5_3:        { w:140, h:74, ports:{ p2:{dx:22,dy:0,kind:'out'}, p4:{dx:118,dy:0,kind:'out'}, p3:{dx:0,dy:37,kind:'exhaust'}, p5:{dx:140,dy:37,kind:'exhaust'}, p1:{dx:70,dy:74,kind:'in'} } },
-    v4_3:        { w:112, h:70, ports:{ p2:{dx:16,dy:0,kind:'out'}, p4:{dx:96,dy:0,kind:'out'}, p3:{dx:112,dy:35,kind:'exhaust'}, p1:{dx:56,dy:70,kind:'in'} } },
+    v2:          { w:74,  h:66, ports:{ p1:{dx:37,dy:66,kind:'in'}, p2:{dx:37,dy:0,kind:'out'} } },
+    v3:          { w:96,  h:66, ports:{ p1:{dx:38,dy:66,kind:'in'}, p2:{dx:48,dy:0,kind:'out'}, p3:{dx:58,dy:66,kind:'exhaust'} } },
+    v5_2:        { w:124, h:70, ports:{ p4:{dx:46,dy:0,kind:'out'}, p2:{dx:78,dy:0,kind:'out'}, p5:{dx:41,dy:70,kind:'exhaust'}, p1:{dx:62,dy:70,kind:'in'}, p3:{dx:83,dy:70,kind:'exhaust'} } },
+    v5_3:        { w:140, h:74, ports:{ p4:{dx:54,dy:0,kind:'out'}, p2:{dx:86,dy:0,kind:'out'}, p5:{dx:49,dy:74,kind:'exhaust'}, p1:{dx:70,dy:74,kind:'in'}, p3:{dx:91,dy:74,kind:'exhaust'} } },
+    v4_3:        { w:112, h:70, ports:{ p4:{dx:42,dy:0,kind:'out'}, p2:{dx:70,dy:0,kind:'out'}, p1:{dx:42,dy:70,kind:'in'}, p3:{dx:70,dy:70,kind:'exhaust'} } },
     check:       { w:70,  h:36, ports:{ in:{dx:0,dy:18,kind:'in'}, out:{dx:70,dy:18,kind:'out'} } },
     pilotcheck:  { w:70,  h:56, ports:{ in:{dx:0,dy:18,kind:'in'}, out:{dx:70,dy:18,kind:'out'}, pilot:{dx:35,dy:56,kind:'in'} } },
     logic2:      { w:80,  h:56, ports:{ in1:{dx:0,dy:10,kind:'in'}, in2:{dx:0,dy:46,kind:'in'}, out:{dx:80,dy:28,kind:'out'} } },
-    cyl_single:  { w:150, h:50, ports:{ in:{dx:0,dy:25,kind:'in'} } },
-    cyl_double:  { w:170, h:50, ports:{ cap:{dx:0,dy:14,kind:'in'}, rod:{dx:0,dy:36,kind:'in'} } },
+    cyl_single:  { w:150, h:50, ports:{ in:{dx:20,dy:25,kind:'in'} } },
+    cyl_double:  { w:170, h:50, ports:{ cap:{dx:20,dy:25,kind:'in'}, rod:{dx:82,dy:8,kind:'in'} } },
     cyl_rodless: { w:170, h:40, ports:{ cap:{dx:0,dy:20,kind:'in'}, rod:{dx:170,dy:20,kind:'in'} } },
     rotary:      { w:64,  h:64, ports:{ cap:{dx:0,dy:20,kind:'in'}, rod:{dx:0,dy:48,kind:'in'} } },
     terminal:    { w:44,  h:44, ports:{ in:{dx:0,dy:22,kind:'in'} } },
@@ -290,7 +315,7 @@
     // --- FLOW CONTROL ---
     { id:'oneway_flow', name:'One-Way Flow Ctrl', cat:'Flow Control', family:'passthrough', geom:'passthrough', icon:'oneway' },
     { id:'throttle', name:'Throttle Valve', cat:'Flow Control', family:'passthrough', geom:'passthrough', icon:'throttle' },
-    { id:'quick_exhaust', name:'Quick Exhaust', cat:'Flow Control', family:'passthrough', geom:'passthrough', icon:'quickexh' },
+    { id:'quick_exhaust', name:'Quick Exhaust', cat:'Flow Control', family:'quickexh', geom:'passthrough', icon:'quickexh' },
 
     // --- PRESSURE CONTROL ---
     { id:'relief', name:'Relief Valve', cat:'Pressure Control', family:'passthrough', geom:'passthrough', icon:'relief', hasSetPressure:true },
@@ -298,7 +323,7 @@
 
     // --- LOGIC VALVES ---
     { id:'check', name:'Check Valve', cat:'Logic Valves', family:'check', geom:'check', icon:'check' },
-    { id:'pilotcheck', name:'Pilot Check Valve', cat:'Logic Valves', family:'check', geom:'pilotcheck', icon:'check' },
+    { id:'pilotcheck', name:'Pilot Check Valve', cat:'Logic Valves', family:'pilotcheck', geom:'pilotcheck', icon:'check' },
     { id:'shuttle', name:'Shuttle (OR)', cat:'Logic Valves', family:'shuttle', geom:'logic2', icon:'shuttle' },
     { id:'and_valve', name:'AND Valve', cat:'Logic Valves', family:'and', geom:'logic2', icon:'and' },
 
@@ -350,7 +375,7 @@
     running: false,
     supplyPressure: 6,
   };
-  let prevPressurized = new Set();
+  let prevPressures = new Map();
   let history = [];
   function pushHistory(){
     history.push(JSON.stringify({components:state.components, connections:state.connections}));
@@ -365,6 +390,8 @@
     render();
   }
   function getComp(id){ return state.components.find(c=>c.id===id); }
+  function portPressure(map, key){ return (map && map.get(key)) || 0; }
+  function isPress(map, key){ return portPressure(map, key) > 0.35; }
 
   function defaultState(t){
     switch(t.family){
@@ -372,7 +399,7 @@
       case 'v5_2': return { position:'B' };
       case 'v5_3': case 'v4_3': return { position:'C', centerType: t.centerType||'closed' };
       case 'cyl_single': case 'cyl_double': case 'cyl_rodless': return { extend:0, target:0 };
-      case 'rotary': return { angle:0, target:0 };
+      case 'rotary': return { angle:0, target:0, extend:0 };
       case 'gauge': return { reading:0 };
       case 'tank': return { pressure:0 };
       case 'timer_on': return { delayMs:1500, outputEnabled:false, timerStart:null };
@@ -383,15 +410,54 @@
 
   function addComponent(typeId, x, y){
     const t = TYPE_MAP[typeId];
-    const comp = { id: genId(typeId), type: typeId, x, y, state: defaultState(t) };
+    const comp = { id: genId(typeId), type: typeId, x, y, rot: 0, state: defaultState(t) };
     if(t.hasSetPressure) comp.state.setPressure = 6;
     return comp;
   }
 
   function portWorld(compId, portId){
     const comp = getComp(compId);
-    const d = defOf(comp).ports[portId];
-    return { x: comp.x + d.dx, y: comp.y + d.dy };
+    if(!comp) return {x:0,y:0};
+    const geom = defOf(comp);
+    const d = geom.ports[portId];
+    if(!d) return {x:comp.x, y:comp.y};
+    let dx = d.dx, dy = d.dy;
+    // 180° rotation flips ports around component center
+    if((comp.rot||0) % 360 === 180){
+      dx = geom.w - d.dx;
+      dy = geom.h - d.dy;
+    }
+    return { x: comp.x + dx, y: comp.y + dy };
+  }
+
+  function isMomentary(comp){
+    const t=TYPE_MAP[comp.type];
+    if(!['v3','v5_2','v5_3','v4_3'].includes(t.family)) return false;
+    return !/double/.test(comp.type);   // spring-return valves act only while held
+  }
+  function actuateValve(comp, alt){
+    const t=TYPE_MAP[comp.type];
+    if(t.family==='v3') comp.state.open = !t.defaultOpen;
+    else if(t.family==='v5_2') comp.state.position='A';
+    else comp.state.position = alt?'B':'A';
+  }
+  function releaseValve(comp){
+    const t=TYPE_MAP[comp.type];
+    if(t.family==='v3') comp.state.open = !!t.defaultOpen;
+    else if(t.family==='v5_2') comp.state.position='B';
+    else comp.state.position='C';
+  }
+  function toggleValve(comp){
+    if(!comp) return false;
+    const t = TYPE_MAP[comp.type];
+    if(t.family==='v2'||t.family==='v3'){ comp.state.open = !comp.state.open; return true; }
+    if(t.family==='v5_2'){ comp.state.position = comp.state.position==='A'?'B':'A'; return true; }
+    if(t.family==='v5_3'||t.family==='v4_3'){
+      const order=['B','C','A'];
+      comp.state.position = order[(order.indexOf(comp.state.position)+1)%3];
+      return true;
+    }
+    return false;
   }
 
   /* seed a starter circuit */
@@ -411,22 +477,31 @@
   seed();
 
   /* =========================================================
-     3. SIMULATION ENGINE
+     3. SIMULATION ENGINE  (numeric pressure + correct routing)
      ========================================================= */
-  function propagate(comp, portId, pressurized){
+  /** Internal port links from a pressurized port. Returns destination port ids. */
+  function internalLinks(comp, portId, P){
     const t = TYPE_MAP[comp.type];
     switch(t.family){
       case 'passthrough':
+        if(comp.type==='relief') return [];   // normally closed, vents at set pressure (handled as net cap)
+        if(comp.type==='sequence') return (portId==='in' && portPressure(P, comp.id+':in') >= (comp.state.setPressure!=null?comp.state.setPressure:6)-0.001) ? ['out'] : [];
         return portId==='in' ? ['out'] : portId==='out' ? ['in'] : [];
       case 'tank':
         return portId==='inb' ? ['out'] : portId==='out' ? ['inb'] : [];
       case 'check':
+      case 'quickexh':
         return portId==='in' ? ['out'] : [];
+      case 'pilotcheck': {
+        if(portId==='in') return ['out'];
+        if(portId==='out' && isPress(P, comp.id+':pilot')) return ['in'];
+        return [];
+      }
       case 'shuttle':
         return (portId==='in1'||portId==='in2') ? ['out'] : [];
       case 'and': {
-        if(portId==='in1' && pressurized.has(comp.id+':in2')) return ['out'];
-        if(portId==='in2' && pressurized.has(comp.id+':in1')) return ['out'];
+        if(portId==='in1' && isPress(P, comp.id+':in2')) return ['out'];
+        if(portId==='in2' && isPress(P, comp.id+':in1')) return ['out'];
         return [];
       }
       case 'v2': {
@@ -438,30 +513,29 @@
         return portId==='p2'?['p3']: portId==='p3'?['p2']:[];
       }
       case 'v5_2': {
-        const A = comp.state.position==='A';
-        if(A){ if(portId==='p1')return['p2']; if(portId==='p2')return['p1']; if(portId==='p4')return['p5']; if(portId==='p5')return['p4']; return[]; }
-        if(portId==='p1')return['p4']; if(portId==='p4')return['p1']; if(portId==='p2')return['p3']; if(portId==='p3')return['p2']; return[];
+        const A = comp.state.position==='A';   // A = actuated, B = spring/rest (ISO: P->2)
+        if(A){ if(portId==='p1')return['p4']; if(portId==='p4')return['p1']; if(portId==='p2')return['p3']; if(portId==='p3')return['p2']; return []; }
+        if(portId==='p1')return['p2']; if(portId==='p2')return['p1']; if(portId==='p4')return['p5']; if(portId==='p5')return['p4']; return [];
       }
       case 'v5_3': {
         const pos = comp.state.position;
-        if(pos==='A'){ if(portId==='p1')return['p2']; if(portId==='p2')return['p1']; if(portId==='p4')return['p5']; if(portId==='p5')return['p4']; return[]; }
-        if(pos==='B'){ if(portId==='p1')return['p4']; if(portId==='p4')return['p1']; if(portId==='p2')return['p3']; if(portId==='p3')return['p2']; return[]; }
+        if(pos==='A'){ if(portId==='p1')return['p2']; if(portId==='p2')return['p1']; if(portId==='p4')return['p5']; if(portId==='p5')return['p4']; return []; }
+        if(pos==='B'){ if(portId==='p1')return['p4']; if(portId==='p4')return['p1']; if(portId==='p2')return['p3']; if(portId==='p3')return['p2']; return []; }
         const ct = comp.state.centerType;
-        if(ct==='exhaust'){ if(portId==='p2')return['p3']; if(portId==='p3')return['p2']; if(portId==='p4')return['p5']; if(portId==='p5')return['p4']; return[]; }
-        if(ct==='pressure'){ if(portId==='p1')return['p2','p4']; if(portId==='p2')return['p1']; if(portId==='p4')return['p1']; return[]; }
+        if(ct==='exhaust'){ if(portId==='p2')return['p3']; if(portId==='p3')return['p2']; if(portId==='p4')return['p5']; if(portId==='p5')return['p4']; return []; }
+        if(ct==='pressure'){ if(portId==='p1')return['p2','p4']; if(portId==='p2'||portId==='p4')return['p1']; return []; }
         return [];
       }
       case 'v4_3': {
         const pos = comp.state.position;
-        if(pos==='A'){ if(portId==='p1')return['p2']; if(portId==='p2')return['p1']; if(portId==='p4')return['p3']; if(portId==='p3')return['p4']; return[]; }
-        if(pos==='B'){ if(portId==='p1')return['p4']; if(portId==='p4')return['p1']; if(portId==='p2')return['p3']; if(portId==='p3')return['p2']; return[]; }
+        if(pos==='A'){ if(portId==='p1')return['p2']; if(portId==='p2')return['p1']; if(portId==='p4')return['p3']; if(portId==='p3')return['p4']; return []; }
+        if(pos==='B'){ if(portId==='p1')return['p4']; if(portId==='p4')return['p1']; if(portId==='p2')return['p3']; if(portId==='p3')return['p2']; return []; }
         const ct = comp.state.centerType;
-        if(ct==='exhaust'){ if(portId==='p2')return['p3']; if(portId==='p3')return['p2','p4']; if(portId==='p4')return['p3']; return[]; }
+        if(ct==='exhaust'){ if(portId==='p2'||portId==='p4')return['p3']; if(portId==='p3')return['p2','p4']; return []; }
         return [];
       }
       case 'timer_on': case 'timer_off': {
-        if(portId==='in') return comp.state.outputEnabled ? ['out'] : [];
-        if(portId==='out') return ['in'];
+        if(portId==='in' && comp.state.outputEnabled) return ['out'];
         return [];
       }
       case 'tconnector': {
@@ -470,30 +544,40 @@
         if(portId==='p3') return ['p1','p2'];
         return [];
       }
-      default: return []; // terminal: cylinders, gauges, silencer, suction cup, proximity, rotary
+      default: return [];
     }
+  }
+
+  function transformPressure(comp, fromPort, toPort, pIn){
+    const t = TYPE_MAP[comp.type];
+    if(t.hasSetPressure && toPort==='out' && (comp.type==='regulator'||comp.type==='frl')){
+      const setP = (comp.state.setPressure!=null) ? comp.state.setPressure : state.supplyPressure;
+      return Math.min(pIn, setP);
+    }
+    return pIn;
   }
 
   function preTick(dt){
     state.components.forEach(c=>{
       const t = TYPE_MAP[c.type];
       if(t.family==='tank'){
-        const charging = prevPressurized.has(c.id+':inb');
-        const target = charging ? state.supplyPressure : 0;
+        const inP = portPressure(prevPressures, c.id+':inb');
+        const charging = inP > 0.35;
+        const target = charging ? inP : 0;
         const rate = charging ? 1.4 : 0.25;
         c.state.pressure += (target - c.state.pressure) * Math.min(dt*rate, 1);
         if(c.state.pressure < 0.05) c.state.pressure = 0;
       }
       if(t.family==='timer_on'){
-        const inputOn = prevPressurized.has(c.id+':in');
+        const inputOn = isPress(prevPressures, c.id+':in');
         if(inputOn){
           if(c.state.timerStart==null) c.state.timerStart = performance.now();
           c.state.outputEnabled = (performance.now()-c.state.timerStart) >= (c.state.delayMs||1500);
         } else { c.state.timerStart=null; c.state.outputEnabled=false; }
       }
       if(t.family==='timer_off'){
-        const inputOn = prevPressurized.has(c.id+':in');
-        if(inputOn){ c.state.outputEnabled=true; c.state.offStart=null; }
+        const inputOn = isPress(prevPressures, c.id+':in');
+        if(inputOn){ c.state.outputEnabled=true; c.state.offStart=null; c.state.holdP=portPressure(prevPressures, c.id+':in'); }
         else if(c.state.outputEnabled){
           if(c.state.offStart==null) c.state.offStart = performance.now();
           if((performance.now()-c.state.offStart) >= (c.state.delayMs||1500)) c.state.outputEnabled=false;
@@ -502,49 +586,77 @@
     });
   }
 
-  function computePressurized(){
-    const pressurized = new Set();
+  function computePressures(){
+    const P = new Map();
     const queue = [];
+    const par = new Map();
+    const find = k=>{ while(par.has(k) && par.get(k)!==k) k=par.get(k); return k; };
+    state.connections.forEach(cn=>{ const a=find(cn.from), b=find(cn.to); if(a!==b) par.set(a,b); });
+    state.components.forEach(c=>{ if(c.type==='tconnector'){ ['p2','p3'].forEach(p=>{ const a=find(c.id+':p1'), b=find(c.id+':'+p); if(a!==b) par.set(a,b); }); } });
+    const caps = new Map();
+    state.components.forEach(c=>{
+      if(c.type==='relief'){ const r=find(c.id+':in'); const sp=c.state.setPressure!=null?c.state.setPressure:6; caps.set(r, Math.min(caps.has(r)?caps.get(r):99, sp)); }
+    });
+    function raise(key, val){
+      const cp = caps.get(find(key)); if(cp!=null) val = Math.min(val, cp);
+      if(val < 0.05) return;
+      const cur = P.get(key) || 0;
+      if(val > cur + 0.01){ P.set(key, val); queue.push(key); }
+    }
     state.components.forEach(c=>{
       const t = TYPE_MAP[c.type];
-      if(t.family==='source'){ const k=c.id+':out'; pressurized.add(k); queue.push(k); }
-      if(t.family==='tank' && c.state.pressure>0.4){ const k=c.id+':out'; if(!pressurized.has(k)){pressurized.add(k); queue.push(k);} }
+      if(t.family==='source') raise(c.id+':out', state.supplyPressure);
+      if(t.family==='tank' && c.state.pressure>0.4) raise(c.id+':out', c.state.pressure);
+      if(t.family==='timer_off' && c.state.outputEnabled) raise(c.id+':out', c.state.holdP||state.supplyPressure);
     });
-    while(queue.length){
+    let guard = 0;
+    while(queue.length && guard++ < 5000){
       const cur = queue.shift();
+      const pVal = P.get(cur) || 0;
       const idx = cur.indexOf(':');
       const compId = cur.slice(0,idx), portId = cur.slice(idx+1);
       const comp = getComp(compId);
       if(!comp) continue;
-      propagate(comp, portId, pressurized).forEach(other=>{
-        const k2 = compId+':'+other;
-        if(!pressurized.has(k2)){ pressurized.add(k2); queue.push(k2); }
+      internalLinks(comp, portId, P).forEach(other=>{
+        raise(compId+':'+other, transformPressure(comp, portId, other, pVal));
       });
       state.connections.forEach(conn=>{
         let otherKey=null;
         if(conn.from===cur) otherKey=conn.to;
         else if(conn.to===cur) otherKey=conn.from;
-        if(otherKey && !pressurized.has(otherKey)){ pressurized.add(otherKey); queue.push(otherKey); }
+        if(otherKey) raise(otherKey, pVal);
       });
     }
-    return pressurized;
+    return P;
   }
 
-  function updateActuators(pressurized){
+  function computePressurized(){
+    const P = computePressures();
+    const s = new Set();
+    P.forEach((v,k)=>{ if(v>0.35) s.add(k); });
+    return s;
+  }
+
+  function updateActuators(P, dt){
+    dt = dt || 0.016;
     state.components.forEach(c=>{
       const t = TYPE_MAP[c.type];
       if(t.family==='cyl_single'){
-        c.state.target = pressurized.has(c.id+':in') ? 1 : 0;
+        c.state.target = isPress(P, c.id+':in') ? 1 : 0;
       } else if(t.family==='cyl_double' || t.family==='cyl_rodless'){
-        const ext = pressurized.has(c.id+':cap'), ret = pressurized.has(c.id+':rod');
+        const ext = isPress(P, c.id+':cap'), ret = isPress(P, c.id+':rod');
         if(ext && !ret) c.state.target = 1;
         else if(ret && !ext) c.state.target = 0;
       } else if(t.family==='rotary'){
-        const ext = pressurized.has(c.id+':cap'), ret = pressurized.has(c.id+':rod');
+        const ext = isPress(P, c.id+':cap'), ret = isPress(P, c.id+':rod');
         if(ext && !ret) c.state.target = 1;
         else if(ret && !ext) c.state.target = 0;
       } else if(t.family==='gauge'){
-        c.state.reading = pressurized.has(c.id+':in') ? state.supplyPressure : 0;
+        { const tgt = portPressure(P, c.id+':in'), cur = c.state.reading||0, d = tgt-cur;
+          // needle fills gradually instead of jumping to the final value
+          c.state.reading = Math.abs(d)<0.03 ? tgt : cur + d*Math.min(dt*1.6,1); }
+        const moving = state.components.some(cc=>['cyl_single','cyl_double','cyl_rodless','rotary'].includes(TYPE_MAP[cc.type].family) && Math.abs((cc.state.target||0)-(cc.state.extend||0))>0.02);
+        c.state.flow = (c.type==='flowmeter' && moving) ? c.state.reading*15 : 0;
       }
     });
   }
@@ -583,6 +695,90 @@
     return '';
   }
 
+
+  /* ---------- ISO 1219 valve symbols ---------- */
+  const ISO_CFG = {
+    v2:  { bw:40, bh:36, y0:15, cx:37,  H:66, order:['A','B'],     pts:{p2:[.5,'t'],p1:[.5,'b']} },
+    v3:  { bw:52, bh:38, y0:14, cx:48,  H:66, order:['A','B'],     pts:{p2:[.5,'t'],p1:[.3,'b'],p3:[.7,'b']} },
+    v5_2:{ bw:64, bh:40, y0:15, cx:62,  H:70, order:['A','B'],     pts:{p4:[.25,'t'],p2:[.75,'t'],p5:[.17,'b'],p1:[.5,'b'],p3:[.83,'b']} },
+    v5_3:{ bw:64, bh:42, y0:16, cx:70,  H:74, order:['A','C','B'], pts:{p4:[.25,'t'],p2:[.75,'t'],p5:[.17,'b'],p1:[.5,'b'],p3:[.83,'b']} },
+    v4_3:{ bw:56, bh:40, y0:15, cx:56,  H:70, order:['A','C','B'], pts:{p4:[.25,'t'],p2:[.75,'t'],p1:[.25,'b'],p3:[.75,'b']} },
+  };
+  function isoPosDef(comp,t,k){
+    const f=t.family;
+    if(f==='v2')  return k==='A' ? {f:[['p1','p2']],b:[]} : {f:[],b:['p1']};
+    if(f==='v3')  return k==='A' ? {f:[['p1','p2']],b:['p3']} : {f:[['p2','p3']],b:['p1']};
+    if(f==='v5_2')return k==='A' ? {f:[['p1','p4'],['p2','p3']],b:['p5']} : {f:[['p1','p2'],['p4','p5']],b:['p3']};
+    if(f==='v5_3'){
+      if(k==='A') return {f:[['p1','p2'],['p4','p5']],b:['p3']};
+      if(k==='B') return {f:[['p1','p4'],['p2','p3']],b:['p5']};
+      const ct=comp.state.centerType;
+      if(ct==='exhaust') return {f:[['p2','p3'],['p4','p5']],b:['p1']};
+      if(ct==='pressure') return {f:[['p1','p2'],['p1','p4']],b:['p3','p5']};
+      return {f:[],b:['p1','p2','p3','p4','p5']};
+    }
+    if(k==='A') return {f:[['p1','p2'],['p4','p3']],b:[]};
+    if(k==='B') return {f:[['p1','p4'],['p2','p3']],b:[]};
+    return comp.state.centerType==='exhaust' ? {f:[['p2','p3'],['p4','p3']],b:['p1']} : {f:[],b:['p1','p2','p3','p4']};
+  }
+  function isoCur(comp,t){
+    if(t.family==='v2'||t.family==='v3') return comp.state.open ? 'A':'B';
+    return comp.state.position;
+  }
+  function isoArrow(x1,y1,x2,y2,col){
+    const a=Math.atan2(y2-y1,x2-x1), sz=6, hx=x2-Math.cos(a)*sz, hy=y2-Math.sin(a)*sz, nx=-Math.sin(a)*3, ny=Math.cos(a)*3;
+    return `<line x1="${x1}" y1="${y1}" x2="${hx}" y2="${hy}" stroke="${col}" stroke-width="1.5"/><polygon points="${x2},${y2} ${hx+nx},${hy+ny} ${hx-nx},${hy-ny}" fill="${col}"/>`;
+  }
+  function actKind(id){
+    if(/pb\d\d|push/.test(id)) return 'push';
+    if(/roller|limit/.test(id)) return 'roller';
+    if(/idle/.test(id)) return 'idle';
+    if(/plunger/.test(id)) return 'plunger';
+    if(/pilot/.test(id)) return 'pilot';
+    if(/sol/.test(id)) return 'sol';
+    if(/onoff/.test(id)) return 'onoff';
+    return 'push';
+  }
+  function actSym(kind,x,y,d){   // x,y = box edge, d = -1 (left) / +1 (right) = direction away from box
+    const c='#173681', f=`fill="#fff" stroke="${c}" stroke-width="1.4"`, l=`stroke="${c}" stroke-width="1.4" fill="none"`;
+    const rx=(w)=> d>0? x : x-w;
+    switch(kind){
+      case 'sol':   return `<rect x="${rx(18)}" y="${y-9}" width="18" height="18" ${f}/><line x1="${rx(18)}" y1="${y+9}" x2="${rx(18)+18}" y2="${y-9}" ${l}/>`;
+      case 'pilot': return `<polygon points="${x},${y} ${x+d*11},${y-6} ${x+d*11},${y+6}" fill="${c}" stroke="${c}"/>`;
+      case 'push':  return `<line x1="${x}" y1="${y}" x2="${x+d*8}" y2="${y}" ${l}/><line x1="${x+d*8}" y1="${y-8}" x2="${x+d*8}" y2="${y+8}" ${l}/>`;
+      case 'plunger':return `<line x1="${x}" y1="${y}" x2="${x+d*6}" y2="${y}" ${l}/><rect x="${rx(6)+(d>0?6:0)-(d>0?0:0)}" y="${y-6}" width="6" height="12" ${f}/>`;
+      case 'idle':  return `<line x1="${x}" y1="${y}" x2="${x+d*6}" y2="${y}" ${l}/><circle cx="${x+d*11}" cy="${y}" r="5" ${f}/><path d="M${x+d*9},${y+8} L${x+d*14},${y+8}" ${l}/>`;
+      case 'onoff': return `<line x1="${x}" y1="${y}" x2="${x+d*8}" y2="${y}" ${l}/><line x1="${x+d*8}" y1="${y}" x2="${x+d*16}" y2="${y-9}" ${l}/>`;
+      default:      return `<line x1="${x}" y1="${y}" x2="${x+d*6}" y2="${y}" ${l}/><circle cx="${x+d*11}" cy="${y}" r="5" ${f}/>`;
+    }
+  }
+  function springSym(x,y,d){
+    let pts=`${x},${y}`; for(let i=1;i<=5;i++) pts+=` ${x+d*(i*3.5)},${y+(i%2?-6:6)}`; pts+=` ${x+d*21},${y}`;
+    return `<polyline points="${pts}" fill="none" stroke="#173681" stroke-width="1.4"/>`;
+  }
+  function isoValve(comp,t){
+    const C=ISO_CFG[t.family], out=[], cur=isoCur(comp,t), ai=C.order.indexOf(cur), n=C.order.length;
+    const bx0=C.cx-C.bw/2, ym=C.y0+C.bh/2;
+    const att=(pid,x)=>{ const q=C.pts[pid]; return {x:x+q[0]*C.bw, y:q[1]==='t'?C.y0:C.y0+C.bh}; };
+    C.order.forEach((k,i)=>{
+      const x=bx0+(i-ai)*C.bw, act=(i===ai), col=act?'#1a9e5c':'#7b8794', def=isoPosDef(comp,t,k);
+      out.push(`<rect class="comp-body" x="${x}" y="${C.y0}" width="${C.bw}" height="${C.bh}" fill="${act?'#f2fbf6':'#fff'}" stroke="${col}" stroke-width="${act?2.2:1.3}"/>`);
+      def.f.forEach(([a,b])=>{ const A=att(a,x),B=att(b,x); out.push(isoArrow(A.x,A.y,B.x,B.y,col)); });
+      def.b.forEach(a=>{ const A=att(a,x), dy=(C.pts[a][1]==='t')?6:-6; out.push(`<path d="M${A.x},${A.y} L${A.x},${A.y+dy} M${A.x-4},${A.y+dy} L${A.x+4},${A.y+dy}" stroke="${col}" stroke-width="1.5" fill="none"/>`); });
+    });
+    const x0=bx0-ai*C.bw, x1=bx0+(n-1-ai)*C.bw+C.bw;
+    const id=comp.type, kind=actKind(id), dbl=/double/.test(id)||n===3;
+    out.push(actSym(kind,x0,ym,-1));
+    out.push(dbl ? actSym(/53|43/.test(id)&&!/pilot/.test(id)?'sol':kind,x1,ym,1) : springSym(x1,ym,1));
+    Object.entries(C.pts).forEach(([pid,q])=>{
+      const px=bx0+q[0]*C.bw;
+      if(q[1]==='t'){ out.push(`<line x1="${px}" y1="0" x2="${px}" y2="${C.y0}" stroke="#173681" stroke-width="1.4"/><text class="comp-sub" x="${px}" y="-9">${pid.slice(1)}</text>`); }
+      else { out.push(`<line x1="${px}" y1="${C.y0+C.bh}" x2="${px}" y2="${C.H}" stroke="#173681" stroke-width="1.4"/><text class="comp-sub" x="${px}" y="${C.H+15}">${pid.slice(1)}</text>`); }
+    });
+    out.push(`<text class="comp-label" x="${C.cx}" y="${C.H+30}">${t.name}</text>`);
+    return out.join('');
+  }
+
   function shapeFor(comp){
     const t = TYPE_MAP[comp.type];
     const geom = FAMILY_GEOM[t.geom];
@@ -617,52 +813,20 @@
         parts.push(`<text class="comp-sub" x="18" y="32">F</text><text class="comp-sub" x="52" y="32">R</text><text class="comp-sub" x="86" y="32">L</text>`);
         parts.push(`<text class="comp-label" x="52" y="74">FRL Unit</text>`);
         break;
-      case 'v2': {
-        const open = comp.state.open;
-        parts.push(`<rect class="comp-body" width="74" height="30" rx="5" fill="${open?'#e7fbf3':'#fff5f0'}" stroke="${open?'#1a9e5c':'#e08a1e'}" stroke-width="1.6" y="16"/>`);
-        parts.push(`<g transform="translate(37,16)">${actuatorGlyph(comp.type)}</g>`);
-        parts.push(`<text class="comp-sub" x="37" y="34" font-weight="700">2/2 ${open?'ON':'OFF'}</text>`);
-        parts.push(`<text class="comp-label" x="37" y="60">${t.name}</text>`);
+      case 'v2': case 'v3': case 'v5_2': case 'v5_3': case 'v4_3':
+        parts.push(isoValve(comp,t));
         break;
-      }
-      case 'v3': {
-        const open = comp.state.open;
-        parts.push(`<rect class="comp-body" width="96" height="46" rx="6" y="20" fill="${open?'#e7fbf3':'#fff5f0'}" stroke="${open?'#1a9e5c':'#e08a1e'}" stroke-width="1.6"/>`);
-        parts.push(`<g transform="translate(48,20)">${actuatorGlyph(comp.type)}</g>`);
-        parts.push(`<text class="comp-sub" x="48" y="48" font-weight="700">3/2 ${open?'OPEN':'NC'}</text>`);
-        parts.push(`<text class="comp-label" x="48" y="86">${t.name}</text>`);
-        break;
-      }
-      case 'v5_2': {
-        const posA = comp.state.position==='A';
-        parts.push(`<rect class="comp-body" width="124" height="50" rx="6" y="10" fill="${posA?'#e7fbf3':'#eef2ff'}" stroke="${posA?'#1a9e5c':'#2a63e8'}" stroke-width="1.6"/>`);
-        parts.push(`<g transform="translate(62,10)">${actuatorGlyph(comp.type)}</g>`);
-        parts.push(`<text class="comp-sub" x="62" y="38" font-weight="700">5/2 POS ${posA?'A':'B'}</text>`);
-        parts.push(`<text class="comp-label" x="62" y="90">${t.name}</text>`);
-        break;
-      }
-      case 'v5_3': {
-        const pos = comp.state.position;
-        const col = pos==='A' ? '#1a9e5c' : pos==='B' ? '#2a63e8' : '#9aa7b4';
-        parts.push(`<rect class="comp-body" width="140" height="54" rx="6" y="10" fill="#f7f9fc" stroke="${col}" stroke-width="1.6"/>`);
-        parts.push(`<g transform="translate(70,10)">${actuatorGlyph(comp.type)}</g>`);
-        parts.push(`<text class="comp-sub" x="70" y="42" font-weight="700">5/3 ${pos}</text>`);
-        parts.push(`<text class="comp-label" x="70" y="94">${t.name}</text>`);
-        break;
-      }
-      case 'v4_3': {
-        const pos = comp.state.position;
-        const col = pos==='A' ? '#1a9e5c' : pos==='B' ? '#2a63e8' : '#9aa7b4';
-        parts.push(`<rect class="comp-body" width="112" height="50" rx="6" y="10" fill="#f7f9fc" stroke="${col}" stroke-width="1.6"/>`);
-        parts.push(`<g transform="translate(56,10)">${actuatorGlyph(comp.type)}</g>`);
-        parts.push(`<text class="comp-sub" x="56" y="38" font-weight="700">4/3 ${pos}</text>`);
-        parts.push(`<text class="comp-label" x="56" y="90">${t.name}</text>`);
-        break;
-      }
       case 'check':
+      case 'quickexh':
         parts.push(`<rect class="comp-body" width="${geom.w}" height="${geom.h}" rx="18" fill="#f0fbf5" stroke="#1a9e5c" stroke-width="1.5"/>`);
         parts.push(`<path d="M20,${geom.h/2} L${geom.w-20},${geom.h/2} M${geom.w/2},6 L${geom.w-20},${geom.h/2} L${geom.w/2},${geom.h-6}" stroke="#1a9e5c" stroke-width="1.6" fill="none"/>`);
         parts.push(`<text class="comp-label" x="${geom.w/2}" y="${geom.h+18}">${t.name}</text>`);
+        break;
+      case 'pilotcheck':
+        parts.push(`<rect class="comp-body" width="${geom.w}" height="36" rx="18" fill="#f0fbf5" stroke="#1a9e5c" stroke-width="1.5"/>`);
+        parts.push(`<path d="M20,18 L${geom.w-20},18 M${geom.w/2},6 L${geom.w-20},18 L${geom.w/2},30" stroke="#1a9e5c" stroke-width="1.6" fill="none"/>`);
+        parts.push(`<line x1="${geom.w/2}" y1="36" x2="${geom.w/2}" y2="50" stroke="#173681" stroke-width="1.5"/>`);
+        parts.push(`<text class="comp-label" x="${geom.w/2}" y="${geom.h+16}">${t.name}</text>`);
         break;
       case 'shuttle':
         parts.push(`<path class="comp-body" d="M4,28 L40,4 L76,28 L40,52 Z" fill="#f0fbf5" stroke="#1a9e5c" stroke-width="1.6"/>`);
@@ -677,7 +841,8 @@
       case 'cyl_single': {
         const ext = comp.state.extend||0, rodLen = 40*ext;
         parts.push(`<rect x="20" y="8" width="60" height="34" rx="4" fill="#f2f6ff" stroke="#5c7fd9" stroke-width="1.6"/>`);
-        parts.push(`<rect x="80" y="21" width="${8+rodLen}" height="8" fill="#9aa7b4"/>`);
+        parts.push(`<rect x="${26+rodLen}" y="21" width="${62}" height="8" fill="#9aa7b4"/>`);
+        parts.push(`<rect x="${22+rodLen}" y="9" width="4" height="32" fill="#173681"/>`);
         parts.push(`<rect x="${80+rodLen}" y="14" width="10" height="22" rx="2" fill="#5c7fd9"/>`);
         parts.push(`<text class="comp-label" x="60" y="66">${t.name}</text>`);
         break;
@@ -685,7 +850,8 @@
       case 'cyl_double': {
         const ext = comp.state.extend||0, rodLen = 55*ext;
         parts.push(`<rect x="20" y="8" width="70" height="34" rx="4" fill="#f2f6ff" stroke="#5c7fd9" stroke-width="1.6"/>`);
-        parts.push(`<rect x="90" y="21" width="${8+rodLen}" height="8" fill="#9aa7b4"/>`);
+        parts.push(`<rect x="${26+rodLen*1.0}" y="21" width="${72}" height="8" fill="#9aa7b4"/>`);
+        parts.push(`<rect x="${22+rodLen}" y="9" width="4" height="32" fill="#173681"/>`);
         parts.push(`<rect x="${90+rodLen}" y="12" width="10" height="26" rx="2" fill="#5c7fd9"/>`);
         parts.push(`<text class="comp-label" x="70" y="66">${t.name}</text>`);
         break;
@@ -718,12 +884,14 @@
       }
       case 'gauge': {
         const reading = comp.state.reading||0;
-        const angle = -120 + (reading/10)*240;
         const isFlow = comp.type==='flowmeter';
+        const dial = isFlow ? Math.min(10,(comp.state.flow||0)/15) : Math.min(10,reading);
+        const angle = 135 + (dial/10)*270;     // 0 -> lower-left, 5 -> top, 10 -> lower-right
         parts.push(`<circle class="comp-body" cx="25" cy="25" r="24" fill="#fff" stroke="#5c7fd9" stroke-width="1.8"/>`);
+        for(let i=0;i<=10;i++){ const a=(135+i*27)*Math.PI/180; parts.push(`<line x1="${25+17*Math.cos(a)}" y1="${25+17*Math.sin(a)}" x2="${25+21*Math.cos(a)}" y2="${25+21*Math.sin(a)}" stroke="#5c7fd9" stroke-width="1"/>`); }
         parts.push(`<line x1="25" y1="25" x2="${25+16*Math.cos(angle*Math.PI/180)}" y2="${25+16*Math.sin(angle*Math.PI/180)}" stroke="#c23b2e" stroke-width="2" stroke-linecap="round"/>`);
         parts.push(`<circle cx="25" cy="25" r="2.4" fill="#16232f"/>`);
-        parts.push(`<text class="comp-label" x="25" y="66">${isFlow? (reading*15).toFixed(0)+' L/min' : reading.toFixed(1)+' bar'}</text>`);
+        parts.push(`<text class="comp-label" x="25" y="66">${isFlow? (comp.state.flow||0).toFixed(0)+' L/min' : reading.toFixed(1)+' bar'}</text>`);
         break;
       }
       case 'timer_on': case 'timer_off': {
@@ -742,32 +910,42 @@
 
     Object.entries(geom.ports).forEach(([pid,p])=>{
       const color = p.kind==='in' ? 'var(--port-in)' : p.kind==='out' ? 'var(--port-out)' : 'var(--port-exh)';
-      parts.push(`<circle class="port" data-comp="${id}" data-port="${pid}" cx="${p.dx}" cy="${p.dy}" r="6" fill="${color}"></circle>`);
+      const hint = state.selected && state.selected.kind==='component' && state.selected.id===id && !isConnected(id,pid);
+      parts.push(`<circle class="port${hint?' port-hint':''}" data-comp="${id}" data-port="${pid}" cx="${p.dx}" cy="${p.dy}" r="6" fill="${color}"></circle>`);
     });
-    return parts.join('');
+    let outStr = parts.join('');
+    if(((comp.rot||0)%360)===180) outStr = outStr.replace(/<text ([^>]*?)x="([\d.\-]+)" y="([\d.\-]+)"/g,'<text $1x="$2" y="$3" transform="rotate(180 $2 $3)"');
+    return outStr;
   }
 
   function connPathD(a,b){ const midX=(a.x+b.x)/2; return `M${a.x},${a.y} L${midX},${a.y} L${midX},${b.y} L${b.x},${b.y}`; }
 
-  function renderConns(pressurized){
+  function renderConns(P){
     layerConn.innerHTML = state.connections.map(conn=>{
       const [fc,fp] = conn.from.split(':'), [tc,tp] = conn.to.split(':');
       if(!getComp(fc) || !getComp(tc)) return '';
       const a = portWorld(fc,fp), b = portWorld(tc,tp);
-      const isPress = pressurized.has(conn.from) && pressurized.has(conn.to);
+      // Line is live if either end carries pressure
+      const live = isPress(P, conn.from) || isPress(P, conn.to);
       const sel = state.selected && state.selected.kind==='connection' && state.selected.id===conn.id;
       const d = connPathD(a,b);
-      return `<path class="conn-path ${isPress?'pressurized':''} ${sel?'selected':''}" d="${d}"></path><path class="conn-hit" data-id="${conn.id}" d="${d}"></path>`;
+      return `<path class="conn-path ${live?'pressurized':''} ${sel?'selected':''}" d="${d}"></path><path class="conn-hit" data-id="${conn.id}" d="${d}"></path>`;
     }).join('');
   }
 
   function render(){
     layerComp.innerHTML = state.components.map(c=>{
       const sel = state.selected && state.selected.kind==='component' && state.selected.id===c.id;
-      return `<g class="comp ${sel?'selected':''}" data-id="${c.id}" transform="translate(${c.x},${c.y})">${shapeFor(c)}</g>`;
+      const rot = (c.rot||0) % 360;
+      const geom = defOf(c);
+      // Rotate 180° around component center
+      const xf = rot===180
+        ? `translate(${c.x+geom.w},${c.y+geom.h}) rotate(180)`
+        : `translate(${c.x},${c.y})`;
+      return `<g class="comp ${sel?'selected':''}" data-id="${c.id}" transform="${xf}">${shapeFor(c)}</g>`;
     }).join('');
-    const pressurized = state.running ? computePressurized() : new Set();
-    renderConns(pressurized);
+    const P = state.running ? computePressures() : new Map();
+    renderConns(P);
     renderProperties();
   }
 
@@ -780,13 +958,14 @@
     lastTs = ts;
 
     preTick(dt);
-    const pressurized = computePressurized();
-    updateActuators(pressurized);
-    prevPressurized = pressurized;
+    const P = computePressures();
+    updateActuators(P, dt);
+    prevPressures = P;
 
     state.components.forEach(c=>{
       const t = TYPE_MAP[c.type];
       if(['cyl_single','cyl_double','cyl_rodless','rotary'].includes(t.family)){
+        if(c.state.extend==null) c.state.extend = 0;
         const diff = c.state.target - c.state.extend;
         c.state.extend += diff * Math.min(dt*4,1);
         if(Math.abs(diff)<0.01) c.state.extend = c.state.target;
@@ -795,10 +974,10 @@
     });
 
     state.connections.forEach(conn=>{
-      const isPress = pressurized.has(conn.from) && pressurized.has(conn.to);
+      const live = isPress(P, conn.from) || isPress(P, conn.to);
       if(!particles.has(conn.id)) particles.set(conn.id,{list:[],acc:0});
       const store = particles.get(conn.id);
-      if(isPress){
+      if(live){
         store.acc += dt;
         if(store.acc>0.22){ store.acc=0; store.list.push(0); }
         store.list = store.list.map(v=>v+dt*0.7).filter(v=>v<=1);
@@ -814,7 +993,12 @@
         g.innerHTML = shapeFor(c);
       }
     });
-    renderConns(pressurized);
+    renderConns(P);
+    // Refresh gauge reading in properties if selected
+    if(state.selected && state.selected.kind==='component'){
+      const sc = getComp(state.selected.id);
+      if(sc && TYPE_MAP[sc.type].family==='gauge') renderProperties();
+    }
 
     let ph = '';
     state.connections.forEach(conn=>{
@@ -832,9 +1016,55 @@
   /* =========================================================
      5. PROPERTIES PANEL
      ========================================================= */
+
+  /* ---------- circuit guidance: ports + next component ---------- */
+  const PORT_TXT={p1:'1 · Pressure inlet (P)',p2:'2 · Work port',p3:'3 · Exhaust',p4:'4 · Work port',p5:'5 · Exhaust',in:'Inlet',out:'Outlet',inb:'Tank inlet',cap:'Cap side (extends)',rod:'Rod side (retracts)',pilot:'Pilot signal',in1:'Input 1',in2:'Input 2'};
+  function portLabel(t,pid){ if(t.family==='cyl_single'&&pid==='in') return 'Air inlet (extends)'; return PORT_TXT[pid]||pid; }
+  function isConnected(cid,pid){ const k=cid+':'+pid; return state.connections.some(c=>c.from===k||c.to===k); }
+  function nextSpecs(c){
+    const t=TYPE_MAP[c.type], f=t.family, L=[];
+    const A=(type,from,to,label,extra)=>L.push({type,from,to,label,extra});
+    const valve=()=>{ A('cyl_double','p2','cap','Double-acting cylinder',[['p4','rod']]); A('cyl_single','p2','in','Single-acting cylinder'); A('silencer',['p3','p5'],'in','Silencer on exhaust'); };
+    switch(f){
+      case 'source': A('frl','out','in','FRL Unit (filter + regulator)'); A('air_tank','out','inb','Air Tank'); A('regulator','out','in','Regulator'); A('tconnector','out','p1','T-Connector (split line)'); break;
+      case 'tank': A('frl','out','in','FRL Unit'); A('regulator','out','in','Regulator'); A('sol52single','out','p1','5/2 Single Sol. valve'); break;
+      case 'passthrough': case 'frl': case 'check': case 'quickexh': case 'pilotcheck': case 'shuttle': case 'and': case 'timer_on': case 'timer_off':
+        A('sol52single','out','p1','5/2 Single Sol. valve'); A('pb32nc','out','p1','3/2 Push Button valve'); A('gauge','out','in','Pressure Gauge'); A('tconnector','out','p1','T-Connector'); break;
+      case 'tconnector': A('gauge',['p2','p3'],'in','Pressure Gauge'); A('sol52single',['p2','p3'],'p1','5/2 Single Sol. valve'); A('pb32nc',['p2','p3'],'p1','3/2 Push Button valve'); break;
+      case 'v2': A('cyl_single','p2','in','Single-acting cylinder'); A('gauge','p2','in','Pressure Gauge'); break;
+      case 'v3': A('cyl_single','p2','in','Single-acting cylinder'); A('silencer','p3','in','Silencer on exhaust'); break;
+      case 'v5_2': case 'v5_3': case 'v4_3': valve(); break;
+    }
+    return L.filter(sp=>Array.isArray(sp.from) ? sp.from.some(p=>!isConnected(c.id,p)) : !isConnected(c.id,sp.from));
+  }
+  function addNext(c,spec){
+    const g=defOf(c), nt=TYPE_MAP[spec.type], ng=FAMILY_GEOM[nt.geom];
+    const from = Array.isArray(spec.from) ? spec.from.find(p=>!isConnected(c.id,p)) : spec.from;
+    if(!from) return;
+    pushHistory();
+    const x=c.x+g.w+110; let y=c.y;
+    while(state.components.some(o=>{ const og=defOf(o); return Math.abs(o.x-x)<og.w+30 && Math.abs(o.y-y)<og.h+50; })) y+=110;
+    const n=addComponent(spec.type,x,y); state.components.push(n);
+    state.connections.push({id:genId('conn'),from:c.id+':'+from,to:n.id+':'+spec.to});
+    (spec.extra||[]).forEach(([fp,tp])=>{ if(!isConnected(c.id,fp)) state.connections.push({id:genId('conn'),from:c.id+':'+fp,to:n.id+':'+tp}); });
+    state.selected={kind:'component',id:n.id};
+    ensureVisible(n); render();
+  }
+  function guidanceHTML(c){
+    const t=TYPE_MAP[c.type], g=defOf(c);
+    const rows=Object.entries(g.ports).map(([pid,p])=>{
+      const ok=isConnected(c.id,pid);
+      return `<div class="prop-row"><span class="prop-label">${portLabel(t,pid)}</span><span class="prop-value" style="color:${ok?'#1a9e5c':'#e08a1e'}">${ok?'✓ connected':'○ free'}</span></div>`;
+    }).join('');
+    const specs=nextSpecs(c);
+    let next = specs.length ? specs.map((sp,i)=>`<button class="action-btn next-btn" data-i="${i}">＋ ${sp.label}</button>`).join('')
+      : `<div class="empty-msg">${['cyl_single','cyl_double','cyl_rodless','rotary','gauge','terminal'].includes(t.family)?'End of this branch. Connect any free port above (orange pulsing dots), then press Run.':'All main ports are connected.'}</div>`;
+    return `<h2 style="margin-top:14px;font-size:12px;">Ports</h2>${rows}<h2 style="margin-top:14px;font-size:12px;">What next?</h2>${next}<div class="empty-msg" style="margin-top:6px;">Pulsing orange dots on the canvas = free ports. Click a dot, then a dot on the next component to connect.</div>`;
+  }
+
   function renderProperties(){
     const panel = document.getElementById('selection-panel');
-    if(!state.selected){ panel.innerHTML = `<div class="empty-msg">Nothing selected. Click a component or connection on the canvas.</div>`; return; }
+    if(!state.selected){ panel.innerHTML = `<div class="empty-msg">Nothing selected. Click a component to see its ports and what to add next. Drag empty canvas to pan, scroll to move, Ctrl+scroll to zoom.</div>`; return; }
     if(state.selected.kind==='connection'){
       panel.innerHTML = `<div class="prop-row"><span class="prop-label">Type</span><span class="prop-value">Pipe</span></div>
         <button class="action-btn danger" id="del-sel">🗑 Delete Connection</button>`;
@@ -873,18 +1103,13 @@
     panel.innerHTML = `
       <div class="prop-row"><span class="prop-label">Component</span><span class="prop-value">${t.name}</span></div>
       ${extra}
-      <button class="action-btn danger" id="del-sel">🗑 Delete Component</button>`;
+      <button class="action-btn danger" id="del-sel">🗑 Delete Component</button>
+      ${guidanceHTML(c)}`;
     document.getElementById('del-sel').onclick = deleteSelected;
+    { const specs=nextSpecs(c); panel.querySelectorAll('.next-btn').forEach(b=>b.onclick=()=>addNext(c,specs[+b.dataset.i])); }
     const toggleBtn = document.getElementById('toggle-comp');
     if(toggleBtn){
-      toggleBtn.onclick = ()=>{
-        if(t.family==='v2'||t.family==='v3') c.state.open = !c.state.open;
-        else if(t.family==='v5_2') c.state.position = c.state.position==='A'?'B':'A';
-        else if(t.family==='v5_3'||t.family==='v4_3'){
-          const order=['B','C','A']; c.state.position = order[(order.indexOf(c.state.position)+1)%3];
-        }
-        render();
-      };
+      toggleBtn.onclick = ()=>{ toggleValve(c); render(); };
     }
     const delaySlider = document.getElementById('delay-slider');
     if(delaySlider) delaySlider.addEventListener('input', e=>{ c.state.delayMs = parseInt(e.target.value,10); render(); });
@@ -916,6 +1141,7 @@
   }
 
   let connecting=null, dragging=null;
+  let panX=0, panY=0, panning=null;
 
   svg.addEventListener('mousedown',(e)=>{
     const portEl = e.target.closest('.port');
@@ -940,18 +1166,31 @@
       const id = compEl.getAttribute('data-id');
       state.selected = {kind:'component', id};
       const pos = toSvgCoords(e); const comp = getComp(id);
-      pushHistory();
-      dragging = { id, offX: pos.x-comp.x, offY: pos.y-comp.y };
+      dragging = { id, offX: pos.x-comp.x, offY: pos.y-comp.y, startX: comp.x, startY: comp.y, moved:false, snap: JSON.stringify({components:state.components, connections:state.connections}), mom:false };
+      if(isMomentary(comp)){ actuateValve(comp, e.shiftKey); dragging.mom=true; }
       render();
       return;
     }
     if(connEl){ state.selected={kind:'connection', id:connEl.getAttribute('data-id')}; render(); return; }
-    if(!connecting){ state.selected=null; render(); }
+    if(!connecting){ state.selected=null; render(); panning={sx:e.clientX, sy:e.clientY, px:panX, py:panY}; svg.classList.add('panning'); }
   });
 
   window.addEventListener('mousemove',(e)=>{
+    if(panning){
+      const r=svg.getBoundingClientRect(), vb=svg.viewBox.baseVal;
+      panX = panning.px - (e.clientX-panning.sx)*vb.width/r.width;
+      panY = panning.py - (e.clientY-panning.sy)*vb.height/r.height;
+      applyZoom(); return;
+    }
     const pos = toSvgCoords(e);
-    if(dragging){ const comp=getComp(dragging.id); if(comp){ comp.x=pos.x-dragging.offX; comp.y=pos.y-dragging.offY; render(); } }
+    if(dragging){
+      const comp=getComp(dragging.id);
+      if(comp){
+        const nx = pos.x-dragging.offX, ny = pos.y-dragging.offY;
+        if(!dragging.moved && (Math.abs(nx-dragging.startX)>3 || Math.abs(ny-dragging.startY)>3)){ dragging.moved = true; history.push(dragging.snap); if(history.length>60) history.shift(); }
+        comp.x=nx; comp.y=ny; render();
+      }
+    }
     if(connecting){
       const start = portWorld(connecting.compId, connecting.portId);
       tempLine.style.display='block';
@@ -959,7 +1198,17 @@
       tempLine.setAttribute('x2',pos.x); tempLine.setAttribute('y2',pos.y);
     }
   });
-  window.addEventListener('mouseup', ()=>{ dragging=null; });
+  window.addEventListener('mouseup', ()=>{
+    if(panning){ panning=null; svg.classList.remove('panning'); }
+    if(dragging){
+      const comp = getComp(dragging.id);
+      if(comp){
+        if(dragging.mom){ releaseValve(comp); render(); }
+        else if(!dragging.moved){ if(toggleValve(comp)) render(); }
+      }
+    }
+    dragging=null;
+  });
 
   window.addEventListener('keydown',(e)=>{
     if(['Delete','Backspace'].includes(e.key)){
@@ -1055,7 +1304,7 @@
      8. TOOLBAR
      ========================================================= */
   document.getElementById('btn-run').addEventListener('click', ()=>{
-    state.running = true; lastTs=null; prevPressurized = computePressurized();
+    state.running = true; lastTs=null; prevPressures = computePressures();
     document.getElementById('btn-run').disabled = true;
     document.getElementById('btn-stop').disabled = false;
     document.getElementById('status-chip').classList.add('running');
@@ -1076,7 +1325,7 @@
       if(t.family==='timer_on'){ c.state.outputEnabled=false; c.state.timerStart=null; }
       if(t.family==='timer_off'){ c.state.outputEnabled=false; c.state.offStart=null; }
     });
-    prevPressurized = new Set();
+    prevPressures = new Map();
     particles.clear();
     render();
   });
@@ -1084,7 +1333,10 @@
   document.getElementById('btn-undo').addEventListener('click', undo);
   document.getElementById('btn-rotate').addEventListener('click', ()=>{
     if(!state.selected || state.selected.kind!=='component') return;
-    // simple visual affordance: nudge selected component - true rotation is out of scope for port-based layout
+    const c = getComp(state.selected.id);
+    if(!c) return;
+    pushHistory();
+    c.rot = ((c.rot||0) + 180) % 360;
     render();
   });
   document.getElementById('btn-clear').addEventListener('click', ()=>{
@@ -1099,10 +1351,29 @@
   });
 
   let zoomScale = 1;
-  function applyZoom(){ zoomScale = Math.max(0.55, Math.min(1.8, zoomScale)); svg.setAttribute('viewBox', `0 0 ${1400*zoomScale} ${900*zoomScale}`); }
+  function applyZoom(){
+    zoomScale = Math.max(0.55, Math.min(1.8, zoomScale));
+    panX = Math.max(-1200, Math.min(4000, panX)); panY = Math.max(-800, Math.min(3000, panY));
+    svg.setAttribute('viewBox', `${panX} ${panY} ${1400*zoomScale} ${900*zoomScale}`);
+  }
+  svg.addEventListener('wheel', e=>{
+    e.preventDefault();
+    if(e.ctrlKey){ zoomScale += e.deltaY>0?0.1:-0.1; }
+    else if(e.shiftKey){ panX += (e.deltaY||e.deltaX)*zoomScale; }
+    else { panX += e.deltaX*zoomScale; panY += e.deltaY*zoomScale; }
+    applyZoom();
+  }, {passive:false});
+  function ensureVisible(c){
+    const g=defOf(c), W=1400*zoomScale, Hh=900*zoomScale;
+    if(c.x+g.w+40 > panX+W) panX = c.x+g.w+60-W;
+    if(c.x-40 < panX) panX = c.x-60;
+    if(c.y+g.h+60 > panY+Hh) panY = c.y+g.h+80-Hh;
+    if(c.y-40 < panY) panY = c.y-60;
+    applyZoom();
+  }
   document.getElementById('zoom-in').addEventListener('click', ()=>{ zoomScale-=0.15; applyZoom(); });
   document.getElementById('zoom-out').addEventListener('click', ()=>{ zoomScale+=0.15; applyZoom(); });
-  document.getElementById('zoom-reset').addEventListener('click', ()=>{ zoomScale=1; applyZoom(); });
+  document.getElementById('zoom-reset').addEventListener('click', ()=>{ zoomScale=1; panX=0; panY=0; applyZoom(); });
 
   render();
 })();
